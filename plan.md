@@ -247,18 +247,18 @@
 ## FASE 5: API de Produtos
 
 ### 5.1 Criar API Client de Produtos
-- [ ] Criar productService em lib/api/productService.ts
-- [ ] Criar função getProducts
-- [ ] Criar função getProductById
-- [ ] Criar função createProduct
-- [ ] Criar função updateProduct
-- [ ] Criar função deleteProduct
-- [ ] Criar função searchProducts
-- [ ] Criar função getProductsByFilters
-- [ ] Criar função getProductsByCategory
+- [x] Criar productService em lib/api/productService.ts
+- [x] Criar função getProducts
+- [x] Criar função getProductById
+- [x] Criar função createProduct
+- [x] Criar função updateProduct
+- [x] Criar função deleteProduct
+- [x] Criar função searchProducts
+- [x] Criar função getProductsByFilters
+- [x] Criar função getProductsByCategory
 
 ### 5.2 Criar Hooks de Produtos
-- [ ] Criar hook useProducts
+- [x] Criar hook useProducts
 - [x] Criar hook useProduct
 - [x] Criar hook useCreateProduct
 - [x] Criar hook useUpdateProduct
