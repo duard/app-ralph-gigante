@@ -1,6 +1,7 @@
 import { lazy } from 'react'
 import { Navigate } from 'react-router-dom'
 import { PublicLayout } from '@/components/layouts/public-layout'
+import { ProtectedRoute } from '@/components/auth/protected-route'
 
 // Lazy load components for better performance
 const Landing = lazy(() => import('@/app/landing/page'))
@@ -65,51 +66,91 @@ export const routes: RouteConfig[] = [
     )
   },
 
-  // Dashboard Routes
-  {
-    path: "/dashboard",
-    element: <Dashboard />
-  },
-  {
-    path: "/dashboard-2",
-    element: <Dashboard2 />
-  },
+   // Dashboard Routes
+   {
+     path: "/dashboard",
+     element: (
+       <ProtectedRoute>
+         <Dashboard />
+       </ProtectedRoute>
+     )
+   },
+   {
+     path: "/dashboard-2",
+     element: (
+       <ProtectedRoute>
+         <Dashboard2 />
+       </ProtectedRoute>
+     )
+   },
 
-  // Application Routes
-  {
-    path: "/mail",
-    element: <Mail />
-  },
-  {
-    path: "/tasks",
-    element: <Tasks />
-  },
-  {
-    path: "/chat",
-    element: <Chat />
-  },
-  {
-    path: "/calendar",
-    element: <Calendar />
-  },
-  {
-    path: "/produtos",
-    element: <Produtos />
-  },
+   // Application Routes
+   {
+     path: "/mail",
+     element: (
+       <ProtectedRoute>
+         <Mail />
+       </ProtectedRoute>
+     )
+   },
+   {
+     path: "/tasks",
+     element: (
+       <ProtectedRoute>
+         <Tasks />
+       </ProtectedRoute>
+     )
+   },
+   {
+     path: "/chat",
+     element: (
+       <ProtectedRoute>
+         <Chat />
+       </ProtectedRoute>
+     )
+   },
+   {
+     path: "/calendar",
+     element: (
+       <ProtectedRoute>
+         <Calendar />
+       </ProtectedRoute>
+     )
+   },
+   {
+     path: "/produtos",
+     element: (
+       <ProtectedRoute>
+         <Produtos />
+       </ProtectedRoute>
+     )
+   },
 
-  // Content Pages
-  {
-    path: "/users",
-    element: <Users />
-  },
-  {
-    path: "/faqs",
-    element: <FAQs />
-  },
-  {
-    path: "/pricing",
-    element: <Pricing />
-  },
+   // Content Pages
+   {
+     path: "/users",
+     element: (
+       <ProtectedRoute>
+         <Users />
+       </ProtectedRoute>
+     )
+   },
+   {
+     path: "/faqs",
+     element: (
+       <ProtectedRoute>
+         <FAQs />
+       </ProtectedRoute>
+     )
+   },
+   {
+     path: "/pricing",
+     element: (
+       <ProtectedRoute>
+         <Pricing />
+       </ProtectedRoute>
+     )
+   },
 
   // Authentication Routes
   {
@@ -227,31 +268,55 @@ export const routes: RouteConfig[] = [
     )
   },
 
-  // Settings Routes
-  {
-    path: "/settings/user",
-    element: <UserSettings />
-  },
-  {
-    path: "/settings/account",
-    element: <AccountSettings />
-  },
-  {
-    path: "/settings/billing",
-    element: <BillingSettings />
-  },
-  {
-    path: "/settings/appearance",
-    element: <AppearanceSettings />
-  },
-  {
-    path: "/settings/notifications",
-    element: <NotificationSettings />
-  },
-  {
-    path: "/settings/connections",
-    element: <ConnectionSettings />
-  },
+   // Settings Routes
+   {
+     path: "/settings/user",
+     element: (
+       <ProtectedRoute>
+         <UserSettings />
+       </ProtectedRoute>
+     )
+   },
+   {
+     path: "/settings/account",
+     element: (
+       <ProtectedRoute>
+         <AccountSettings />
+       </ProtectedRoute>
+     )
+   },
+   {
+     path: "/settings/billing",
+     element: (
+       <ProtectedRoute>
+         <BillingSettings />
+       </ProtectedRoute>
+     )
+   },
+   {
+     path: "/settings/appearance",
+     element: (
+       <ProtectedRoute>
+         <AppearanceSettings />
+       </ProtectedRoute>
+     )
+   },
+   {
+     path: "/settings/notifications",
+     element: (
+       <ProtectedRoute>
+         <NotificationSettings />
+       </ProtectedRoute>
+     )
+   },
+   {
+     path: "/settings/connections",
+     element: (
+       <ProtectedRoute>
+         <ConnectionSettings />
+       </ProtectedRoute>
+     )
+   },
 
   // Catch-all route for 404
   {

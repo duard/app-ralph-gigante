@@ -45,46 +45,20 @@ apiClient.interceptors.response.use(
         return response;
     },
     async (error: AxiosError) => {
-        const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+        const _originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-        // Handle 401 Unauthorized - attempt token refresh
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
+        // Handle 401 Unauthorized - redirect to login
+        if (error.response?.status === 401) {
+            // Clear tokens
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('refresh_token');
 
-            try {
-                const refreshToken = localStorage.getItem('refresh_token');
+            toast.error('Sessão expirada. Por favor, faça login novamente.');
 
-                if (refreshToken) {
-                    // Attempt to refresh the token
-                    const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
-                        refreshToken,
-                    });
+            // Redirect to login page
+            window.location.href = '/auth/sign-in';
 
-                    const { token: newToken, refreshToken: newRefreshToken } = response.data;
-
-                    // Store new tokens
-                    localStorage.setItem('auth_token', newToken);
-                    localStorage.setItem('refresh_token', newRefreshToken);
-
-                    // Retry original request with new token
-                    if (originalRequest.headers) {
-                        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-                    }
-
-                    return apiClient(originalRequest);
-                }
-            } catch (refreshError) {
-                // Refresh failed - clear tokens and redirect to login
-                localStorage.removeItem('auth_token');
-                localStorage.removeItem('refresh_token');
-
-                toast.error('Sessão expirada. Por favor, faça login novamente.');
-
-                // Redirect to login page
-                window.location.href = '/auth/sign-in';
-
-                return Promise.reject(refreshError);
-            }
+            return Promise.reject(error);
         }
 
         // Handle other error statuses

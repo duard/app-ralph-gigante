@@ -14,14 +14,9 @@ export interface LoginRequest {
  * Login response interface
  */
 export interface LoginResponse {
-    success: boolean;
-    data: {
-        user: User;
-        token: string;
-        refreshToken: string;
-        expiresIn: number;
-    };
-    message?: string;
+  access_token: string;
+  token_type: string;
+  expires_in: number;
 }
 
 /**

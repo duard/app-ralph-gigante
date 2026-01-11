@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useNavigate } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -21,10 +22,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { toast } from "sonner"
+import { authService } from "@/lib/api/auth-service"
+import { useAuthStore } from "@/stores/auth-store"
 
 const loginFormSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  username: z.string().min(1, "Username is required"),
+  password: z.string().min(1, "Password is required"),
 })
 
 type LoginFormValues = z.infer<typeof loginFormSchema>
@@ -33,13 +37,58 @@ export function LoginForm1({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const navigate = useNavigate()
+  const { login, setLoading, setError, isLoading } = useAuthStore()
+
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: "test@example.com",
-      password: "password",
+      username: "CONVIDADO",
+      password: "guest123",
     },
   })
+
+  const onSubmit = async (values: LoginFormValues) => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      const response = await authService.login({
+        username: values.username,
+        password: values.password,
+      })
+
+      const token = response.access_token
+      const refreshToken = null // No refresh token in this API
+
+      // Create user object from username
+      const user = {
+        id: values.username,
+        username: values.username,
+        email: values.username,
+        name: values.username,
+        role: 'user',
+      }
+
+      // Store tokens and update auth state
+      authService.storeTokens(token, refreshToken)
+      authService.setAuthHeader(token)
+
+      // Update store
+      login(user, token, refreshToken)
+
+      toast.success("Login realizado com sucesso!")
+
+      // Redirect to dashboard
+      navigate("/dashboard")
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Erro desconhecido"
+      setError(message)
+      toast.error(message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -47,24 +96,23 @@ export function LoginForm1({
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Enter your username below to login to your account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form action="/">
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid gap-6">
                 <div className="grid gap-4">
                   <FormField
                     control={form.control}
-                    name="email"
+                    name="username"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>Username</FormLabel>
                         <FormControl>
                           <Input
-                            type="email"
-                            placeholder="test@example.com"
+                            placeholder="CONVIDADO"
                             {...field}
                           />
                         </FormControl>
@@ -93,8 +141,8 @@ export function LoginForm1({
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full cursor-pointer">
-                    Login
+                  <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
+                    {isLoading ? "Logging in..." : "Login"}
                   </Button>
 
                   <Button variant="outline" className="w-full cursor-pointer" type="button">
