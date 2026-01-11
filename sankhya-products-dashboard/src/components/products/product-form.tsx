@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   RotateCcw,
   Loader2,
+  EyeOff,
 } from "lucide-react"
 import { type Product } from "@/stores/products-store"
 import { productFormSchema, type ProductFormSchemaType } from "@/lib/validations/product-schemas"

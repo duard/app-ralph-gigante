@@ -154,8 +154,8 @@ export function ProductFilters() {
                   <SelectContent>
                     <SelectItem value="all">Todas as categorias</SelectItem>
                     {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
+                      <SelectItem key={category || 'undefined'} value={category || ''}>
+                        {category || 'Sem categoria'}
                       </SelectItem>
                     ))}
                   </SelectContent>

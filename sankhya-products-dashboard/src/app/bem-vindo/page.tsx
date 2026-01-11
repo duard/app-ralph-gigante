@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import {
     Package,
     BarChart3,
-    Users,
     Settings,
     LogOut,
     ArrowRight,

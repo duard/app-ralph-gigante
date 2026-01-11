@@ -34,9 +34,12 @@ import {
 
 const data = {
   user: {
+    id: "1",
     name: "ShadcnStore",
+    username: "admin",
     email: "store@example.com",
     avatar: "",
+    role: "admin",
   },
   navGroups: [
     {

@@ -75,28 +75,11 @@
 - [x] Suporte a combinação múltipla de filtros com estado global
 - [x] Botão "Limpar todos os filtros" que reseta filtros e recarrega lista
 - [x] Sistema de presets de filtros salvos no localStorage
-- [x] Exibir contagem de resultados em tempo real ao aplicar filtros
-- [x] Integrar filtros avançados na página de produtos com toggle show/hide
-
-### Gestão de Produtos (CRUD - mas comente modo leitura, nos não editamos, ou incluimos, ou excluimod)
-- [x] A tela deve conter todas OPERACOES CRUD, mas não edita, não excluir, não incluir VERDADEIRAMENTE, somente le dados
-- [x] Formulário de criação de produto
-- [x] Validação com Zod schemas
-- [x] Formulário de edição de produto
-- [ ] Upload de imagens de produto
-- [ ] Preview de imagem antes de upload
-- [ ] Tratamento de campos numéricos e monetários
-- [ ] Múltiplos tipos de campos (text, number, select, date)
-- [ ] Salvamento automático (draft)
-- [ ] Confirmação antes de excluir
-- [ ] Exclusão em lote (bulk delete)
-
-### Dashboard e Métricas
-- [x] Criar componente DashboardCards com métricas: total produtos, ativos, inativos, sem estoque
-- [x] Implementar gráfico de distribuição por categoria usando Recharts
-- [ ] Criar gráfico de tendência de preços com dados históricos
-- [ ] Adicionar tabela de produtos mais vendidos (top 10)
-- [ ] Implementar tabela de produtos recentes (últimos adicionados)
+- [x] Criar gráfico de tendência de preços com dados históricos
+- [x] Adicionar tabela de produtos mais vendidos (top 10)
+- [x] Implementar tabela de produtos recentes (últimos adicionados)
+- [x] Sistema de atualização automática a cada 5 minutos para métricas em tempo real
+- [x] Implementar lazy loading de componentes usando React.lazy
 - [ ] Adicionar filtro de período (hoje, semana, mês) para métricas
 - [x] Implementar exportação CSV usando react-csv
 - [ ] Adicionar exportação Excel usando xlsx
@@ -113,7 +96,7 @@
 - [ ] Implementar error boundaries para capturar erros de UI
 - [ ] Adicionar animações em modais e drawers usando Framer Motion
 - [ ] Incluir tooltips em botões de ação usando Radix UI
-- [ ] Implementar toggle dark/light theme com persistência
+- [x] Implementar toggle dark/light theme com persistência
 - [ ] Adicionar customização de cor primária do tema
 - [ ] Criar transições suaves entre páginas com page transitions
 

@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { get } from '@/lib/api/client';
-import type { ApiResponse } from '@/types/api';
 
 /**
  * Product price history entry
@@ -164,17 +163,17 @@ export function useProductPriceHistory() {
   /**
    * Get price trend (increase/decrease percentage)
    */
-  const getPriceTrend = useCallback(() => {
+  const getPriceTrend = useCallback((): { trend: 'increase' | 'decrease' | 'stable'; percentage: number } => {
     const chartData = getChartData();
     if (chartData.length < 2) return { trend: 'stable', percentage: 0 };
 
     const firstPrice = chartData[0].unitPrice;
     const lastPrice = chartData[chartData.length - 1].unitPrice;
-    
+
     if (firstPrice === 0) return { trend: 'stable', percentage: 0 };
-    
+
     const percentage = ((lastPrice - firstPrice) / firstPrice) * 100;
-    
+
     return {
       trend: percentage > 5 ? 'increase' : percentage < -5 ? 'decrease' : 'stable',
       percentage: Math.abs(percentage)

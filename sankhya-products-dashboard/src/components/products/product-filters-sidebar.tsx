@@ -35,7 +35,7 @@ interface ProductFiltersSidebarProps {
 export function ProductFiltersSidebar({ className, children }: ProductFiltersSidebarProps) {
   const { filters, setFilters, resetFilters } = useProductsStore()
   const { products } = useProducts()
-  const [isOpen, setIsOpen] = React.useState(false)
+
   
   // Collapsible sections state
   const [basicFiltersOpen, setBasicFiltersOpen] = React.useState(true)
@@ -281,8 +281,8 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
                   <SelectContent>
                     <SelectItem value="all">Todas as categorias</SelectItem>
                     {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
+                      <SelectItem key={category || 'undefined'} value={category || ''}>
+                        {category || 'Sem categoria'}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -304,8 +304,8 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
                   <SelectContent>
                     <SelectItem value="all">Todas as unidades</SelectItem>
                     {units.map((unit) => (
-                      <SelectItem key={unit} value={unit}>
-                        {unit}
+                      <SelectItem key={unit || 'undefined'} value={unit || ''}>
+                        {unit || 'Sem unidade'}
                       </SelectItem>
                     ))}
                   </SelectContent>

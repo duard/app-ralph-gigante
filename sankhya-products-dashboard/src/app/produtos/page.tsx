@@ -1,6 +1,5 @@
 import { BaseLayout } from "@/components/layouts/base-layout"
 import { ProductList } from "@/components/products/product-list"
-import type { Product } from "@/stores/products-store"
 
 export default function Page() {
   const handleAddProduct = () => {
