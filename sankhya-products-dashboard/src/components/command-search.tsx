@@ -3,6 +3,7 @@
 import * as React from "react"
 import { useNavigate } from "react-router-dom"
 import { Command as CommandPrimitive } from "cmdk"
+import { useDebounce } from "@/lib/utils/debounce"
 import {
   Search,
   LayoutPanelLeft,
@@ -148,41 +149,58 @@ export function CommandSearch({ open, onOpenChange }: CommandSearchProps) {
 
   const [productResults, setProductResults] = React.useState<SearchItem[]>([])
 
-  // Search products when query changes
-  React.useEffect(() => {
-    const searchForProducts = async () => {
-      if (!searchQuery.trim()) {
-        setProductResults([])
-        return
-      }
-
-      setIsLoading(true)
-      try {
-        const results = await searchProducts(searchQuery)
-        if (results && results.length > 0) {
-          const productItems: SearchItem[] = results.map((product) => ({
-            title: product.descrprod || `Produto #${product.codprod}`,
-            subtitle: `Código: ${product.codprod} | Preço: R$ ${(product.vlrvenda || 0).toFixed(2)}`,
-            productCode: product.codprod,
-            group: "Produtos",
-            icon: Package,
-          }))
-          setProductResults(productItems)
-        } else {
-          setProductResults([])
-        }
-      } catch (error) {
-        console.error("Search error:", error)
-        toast.error("Erro ao buscar produtos")
-        setProductResults([])
-      } finally {
-        setIsLoading(false)
-      }
+  // Enhanced debounced search for products
+  const performProductSearch = React.useCallback(async (query: string) => {
+    if (!query.trim()) {
+      setProductResults([])
+      setIsLoading(false)
+      return
     }
 
-    const timeoutId = setTimeout(searchForProducts, 300)
-    return () => clearTimeout(timeoutId)
-  }, [searchQuery, searchProducts])
+    setIsLoading(true)
+    try {
+      const results = await searchProducts(query)
+      if (results && results.length > 0) {
+        const productItems: SearchItem[] = results.map((product) => ({
+          title: product.descrprod || `Produto #${product.codprod}`,
+          subtitle: `Código: ${product.codprod} | Preço: R$ ${(product.vlrvenda || 0).toFixed(2)}`,
+          productCode: product.codprod,
+          group: "Produtos",
+          icon: Package,
+        }))
+        setProductResults(productItems)
+      } else {
+        setProductResults([])
+      }
+    } catch (error) {
+      console.error("Search error:", error)
+      toast.error("Erro ao buscar produtos")
+      setProductResults([])
+    } finally {
+      setIsLoading(false)
+    }
+  }, [searchProducts])
+
+  // Debounced search with performance optimizations
+  const { debounced: debouncedProductSearch, cancel } = useDebounce(
+    performProductSearch,
+    300,
+    {
+      leading: false,
+      trailing: true,
+      maxWait: 900 // Maximum wait to prevent hanging
+    }
+  )
+
+  // Search products when query changes using debounced function
+  React.useEffect(() => {
+    debouncedProductSearch(searchQuery)
+  }, [searchQuery, debouncedProductSearch])
+
+  // Cleanup on unmount
+  React.useEffect(() => {
+    return cancel
+  }, [cancel])
 
   // Combine static items with product results
   const allSearchItems = React.useMemo(() => {
@@ -193,7 +211,7 @@ export function CommandSearch({ open, onOpenChange }: CommandSearchProps) {
       // Show static navigation items when not searching
       return staticItems
     }
-  }, [searchQuery, productResults])
+  }, [searchQuery, productResults, staticItems])
 
   const groupedItems = allSearchItems.reduce((acc, item) => {
     if (!acc[item.group]) {

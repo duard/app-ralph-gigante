@@ -136,13 +136,22 @@ export function ProductList({
   // Virtualization setup
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
   
-  // Debounced search for API calls
-  const debouncedSearchProducts = useDebounce((query: unknown) => {
+  // Enhanced debounced search with performance optimizations
+  const { debounced: debouncedSearchProducts, cancel } = useDebounce((query: unknown) => {
     const searchQuery = query as string
     if (searchQuery.trim()) {
       searchProducts(searchQuery)
     }
-  }, 300)
+  }, 300, {
+    leading: false,
+    trailing: true,
+    maxWait: 900 // Maximum wait to prevent hanging
+  })
+
+  // Cleanup debounced search on unmount
+  React.useEffect(() => {
+    return cancel
+  }, [cancel])
 
   const table = useReactTable({
     data: filteredProducts,

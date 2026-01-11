@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { X, Download } from "lucide-react"
 import type { Table } from "@tanstack/react-table"
 import { toast } from "sonner"
@@ -27,10 +28,14 @@ export function ProductTableToolbar<TData>({
 }: ProductTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
 
-  // Debounced search with 300ms delay for API calls
-  const debouncedOnSearch = useDebounce((value: unknown) => {
+  // Enhanced debounced search with cancellation and performance optimizations
+  const { debounced: debouncedOnSearch, cancel } = useDebounce((value: unknown) => {
     onSearch?.(value as string)
-  }, 300)
+  }, 300, {
+    leading: false,
+    trailing: true,
+    maxWait: 900 // Maximum wait to prevent hanging
+  })
 
   // Immediate local filter for UI responsiveness
   const handleSearchChange = (value: string) => {
@@ -45,6 +50,11 @@ export function ProductTableToolbar<TData>({
     // Trigger debounced search for API calls
     debouncedOnSearch(value)
   }
+
+  // Cleanup debounced search on unmount
+  useEffect(() => {
+    return cancel
+  }, [cancel])
 
   return (
     <div className="flex items-center justify-between">
