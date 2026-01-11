@@ -202,7 +202,7 @@
 
 ### 3.8 Testar Autenticação
  - [x] Testar login com credenciais válidas
-- [ ] Testar login com credenciais inválidas
+ - [x] Testar login com credenciais inválidas
 - [ ] Testar persistência de sessão
 - [ ] Testar refresh de token
 - [ ] Testar logout
