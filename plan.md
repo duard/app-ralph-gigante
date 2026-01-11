@@ -203,7 +203,7 @@
 ### 3.8 Testar Autenticação
  - [x] Testar login com credenciais válidas
  - [x] Testar login com credenciais inválidas
-- [ ] Testar persistência de sessão
+ - [x] Testar persistência de sessão
 - [ ] Testar refresh de token
 - [ ] Testar logout
 - [ ] Testar redirecionamento em rotas protegidas
@@ -715,7 +715,7 @@
 - [ ] Testar fluxo de logout
 - [ ] Testar refresh de token
 - [ ] Testar rotas protegidas
-- [ ] Testar persistência de sessão
+ - [x] Testar persistência de sessão
 
 ### 12.7 Testes de Integração - Produtos
 - [ ] Testar listagem de produtos
