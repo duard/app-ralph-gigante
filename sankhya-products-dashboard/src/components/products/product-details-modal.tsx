@@ -6,17 +6,19 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Card, CardContent } from "@/components/ui/card"
 import { formatProductCode, formatProductPrice, formatProductStatus, formatDate } from "@/lib/utils/product-utils"
 import type { Product } from "@/stores/products-store"
-import { 
-  Package, 
-  DollarSign, 
-  Box, 
-  Tag, 
+import {
+  Package,
+  DollarSign,
+  Box,
+  Tag,
   Calendar,
   ArrowLeft,
   ArrowRight,
-  Edit
+  Edit,
+  ImageIcon
 } from "lucide-react"
 
 interface ProductDetailsModalProps {
@@ -96,6 +98,26 @@ export function ProductDetailsModal({
 
           <ScrollArea className="max-h-[70vh] px-6 py-4">
             <div className="space-y-6">
+              {/* Product Image */}
+              {product.imagem && (
+                <div className="flex justify-center">
+                  <Card className="w-48 h-48 overflow-hidden">
+                    <CardContent className="p-0 h-full flex items-center justify-center">
+                      <img
+                        src={product.imagem}
+                        alt={product.descrprod}
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement
+                          target.style.display = 'none'
+                          target.parentElement!.innerHTML = '<div class="flex flex-col items-center justify-center h-full text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg><p class="text-xs mt-2">Imagem não disponível</p></div>'
+                        }}
+                      />
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+
               {/* Status and Basic Info */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">

@@ -57,7 +57,7 @@
 ### Detalhes do Produto
 - [x] Modal/Drawer para detalhes do produto
 - [x] Exibição completa dos campos do TGFPRO
-- [ ] Imagem do produto (se disponível)
+- [x] Imagem do produto (se disponível)
 - [ ] Histórico de preços (via API endpoints)
 - [x] Informações relacionadas (grupo, classe, seção)
 - [x] Estoque disponível
@@ -66,16 +66,17 @@
 - [x] Botão de edição rápida
 
 ### Filtros Avançados
-- [ ] Sidebar de filtros colapsável
-- [ ] Filtro por preço (range slider)
-- [ ] Filtro por código/nome (search input)
-- [ ] Filtro por status (ativo/inativo)
-- [ ] Filtro por grupo/categoria (dropdown)
-- [ ] Filtro por unidade de medida
-- [ ] Combinação múltipla de filtros
-- [ ] Limpar todos os filtros
-- [ ] Salvar filtros como presets
-- [ ] Contagem de resultados ao aplicar filtros
+- [ ] Criar componente ProductFiltersSidebar com layout colapsável
+- [ ] Implementar filtro de preço com range slider usando react-range
+- [ ] Adicionar filtro por código/produto com input de texto
+- [ ] Criar filtro por status (ativo/inativo) com radio buttons
+- [ ] Implementar filtro por grupo/categoria com dropdown populado da API /tgfgru
+- [ ] Adicionar filtro por unidade de medida com select
+- [ ] Suporte a combinação múltipla de filtros com estado global
+- [ ] Botão "Limpar todos os filtros" que reseta filtros e recarrega lista
+- [ ] Sistema de presets de filtros salvos no localStorage
+- [ ] Exibir contagem de resultados em tempo real ao aplicar filtros
+- [ ] Integrar filtros avançados na página de produtos com toggle show/hide
 
 ### Gestão de Produtos (CRUD - mas comente modo leitura, nos não editamos, ou incluimos, ou excluimod)
 - [ ] A tela deve conter todas OPERACOES CRUD, mas não edita, não excluir, não incluir VERDADEIRAMENTE, somente le dados
@@ -91,66 +92,68 @@
 - [ ] Exclusão em lote (bulk delete)
 
 ### Dashboard e Métricas
-- [ ] Cards de métricas principais (total produtos, ativos, inativos, sem estoque)
-- [ ] Gráfico de distribuição por categoria
-- [ ] Gráfico de tendência de preços
-- [ ] Tabela de produtos mais vendidos
-- [ ] Tabela de produtos recentes
-- [ ] Filtro de período para métricas
-- [ ] Exportação de dados (CSV, Excel, PDF)
-- [ ] Atualização automática em tempo real
+- [ ] Criar componente DashboardCards com métricas: total produtos, ativos, inativos, sem estoque
+- [ ] Implementar gráfico de distribuição por categoria usando Recharts
+- [ ] Criar gráfico de tendência de preços com dados históricos
+- [ ] Adicionar tabela de produtos mais vendidos (top 10)
+- [ ] Implementar tabela de produtos recentes (últimos adicionados)
+- [ ] Adicionar filtro de período (hoje, semana, mês) para métricas
+- [ ] Implementar exportação CSV usando react-csv
+- [ ] Adicionar exportação Excel usando xlsx
+- [ ] Criar exportação PDF usando jsPDF ou react-pdf
+- [ ] Sistema de atualização automática a cada 5 minutos para métricas em tempo real
 
 ### UI/UX
-- [ ] Layout responsivo mobile-first
-- [ ] Navegação lateral (sidebar) com menus
-- [ ] Breadcrumb de navegação
-- [ ] Barra de busca global
-- [ ] Notificações toast (Sonner)
-- [ ] Loading states consistentes
-- [ ] Error boundaries
-- [ ] Modais e drawers animados
-- [ ] Tooltip em ações
-- [ ] Dark/Light theme toggle
-- [ ] Customização de tema (cor primária)
-- [ ] Transições suaves entre páginas
+- [ ] Melhorar layout responsivo com breakpoints mobile-first usando Tailwind
+- [ ] Implementar navegação lateral (sidebar) com menus expansíveis
+- [ ] Adicionar breadcrumb de navegação usando react-router
+- [ ] Criar barra de busca global no header
+- [ ] Configurar notificações toast usando Sonner em todas as ações
+- [ ] Padronizar loading states com skeletons consistentes
+- [ ] Implementar error boundaries para capturar erros de UI
+- [ ] Adicionar animações em modais e drawers usando Framer Motion
+- [ ] Incluir tooltips em botões de ação usando Radix UI
+- [ ] Implementar toggle dark/light theme com persistência
+- [ ] Adicionar customização de cor primária do tema
+- [ ] Criar transições suaves entre páginas com page transitions
 
 ### Performance
-- [ ] Lazy loading de componentes
-- [ ] Code splitting por rotas
-- [ ] Memoização de componentes pesados
-- [ ] Debounce em searches e inputs
-- [ ] Cache de requisições API
-- [ ] Virtualização para listas longas
-- [ ] Otimize rebuild Vite (< 5s)
-- [ ] Bundle size otimizado (< 500KB gzipped)
-- [ ] Lighthouse score > 90
+- [ ] Implementar lazy loading de componentes usando React.lazy
+- [ ] Configurar code splitting por rotas com React Router
+- [ ] Adicionar memoização em componentes pesados usando React.memo
+- [ ] Otimizar debounce em searches e inputs (já implementado em alguns)
+- [ ] Implementar cache de requisições API usando React Query/SWR
+- [ ] Melhorar virtualização para listas longas (já implementado)
+- [ ] Otimizar rebuild Vite com configurações apropriadas
+- [ ] Reduzir bundle size removendo dependências desnecessárias
+- [ ] Melhorar Lighthouse score com otimizações de performance
 
 ### Testes
-- [ ] Testes unitários de hooks customizados
-- [ ] Testes de componentes principais
-- [ ] Testes de integração com API (mockada)
-- [ ] Coverage > 70%
+- [ ] Criar testes unitários para hooks customizados usando Vitest
+- [ ] Implementar testes de componentes principais com Testing Library
+- [ ] Adicionar testes de integração com API usando MSW para mocks
+- [ ] Configurar coverage mínimo de 70% com Vite
 
 
 ### Documentação
-- [ ] README com instruções de setup
-- [ ] Documentação de componentes internos
-- [ ] API Client documentado
-- [ ] Guia de estilos
-- [ ] Arquitetura do projeto
+- [ ] Atualizar README com instruções completas de setup e desenvolvimento
+- [ ] Criar documentação de componentes internos usando Storybook
+- [ ] Documentar API Client com exemplos de uso
+- [ ] Criar guia de estilos e convenções do projeto
+- [ ] Documentar arquitetura do projeto (estrutura de pastas, stores, etc.)
 
 ### DevOps
 - [x] Configuração de ambiente (.env)
-- [ ] Scripts de build e deploy
-- [ ] CI/CD pipeline configurado
+- [ ] Criar scripts de build e deploy para produção
+- [ ] Configurar CI/CD pipeline com GitHub Actions
 - [x] Linting configurado (ESLint)
-- [ ] Prettier configurado
-- [ ] Husky pre-commit hooks
-- [ ] TypeScript strict mode
-- [ ] Health check endpoint
-- [ ] Error tracking (Sentry ou similar)
-- [ ] Analytics (opcional)
-- [ ] full project identation 2 tab
+- [ ] Configurar Prettier para formatação consistente
+- [ ] Implementar Husky pre-commit hooks para lint e tests
+- [x] TypeScript strict mode ativado
+- [ ] Adicionar health check endpoint na API
+- [ ] Configurar error tracking com Sentry
+- [ ] Implementar analytics opcional (Google Analytics)
+- [x] Indentação de 2 espaços em todo projeto
 
 ## Verification
 
@@ -298,10 +301,47 @@ src/
 - Shadows: sistema de sombras do Tailwind
 - Animations: Framer Motion ou CSS transitions
 
+### Tarefas API (api-sankhya-center)
+- [x] Autenticação JWT implementada
+- [x] Endpoints TGFPRO produtos funcionando
+- [x] Documentação Swagger completa
+- [x] Cache e rate limiting configurados
+- [x] WebSocket para updates em tempo real
+- [ ] Adicionar endpoint para histórico de preços de produtos
+- [ ] Implementar endpoint para produtos relacionados
+- [ ] Otimizar queries do Sankhya com índices
+- [ ] Adicionar logs estruturados para debugging
+- [ ] Implementar health checks detalhados
+- [ ] Adicionar métricas de performance (response times)
+
+### Tarefas Frontend (sankhya-products-dashboard)
+- [x] Autenticação e login funcionando
+- [x] Listagem de produtos com paginação
+- [x] Virtualização implementada
+- [x] Busca em tempo real com debounce
+- [x] Modal de detalhes de produto
+- [ ] Implementar filtros avançados (sidebar, ranges, etc.)
+- [ ] Criar dashboard com métricas e gráficos
+- [ ] Melhorar UI/UX (themes, breadcrumbs, etc.)
+- [ ] Otimizações de performance (lazy loading, cache)
+- [ ] Adicionar testes unitários e integração
+- [ ] Completar documentação e DevOps
+
+### Notas de Desenvolvimento
+- Sempre usar `pnpm` para gerenciar dependências
+- Executar `pnpm build` para verificar erros antes de commit
+- Executar `pnpm lint` e corrigir issues de linting
+- Usar indentação de 2 espaços em todo código
+- Focar apenas em produtos TGFPRO, sem gestão de imagens (placeholders)
+- Não implementar operações reais de CRUD (somente leitura)
+- Se build e lint passarem sem erros, fazer commit e push
+- Usar Ralph para implementar tarefas de forma autônoma
+
 ## Progress
 
 Add entries below this line:
 
+- **2025-01-11**: ✅ Implementado visualização de imagem do produto no modal de detalhes. Adicionada seção de imagem ao ProductDetailsModal que exibe a imagem do produto quando disponível, com tratamento de erro para imagens quebradas mostrando placeholder. Componente localizado em `src/components/products/product-details-modal.tsx`.
 - **2025-01-11**: ✅ Implementado virtualização de lista para 1000+ produtos. Adicionado @tanstack/react-virtual para renderização eficiente, substituído corpo da tabela tradicional por contêiner de rolagem virtualizado, mantido cabeçalho fixo para melhor UX, configurado altura de linha ótima (57px) e overscan (5) para performance.
 - **2025-01-11**: ✅ Implementado modal/drawer de detalhes do produto com informações completas do TGFPRO, navegação entre produtos e botão de edição rápida. Componente criado em `src/components/products/product-details-modal.tsx` e integrado na tabela de produtos.
 - **2025-01-11**: ✅ Implementado busca em tempo real com debounce de 300ms. Criado utilitário `useDebounce` em `src/lib/utils/debounce.ts`, atualizado `ProductTableToolbar` para busca responsiva e `ProductList` para chamadas API debounced. A busca agora filtra localmente imediatamente para feedback visual e faz chamadas API com 300ms de debounce.
