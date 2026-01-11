@@ -227,3 +227,123 @@ export async function downloadExcel(products: CSVProductRow[], filename: string 
     throw new Error('Falha ao exportar arquivo Excel');
   }
 }
+
+export async function downloadPDF(products: CSVProductRow[], filename: string = 'produtos.pdf'): Promise<void> {
+  try {
+    // Dynamically import jsPDF and autotable to avoid SSR issues
+    const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+      import('jspdf'),
+      import('jspdf-autotable')
+    ]);
+
+    // Create new PDF document
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    // Add custom font for better UTF-8 support (optional)
+    // For Brazilian Portuguese characters, you might need to add a font that supports them
+    
+    // Prepare data for the table
+    const headers = [
+      'Código',
+      'Descrição',
+      'Ref. Fab',
+      'Un',
+      'Preço Venda',
+      'Preço Custo',
+      'Estoque',
+      'Est. Mín',
+      'Status',
+      'Categoria',
+      'NCM'
+    ];
+
+    const rows = products.map(product => [
+      String(product.codprod),
+      product.descrprod || '',
+      product.reffab || '',
+      product.codvol || '',
+      formatCurrency(product.vlrvenda || 0),
+      formatCurrency(product.vlrcusto || 0),
+      String(product.estoque || 0),
+      String(product.estmin || 0),
+      product.ativo === 'S' ? 'Ativo' : 'Inativo',
+      product.descrgrupoprod || '',
+      product.ncm || ''
+    ]);
+
+    // Add title
+    doc.setFontSize(16);
+    doc.text('Relatório de Produtos', 148, 15, { align: 'center' });
+
+    // Add generation date
+    doc.setFontSize(10);
+    doc.text(`Data: ${formatDate(new Date())}`, 148, 22, { align: 'center' });
+
+    // Add total count
+    doc.text(`Total de produtos: ${products.length}`, 148, 29, { align: 'center' });
+
+    // Add table using autoTable
+    autoTable(doc, {
+      head: [headers],
+      body: rows,
+      startY: 35,
+      theme: 'grid',
+      styles: {
+        fontSize: 8,
+        cellPadding: 2,
+        font: 'helvetica'
+      },
+      headStyles: {
+        fillColor: [59, 130, 246], // blue-500
+        textColor: 255,
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: {
+        fillColor: [249, 250, 251] // gray-50
+      },
+      columnStyles: {
+        0: { cellWidth: 15 }, // Código
+        1: { cellWidth: 45 }, // Descrição
+        2: { cellWidth: 20 }, // Ref. Fab
+        3: { cellWidth: 10 }, // Un
+        4: { cellWidth: 25 }, // Preço Venda
+        5: { cellWidth: 25 }, // Preço Custo
+        6: { cellWidth: 15 }, // Estoque
+        7: { cellWidth: 15 }, // Est. Mín
+        8: { cellWidth: 15 }, // Status
+        9: { cellWidth: 30 }, // Categoria
+        10: { cellWidth: 20 } // NCM
+      },
+      margin: { top: 35, right: 10, bottom: 20, left: 10 }
+    });
+
+    // Add footer
+    const pageCount = doc.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.text(
+        `Página ${i} de ${pageCount}`,
+        148,
+        doc.internal.pageSize.height - 10,
+        { align: 'center' }
+      );
+      doc.text(
+        'Gerado por Sankhya Products Dashboard',
+        148,
+        doc.internal.pageSize.height - 5,
+        { align: 'center' }
+      );
+    }
+
+    // Save the PDF
+    doc.save(filename);
+  } catch (error) {
+    console.error('Erro ao exportar PDF:', error);
+    throw new Error('Falha ao exportar arquivo PDF');
+  }
+}

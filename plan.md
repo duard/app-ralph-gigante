@@ -83,7 +83,7 @@
 - [x] Adicionar filtro de período (hoje, semana, mês) para métricas
 - [x] Implementar exportação CSV usando react-csv
 - [x] Adicionar exportação Excel usando xlsx
-- [ ] Criar exportação PDF usando jsPDF ou react-pdf
+- [x] Criar exportação PDF usando jsPDF ou react-pdf
 - [ ] Sistema de atualização automática a cada 5 minutos para métricas em tempo real
 
 ### UI/UX
@@ -397,6 +397,8 @@ src/
 ## Progress
 
 Add entries below this line:
+
+- **2025-01-11**: ✅ Implementada exportação PDF usando jsPDF e jspdf-autotable. Adicionada funcionalidade completa de exportação PDF com formatação profissional de tabela, incluindo cabeçalho, data de geração, total de produtos, e rodapé com numeração de páginas. Implementada função `downloadPDF` com layout em landscape para melhor legibilidade, formatação de moeda brasileira, e tratamento de erros. Pacotes jspdf e jspdf-autotable instalados. Botão de exportação PDF adicionado à toolbar da tabela de produtos. Build e typecheck funcionando sem erros.
 
 - **2025-01-11**: ✅ Implementada exportação Excel usando xlsx package. Adicionada funcionalidade completa de exportação Excel com botão dedicado na toolbar da tabela de produtos. Implementada função `downloadExcel` com formatação adequada de colunas, larguras otimizadas para legibilidade, e tratamento de erros. Pacote xlsx adicionado como dependência. Build e lint funcionando sem erros críticos.
 
