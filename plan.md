@@ -39,7 +39,7 @@
 - [x] Exibição de dados do usuário logado (GET /auth/me)
  - [x] Persistência de sessão via localStorage
 - [x] Loading states durante autenticação
-- [ ] Tratamento de erros de autenticação com feedback visual
+- [x] Tratamento de erros de autenticação com feedback visual
 
 ### Listagem de Produtos
 - [x] Grid/Table de produtos com paginação

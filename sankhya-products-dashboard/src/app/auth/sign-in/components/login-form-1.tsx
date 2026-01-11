@@ -25,6 +25,7 @@ import {
 import { toast } from "sonner"
 import { authService } from "@/lib/api/auth-service"
 import { useAuthStore } from "@/stores/auth-store"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 const loginFormSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -38,7 +39,7 @@ export function LoginForm1({
   ...props
 }: React.ComponentProps<"div">) {
   const navigate = useNavigate()
-  const { login, setLoading, setError, isLoading } = useAuthStore()
+  const { login, setLoading, setError, isLoading, error } = useAuthStore()
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -166,6 +167,11 @@ export function LoginForm1({
           </Form>
         </CardContent>
       </Card>
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
