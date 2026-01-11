@@ -46,10 +46,10 @@
 - [x] Colunas configuráveis: codprod, descricao, codvol, unidade, preco, status
  - [x] Ordenação por todas as colunas clicáveis
 - [x] Filtros por nome, código, preço, status
-- [ ] Busca em tempo real com debounce (300ms)
+- [x] Busca em tempo real com debounce (300ms)
 - [x] Controles de paginação (page, perPage)
 - [x] Indicador de total, página atual e última página
-- [ ] Virtualização de lista para 1000+ produtos
+- [x] Virtualização de lista para 1000+ produtos
 - [x] Estados de loading (skeletons)
  - [x] Estados vazios (empty states)
 - [x] Estados de erro com retry
@@ -302,4 +302,6 @@ src/
 
 Add entries below this line:
 
+- **2025-01-11**: ✅ Implementado virtualização de lista para 1000+ produtos. Adicionado @tanstack/react-virtual para renderização eficiente, substituído corpo da tabela tradicional por contêiner de rolagem virtualizado, mantido cabeçalho fixo para melhor UX, configurado altura de linha ótima (57px) e overscan (5) para performance.
 - **2025-01-11**: ✅ Implementado modal/drawer de detalhes do produto com informações completas do TGFPRO, navegação entre produtos e botão de edição rápida. Componente criado em `src/components/products/product-details-modal.tsx` e integrado na tabela de produtos.
+- **2025-01-11**: ✅ Implementado busca em tempo real com debounce de 300ms. Criado utilitário `useDebounce` em `src/lib/utils/debounce.ts`, atualizado `ProductTableToolbar` para busca responsiva e `ProductList` para chamadas API debounced. A busca agora filtra localmente imediatamente para feedback visual e faz chamadas API com 300ms de debounce.
