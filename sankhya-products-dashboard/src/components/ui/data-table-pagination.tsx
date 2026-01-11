@@ -9,6 +9,7 @@ import {
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import {
   Select,
   SelectContent,
@@ -118,45 +119,73 @@ export function DataTablePagination<TData>({
           </Select>
         </div>
         <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex cursor-pointer disabled:cursor-not-allowed"
-            onClick={handleFirstPage}
-            disabled={!canPreviousPage}
-          >
-            <span className="sr-only">Primeira página</span>
-            <ChevronsLeft />
-          </Button>
-          <Button
-            variant="outline"
-            className="h-8 w-8 p-0 cursor-pointer disabled:cursor-not-allowed"
-            onClick={handlePreviousPage}
-            disabled={!canPreviousPage}
-          >
-            <span className="sr-only">Página anterior</span>
-            <ChevronLeft />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                className="hidden h-8 w-8 p-0 lg:flex cursor-pointer disabled:cursor-not-allowed"
+                onClick={handleFirstPage}
+                disabled={!canPreviousPage}
+              >
+                <span className="sr-only">Primeira página</span>
+                <ChevronsLeft />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Primeira página</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                className="h-8 w-8 p-0 cursor-pointer disabled:cursor-not-allowed"
+                onClick={handlePreviousPage}
+                disabled={!canPreviousPage}
+              >
+                <span className="sr-only">Página anterior</span>
+                <ChevronLeft />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Página anterior</p>
+            </TooltipContent>
+          </Tooltip>
           <div className="flex w-[100px] items-center justify-center text-sm font-medium">
             Página {currentPage} de {totalPages}
           </div>
-          <Button
-            variant="outline"
-            className="h-8 w-8 p-0 cursor-pointer disabled:cursor-not-allowed"
-            onClick={handleNextPage}
-            disabled={!canNextPage}
-          >
-            <span className="sr-only">Próxima página</span>
-            <ChevronRight />
-          </Button>
-          <Button
-            variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex cursor-pointer disabled:cursor-not-allowed"
-            onClick={handleLastPage}
-            disabled={!canNextPage}
-          >
-            <span className="sr-only">Última página</span>
-            <ChevronsRight />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                className="h-8 w-8 p-0 cursor-pointer disabled:cursor-not-allowed"
+                onClick={handleNextPage}
+                disabled={!canNextPage}
+              >
+                <span className="sr-only">Próxima página</span>
+                <ChevronRight />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Próxima página</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                className="hidden h-8 w-8 p-0 lg:flex cursor-pointer disabled:cursor-not-allowed"
+                onClick={handleLastPage}
+                disabled={!canNextPage}
+              >
+                <span className="sr-only">Última página</span>
+                <ChevronsRight />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Última página</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
     </div>

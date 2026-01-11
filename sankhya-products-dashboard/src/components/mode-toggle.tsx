@@ -4,6 +4,7 @@ import * as React from "react"
 import { Moon, Sun } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { useTheme } from "@/hooks/use-theme"
 import { useCircularTransition } from "@/hooks/use-circular-transition"
 import "./theme-customizer/circular-transition.css"
@@ -44,21 +45,28 @@ export function ModeToggle({ variant = "outline" }: ModeToggleProps) {
   }
 
   return (
-    <Button
-      variant={variant}
-      size="icon"
-      onClick={handleToggle}
-      className="cursor-pointer mode-toggle-button relative overflow-hidden"
-    >
-      {/* Show the icon for the mode you can switch TO */}
-      {isDarkMode ? (
-        <Sun className="h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-0 scale-100" />
-      ) : (
-        <Moon className="h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-0 scale-100" />
-      )}
-      <span className="sr-only">
-        Switch to {isDarkMode ? "light" : "dark"} mode
-      </span>
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          variant={variant}
+          size="icon"
+          onClick={handleToggle}
+          className="cursor-pointer mode-toggle-button relative overflow-hidden"
+        >
+          {/* Show the icon for the mode you can switch TO */}
+          {isDarkMode ? (
+            <Sun className="h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-0 scale-100" />
+          ) : (
+            <Moon className="h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-0 scale-100" />
+          )}
+          <span className="sr-only">
+            Switch to {isDarkMode ? "light" : "dark"} mode
+          </span>
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>Alternar para modo {isDarkMode ? "claro" : "escuro"}</p>
+      </TooltipContent>
+    </Tooltip>
   )
 }

@@ -19,6 +19,7 @@ import {
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { LoadingState } from "@/components/ui/loading"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 import { useProducts } from "@/hooks/use-products"
 import { toast } from "sonner"
@@ -314,16 +315,23 @@ export function CommandSearch({ open, onOpenChange }: CommandSearchProps) {
 
 export function SearchTrigger({ onClick }: { onClick: () => void }) {
   return (
-    <button
-      onClick={onClick}
-      className="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 px-3 py-1 relative w-full justify-start text-muted-foreground sm:pr-12 md:w-36 lg:w-56"
-    >
-      <Search className="mr-2 h-3.5 w-3.5" />
-      <span className="hidden lg:inline-flex">Buscar produtos...</span>
-      <span className="inline-flex lg:hidden">Buscar...</span>
-      <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-4 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-        <span className="text-xs">⌘</span>K
-      </kbd>
-    </button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          onClick={onClick}
+          className="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 px-3 py-1 relative w-full justify-start text-muted-foreground sm:pr-12 md:w-36 lg:w-56"
+        >
+          <Search className="mr-2 h-3.5 w-3.5" />
+          <span className="hidden lg:inline-flex">Buscar produtos...</span>
+          <span className="inline-flex lg:hidden">Buscar...</span>
+          <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-4 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+            <span className="text-xs">⌘</span>K
+          </kbd>
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>Buscar produtos (⌘K)</p>
+      </TooltipContent>
+    </Tooltip>
   )
 }

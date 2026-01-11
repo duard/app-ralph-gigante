@@ -12,6 +12,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { PRODUCT_TABLE_COLUMNS } from "@/lib/constants/product-constants"
 
 interface ProductTableViewOptionsProps<TData> {
@@ -24,14 +25,21 @@ export function ProductTableViewOptions<TData>({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="ml-auto hidden h-8 lg:flex cursor-pointer mr-2"
-        >
-          <Settings2 />
-          Colunas
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="ml-auto hidden h-8 lg:flex cursor-pointer mr-2"
+            >
+              <Settings2 />
+              Colunas
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Personalizar colunas visíveis</p>
+          </TooltipContent>
+        </Tooltip>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[150px]">
         <DropdownMenuLabel>Alternar colunas</DropdownMenuLabel>

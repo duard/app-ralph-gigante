@@ -12,6 +12,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 
 interface DataTableRowActionsProps<TData> {
@@ -25,13 +26,20 @@ export function DataTableRowActions<TData>({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted cursor-pointer"
-        >
-          <MoreHorizontal />
-          <span className="sr-only">Open menu</span>
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              className="flex h-8 w-8 p-0 data-[state=open]:bg-muted cursor-pointer"
+            >
+              <MoreHorizontal />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Ações</p>
+          </TooltipContent>
+        </Tooltip>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem className="cursor-pointer">View Task</DropdownMenuItem>

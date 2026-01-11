@@ -3,6 +3,7 @@
 import * as React from "react"
 import { AlertTriangle, RefreshCw, Home } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner"
@@ -76,30 +77,51 @@ function DefaultErrorFallback({
           </Alert>
           
           <div className="flex flex-col sm:flex-row gap-2 pt-4">
-            <Button 
-              onClick={onReset} 
-              variant="default"
-              className="flex-1 gap-2"
-            >
-              <RefreshCw className="h-4 w-4" />
-              Tentar novamente
-            </Button>
-            <Button 
-              onClick={handleReload} 
-              variant="outline"
-              className="flex-1 gap-2"
-            >
-              <RefreshCw className="h-4 w-4" />
-              Recarregar página
-            </Button>
-            <Button 
-              onClick={handleGoHome} 
-              variant="ghost"
-              className="flex-1 gap-2"
-            >
-              <Home className="h-4 w-4" />
-              Página inicial
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  onClick={onReset} 
+                  variant="default"
+                  className="flex-1 gap-2"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  Tentar novamente
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Tentar recuperar da falha</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  onClick={handleReload} 
+                  variant="outline"
+                  className="flex-1 gap-2"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  Recarregar página
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Recarregar página completamente</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  onClick={handleGoHome} 
+                  variant="ghost"
+                  className="flex-1 gap-2"
+                >
+                  <Home className="h-4 w-4" />
+                  Página inicial
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Ir para página inicial</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </CardContent>
       </Card>
