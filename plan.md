@@ -221,11 +221,11 @@
 - [x] Criar interface ProductWithRelations
 
 ### 4.2 Criar Zod Schemas de Produtos
-- [ ] Criar schema ProductSchema
-- [ ] Criar schema ProductFiltersSchema
-- [ ] Criar schema ProductFormSchema
-- [ ] Criar schema ProductSearchParamsSchema
-- [ ] Criar mensagens de erro customizadas
+- [x] Criar schema ProductSchema
+- [x] Criar schema ProductFiltersSchema
+- [x] Criar schema ProductFormSchema
+- [x] Criar schema ProductSearchParamsSchema
+- [x] Criar mensagens de erro customizadas
 
 ### 4.3 Criar Constantes de Produtos
 - [x] Criar constantes de colunas da tabela
@@ -235,14 +235,14 @@
 - [x] Criar constantes de unidades de medida
 
 ### 4.4 Criar Utilitários de Produtos
-- [ ] Criar formatProductCode
-- [ ] Criar formatProductName
-- [ ] Criar formatProductPrice
-- [ ] Criar formatProductStatus
-- [ ] Criar formatProductUnit
-- [ ] Criar getInitials
-- [ ] Criar slugify
-- [ ] Criar formatDate
+- [x] Criar formatProductCode
+- [x] Criar formatProductName
+- [x] Criar formatProductPrice
+- [x] Criar formatProductStatus
+- [x] Criar formatProductUnit
+- [x] Criar getInitials
+- [x] Criar slugify
+- [x] Criar formatDate
 
 ## FASE 5: API de Produtos
 
