@@ -5,8 +5,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatProductCode(code: string): string {
-  return code.toUpperCase().padStart(6, '0');
+export function formatProductCode(code: string | number): string {
+  return String(code).toUpperCase().padStart(6, '0');
 }
 
 export function formatProductName(name: string): string {
@@ -21,7 +21,7 @@ export function formatProductPrice(price: number): string {
 }
 
 export function formatProductStatus(status: string): string {
-  return status === 'active' ? 'Ativo' : 'Inativo';
+  return status === 'S' ? 'Ativo' : 'Inativo';
 }
 
 export function formatProductUnit(unit: string): string {

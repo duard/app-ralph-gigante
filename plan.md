@@ -364,7 +364,7 @@
 - [ ] Configurar meta tags e SEO
 
 ### 7.2 Implementar Listagem de Produtos
-- [ ] Criar ProductList component
+- [x] Criar ProductList component
 - [ ] Implementar tabela de produtos
 - [ ] Configurar colunas da tabela
 - [ ] Implementar ordenação de colunas
