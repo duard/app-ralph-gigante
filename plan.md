@@ -92,7 +92,7 @@
 - [ ] Exclusão em lote (bulk delete)
 
 ### Dashboard e Métricas
-- [ ] Criar componente DashboardCards com métricas: total produtos, ativos, inativos, sem estoque
+- [x] Criar componente DashboardCards com métricas: total produtos, ativos, inativos, sem estoque
 - [ ] Implementar gráfico de distribuição por categoria usando Recharts
 - [ ] Criar gráfico de tendência de preços com dados históricos
 - [ ] Adicionar tabela de produtos mais vendidos (top 10)
@@ -351,3 +351,5 @@ Add entries below this line:
 - **2025-01-11**: ✅ Implementado busca em tempo real com debounce de 300ms. Criado utilitário `useDebounce` em `src/lib/utils/debounce.ts`, atualizado `ProductTableToolbar` para busca responsiva e `ProductList` para chamadas API debounced. A busca agora filtra localmente imediatamente para feedback visual e faz chamadas API com 300ms de debounce.
 
 - **2025-01-11**: ✅ Implementada exportação CSV de produtos usando react-csv. Adicionadas funções `productsToCSV` e `downloadCSV` em `src/lib/utils/product-utils.ts` para converter produtos em formato CSV e realizar download. Adicionado botão "Exportar CSV" na barra de ferramentas da tabela de produtos que exporta todos os produtos visíveis com colunas: Código, Nome/Descrição, Ref. Fabricante, Unidade, Preço Venda, Preço Custo, Estoque, Estoque Mínimo, Status, Categoria, NCM, Peso Líquido, Peso Bruto. O arquivo é baixado com nome formatado `produtos-YYYY-MM-DD.csv`.
+
+- **2025-01-11**: ✅ Implementado componente DashboardCards com métricas de produtos. Criado componente que exibe cards com: Total de Produtos, Produtos Ativos, Produtos Sem Estoque e Valor Total em Estoque. Adicionado hook `useDashboardMetrics` para calcular métricas em tempo real a partir dos dados da store de produtos. Componente localizado em `src/app/dashboard/components/dashboard-cards.tsx` e hook em `src/hooks/use-dashboard-metrics.ts`.
