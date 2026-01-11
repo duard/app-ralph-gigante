@@ -41,13 +41,13 @@ export function DashboardLayout({ children, title, description }: DashboardLayou
             <SiteHeader />
             <div className="flex flex-1 flex-col">
               <div className="@container/main flex flex-1 flex-col gap-2">
-                <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                <div className="flex flex-col gap-3 sm:gap-4 py-3 sm:py-4 md:gap-6 md:py-6">
                   {title && (
-                    <div className="px-4 lg:px-6">
-                      <div className="flex flex-col gap-2">
-                        <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+                    <div className="px-3 sm:px-4 lg:px-6">
+                      <div className="flex flex-col gap-1 sm:gap-2">
+                        <h1 className="text-xl sm:text-2xl font-bold tracking-tight">{title}</h1>
                         {description && (
-                          <p className="text-muted-foreground">{description}</p>
+                          <p className="text-sm sm:text-base text-muted-foreground">{description}</p>
                         )}
                       </div>
                     </div>
@@ -65,13 +65,13 @@ export function DashboardLayout({ children, title, description }: DashboardLayou
             <SiteHeader />
             <div className="flex flex-1 flex-col">
               <div className="@container/main flex flex-1 flex-col gap-2">
-                <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                <div className="flex flex-col gap-3 sm:gap-4 py-3 sm:py-4 md:gap-6 md:py-6">
                   {title && (
-                    <div className="px-4 lg:px-6">
-                      <div className="flex flex-col gap-2">
-                        <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+                    <div className="px-3 sm:px-4 lg:px-6">
+                      <div className="flex flex-col gap-1 sm:gap-2">
+                        <h1 className="text-xl sm:text-2xl font-bold tracking-tight">{title}</h1>
                         {description && (
-                          <p className="text-muted-foreground">{description}</p>
+                          <p className="text-sm sm:text-base text-muted-foreground">{description}</p>
                         )}
                       </div>
                     </div>

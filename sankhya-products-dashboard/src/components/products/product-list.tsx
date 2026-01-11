@@ -218,126 +218,194 @@ export function ProductList({
   }
 
   return (
-    <div className="flex gap-6">
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block">
-        <ProductFiltersSidebar className="w-80" />
-      </div>
+    <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+      {/* Sidebar - Mobile accessible */}
+      <ProductFiltersSidebar className="w-full lg:w-80 lg:block" />
       
       {/* Main Content */}
       <div className="flex-1 space-y-4">
-      <ProductTableToolbar
-        table={table}
-        onSearch={(value) => {
-          setSearchValue(value)
-          // Trigger debounced API search
-          debouncedSearchProducts(value)
-        }}
-        onAddProduct={onAddProduct}
-        searchValue={searchValue}
-      />
-      <div className="rounded-md border">
-        <div 
-          ref={tableContainerRef}
-          className="h-[600px] overflow-auto"
-        >
-          <div className="min-w-full">
-            {/* Fixed header */}
-            <div className="sticky top-0 z-10 bg-background border-b">
-              <table className="w-full">
-                <thead>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id} className="border-b">
-                      {headerGroup.headers.map((header) => {
-                        return (
-                          <th 
-                            key={header.id} 
-                            colSpan={header.colSpan}
-                            className="px-4 py-3 text-left font-medium text-sm text-muted-foreground bg-background"
-                          >
-                            {header.isPlaceholder
-                              ? null
-                              : flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                                )}
-                          </th>
-                        )
-                      })}
-                    </tr>
-                  ))}
-                </thead>
-              </table>
-            </div>
-
-            {/* Virtualized body */}
-            <div
-              style={{
-                height: `${virtualizer.getTotalSize()}px`,
-                width: '100%',
-                position: 'relative',
-              }}
+        <ProductTableToolbar
+          table={table}
+          onSearch={(value) => {
+            setSearchValue(value)
+            // Trigger debounced API search
+            debouncedSearchProducts(value)
+          }}
+          onAddProduct={onAddProduct}
+          searchValue={searchValue}
+        />
+        
+        <div className="rounded-md border">
+          {/* Desktop Table View */}
+          <div className="hidden md:block">
+            <div 
+              ref={tableContainerRef}
+              className="h-[600px] overflow-auto"
             >
-              {table.getRowModel().rows?.length ? (
-                virtualizer.getVirtualItems().map((virtualItem) => {
-                  const row = table.getRowModel().rows[virtualItem.index]
-                  return (
-                    <div
-                      key={row.id}
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: `${virtualItem.size}px`,
-                        transform: `translateY(${virtualItem.start}px)`,
-                      }}
-                    >
-                      <table className="w-full">
-                        <tbody>
-                          <tr 
-                            className="border-b hover:bg-muted/50 data-[state=selected]:bg-muted"
-                            data-state={row.getIsSelected() && "selected"}
-                          >
-                            {row.getVisibleCells().map((cell) => (
-                              <td 
-                                key={cell.id}
-                                className="px-4 py-3 align-middle"
+              <div className="min-w-full">
+                {/* Fixed header */}
+                <div className="sticky top-0 z-10 bg-background border-b">
+                  <table className="w-full">
+                    <thead>
+                      {table.getHeaderGroups().map((headerGroup) => (
+                        <tr key={headerGroup.id} className="border-b">
+                          {headerGroup.headers.map((header) => {
+                            return (
+                              <th 
+                                key={header.id} 
+                                colSpan={header.colSpan}
+                                className="px-4 py-3 text-left font-medium text-sm text-muted-foreground bg-background"
                               >
-                                {flexRender(
-                                  cell.column.columnDef.cell,
-                                  cell.getContext()
-                                )}
-                              </td>
-                            ))}
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  )
-                })
-              ) : (
-                <div className="flex items-center justify-center h-24">
-                  <EmptyState />
+                                {header.isPlaceholder
+                                  ? null
+                                  : flexRender(
+                                      header.column.columnDef.header,
+                                      header.getContext()
+                                    )}
+                              </th>
+                            )
+                          })}
+                        </tr>
+                      ))}
+                    </thead>
+                  </table>
                 </div>
-              )}
+
+                {/* Virtualized body */}
+                <div
+                  style={{
+                    height: `${virtualizer.getTotalSize()}px`,
+                    width: '100%',
+                    position: 'relative',
+                  }}
+                >
+                  {table.getRowModel().rows?.length ? (
+                    virtualizer.getVirtualItems().map((virtualItem) => {
+                      const row = table.getRowModel().rows[virtualItem.index]
+                      return (
+                        <div
+                          key={row.id}
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: `${virtualItem.size}px`,
+                            transform: `translateY(${virtualItem.start}px)`,
+                          }}
+                        >
+                          <table className="w-full">
+                            <tbody>
+                              <tr 
+                                className="border-b hover:bg-muted/50 data-[state=selected]:bg-muted cursor-pointer"
+                                data-state={row.getIsSelected() && "selected"}
+                                onClick={() => {
+                                  setSelectedProduct(row.original)
+                                  setIsDetailsModalOpen(true)
+                                }}
+                              >
+                                {row.getVisibleCells().map((cell) => (
+                                  <td 
+                                    key={cell.id}
+                                    className="px-4 py-3 align-middle"
+                                  >
+                                    {flexRender(
+                                      cell.column.columnDef.cell,
+                                      cell.getContext()
+                                    )}
+                                  </td>
+                                ))}
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      )
+                    })
+                  ) : (
+                    <div className="flex items-center justify-center h-24">
+                      <EmptyState />
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* Mobile Card View */}
+          <div className="md:block lg:hidden p-4 space-y-3 max-h-[600px] overflow-y-auto">
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <div
+                  key={row.id}
+                  className="p-4 border rounded-lg bg-card hover:bg-muted/50 transition-colors cursor-pointer"
+                  data-state={row.getIsSelected() && "selected"}
+                  onClick={() => {
+                    setSelectedProduct(row.original)
+                    setIsDetailsModalOpen(true)
+                  }}
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-base leading-tight mb-1 truncate">
+                        {row.getValue("descrprod")}
+                      </h3>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Badge variant="outline" className="text-xs">
+                          #{formatProductCode(row.getValue("codprod"))}
+                        </Badge>
+                        <Badge variant={row.original.ativo === "S" ? "default" : "secondary"} className="text-xs">
+                          {row.original.ativo === "S" ? "Ativo" : "Inativo"}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="text-right ml-4">
+                      <p className="font-bold text-lg text-green-600">
+                        {formatProductPrice(row.getValue("vlrvenda"))}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="space-y-1">
+                        <span className="text-xs text-muted-foreground">Status</span>
+                        <div>
+                          <Badge variant={row.original.ativo === "S" ? "default" : "secondary"}>
+                            {row.original.ativo === "S" ? "Ativo" : "Inativo"}
+                          </Badge>
+                        </div>
+                      </div>
+                    
+                    <div className="space-y-1">
+                      <span className="text-xs text-muted-foreground">Unidade</span>
+                      <p className="font-medium">{row.getValue("codvol") || "-"}</p>
+                    </div>
+                    
+                    <div className="space-y-1 col-span-2">
+                      <span className="text-xs text-muted-foreground">Categoria</span>
+                      <p className="font-medium">{row.getValue("descrgrupoprod") || "-"}</p>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <EmptyState />
+            )}
+          </div>
         </div>
-      </div>
-      <DataTablePagination 
-        table={table}
-        pagination={pagination}
-        goToPage={goToPage}
-        changePageSize={changePageSize}
-      />
-      
-      <ProductDetailsModal
-        product={selectedProduct}
-        isOpen={isDetailsModalOpen}
-        onClose={handleCloseModal}
-        onEdit={handleModalEdit}
-      />
+        
+        <DataTablePagination 
+          table={table}
+          pagination={pagination}
+          goToPage={goToPage}
+          changePageSize={changePageSize}
+        />
+        
+        <ProductDetailsModal
+          product={selectedProduct}
+          isOpen={isDetailsModalOpen}
+          onClose={handleCloseModal}
+          onEdit={handleModalEdit}
+        />
       </div>
     </div>
   )

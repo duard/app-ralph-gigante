@@ -25,6 +25,7 @@ import { useProductsStore } from "@/stores/products-store"
 import { useProducts } from "@/hooks/use-products"
 import { filterPresetsStore, type FilterPreset } from "@/lib/stores/filter-presets-store"
 import { cn } from "@/lib/utils"
+import { formatCurrency } from "@/lib/utils/product-utils"
 import { toast } from "sonner"
 
 interface ProductFiltersSidebarProps {
@@ -561,10 +562,244 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
     return <>{children}</>
   }
 
-  // Otherwise, render as standalone sidebar
+  // Otherwise, render as standalone sidebar with mobile responsiveness
   return (
-    <div className={cn("w-full sm:w-80 border bg-background", className)}>
-      {content}
+    <div className={cn("w-full border bg-background", className)}>
+      <div className="sm:hidden">
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between p-4 border-b bg-muted/20">
+          <div className="flex items-center gap-2">
+            <SlidersHorizontal className="h-4 w-4" />
+            <h3 className="font-semibold">Filtros Avançados</h3>
+            {activeFiltersCount > 0 && (
+              <Badge variant="secondary" className="h-5 px-1 text-xs">
+                {activeFiltersCount}
+              </Badge>
+            )}
+          </div>
+          {hasActiveFilters && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearFilters}
+              className="h-8 px-2"
+            >
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+        
+        {/* Mobile Content - always expanded */}
+        <div className="p-4 space-y-4">
+          {/* Basic Filters - Always open on mobile */}
+          <div className="space-y-4">
+            <h4 className="font-medium text-sm">Filtros Básicos</h4>
+            
+            {/* Search */}
+            <div className="space-y-2">
+              <Label htmlFor="mobile-search">Buscar</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="mobile-search"
+                  placeholder="Código, nome ou ref. fabricante..."
+                  value={searchValue}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  className="pl-9"
+                />
+                {searchValue && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3"
+                    onClick={() => handleSearchChange('')}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {/* Status filter */}
+            <div className="space-y-2">
+              <Label htmlFor="mobile-status">Status</Label>
+              <Select value={statusValue} onValueChange={handleStatusChange}>
+                <SelectTrigger id="mobile-status">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="active">Ativos</SelectItem>
+                  <SelectItem value="inactive">Inativos</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Category & Unit - Always open on mobile */}
+          <div className="space-y-4">
+            <h4 className="font-medium text-sm">Categoria & Unidade</h4>
+            
+            {/* Category filter */}
+            {categories.length > 0 && (
+              <div className="space-y-2">
+                <Label htmlFor="mobile-category">Categoria</Label>
+                <Select 
+                  value={filters?.category || 'all'} 
+                  onValueChange={(value) => handleCategoryChange(value || '')}
+                >
+                  <SelectTrigger id="mobile-category">
+                    <SelectValue placeholder="Todas as categorias" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas as categorias</SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category || 'undefined'} value={category || ''}>
+                        {category || 'Sem categoria'}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {/* Unit filter */}
+            {units.length > 0 && (
+              <div className="space-y-2">
+                <Label htmlFor="mobile-unit">Unidade</Label>
+                <Select 
+                  value={filters?.unit || 'all'} 
+                  onValueChange={(value) => handleUnitChange(value || '')}
+                >
+                  <SelectTrigger id="mobile-unit">
+                    <SelectValue placeholder="Todas as unidades" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas as unidades</SelectItem>
+                    {units.map((unit) => (
+                      <SelectItem key={unit || 'undefined'} value={unit || ''}>
+                        {unit || 'Sem unidade'}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+          </div>
+
+          <Separator />
+
+          {/* Price Range - Always open on mobile */}
+          <div className="space-y-4">
+            <h4 className="font-medium text-sm">Faixa de Preço</h4>
+            
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                      <span>De: {formatCurrency(isNaN(currentPriceRange[0]) ? 0 : currentPriceRange[0])}</span>
+                      <span>Até: {formatCurrency(isNaN(currentPriceRange[1]) ? 0 : currentPriceRange[1])}</span>
+              </div>
+              <Slider
+                value={currentPriceRange}
+                onValueChange={handlePriceRangeChange}
+                min={priceRange.min}
+                max={priceRange.max}
+                step={1}
+                className="w-full"
+              />
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Mobile Presets - simplified */}
+          <div className="space-y-4">
+            <h4 className="font-medium text-sm">Filtros Salvos</h4>
+            
+            {!isCreatingPreset ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsCreatingPreset(true)}
+                className="w-full h-8"
+                disabled={!hasActiveFilters}
+              >
+                <Plus className="h-3 w-3 mr-1" />
+                Novo Preset
+              </Button>
+            ) : (
+              <div className="space-y-3">
+                <Input
+                  placeholder="Nome do preset..."
+                  value={newPresetName}
+                  onChange={(e) => setNewPresetName(e.target.value)}
+                  className="h-8"
+                />
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    onClick={handleSavePreset}
+                    disabled={!newPresetName.trim() || !hasActiveFilters}
+                    className="h-7"
+                  >
+                    <Save className="h-3 w-3 mr-1" />
+                    Salvar
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setIsCreatingPreset(false)
+                      setNewPresetName("")
+                    }}
+                    className="h-7"
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+                {!hasActiveFilters && (
+                  <p className="text-xs text-muted-foreground">
+                    Aplique alguns filtros antes de salvar
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Saved presets list */}
+            {savedPresets.length > 0 && (
+              <div className="space-y-2">
+                <div className="space-y-1 max-h-40 overflow-y-auto">
+                  {savedPresets.map((preset) => (
+                    <div
+                      key={preset.id}
+                      className="flex items-center justify-between p-2 rounded border bg-card hover:bg-muted/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Bookmark className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-sm">{preset.name}</span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeletePreset(preset.id, preset.name)}
+                        className="h-6 w-6 p-0"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      
+      {/* Desktop Sidebar */}
+      <div className="hidden sm:block">
+        {content}
+      </div>
     </div>
   )
 }

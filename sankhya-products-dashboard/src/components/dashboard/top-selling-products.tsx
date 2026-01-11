@@ -114,19 +114,19 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
 
   return (
     <Card className={cn("", className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <div>
-          <CardTitle className="flex items-center gap-2">
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0 pb-4">
+        <div className="space-y-1">
+          <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
             <BarChart3 className="h-5 w-5" />
             Produtos Mais Vendidos
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-sm">
             Top {limit} produtos por volume de vendas
           </CardDescription>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
           <Select value={period} onValueChange={(value: '30' | '90' | 'all') => setPeriod(value)}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="w-full sm:w-32">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -136,7 +136,7 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
             </SelectContent>
           </Select>
           <Select value={sortBy} onValueChange={(value: 'movimentacoes' | 'quantidade' | 'valor') => setSortBy(value)}>
-            <SelectTrigger className="w-32">
+            <SelectTrigger className="w-full sm:w-32">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -147,82 +147,156 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
           </Select>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         {topProducts.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-muted-foreground">
             <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
             <p>Nenhum dado de vendas disponível</p>
           </div>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-16">Posição</TableHead>
-                <TableHead>Produto</TableHead>
-                <TableHead className="text-right">Movimentações</TableHead>
-                <TableHead className="text-right">Quantidade</TableHead>
-                <TableHead className="text-right">Valor Total</TableHead>
-                <TableHead className="text-right">Última Mov.</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-16">Posição</TableHead>
+                    <TableHead>Produto</TableHead>
+                    <TableHead className="text-right">Movimentações</TableHead>
+                    <TableHead className="text-right">Quantidade</TableHead>
+                    <TableHead className="text-right">Valor Total</TableHead>
+                    <TableHead className="text-right">Última Mov.</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {topProducts.map((product) => (
+                    <TableRow
+                      key={product.codprod}
+                      className={cn("hover:bg-muted/50", getRankingColor(product.ranking))}
+                    >
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-2">
+                          {getRankingIcon(product.ranking)}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="space-y-1">
+                          <p className="font-medium text-sm">{product.descricao}</p>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="text-xs">
+                              #{product.codprod}
+                            </Badge>
+                            {product.codvol && (
+                              <Badge variant="secondary" className="text-xs">
+                                {product.codvol}
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <TrendingUp className="h-3 w-3 text-blue-500" />
+                          <span className="font-medium">{product.totalMovimentacoes}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <Package className="h-3 w-3 text-green-500" />
+                          <span className="font-medium">{product.totalQuantidade.toLocaleString()}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <DollarSign className="h-3 w-3 text-green-600" />
+                          <span className="font-medium text-green-600">
+                            {formatCurrency(product.totalValor)}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right text-sm text-muted-foreground">
+                        {new Date(product.ultimaMovimentacao).toLocaleDateString('pt-BR')}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-3">
               {topProducts.map((product) => (
-                <TableRow
+                <div
                   key={product.codprod}
-                  className={cn("hover:bg-muted/50", getRankingColor(product.ranking))}
+                  className={cn(
+                    "p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors",
+                    getRankingColor(product.ranking)
+                  )}
                 >
-                  <TableCell className="font-medium">
+                  <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
                       {getRankingIcon(product.ranking)}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-1">
-                      <p className="font-medium text-sm">{product.descricao}</p>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-xs">
-                          #{product.codprod}
-                        </Badge>
-                        {product.codvol && (
-                          <Badge variant="secondary" className="text-xs">
-                            {product.codvol}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-sm leading-tight truncate">
+                          {product.descricao}
+                        </h4>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge variant="outline" className="text-xs">
+                            #{product.codprod}
                           </Badge>
-                        )}
+                          {product.codvol && (
+                            <Badge variant="secondary" className="text-xs">
+                              {product.codvol}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <TrendingUp className="h-3 w-3 text-blue-500" />
-                      <span className="font-medium">{product.totalMovimentacoes}</span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-1 text-muted-foreground">
+                        <TrendingUp className="h-3 w-3" />
+                        <span className="text-xs">Movimentações</span>
+                      </div>
+                      <p className="font-medium">{product.totalMovimentacoes}</p>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <Package className="h-3 w-3 text-green-500" />
-                      <span className="font-medium">{product.totalQuantidade.toLocaleString()}</span>
+                    
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-1 text-muted-foreground">
+                        <Package className="h-3 w-3" />
+                        <span className="text-xs">Quantidade</span>
+                      </div>
+                      <p className="font-medium">{product.totalQuantidade.toLocaleString()}</p>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <DollarSign className="h-3 w-3 text-green-600" />
-                      <span className="font-medium text-green-600">
+                    
+                    <div className="space-y-1 col-span-2">
+                      <div className="flex items-center gap-1 text-muted-foreground">
+                        <DollarSign className="h-3 w-3" />
+                        <span className="text-xs">Valor Total</span>
+                      </div>
+                      <p className="font-medium text-green-600 text-base">
                         {formatCurrency(product.totalValor)}
-                      </span>
+                      </p>
                     </div>
-                  </TableCell>
-                  <TableCell className="text-right text-sm text-muted-foreground">
-                    {new Date(product.ultimaMovimentacao).toLocaleDateString('pt-BR')}
-                  </TableCell>
-                </TableRow>
+                    
+                    <div className="space-y-1 col-span-2">
+                      <span className="text-xs text-muted-foreground">Última Movimentação</span>
+                      <p className="text-sm font-medium">
+                        {new Date(product.ultimaMovimentacao).toLocaleDateString('pt-BR')}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               ))}
-            </TableBody>
-          </Table>
+            </div>
+          </>
         )}
 
         {topProducts.length > 0 && (
-          <div className="mt-4 pt-4 border-t">
-            <div className="flex justify-between text-sm text-muted-foreground">
+          <div className="pt-4 border-t">
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-4 text-sm text-muted-foreground">
               <span>Ordenado por: {
                 sortBy === 'valor' ? 'Valor Total' :
                 sortBy === 'quantidade' ? 'Quantidade Vendida' :

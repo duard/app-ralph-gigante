@@ -38,25 +38,25 @@ export default function Page() {
 
   return (
     <BaseLayout title="Dashboard" description="Bem-vindo ao seu dashboard de produtos">
-        <div className="@container/main px-4 lg:px-6 space-y-6">
-          {/* Auto-refresh controls */}
-          <div className="flex items-center justify-between p-4 bg-muted/20 rounded-lg">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <span>Atualização automática:</span>
-              <span className={isEnabled ? "text-green-600" : "text-red-600"}>
+        <div className="@container/main px-3 sm:px-4 lg:px-6 space-y-4 sm:space-y-6">
+          {/* Auto-refresh controls - Mobile-first responsive */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 bg-muted/20 rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-muted-foreground">
+              <span className="font-medium">Atualização automática:</span>
+              <span className={isEnabled ? "text-green-600 font-medium" : "text-red-600 font-medium"}>
                 {isEnabled ? "Ativada" : "Desativada"}
               </span>
               {isEnabled && (
-                <span>Próxima em: {formatTimeUntilRefresh(timeUntilNextRefresh)}</span>
+                <span className="text-xs sm:text-sm">Próxima em: {formatTimeUntilRefresh(timeUntilNextRefresh)}</span>
               )}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <button
                 onClick={() => {
                   toast.loading("Atualizando dados...");
                   refreshNow();
                 }}
-                className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
+                className="w-full sm:w-auto px-3 py-2 text-sm bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
               >
                 Atualizar Agora
               </button>
@@ -65,10 +65,10 @@ export default function Page() {
                   toggleAutoRefresh();
                   toast.success(isEnabled ? "Auto-refresh desativado" : "Auto-refresh ativado");
                 }}
-                className={`px-3 py-1 text-sm rounded transition-colors ${
+                className={`w-full sm:w-auto px-3 py-2 text-sm rounded-lg transition-colors font-medium ${
                   isEnabled
-                    ? "bg-red-100 text-red-800 hover:bg-red-200"
-                    : "bg-green-100 text-green-800 hover:bg-green-200"
+                    ? "bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900/20 dark:text-red-300"
+                    : "bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/20 dark:text-green-300"
                 }`}
               >
                 {isEnabled ? "Desativar" : "Ativar"} Auto-refresh
@@ -76,28 +76,49 @@ export default function Page() {
             </div>
           </div>
 
+           {/* Dashboard Cards - Responsive grid */}
            <DashboardCards
              period={cardsPeriod}
              onPeriodChange={setCardsPeriod}
              showPeriodSelector={true}
            />
-           <div className="grid gap-6 md:grid-cols-2">
-             <ChartAreaInteractive />
+
+           {/* Charts section - Responsive grid layout */}
+           <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
+             <div className="col-span-1 lg:col-span-1">
+               <ChartAreaInteractive />
+             </div>
+             <div className="col-span-1 lg:col-span-1">
+               <Suspense fallback={<LazyLoadingFallback />}>
+                 <LazyCategoryDistributionChart />
+               </Suspense>
+             </div>
+           </div>
+
+           {/* Price trend chart - Full width with responsive padding */}
+           <div className="w-full">
              <Suspense fallback={<LazyLoadingFallback />}>
-               <LazyCategoryDistributionChart />
+               <LazyPriceTrendChart />
              </Suspense>
            </div>
-           <Suspense fallback={<LazyLoadingFallback />}>
-             <LazyPriceTrendChart />
-           </Suspense>
-           <Suspense fallback={<LazyLoadingFallback />}>
-             <LazyTopSellingProducts />
-           </Suspense>
-           <Suspense fallback={<LazyLoadingFallback />}>
-             <LazyRecentProducts />
-           </Suspense>
+
+           {/* Tables section - Responsive stacking */}
+           <div className="grid gap-4 sm:gap-6 grid-cols-1 xl:grid-cols-2">
+             <div className="col-span-1 xl:col-span-1">
+               <Suspense fallback={<LazyLoadingFallback />}>
+                 <LazyTopSellingProducts />
+               </Suspense>
+             </div>
+             <div className="col-span-1 xl:col-span-1">
+               <Suspense fallback={<LazyLoadingFallback />}>
+                 <LazyRecentProducts />
+               </Suspense>
+             </div>
+           </div>
         </div>
-        <div className="@container/main">
+        
+        {/* DataTable section - Responsive container */}
+        <div className="@container/main px-3 sm:px-4 lg:px-6 mt-4 sm:mt-6">
            <DataTable
              data={data}
              pastPerformanceData={pastPerformanceData}
