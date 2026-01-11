@@ -21,26 +21,22 @@ interface FormErrors {
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
-    const [showPassword, setShowPassword] = useState(false);
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('CONVIDADO');
+    const [password, setPassword] = useState('guest123');
     const [rememberMe, setRememberMe] = useState(false);
     const [errors, setErrors] = useState<FormErrors>({});
+    const [showPassword, setShowPassword] = useState(false);
     const { login, isLoading } = useAuth();
 
     const validate = (): boolean => {
         const newErrors: FormErrors = {};
 
         if (!username) {
-            newErrors.username = 'Usuário é obrigatório';
-        } else if (username.length < 3) {
-            newErrors.username = 'Usuário deve ter ao menos 3 caracteres';
+            newErrors.username = 'Username é obrigatório';
         }
 
         if (!password) {
-            newErrors.password = 'Senha é obrigatória';
-        } else if (password.length < 6) {
-            newErrors.password = 'Senha deve ter ao menos 6 caracteres';
+            newErrors.password = 'Password é obrigatório';
         }
 
         setErrors(newErrors);
@@ -66,11 +62,11 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     return (
         <form onSubmit={onSubmit} className="space-y-5">
             <div className="space-y-2">
-                <Label htmlFor="username" className="text-sm font-medium">Usuário</Label>
+                <Label htmlFor="username" className="text-sm font-medium">Username</Label>
                 <Input
                     id="username"
                     type="text"
-                    placeholder="Digite seu usuário"
+                    placeholder="Digite seu username"
                     autoComplete="username"
                     disabled={isLoading}
                     className="h-11 px-4 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-primary/20"
@@ -86,11 +82,11 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium">Senha</Label>
+                <Label htmlFor="password" className="text-sm font-medium">Password</Label>
                 <div className="relative">
                     <Input
                         id="password"
-                        type={showPassword ? 'text' : 'password'}
+                        type={showPassword ? "text" : "password"}
                         placeholder="Digite sua senha"
                         autoComplete="current-password"
                         disabled={isLoading}
@@ -104,8 +100,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                     <Button
                         type="button"
                         variant="ghost"
-                        size="icon"
-                        className="absolute right-0 top-0 h-11 w-11 hover:bg-transparent text-muted-foreground hover:text-foreground"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                         onClick={() => setShowPassword(!showPassword)}
                         disabled={isLoading}
                     >
@@ -114,9 +110,6 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                         ) : (
                             <Eye className="h-4 w-4" />
                         )}
-                        <span className="sr-only">
-                            {showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-                        </span>
                     </Button>
                 </div>
                 {errors.password && (
@@ -167,13 +160,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             </Button>
 
             <div className="text-center text-sm text-muted-foreground">
-                Não tem uma conta?{' '}
-                <Link
-                    to="/auth/sign-up"
-                    className="font-medium text-primary hover:text-primary/80 transition-colors"
-                >
-                    Cadastre-se
-                </Link>
+                Entre com suas credenciais Sankhya para acessar o dashboard.
             </div>
         </form>
     );

@@ -57,10 +57,11 @@ export function LoginForm1({
       const response = await authService.login({
         username: values.username,
         password: values.password,
+        rememberMe: false, // TODO: Add remember me checkbox to form
       })
 
       const token = response.access_token
-      const refreshToken = null // No refresh token in this API
+      const refreshToken = '' // No refresh token in this API
 
       // Create user object from username
       const user = {
@@ -72,7 +73,7 @@ export function LoginForm1({
       }
 
       // Store tokens and update auth state
-      authService.storeTokens(token, refreshToken)
+      authService.storeTokens(token, refreshToken, false)
       authService.setAuthHeader(token)
 
       // Update store

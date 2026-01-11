@@ -44,7 +44,7 @@ export interface RefreshResponse {
  */
 export const authService = {
     /**
-     * Login with username and password
+     * Login with Sankhya credentials
      */
     async login(credentials: LoginRequest): Promise<LoginResponse> {
         return post<LoginResponse>('/auth/login', {

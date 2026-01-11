@@ -35,7 +35,7 @@ export function useAuth() {
 
                 if (response.access_token) {
                     // Store tokens securely based on rememberMe
-                    authService.storeTokens(response.access_token, '', credentials.rememberMe); // Note: API doesn't return refresh token yet
+                    authService.storeTokens(response.access_token, '', credentials.rememberMe || false); // Note: API doesn't return refresh token yet
                     authService.setAuthHeader(response.access_token);
 
                     // Fetch user data after login
