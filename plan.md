@@ -59,7 +59,7 @@
 - [x] Configurar React Router v7
 - [x] Criar estrutura de rotas em src/config/routes.tsx
 - [x] Criar layout público (sem autenticação)
-- [ ] Criar layout protegido (com autenticação)
+- [x] Criar layout protegido (com autenticação)
 - [x] Criar layout de dashboard (com sidebar)
 - [x] Configurar fallback routes (404)
 - [x] Configurar rota de redirecionamento raiz
