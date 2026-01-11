@@ -119,29 +119,36 @@ export const authService = {
     },
 
     /**
-     * Store tokens in localStorage
+     * Store tokens securely based on rememberMe preference
+     * - If rememberMe: store both tokens in localStorage
+     * - If not: store access_token in sessionStorage, don't store refreshToken
      */
-    storeTokens(token: string, refreshToken: string): void {
-        localStorage.setItem('auth_token', token);
-        localStorage.setItem('refresh_token', refreshToken);
+    storeTokens(token: string, refreshToken: string, rememberMe: boolean): void {
+        if (rememberMe) {
+            localStorage.setItem('auth_token', token);
+            localStorage.setItem('refresh_token', refreshToken);
+        } else {
+            sessionStorage.setItem('auth_token', token);
+            // Don't store refreshToken for security
+        }
     },
 
     /**
-     * Get stored tokens
+     * Get stored tokens from localStorage or sessionStorage
      */
     getStoredTokens(): { token: string | null; refreshToken: string | null } {
-        return {
-            token: localStorage.getItem('auth_token'),
-            refreshToken: localStorage.getItem('refresh_token'),
-        };
+        const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+        const refreshToken = localStorage.getItem('refresh_token');
+        return { token, refreshToken };
     },
 
     /**
-     * Clear stored tokens
+     * Clear stored tokens from both storages
      */
     clearTokens(): void {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('refresh_token');
+        sessionStorage.removeItem('auth_token');
     },
 
     /**

@@ -31,7 +31,7 @@
 
 ### Autenticação e Segurança
 - [x] Sistema de login funcional consumindo POST /auth/login
-- [ ] Armazenamento seguro de tokens (access_token e refresh_token)
+- [x] Armazenamento seguro de tokens (access_token e refresh_token)
 - [ ] Renovação automática de token ao expirar (401 → refresh)
 - [ ] Interceptores Axios para adicionar Authorization header
 - [ ] Logout funcional removendo tokens

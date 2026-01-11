@@ -36,8 +36,8 @@ export function useAuth() {
                 if (response.success) {
                     const { user, token, refreshToken } = response.data;
 
-                    // Store tokens
-                    authService.storeTokens(token, refreshToken);
+                    // Store tokens securely based on rememberMe
+                    authService.storeTokens(token, refreshToken, credentials.rememberMe);
                     authService.setAuthHeader(token);
 
                     // Update store
