@@ -106,7 +106,7 @@
 ### UI/UX
 - [ ] Melhorar layout responsivo com breakpoints mobile-first usando Tailwind
 - [ ] Implementar navegação lateral (sidebar) com menus expansíveis
-- [ ] Adicionar breadcrumb de navegação usando react-router
+- [x] Adicionar breadcrumb de navegação usando react-router
 - [ ] Criar barra de busca global no header
 - [ ] Configurar notificações toast usando Sonner em todas as ações
 - [ ] Padronizar loading states com skeletons consistentes
@@ -340,6 +340,8 @@ src/
 ## Progress
 
 Add entries below this line:
+
+- **2025-01-11**: ✅ Implementado componente breadcrumb-nav.tsx com navegação por breadcrumb usando react-router. Criado componente que utiliza useLocation para obter o caminho atual, gera itens de breadcrumb baseados nos segmentos da URL e integra com os componentes de breadcrumb do shadcn-ui. O componente foi adicionado ao BaseLayout para aparecer em todas as páginas protegidas. Componente localizado em `src/components/breadcrumb-nav.tsx`.
 
 - **2025-01-11**: ✅ Implementado componente product-form.tsx com UI completa de CRUD em modo somente leitura. Criado formulário com 4 abas (Básico, Preços, Estoque, Adicional), validação Zod, upload de imagem com preview, campos monetários formatados, salvamento automático de rascunho e tratamento de estados de loading/error. Componente localizado em `src/components/products/product-form.tsx`.
 
