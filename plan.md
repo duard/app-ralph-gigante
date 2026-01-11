@@ -22,12 +22,12 @@
 - [x] Configurar path aliases (@/*)
 
 ### 1.3 Configuração Vite
-- [ ] Configurar vite.config.ts
-- [ ] Configurar proxy para API Sankhya (localhost:3000)
-- [ ] Configurar build optimizations
-- [ ] Configurar source maps para desenvolvimento
-- [ ] Configurar HMR (Hot Module Replacement)
-- [ ] Otimizar configuração de assets
+- [x] Configurar vite.config.ts
+- [x] Configurar proxy para API Sankhya (localhost:3000)
+- [x] Configurar build optimizations
+- [x] Configurar source maps para desenvolvimento
+- [x] Configurar HMR (Hot Module Replacement)
+- [x] Otimizar configuração de assets
 
 ### 1.4 Configuração ESLint e Prettier
 - [ ] Configurar eslint.config.js
