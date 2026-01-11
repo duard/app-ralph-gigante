@@ -270,7 +270,7 @@
 - [x] Implementar optimistic updates
 
 ### 5.3 Criar Store de Produtos
-- [ ] Criar productsStore com Zustand
+- [x] Criar productsStore com Zustand
 - [ ] Adicionar estado: products, product, filters, pagination
 - [ ] Adicionar actions: setProducts, setProduct, setFilters
 - [ ] Adicionar computed: filteredProducts, sortedProducts
