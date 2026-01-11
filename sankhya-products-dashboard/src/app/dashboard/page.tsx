@@ -9,6 +9,8 @@ import {
   LazyCategoryDistributionChart,
   LazyLoadingFallback
 } from "@/components/lazy-dashboard"
+import { DataBoundaryWrapper } from "@/components/ui/data-error-boundary"
+import { ErrorBoundary } from "@/components/ui/error-boundary"
 
 import { useDashboardAutoRefresh } from "@/hooks/use-auto-refresh"
 import { Suspense, useState } from "react"
@@ -77,42 +79,58 @@ export default function Page() {
           </div>
 
            {/* Dashboard Cards - Responsive grid */}
-           <DashboardCards
-             period={cardsPeriod}
-             onPeriodChange={setCardsPeriod}
-             showPeriodSelector={true}
-           />
+           <ErrorBoundary title="Erro no Dashboard Cards">
+             <DataBoundaryWrapper title="Erro ao carregar métricas">
+               <DashboardCards
+                 period={cardsPeriod}
+                 onPeriodChange={setCardsPeriod}
+                 showPeriodSelector={true}
+               />
+             </DataBoundaryWrapper>
+           </ErrorBoundary>
 
            {/* Charts section - Responsive grid layout */}
            <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
              <div className="col-span-1 lg:col-span-1">
-               <ChartAreaInteractive />
+               <ErrorBoundary title="Erro no Gráfico Interativo">
+                 <DataBoundaryWrapper title="Erro ao carregar gráfico">
+                   <ChartAreaInteractive />
+                 </DataBoundaryWrapper>
+               </ErrorBoundary>
              </div>
              <div className="col-span-1 lg:col-span-1">
-               <Suspense fallback={<LazyLoadingFallback />}>
-                 <LazyCategoryDistributionChart />
-               </Suspense>
+               <ErrorBoundary title="Erro no Gráfico de Categorias">
+                 <Suspense fallback={<LazyLoadingFallback />}>
+                   <LazyCategoryDistributionChart />
+                 </Suspense>
+               </ErrorBoundary>
              </div>
            </div>
 
            {/* Price trend chart - Full width with responsive padding */}
            <div className="w-full">
-             <Suspense fallback={<LazyLoadingFallback />}>
-               <LazyPriceTrendChart />
-             </Suspense>
+             <ErrorBoundary title="Erro no Gráfico de Tendências">
+               <Suspense fallback={<LazyLoadingFallback />}>
+                 <LazyPriceTrendChart />
+               </Suspense>
+             </ErrorBoundary>
            </div>
 
            {/* Tables section - Responsive stacking */}
            <div className="grid gap-4 sm:gap-6 grid-cols-1 xl:grid-cols-2">
              <div className="col-span-1 xl:col-span-1">
-               <Suspense fallback={<LazyLoadingFallback />}>
-                 <LazyTopSellingProducts />
-               </Suspense>
+               <ErrorBoundary title="Erro em Produtos Mais Vendidos">
+                 <Suspense fallback={<LazyLoadingFallback />}>
+                   <LazyTopSellingProducts />
+                 </Suspense>
+               </ErrorBoundary>
              </div>
              <div className="col-span-1 xl:col-span-1">
-               <Suspense fallback={<LazyLoadingFallback />}>
-                 <LazyRecentProducts />
-               </Suspense>
+               <ErrorBoundary title="Erro em Produtos Recentes">
+                 <Suspense fallback={<LazyLoadingFallback />}>
+                   <LazyRecentProducts />
+                 </Suspense>
+               </ErrorBoundary>
              </div>
            </div>
         </div>
