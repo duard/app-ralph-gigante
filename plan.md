@@ -65,12 +65,12 @@
 - [x] Configurar rota de redirecionamento raiz
 
 ### 2.2 Configuração de Tema
-- [ ] Configurar next-themes (dark/light mode)
-- [ ] Criar ThemeProvider
-- [ ] Criar hook useTheme
+- [x] Configurar next-themes (dark/light mode)
+- [x] Criar ThemeProvider
+- [x] Criar hook useTheme
 - [ ] Configurar variáveis CSS para temas
 - [ ] Criar ThemeToggle component
-- [ ] Configurar persistência de tema no localStorage
+- [x] Configurar persistência de tema no localStorage
 
 ### 2.3 Configuração de Tailwind CSS
 - [ ] Configurar tailwind.config.ts
@@ -212,13 +212,13 @@
 ## FASE 4: Tipos e Interfaces de Produtos
 
 ### 4.1 Criar Tipos Base de Produtos
-- [ ] Criar interface Product
-- [ ] Criar interface ProductListResponse
-- [ ] Criar interface ProductFilters
-- [ ] Criar interface ProductPagination
-- [ ] Criar interface ProductSearchParams
-- [ ] Criar interface ProductFormData
-- [ ] Criar interface ProductWithRelations
+- [x] Criar interface Product
+- [x] Criar interface ProductListResponse
+- [x] Criar interface ProductFilters
+- [x] Criar interface ProductPagination
+- [x] Criar interface ProductSearchParams
+- [x] Criar interface ProductFormData
+- [x] Criar interface ProductWithRelations
 
 ### 4.2 Criar Zod Schemas de Produtos
 - [ ] Criar schema ProductSchema
