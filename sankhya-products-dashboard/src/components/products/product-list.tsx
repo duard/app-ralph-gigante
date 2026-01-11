@@ -23,15 +23,17 @@ import { Skeletons } from "@/components/ui/skeletons"
 import { useProducts } from "@/hooks/use-products"
 import type { Product } from "@/stores/products-store"
 import { formatProductCode, formatProductPrice, formatProductStatus } from "@/lib/utils/product-utils"
-import { ProductTableToolbar } from "./product-table-toolbar"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { ErrorState } from "@/components/ui/error-state"
 import { Package } from "lucide-react"
-import { ProductDetailsModal } from "./product-details-modal"
-
-
+import { 
+  LazyProductDetailsModal,
+  LazyProductFiltersSidebar,
+  LazyProductTableToolbar,
+  LazyProductLoadingFallback
+} from "@/components/lazy-products"
 import { useDebounce } from "@/lib/utils/debounce"
-import { ProductFiltersSidebar } from "./product-filters-sidebar"
+import { Suspense } from "react"
 
 
 
@@ -220,20 +222,24 @@ export function ProductList({
   return (
     <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
       {/* Sidebar - Mobile accessible */}
-      <ProductFiltersSidebar className="w-full lg:w-80 lg:block" />
+      <Suspense fallback={<LazyProductLoadingFallback />}>
+        <LazyProductFiltersSidebar className="w-full lg:w-80 lg:block" />
+      </Suspense>
       
-      {/* Main Content */}
-      <div className="flex-1 space-y-4">
-        <ProductTableToolbar
-          table={table}
-          onSearch={(value) => {
-            setSearchValue(value)
-            // Trigger debounced API search
-            debouncedSearchProducts(value)
-          }}
-          onAddProduct={onAddProduct}
-          searchValue={searchValue}
-        />
+       {/* Main Content */}
+       <div className="flex-1 space-y-4">
+         <Suspense fallback={<LazyProductLoadingFallback />}>
+           <LazyProductTableToolbar
+             table={table}
+             onSearch={(value: string) => {
+               setSearchValue(value)
+               // Trigger debounced API search
+               debouncedSearchProducts(value)
+             }}
+             onAddProduct={onAddProduct}
+             searchValue={searchValue}
+           />
+         </Suspense>
         
         <div className="rounded-md border">
           {/* Desktop Table View */}
@@ -400,12 +406,14 @@ export function ProductList({
           changePageSize={changePageSize}
         />
         
-        <ProductDetailsModal
-          product={selectedProduct}
-          isOpen={isDetailsModalOpen}
-          onClose={handleCloseModal}
-          onEdit={handleModalEdit}
-        />
+         <Suspense fallback={<LazyProductLoadingFallback />}>
+           <LazyProductDetailsModal
+             product={selectedProduct}
+             isOpen={isDetailsModalOpen}
+             onClose={handleCloseModal}
+             onEdit={handleModalEdit}
+           />
+         </Suspense>
       </div>
     </div>
   )

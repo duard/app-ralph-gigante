@@ -97,7 +97,7 @@
 - [x] Adicionar animações em modais e drawers usando Framer Motion
 - [ ] Incluir tooltips em botões de ação usando Radix UI
 - [x] Implementar toggle dark/light theme com persistência
-- [ ] Adicionar customização de cor primária do tema
+- [x] Adicionar customização de cor primária do tema
 - [ ] Criar transições suaves entre páginas com page transitions
 
 ### Performance
@@ -396,6 +396,8 @@ src/
 ## Progress
 
 Add entries below this line:
+
+- **2025-01-11**: ✅ Enhanced primary color customization with prominent UI and quick presets. Moved primary color customization to prominent section at top of theme customizer, added 8 quick color presets (Blue, Green, Purple, Orange, Red, Pink, Teal, Indigo), implemented automatic contrast detection for primary-foreground color, improved color picker with better handling of oklch and hex color formats, enhanced user experience with hover tooltips on color presets, made primary color customization more accessible and user-friendly, updated additional brand colors to collapsed accordion for cleaner UI, and fixed TypeScript linting errors in color picker component. Build and typecheck working successfully.
 
 - **2025-01-11**: ✅ Implementar tooltips em botões de ação usando Radix UI. Adicionados tooltips informativos em botões principais da aplicação incluindo ProductTableToolbar (exportações e ações), ProductTableViewOptions (personalização de colunas), DataTablePagination (navegação de páginas), DataTableRowActions (menu de ações), ModeToggle (alternância de tema), ErrorBoundary (botões de recuperação), SearchTrigger (atalho de teclado), e DataTable (cabeçalhos ordenáveis). Corrigidos erros TypeScript em add-task-modal.tsx. Build e lint funcionando sem erros críticos.
 
