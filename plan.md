@@ -261,7 +261,7 @@
 - [ ] Criar hook useProducts
 - [x] Criar hook useProduct
 - [x] Criar hook useCreateProduct
-- [ ] Criar hook useUpdateProduct
+- [x] Criar hook useUpdateProduct
 - [ ] Criar hook useDeleteProduct
 - [ ] Criar hook useSearchProducts
 - [ ] Criar hook useProductFilters
