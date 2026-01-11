@@ -55,15 +55,15 @@
 - [x] Estados de erro com retry
 
 ### Detalhes do Produto
-- [ ] Modal/Drawer para detalhes do produto
-- [ ] Exibição completa dos campos do TGFPRO
+- [x] Modal/Drawer para detalhes do produto
+- [x] Exibição completa dos campos do TGFPRO
 - [ ] Imagem do produto (se disponível)
 - [ ] Histórico de preços (via API endpoints)
-- [ ] Informações relacionadas (grupo, classe, seção)
-- [ ] Estoque disponível
-- [ ] Animações de entrada/saída
-- [ ] Navegação entre produtos (anterior/próximo)
-- [ ] Botão de edição rápida
+- [x] Informações relacionadas (grupo, classe, seção)
+- [x] Estoque disponível
+- [x] Animações de entrada/saída
+- [x] Navegação entre produtos (anterior/próximo)
+- [x] Botão de edição rápida
 
 ### Filtros Avançados
 - [ ] Sidebar de filtros colapsável
@@ -301,3 +301,5 @@ src/
 ## Progress
 
 Add entries below this line:
+
+- **2025-01-11**: ✅ Implementado modal/drawer de detalhes do produto com informações completas do TGFPRO, navegação entre produtos e botão de edição rápida. Componente criado em `src/components/products/product-details-modal.tsx` e integrado na tabela de produtos.

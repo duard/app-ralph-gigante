@@ -24,6 +24,7 @@ import { formatProductCode, formatProductPrice, formatProductStatus } from "@/li
 import { ProductTableToolbar } from "./product-table-toolbar"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { ErrorState } from "@/components/ui/error-state"
+import { ProductDetailsModal } from "./product-details-modal"
 import { Package } from "lucide-react"
 import {
   Table,
@@ -88,19 +89,30 @@ const columns: ColumnDef<Product>[] = [
   {
     id: "actions",
     header: "Ações",
-    cell: ({ row: _row }) => (
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm">
-          Ver
-        </Button>
-        <Button variant="ghost" size="sm">
-          Editar
-        </Button>
-        <Button variant="ghost" size="sm" className="text-destructive">
-          Excluir
-        </Button>
-      </div>
-    ),
+    cell: ({ row }) => {
+      const product = row.original
+      return (
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => handleViewProduct(product)}
+          >
+            Ver
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => handleEditProduct(product)}
+          >
+            Editar
+          </Button>
+          <Button variant="ghost" size="sm" className="text-destructive">
+            Excluir
+          </Button>
+        </div>
+      )
+    },
   },
   {
     accessorKey: "codvol",
@@ -166,10 +178,12 @@ function EmptyState() {
 
 interface ProductListProps {
   onAddProduct?: () => void
+  onEditProduct?: (product: Product) => void
 }
 
 export function ProductList({
   onAddProduct,
+  onEditProduct,
 }: ProductListProps) {
   const {
     filteredProducts,
@@ -187,6 +201,8 @@ export function ProductList({
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
   const [searchValue, setSearchValue] = React.useState("")
+  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null)
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = React.useState(false)
 
   const table = useReactTable({
     data: filteredProducts,
@@ -217,6 +233,27 @@ export function ProductList({
     table.setPageIndex(pagination.page - 1)
     table.setPageSize(pagination.pageSize)
   }, [pagination.page, pagination.pageSize, table])
+
+  const handleViewProduct = (product: Product) => {
+    setSelectedProduct(product)
+    setIsDetailsModalOpen(true)
+  }
+
+  const handleEditProduct = (product: Product) => {
+    if (onEditProduct) {
+      onEditProduct(product)
+    }
+  }
+
+  const handleModalEdit = (product: Product) => {
+    setIsDetailsModalOpen(false)
+    handleEditProduct(product)
+  }
+
+  const handleCloseModal = () => {
+    setIsDetailsModalOpen(false)
+    setSelectedProduct(null)
+  }
 
   if (isLoading) {
     return <ProductListSkeleton />
@@ -297,6 +334,13 @@ export function ProductList({
         pagination={pagination}
         goToPage={goToPage}
         changePageSize={changePageSize}
+      />
+      
+      <ProductDetailsModal
+        product={selectedProduct}
+        isOpen={isDetailsModalOpen}
+        onClose={handleCloseModal}
+        onEdit={handleModalEdit}
       />
     </div>
   )
