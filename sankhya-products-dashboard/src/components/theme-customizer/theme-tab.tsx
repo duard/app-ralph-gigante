@@ -15,6 +15,18 @@ import type { ImportedTheme } from '@/types/theme-customizer'
 import React from 'react'
 import "./circular-transition.css"
 
+// Common primary color presets for quick selection
+const primaryColorPresets = [
+  { name: 'Blue', value: '#3b82f6' },
+  { name: 'Green', value: '#10b981' },
+  { name: 'Purple', value: '#8b5cf6' },
+  { name: 'Orange', value: '#f97316' },
+  { name: 'Red', value: '#ef4444' },
+  { name: 'Pink', value: '#ec4899' },
+  { name: 'Teal', value: '#14b8a6' },
+  { name: 'Indigo', value: '#6366f1' },
+]
+
 interface ThemeTabProps {
   selectedTheme: string
   setSelectedTheme: (theme: string) => void
@@ -81,6 +93,35 @@ export function ThemeTab({
   const handleDarkMode = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (isDarkMode === true) return
     toggleTheme(event)
+  }
+
+  // Helper function to determine appropriate foreground color based on primary color
+  const getContrastColor = (hexColor: string) => {
+    // Convert hex to RGB
+    const hex = hexColor.replace('#', '')
+    const r = parseInt(hex.substr(0, 2), 16)
+    const g = parseInt(hex.substr(2, 2), 16)
+    const b = parseInt(hex.substr(4, 2), 16)
+    
+    // Calculate luminance
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+    
+    // Return white for dark colors, black for light colors
+    return luminance > 0.5 ? '#000000' : '#ffffff'
+  }
+
+  // Enhanced color change handler that also updates foreground color for better contrast
+  const handlePrimaryColorChange = (cssVar: string, value: string) => {
+    handleColorChange(cssVar, value)
+    
+    // If changing primary color, automatically adjust foreground color for better contrast
+    if (cssVar === '--primary' && value.startsWith('#')) {
+      const contrastingColor = getContrastColor(value)
+      // Only auto-set if user hasn't manually set a custom foreground color
+      if (!brandColorsValues['--primary-foreground']) {
+        handleColorChange('--primary-foreground', contrastingColor)
+      }
+    }
   }
 
   return (
@@ -262,14 +303,61 @@ export function ThemeTab({
         </Button>
       </div>
 
-      {/* Brand Colors Section */}
+      {/* Primary Color Customization - Prominently displayed */}
+      <div className="space-y-3 p-3 bg-gradient-to-r from-primary/5 to-primary/10 border border-primary/20 rounded-lg">
+        <div className="flex items-center gap-2">
+          <Palette className="h-4 w-4 text-primary" />
+          <Label className="text-sm font-semibold text-primary">Primary Color</Label>
+        </div>
+        <div className="space-y-2">
+          <ColorPicker
+            label="Primary Brand Color"
+            cssVar="--primary"
+            value={brandColorsValues["--primary"] || ""}
+            onChange={handlePrimaryColorChange}
+          />
+          <ColorPicker
+            label="Primary Text Color"
+            cssVar="--primary-foreground"
+            value={brandColorsValues["--primary-foreground"] || ""}
+            onChange={handleColorChange}
+          />
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Customize the primary brand color used throughout the application
+        </p>
+        
+        {/* Quick Color Presets */}
+        <div className="pt-2">
+          <Label className="text-xs font-medium text-muted-foreground">Quick Presets</Label>
+          <div className="grid grid-cols-4 gap-1.5 mt-2">
+            {primaryColorPresets.map((preset) => (
+              <button
+                key={preset.value}
+                onClick={() => handlePrimaryColorChange('--primary', preset.value)}
+                className="h-6 rounded border border-border/20 hover:border-border/50 transition-colors relative group"
+                style={{ backgroundColor: preset.value }}
+                title={preset.name}
+              >
+                <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-xs bg-background border rounded px-1 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                  {preset.name}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Additional Brand Colors Section */}
       <Accordion type="single" collapsible className="w-full border-b rounded-lg">
         <AccordionItem value="brand-colors" className="border border-border rounded-lg overflow-hidden">
           <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-muted/50 transition-colors">
-            <Label className="text-sm font-medium cursor-pointer">Brand Colors</Label>
+            <Label className="text-sm font-medium cursor-pointer">Additional Brand Colors</Label>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4 pt-2 space-y-3 border-t border-border bg-muted/20">
-            {baseColors.map((color) => (
+            {baseColors.filter(color => !color.cssVar.includes('primary')).map((color) => (
               <div key={color.cssVar} className="flex items-center justify-between">
                 <ColorPicker
                   label={color.name}

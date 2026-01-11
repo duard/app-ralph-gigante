@@ -33,17 +33,36 @@ export function ColorPicker({ label, cssVar, value, onChange }: ColorPickerProps
 
   // Get current computed color for display
   const displayColor = React.useMemo(() => {
-    if (localValue && localValue.startsWith('#')) {
-      return localValue
+    if (localValue) {
+      // Convert oklch colors to hex for display if possible
+      if (localValue.includes('oklch')) {
+        try {
+          // Simple fallback for oklch colors - try to get computed style
+          const computed = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim()
+          if (computed && computed.startsWith('#')) {
+            return computed
+          }
+        } catch (_e) {
+          // If conversion fails, use a default
+        }
+        return '#3b82f6' // Default blue for oklch colors
+      }
+      if (localValue.startsWith('#')) {
+        return localValue
+      }
     }
 
     // Try to get computed value from CSS
-    const computed = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim()
-    if (computed && computed.startsWith('#')) {
-      return computed
+    try {
+      const computed = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim()
+      if (computed && computed.startsWith('#')) {
+        return computed
+      }
+    } catch (_e) {
+      // Ignore errors
     }
 
-    return '#000000'
+    return '#3b82f6' // Default primary color
   }, [localValue, cssVar])
 
   return (
