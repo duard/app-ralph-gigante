@@ -1,6 +1,8 @@
 import * as React from "react"
 import { LoadingState } from "@/components/ui/loading"
 import { Skeletons } from "@/components/ui/skeletons"
+import type { Table } from "@tanstack/react-table"
+import type { Product } from "@/stores/products-store"
 
 // Lazy load heavy product components
 export const LazyProductDetailsModal = React.lazy(() =>
@@ -19,7 +21,12 @@ export const LazyProductTableToolbar = React.lazy(() =>
   import("@/components/products/product-table-toolbar").then(module => ({
     default: module.ProductTableToolbar
   }))
-) as React.ComponentType<unknown>
+) as React.ComponentType<{
+  table: Table<Product>
+  onSearch?: (search: string) => void
+  onAddProduct?: () => void
+  searchValue?: string
+}>
 
 // Loading component
 export function LazyProductLoadingFallback() {

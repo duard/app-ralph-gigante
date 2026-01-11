@@ -4,14 +4,19 @@ import { AppRouter } from '@/components/router/app-router'
 import { ErrorBoundary } from '@/components/ui/error-boundary'
 import { useEffect } from 'react'
 import { initGTM } from '@/utils/analytics'
+import { initializeRoutePreloader } from '@/lib/utils/route-preloader'
+import { CodeSplittingDebug } from '@/components/debug/code-splitting-debug'
 
 // Get basename from environment (for deployment) or use empty string for development
 const basename = import.meta.env.VITE_BASENAME || ''
 
 function App() {
-  // Initialize GTM on app load
+  // Initialize services on app load
   useEffect(() => {
     initGTM();
+    
+    // Initialize route preloader for better performance
+    initializeRoutePreloader();
   }, []);
 
   return (
@@ -34,6 +39,9 @@ function App() {
           <AppRouter />
         </Router>
       </AppLayout>
+      
+      {/* Code splitting debug component - only in development */}
+      <CodeSplittingDebug />
     </ErrorBoundary>
   )
 }

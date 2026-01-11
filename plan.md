@@ -102,7 +102,7 @@
 
 ### Performance
 - [x] Implementar lazy loading de componentes usando React.lazy
-- [ ] Configurar code splitting por rotas com React Router
+- [x] Configurar code splitting por rotas com React Router
 - [ ] Adicionar memoização em componentes pesados usando React.memo
 - [ ] Otimizar debounce em searches e inputs (já implementado em alguns)
 - [ ] Implementar cache de requisições API usando React Query/SWR
@@ -398,6 +398,8 @@ src/
 Add entries below this line:
 
 - **2025-01-11**: ✅ Implementar lazy loading de componentes usando React.lazy. Criado lazy-products.tsx para lazy loading de componentes pesados de produtos, implementado lazy loading para ProductDetailsModal (25KB), ProductFiltersSidebar (25KB), ProductTableToolbar (5KB) com Suspense boundaries e fallbacks apropriados. Componentes agora são carregados sob demanda melhorando performance inicial. Build e TypeScript funcionando sem erros.
+
+- **2025-01-11**: ✅ Configurado code splitting por rotas com React Router e Vite. Implementado code splitting inteligente com chunks separados por funcionalidade: dashboard (152KB), produtos (17KB), auth (48KB), settings (41KB), communication (268KB), tasks (26KB), content (43KB), errors (5KB). Criado sistema de preloading automático de rotas baseado em comportamento do usuário (hover, focus, viewport), utilitários de preload inteligente, e componente de debug para desenvolvimento. Atualizado Vite config com manual chunks function para otimização de bundle separando vendor libraries em grupos lógicos (react-vendor 984KB, utils-vendor 66KB, forms-vendor 63KB, charts-vendor 62KB). Build bem-sucedido com chunks otimizados e carga sob demanda.
 
 - **2025-01-11**: ✅ Enhanced primary color customization with prominent UI and quick presets. Moved primary color customization to prominent section at top of theme customizer, added 8 quick color presets (Blue, Green, Purple, Orange, Red, Pink, Teal, Indigo), implemented automatic contrast detection for primary-foreground color, improved color picker with better handling of oklch and hex color formats, enhanced user experience with hover tooltips on color presets, made primary color customization more accessible and user-friendly, updated additional brand colors to collapsed accordion for cleaner UI, and fixed TypeScript linting errors in color picker component. Build and typecheck working successfully.
 

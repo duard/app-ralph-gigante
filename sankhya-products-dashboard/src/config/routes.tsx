@@ -3,45 +3,52 @@ import { Navigate } from 'react-router-dom'
 import { PublicLayout } from '@/components/layouts/public-layout'
 import { ProtectedRoute } from '@/components/auth/protected-route'
 
-// Lazy load components for better performance
-const Landing = lazy(() => import('@/app/landing/page'))
-const Dashboard = lazy(() => import('@/app/dashboard/page'))
-const Dashboard2 = lazy(() => import('@/app/dashboard-2/page'))
-const Mail = lazy(() => import('@/app/mail/page'))
-const Tasks = lazy(() => import('@/app/tasks/page'))
-const Chat = lazy(() => import('@/app/chat/page'))
-const Calendar = lazy(() => import('@/app/calendar/page'))
-const Users = lazy(() => import('@/app/users/page'))
-const FAQs = lazy(() => import('@/app/faqs/page'))
-const Pricing = lazy(() => import('@/app/pricing/page'))
-const Produtos = lazy(() => import('@/app/produtos/page'))
-const BemVindo = lazy(() => import('@/app/bem-vindo/page'))
+// Lazy load components with code splitting for better performance
+// Main application routes - grouped into logical chunks
 
-// Auth pages
-const SignIn = lazy(() => import('@/app/auth/sign-in/page'))
-const SignIn2 = lazy(() => import('@/app/auth/sign-in-2/page'))
-const SignIn3 = lazy(() => import('@/app/auth/sign-in-3/page'))
-const SignUp = lazy(() => import('@/app/auth/sign-up/page'))
-const SignUp2 = lazy(() => import('@/app/auth/sign-up-2/page'))
-const SignUp3 = lazy(() => import('@/app/auth/sign-up-3/page'))
-const ForgotPassword = lazy(() => import('@/app/auth/forgot-password/page'))
-const ForgotPassword2 = lazy(() => import('@/app/auth/forgot-password-2/page'))
-const ForgotPassword3 = lazy(() => import('@/app/auth/forgot-password-3/page'))
+// Core dashboard and landing pages
+const Landing = lazy(() => import(/* webpackChunkName: "landing" */ '@/app/landing/page'))
+const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ '@/app/dashboard/page'))
+const Dashboard2 = lazy(() => import(/* webpackChunkName: "dashboard" */ '@/app/dashboard-2/page'))
+const BemVindo = lazy(() => import(/* webpackChunkName: "dashboard" */ '@/app/bem-vindo/page'))
 
-// Error pages
-const Unauthorized = lazy(() => import('@/app/errors/unauthorized/page'))
-const Forbidden = lazy(() => import('@/app/errors/forbidden/page'))
-const NotFound = lazy(() => import('@/app/errors/not-found/page'))
-const InternalServerError = lazy(() => import('@/app/errors/internal-server-error/page'))
-const UnderMaintenance = lazy(() => import('@/app/errors/under-maintenance/page'))
+// Main application features
+const Produtos = lazy(() => import(/* webpackChunkName: "produtos" */ '@/app/produtos/page'))
+const Mail = lazy(() => import(/* webpackChunkName: "communication" */ '@/app/mail/page'))
+const Chat = lazy(() => import(/* webpackChunkName: "communication" */ '@/app/chat/page'))
+const Calendar = lazy(() => import(/* webpackChunkName: "communication" */ '@/app/calendar/page'))
+const Tasks = lazy(() => import(/* webpackChunkName: "tasks" */ '@/app/tasks/page'))
 
-// Settings pages
-const UserSettings = lazy(() => import('@/app/settings/user/page'))
-const AccountSettings = lazy(() => import('@/app/settings/account/page'))
-const BillingSettings = lazy(() => import('@/app/settings/billing/page'))
-const AppearanceSettings = lazy(() => import('@/app/settings/appearance/page'))
-const NotificationSettings = lazy(() => import('@/app/settings/notifications/page'))
-const ConnectionSettings = lazy(() => import('@/app/settings/connections/page'))
+// Content and user management
+const Users = lazy(() => import(/* webpackChunkName: "users" */ '@/app/users/page'))
+const FAQs = lazy(() => import(/* webpackChunkName: "content" */ '@/app/faqs/page'))
+const Pricing = lazy(() => import(/* webpackChunkName: "content" */ '@/app/pricing/page'))
+
+// Authentication pages - grouped in auth chunk
+const SignIn = lazy(() => import(/* webpackChunkName: "auth" */ '@/app/auth/sign-in/page'))
+const SignIn2 = lazy(() => import(/* webpackChunkName: "auth" */ '@/app/auth/sign-in-2/page'))
+const SignIn3 = lazy(() => import(/* webpackChunkName: "auth" */ '@/app/auth/sign-in-3/page'))
+const SignUp = lazy(() => import(/* webpackChunkName: "auth" */ '@/app/auth/sign-up/page'))
+const SignUp2 = lazy(() => import(/* webpackChunkName: "auth" */ '@/app/auth/sign-up-2/page'))
+const SignUp3 = lazy(() => import(/* webpackChunkName: "auth" */ '@/app/auth/sign-up-3/page'))
+const ForgotPassword = lazy(() => import(/* webpackChunkName: "auth" */ '@/app/auth/forgot-password/page'))
+const ForgotPassword2 = lazy(() => import(/* webpackChunkName: "auth" */ '@/app/auth/forgot-password-2/page'))
+const ForgotPassword3 = lazy(() => import(/* webpackChunkName: "auth" */ '@/app/auth/forgot-password-3/page'))
+
+// Error pages - grouped in errors chunk
+const Unauthorized = lazy(() => import(/* webpackChunkName: "errors" */ '@/app/errors/unauthorized/page'))
+const Forbidden = lazy(() => import(/* webpackChunkName: "errors" */ '@/app/errors/forbidden/page'))
+const NotFound = lazy(() => import(/* webpackChunkName: "errors" */ '@/app/errors/not-found/page'))
+const InternalServerError = lazy(() => import(/* webpackChunkName: "errors" */ '@/app/errors/internal-server-error/page'))
+const UnderMaintenance = lazy(() => import(/* webpackChunkName: "errors" */ '@/app/errors/under-maintenance/page'))
+
+// Settings pages - grouped in settings chunk
+const UserSettings = lazy(() => import(/* webpackChunkName: "settings" */ '@/app/settings/user/page'))
+const AccountSettings = lazy(() => import(/* webpackChunkName: "settings" */ '@/app/settings/account/page'))
+const BillingSettings = lazy(() => import(/* webpackChunkName: "settings" */ '@/app/settings/billing/page'))
+const AppearanceSettings = lazy(() => import(/* webpackChunkName: "settings" */ '@/app/settings/appearance/page'))
+const NotificationSettings = lazy(() => import(/* webpackChunkName: "settings" */ '@/app/settings/notifications/page'))
+const ConnectionSettings = lazy(() => import(/* webpackChunkName: "settings" */ '@/app/settings/connections/page'))
 
 export interface RouteConfig {
   path: string

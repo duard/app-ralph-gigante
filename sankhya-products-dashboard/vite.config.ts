@@ -43,21 +43,96 @@ export default defineConfig(({ mode }) => {
       minify: mode === 'production' ? 'esbuild' : false,
       rollupOptions: {
         output: {
-          manualChunks: {
-            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-            'ui-vendor': [
-              '@radix-ui/react-avatar',
-              '@radix-ui/react-dialog',
-              '@radix-ui/react-dropdown-menu',
-              '@radix-ui/react-select',
-              '@radix-ui/react-tabs',
-              '@radix-ui/react-tooltip',
-            ],
-            'charts-vendor': ['recharts'],
-            'forms-vendor': ['react-hook-form', 'zod'],
-            'utils-vendor': ['zustand', 'date-fns'],
+          manualChunks: (id) => {
+            // Vendor libraries - third-party dependencies
+            if (id.includes('node_modules')) {
+              // React ecosystem
+              if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+                return 'react-vendor'
+              }
+              
+              // UI components library
+              if (id.includes('@radix-ui')) {
+                return 'ui-vendor'
+              }
+              
+              // Charts and visualization
+              if (id.includes('recharts') || id.includes('d3')) {
+                return 'charts-vendor'
+              }
+              
+              // Form handling and validation
+              if (id.includes('react-hook-form') || id.includes('zod')) {
+                return 'forms-vendor'
+              }
+              
+              // State management and utilities
+              if (id.includes('zustand') || id.includes('date-fns') || id.includes('axios')) {
+                return 'utils-vendor'
+              }
+              
+              // Other vendor libraries
+              return 'vendor'
+            }
+            
+            // Route-based code splitting
+            if (id.includes('/src/app/')) {
+              // Dashboard and core pages
+              if (id.includes('/dashboard/') || id.includes('/bem-vindo/') || id.includes('/landing/')) {
+                return 'dashboard'
+              }
+              
+              // Product management
+              if (id.includes('/produtos/')) {
+                return 'produtos'
+              }
+              
+              // Authentication pages
+              if (id.includes('/auth/')) {
+                return 'auth'
+              }
+              
+              // Settings pages
+              if (id.includes('/settings/')) {
+                return 'settings'
+              }
+              
+              // Error pages
+              if (id.includes('/errors/')) {
+                return 'errors'
+              }
+              
+              // Communication features
+              if (id.includes('/mail/') || id.includes('/chat/') || id.includes('/calendar/')) {
+                return 'communication'
+              }
+              
+              // Task management
+              if (id.includes('/tasks/')) {
+                return 'tasks'
+              }
+              
+              // User and content management
+              if (id.includes('/users/') || id.includes('/faqs/') || id.includes('/pricing/')) {
+                return 'content'
+              }
+              
+              // Default chunk for other routes
+              return 'routes'
+            }
           },
-          chunkFileNames: 'assets/js/[name]-[hash].js',
+          chunkFileNames: (chunkInfo) => {
+            // Route chunks get more descriptive names
+            if (chunkInfo.name === 'dashboard' || chunkInfo.name === 'produtos' || 
+                chunkInfo.name === 'auth' || chunkInfo.name === 'settings' || 
+                chunkInfo.name === 'errors' || chunkInfo.name === 'communication' ||
+                chunkInfo.name === 'tasks' || chunkInfo.name === 'content' || 
+                chunkInfo.name === 'routes') {
+              return 'assets/routes/[name]-[hash].js'
+            }
+            // Vendor chunks
+            return 'assets/js/[name]-[hash].js'
+          },
           entryFileNames: 'assets/js/[name]-[hash].js',
           assetFileNames: (assetInfo) => {
             const name = assetInfo.name ?? ''
