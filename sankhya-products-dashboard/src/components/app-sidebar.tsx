@@ -2,22 +2,22 @@
 
 import * as React from "react"
 import {
-  LayoutPanelLeft,
+  Package,
   LayoutDashboard,
-  Mail,
-  CheckSquare,
-  MessageCircle,
-  Calendar,
-  Shield,
-  AlertTriangle,
+  BarChart3,
+  Home,
   Settings,
   HelpCircle,
+  FileText,
+  TrendingUp,
+  Filter,
+  Download,
   CreditCard,
-  LayoutTemplate,
   Users,
+  Building,
+  Database,
 } from "lucide-react"
 import { Link } from "react-router-dom"
-import { Logo } from "@/components/logo"
 import { SidebarNotification } from "@/components/sidebar-notification"
 
 import { NavMain } from "@/components/nav-main"
@@ -35,177 +35,141 @@ import {
 const data = {
   user: {
     id: "1",
-    name: "ShadcnStore",
-    username: "admin",
-    email: "store@example.com",
+    name: "Sankhya Center",
+    username: "usuario",
+    email: "usuario@sankhya.com",
     avatar: "",
     role: "admin",
   },
   navGroups: [
     {
-      label: "Dashboards",
+      label: "Principal",
       items: [
         {
-          title: "Dashboard 1",
+          title: "Bem-Vindo",
+          url: "/bem-vindo",
+          icon: Home,
+        },
+        {
+          title: "Dashboard",
           url: "/dashboard",
           icon: LayoutDashboard,
         },
         {
           title: "Dashboard 2",
           url: "/dashboard-2",
-          icon: LayoutPanelLeft,
+          icon: BarChart3,
         },
       ],
     },
     {
-      label: "Apps",
+      label: "Produtos",
       items: [
         {
-          title: "Mail",
-          url: "/mail",
-          icon: Mail,
+          title: "Lista de Produtos",
+          url: "/produtos",
+          icon: Package,
         },
         {
-          title: "Tasks",
-          url: "/tasks",
-          icon: CheckSquare,
+          title: "Análise de Produtos",
+          url: "/dashboard",
+          icon: TrendingUp,
         },
         {
-          title: "Chat",
-          url: "/chat",
-          icon: MessageCircle,
+          title: "Filtros Avançados",
+          url: "#",
+          icon: Filter,
+          items: [
+            {
+              title: "Por Categoria",
+              url: "/produtos?view=category",
+            },
+            {
+              title: "Por Preço",
+              url: "/produtos?view=price",
+            },
+            {
+              title: "Por Status",
+              url: "/produtos?view=status",
+            },
+          ],
         },
         {
-          title: "Calendar",
-          url: "/calendar",
-          icon: Calendar,
+          title: "Exportação",
+          url: "#",
+          icon: Download,
+          items: [
+            {
+              title: "Exportar CSV",
+              url: "#",
+            },
+            {
+              title: "Exportar Excel",
+              url: "#",
+            },
+            {
+              title: "Exportar PDF",
+              url: "#",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      label: "Sistema",
+      items: [
+        {
+          title: "Relatórios",
+          url: "/dashboard",
+          icon: FileText,
         },
         {
-          title: "Users",
+          title: "Usuários",
           url: "/users",
           icon: Users,
         },
-      ],
-    },
-    {
-      label: "Pages",
-      items: [
         {
-          title: "Landing",
-          url: "/landing",
-          target: "_blank",
-          icon: LayoutTemplate,
-        },
-        {
-          title: "Auth Pages",
-          url: "#",
-          icon: Shield,
-          items: [
-            {
-              title: "Sign In 1",
-              url: "/auth/sign-in",
-            },
-            {
-              title: "Sign In 2",
-              url: "/auth/sign-in-2",
-            },
-            {
-              title: "Sign In 3",
-              url: "/auth/sign-in-3",
-            },
-            {
-              title: "Sign Up 1",
-              url: "/auth/sign-up",
-            },
-            {
-              title: "Sign Up 2",
-              url: "/auth/sign-up-2",
-            },
-            {
-              title: "Sign Up 3",
-              url: "/auth/sign-up-3",
-            },
-            {
-              title: "Forgot Password 1",
-              url: "/auth/forgot-password",
-            },
-            {
-              title: "Forgot Password 2",
-              url: "/auth/forgot-password-2",
-            },
-            {
-              title: "Forgot Password 3",
-              url: "/auth/forgot-password-3",
-            }
-          ],
-        },
-        {
-          title: "Errors",
-          url: "#",
-          icon: AlertTriangle,
-          items: [
-            {
-              title: "Unauthorized",
-              url: "/errors/unauthorized",
-            },
-            {
-              title: "Forbidden",
-              url: "/errors/forbidden",
-            },
-            {
-              title: "Not Found",
-              url: "/errors/not-found",
-            },
-            {
-              title: "Internal Server Error",
-              url: "/errors/internal-server-error",
-            },
-            {
-              title: "Under Maintenance",
-              url: "/errors/under-maintenance",
-            },
-          ],
-        },
-        {
-          title: "Settings",
+          title: "Configurações",
           url: "#",
           icon: Settings,
           items: [
             {
-              title: "User Settings",
+              title: "Perfil",
               url: "/settings/user",
             },
             {
-              title: "Account Settings",
+              title: "Conta",
               url: "/settings/account",
             },
             {
-              title: "Plans & Billing",
-              url: "/settings/billing",
-            },
-            {
-              title: "Appearance",
+              title: "Aparência",
               url: "/settings/appearance",
             },
             {
-              title: "Notifications",
+              title: "Notificações",
               url: "/settings/notifications",
-            },
-            {
-              title: "Connections",
-              url: "/settings/connections",
             },
           ],
         },
+      ],
+    },
+    {
+      label: "Ajuda",
+      items: [
         {
-          title: "FAQs",
+          title: "Documentação",
           url: "/faqs",
           icon: HelpCircle,
         },
         {
-          title: "Pricing",
+          title: "Planos",
           url: "/pricing",
           icon: CreditCard,
+        },
+        {
+          title: "API",
+          url: "#",
+          icon: Database,
         },
       ],
     },
@@ -219,13 +183,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link to="/dashboard">
+              <Link to="/bem-vindo">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <Logo size={24} className="text-current" />
+                  <Building size={24} className="text-current" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">ShadcnStore</span>
-                  <span className="truncate text-xs">Admin Dashboard</span>
+                  <span className="truncate font-medium">Sankhya Center</span>
+                  <span className="truncate text-xs">Dashboard de Produtos</span>
                 </div>
               </Link>
             </SidebarMenuButton>
