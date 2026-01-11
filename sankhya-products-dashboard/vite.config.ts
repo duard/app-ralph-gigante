@@ -40,13 +40,7 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       sourcemap: mode === 'development',
-      minify: 'terser',
-      terserOptions: {
-        compress: {
-          drop_console: mode === 'production',
-          drop_debugger: mode === 'production',
-        },
-      },
+      minify: mode === 'production' ? 'esbuild' : false,
       rollupOptions: {
         output: {
           manualChunks: {
@@ -66,9 +60,10 @@ export default defineConfig(({ mode }) => {
           chunkFileNames: 'assets/js/[name]-[hash].js',
           entryFileNames: 'assets/js/[name]-[hash].js',
           assetFileNames: (assetInfo) => {
-            const ext = assetInfo.name.split('.').pop()
+            const name = assetInfo.name ?? ''
+            const ext = name.split('.').pop() ?? ''
             if (ext === 'css') return 'assets/css/[name]-[hash][extname]'
-            if (['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'].includes(ext || '')) {
+            if (['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'].includes(ext)) {
               return 'assets/images/[name]-[hash][extname]'
             }
             return 'assets/[ext]/[name]-[hash][extname]'

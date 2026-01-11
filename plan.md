@@ -69,136 +69,136 @@
 - [x] Criar ThemeProvider
 - [x] Criar hook useTheme
 - [x] Configurar variáveis CSS para temas
-- [ ] Criar ThemeToggle component
+- [x] Criar ThemeToggle component (já existe em mode-toggle.tsx)
 - [x] Configurar persistência de tema no localStorage
 
 ### 2.3 Configuração de Tailwind CSS
-- [ ] Configurar tailwind.config.ts
-- [ ] Configurar tema customizado (cores, fontes, espaçamentos)
-- [ ] Configurar plugins tailwind
-- [ ] Criar utilitários customizados
-- [ ] Configurar animações customizadas
-- [ ] Configurar breakpoints customizados
+- [x] Configurar tailwind.config.ts (usando Tailwind v4 com @tailwindcss/vite)
+- [x] Configurar tema customizado (cores, fontes, espaçamentos)
+- [x] Configurar plugins tailwind (tw-animate-css)
+- [x] Criar utilitários customizados
+- [x] Configurar animações customizadas
+- [x] Configurar breakpoints customizados
 
 ### 2.4 Configuração de Componentes shadcn-ui
-- [ ] Configurar components.json do shadcn-ui
-- [ ] Instalar componentes base necessários:
-  - [ ] button
-  - [ ] input
-  - [ ] label
-  - [ ] select
-  - [ ] dialog
-  - [ ] dropdown-menu
-  - [ ] popover
-  - [ ] separator
-  - [ ] scroll-area
-  - [ ] table
-  - [ ] tabs
-  - [ ] toggle
-  - [ ] tooltip
-  - [ ] card
-  - [ ] avatar
-  - [ ] badge
-  - [ ] progress
-  - [ ] checkbox
-  - [ ] switch
-  - [ ] slider
-  - [ ] command
-  - [ ] form
-- [ ] Criar aliases para componentes
-- [ ] Configurar temas dos componentes
+- [x] Configurar components.json do shadcn-ui
+- [x] Instalar componentes base necessários:
+  - [x] button
+  - [x] input
+  - [x] label
+  - [x] select
+  - [x] dialog
+  - [x] dropdown-menu
+  - [x] popover
+  - [x] separator
+  - [x] scroll-area
+  - [x] table
+  - [x] tabs
+  - [x] toggle
+  - [x] tooltip
+  - [x] card
+  - [x] avatar
+  - [x] badge
+  - [x] progress
+  - [x] checkbox
+  - [x] switch
+  - [x] slider
+  - [x] command
+  - [x] form
+- [x] Criar aliases para componentes
+- [x] Configurar temas dos componentes
 
 ### 2.5 Configuração de Axios
-- [ ] Criar instância Axios base
-- [ ] Configurar baseURL da API Sankhya
-- [ ] Configurar interceptors de request (adicionar token)
-- [ ] Configurar interceptors de response (tratar erros)
-- [ ] Configurar retry em falhas
-- [ ] Configurar timeout padrão
-- [ ] Criar tipos para API requests/responses
+- [x] Criar instância Axios base
+- [x] Configurar baseURL da API Sankhya
+- [x] Configurar interceptors de request (adicionar token)
+- [x] Configurar interceptors de response (tratar erros)
+- [x] Configurar retry em falhas
+- [x] Configurar timeout padrão
+- [x] Criar tipos para API requests/responses
 
 ### 2.6 Configuração de State Management (Zustand)
-- [ ] Criar estrutura de stores
-- [ ] Criar authStore
-- [ ] Criar productsStore
-- [ ] Criar uiStore
-- [ ] Criar filtersStore
-- [ ] Configurar persistência de stores (middleware)
+- [x] Criar estrutura de stores
+- [x] Criar authStore
+- [x] Criar productsStore
+- [x] Criar uiStore
+- [x] Criar filtersStore (integrado no productsStore)
+- [x] Configurar persistência de stores (middleware)
 
 ### 2.7 Configuração de Notificações
-- [ ] Configurar Sonner (toasts)
-- [ ] Criar hook useNotifications
-- [ ] Criar tipos de notificações (success, error, warning, info)
-- [ ] Configurar posicionamento e duração
-- [ ] Criar utilitários para disparar notificações
+- [x] Configurar Sonner (toasts)
+- [x] Criar hook useNotifications (integrado no API client)
+- [x] Criar tipos de notificações (success, error, warning, info)
+- [x] Configurar posicionamento e duração
+- [x] Criar utilitários para disparar notificações
 
 ### 2.8 Configuração de Formulários
-- [ ] Configurar React Hook Form
-- [ ] Configurar Zod para validação
-- [ ] Criar schemas de validação base
-- [ ] Criar utilitários de form
-- [ ] Configurar resolvers (Zod)
+- [x] Configurar React Hook Form
+- [x] Configurar Zod para validação
+- [x] Criar schemas de validação base (auth-schemas.ts, product-schemas.ts)
+- [x] Criar utilitários de form
+- [x] Configurar resolvers (Zod)
 
 ## FASE 3: Autenticação
 
 ### 3.1 Criar Tipos de Autenticação
-- [ ] Criar interface LoginRequest
-- [ ] Criar interface LoginResponse
-- [ ] Criar interface RefreshRequest
-- [ ] Criar interface RefreshResponse
-- [ ] Criar interface User
-- [ ] Criar interface AuthState
+- [x] Criar interface LoginRequest
+- [x] Criar interface LoginResponse
+- [x] Criar interface RefreshRequest
+- [x] Criar interface RefreshResponse
+- [x] Criar interface User
+- [x] Criar interface AuthState
 
 ### 3.2 Criar API Client de Autenticação
-- [ ] Criar authService em lib/api/authService.ts
-- [ ] Criar função login
-- [ ] Criar função refreshToken
-- [ ] Criar função logout
-- [ ] Criar função getMe
-- [ ] Criar função checkAuth
+- [x] Criar authService em lib/api/authService.ts
+- [x] Criar função login
+- [x] Criar função refreshToken
+- [x] Criar função logout
+- [x] Criar função getMe
+- [x] Criar função checkAuth
 
 ### 3.3 Criar Hook de Autenticação
-- [ ] Criar hook useAuth
-- [ ] Implementar login mutation
-- [ ] Implementar logout mutation
-- [ ] Implementar refresh token logic
-- [ ] Implementar checkAuth interval
-- [ ] Implementar persistência de tokens
-- [ ] Tratar erros de autenticação
+- [x] Criar hook useAuth
+- [x] Implementar login mutation
+- [x] Implementar logout mutation
+- [x] Implementar refresh token logic
+- [x] Implementar checkAuth interval
+- [x] Implementar persistência de tokens
+- [x] Tratar erros de autenticação
 
 ### 3.4 Criar Store de Autenticação
-- [ ] Criar authStore com Zustand
-- [ ] Adicionar estado: user, token, refreshToken, isAuthenticated
-- [ ] Adicionar actions: setUser, setToken, clearAuth
-- [ ] Adicionar persistência no localStorage
-- [ ] Adicionar middleware para refresh automático
+- [x] Criar authStore com Zustand
+- [x] Adicionar estado: user, token, refreshToken, isAuthenticated
+- [x] Adicionar actions: setUser, setToken, clearAuth
+- [x] Adicionar persistência no localStorage
+- [x] Adicionar middleware para refresh automático
 
 ### 3.5 Criar Página de Login
-- [ ] Criar rota /login
-- [ ] Criar componente LoginForm
-- [ ] Implementar campos: username, password
-- [ ] Implementar validação de formulário
-- [ ] Implementar loading states
-- [ ] Implementar feedback visual de erro/sucesso
-- [ ] Adicionar opção "Lembrar-me"
-- [ ] Adicionar link para recuperação de senha (placeholder)
-- [ ] Adicionar link para registro (placeholder)
+- [x] Criar rota /login (já existe em /auth/sign-in)
+- [x] Criar componente LoginForm
+- [x] Implementar campos: username, password
+- [x] Implementar validação de formulário
+- [x] Implementar loading states
+- [x] Implementar feedback visual de erro/sucesso
+- [x] Adicionar opção "Lembrar-me"
+- [x] Adicionar link para recuperação de senha (placeholder)
+- [x] Adicionar link para registro (placeholder)
 
 ### 3.6 Criar Interceptores de Autenticação
-- [ ] Implementar interceptor para adicionar Bearer token
-- [ ] Implementar interceptor para tratar 401 (unauthorized)
-- [ ] Implementar lógica de refresh token em 401
-- [ ] Implementar logout em falha de refresh
-- [ ] Implementar tratamento de erros globais
+- [x] Implementar interceptor para adicionar Bearer token
+- [x] Implementar interceptor para tratar 401 (unauthorized)
+- [x] Implementar lógica de refresh token em 401
+- [x] Implementar logout em falha de refresh
+- [x] Implementar tratamento de erros globais
 
 ### 3.7 Criar Componentes de Autenticação
-- [ ] Criar ProtectedRoute component (wrapper)
-- [ ] Criar AuthProvider component
-- [ ] Criar AuthGuard component
-- [ ] Criar RequireAuth component
+- [x] Criar ProtectedRoute component (wrapper)
+- [x] Criar AuthProvider component
+- [x] Criar AuthGuard component
+- [x] Criar RequireAuth component (integrado no ProtectedRoute)
 - [ ] Criar UserMenu dropdown
 - [ ] Criar UserAvatar component
-- [ ] Criar LogoutButton component
+- [x] Criar LogoutButton component
 
 ### 3.8 Testar Autenticação
 - [ ] Testar login com credenciais válidas

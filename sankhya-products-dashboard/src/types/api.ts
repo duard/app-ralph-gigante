@@ -39,12 +39,14 @@ export interface PaginatedResponse<T = any> extends ApiResponse<T[]> {
 }
 
 /**
- * Sort order enum
+ * Sort order options
  */
-export enum SortOrder {
-  ASC = 'asc',
-  DESC = 'desc',
-}
+export const SortOrder = {
+  ASC: 'asc',
+  DESC: 'desc',
+} as const;
+
+export type SortOrder = typeof SortOrder[keyof typeof SortOrder];
 
 /**
  * Sort parameters
