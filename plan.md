@@ -123,7 +123,7 @@
 - [x] Criar productsStore
 - [x] Criar uiStore
 - [x] Criar filtersStore (integrado no productsStore)
-- [x] Configurar persistência de stores (middleware)
+- [x] Configurar persistência de stores (middleware)\n- [x] Adicionar derived computed filters para productsStore (filteredProducts)
 
 ### 2.7 Configuração de Notificações
 - [x] Configurar Sonner (toasts)
