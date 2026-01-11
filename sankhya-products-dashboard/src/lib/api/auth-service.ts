@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { apiClient, post, get } from './client';
 import type { User } from '@/stores/auth-store';
 
@@ -53,7 +54,14 @@ export const authService = {
      * Refresh access token
      */
     async refreshToken(refreshToken: string): Promise<RefreshResponse> {
-        return post<RefreshResponse>('/auth/refresh', { refreshToken });
+        const API_BASE_URL = import.meta.env.VITE_SANKHYA_API_URL || '/api';
+        return axios.post<RefreshResponse>(`${API_BASE_URL}/auth/refresh`, { refreshToken }, {
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            timeout: 30000,
+        }).then(response => response.data);
     },
 
     /**

@@ -5,6 +5,7 @@ import axios, {
     type AxiosResponse,
 } from 'axios';
 import { toast } from 'sonner';
+import { authService } from './auth-service';
 
 // API base URL - uses proxy in development
 const API_BASE_URL = import.meta.env.VITE_SANKHYA_API_URL || '/api';
@@ -25,8 +26,8 @@ const apiClient: AxiosInstance = axios.create({
 // Request interceptor - adds authorization token if available
 apiClient.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-        // Get token from localStorage or auth store
-        const token = localStorage.getItem('auth_token');
+        // Get token from stored tokens
+        const { token } = authService.getStoredTokens();
 
         if (token && config.headers) {
             config.headers.Authorization = `Bearer ${token}`;
@@ -47,11 +48,36 @@ apiClient.interceptors.response.use(
     async (error: AxiosError) => {
         const _originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-        // Handle 401 Unauthorized - redirect to login
-        if (error.response?.status === 401) {
-            // Clear tokens
+        // Handle 401 Unauthorized - try refresh token first
+        if (error.response?.status === 401 && !_originalRequest._retry) {
+            _originalRequest._retry = true;
+
+            const refreshToken = localStorage.getItem('refresh_token');
+            if (refreshToken) {
+                try {
+                    const response = await authService.refreshToken(refreshToken);
+                    if (response.success) {
+                        const { token, refreshToken: newRefreshToken } = response.data;
+
+                        // Update stored tokens
+                        localStorage.setItem('auth_token', token);
+                        localStorage.setItem('refresh_token', newRefreshToken);
+
+                        // Update auth header for future requests
+                        apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+                        // Retry the original request
+                        return apiClient(_originalRequest);
+                    }
+                } catch {
+                    // Refresh failed, continue to logout
+                }
+            }
+
+            // Clear tokens and redirect to login
             localStorage.removeItem('auth_token');
             localStorage.removeItem('refresh_token');
+            sessionStorage.removeItem('auth_token');
 
             toast.error('Sessão expirada. Por favor, faça login novamente.');
 
