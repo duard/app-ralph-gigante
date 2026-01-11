@@ -360,7 +360,7 @@
 ### 7.1 Criar Rota e Layout de Produtos
 - [x] Criar rota /produtos
 - [x] Criar página src/app/produtos/page.tsx
-- [ ] Criar layout específico de produtos
+ - [x] Criar layout específico de produtos
 - [ ] Configurar meta tags e SEO
 
 ### 7.2 Implementar Listagem de Produtos
