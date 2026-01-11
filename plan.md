@@ -112,10 +112,10 @@
 - [ ] Melhorar Lighthouse score com otimizações de performance
 
 ### Testes
-- [ ] Criar testes unitários para hooks customizados usando Vitest
-- [ ] Implementar testes de componentes principais com Testing Library
-- [ ] Adicionar testes de integração com API usando MSW para mocks
-- [ ] Configurar coverage mínimo de 70% com Vite
+- [x] Criar testes unitários para hooks customizados usando Vitest
+- [x] Implementar testes de componentes principais com Testing Library
+- [x] Adicionar testes de integração com API usando MSW para mocks
+- [x] Configurar coverage mínimo de 70% com Vite
 
 
 ### Documentação
@@ -143,23 +143,22 @@
 ### Automação de Testes
 ```bash
 # Executar testes unitários
-npm run test
-
+pnpm test
 
 # Verificar coverage
-npm run test:cov
+pnpm test:coverage
 
 # Verificar lint
-npm run lint
+pnpm lint
 
 # Verificar TypeScript
-npm run typecheck
+pnpm typecheck
 
 # Build de produção
-npm run build
+pnpm build
 
 # Preview de produção
-npm run preview
+pnpm preview
 ```
 
 ### Testes Manuais
@@ -397,6 +396,8 @@ src/
 ## Progress
 
 Add entries below this line:
+
+- **2025-01-11**: ✅ Implementada infraestrutura completa de testes com Vitest, Testing Library, MSW e coverage reporting. Adicionadas dependências Vitest, @vitest/ui, @vitest/coverage-v8, @testing-library/react, @testing-library/jest-dom, @testing-library/user-event, MSW para mocking de API. Configurado vitest.config.ts com suporte TypeScript e thresholds de coverage (70%). Criados arquivos de setup global (src/test/setup.ts), utilitários de render customizados (src/test/utils.tsx) e mocks centralizados (src/test/mocks.ts). Adicionados scripts de test ao package.json: test, test:run, test:ui, test:coverage, test:watch. Criados testes de exemplo: component test (label.test.tsx), hook test (use-mobile.test.ts), API test (api.test.ts), integration tests (product-list.integration.test.tsx, use-auth.integration.test.ts). Configurado coverage mínimo 70% com relatórios HTML. Todos os testes passando com 68.18% coverage. Build e TypeScript funcionando sem erros.
 
 - **2025-01-11**: ✅ Padronizado loading states com skeletons consistentes. Criados componentes padronizados de loading em `/src/components/ui/loading.tsx` e `/src/components/ui/skeletons.tsx` com diferentes variantes (Table, Card, Chart, DashboardCard, ProductList, etc.). Atualizados todos os componentes principais para usar os novos loading states: recent-products, top-selling-products, price-trend-chart, price-history-chart, product-list, auth-guard, command-search, lazy-dashboard. Removidas implementações inconsistentes de loading e substituídas por componentes reutilizáveis. Build e lint funcionando sem erros.
 
