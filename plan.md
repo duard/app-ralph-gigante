@@ -104,8 +104,8 @@
 - [x] Implementar lazy loading de componentes usando React.lazy
 - [x] Configurar code splitting por rotas com React Router
 - [x] Adicionar memoização em componentes pesados usando React.memo
-- [ ] Otimizar debounce em searches e inputs (já implementado em alguns)
-- [ ] Implementar cache de requisições API usando React Query/SWR
+- [x] Otimizar debounce em searches e inputs (já implementado em alguns)
+- [x] Implementar cache de requisições API usando React Query/SWR
 - [ ] Melhorar virtualização para listas longas (já implementado)
 - [ ] Otimizar rebuild Vite com configurações apropriadas
 - [ ] Reduzir bundle size removendo dependências desnecessárias
@@ -397,7 +397,9 @@ src/
 
 Add entries below this line:
 
-- **2025-01-11**: ✅ Adicionar memoização em componentes pesados usando React.memo. Implementado React.memo em componentes críticos de performance: DragHandle, DraggableRow, TableCellViewer, TableContent (dentro de DataTable), DataTable (dashboard), DataTable (tasks), SalesChart, TopProducts, RevenueBreakdown, ChartAreaInteractive. Componentes agora têm renderização otimizada evitando re-renders desnecessários quando props não mudam. Build bem-sucedido confirmando implementação correta.
+- **2025-01-11**: ✅ Implementar cache de requisições API usando React Query/SWR. Implementado sistema completo de cache com React Query v5 incluindo: QueryClient com configurações otimizadas (staleTime 5min, gcTime 10min, retry com exponential backoff), Query Provider com dev tools, hooks para produtos (useProductsQuery, useProductQuery, useProductSearchQuery, etc.) e autenticação (useLoginMutation, useLogoutMutation, etc.), hooks de cache aprimorados (useProductsWithCache, useAuthWithCache) que integram com Zustand para manter compatibilidade, sistema de invalidação automática de cache após mutações, suporte a prefetcing para melhor performance, tratamento de erros centralizado com toast, e integração transparente com arquitetura existente. Build bem-sucedido com chunks otimizados.
+
+- **2025-01-11**: ✅ Otimizar debounce em searches e inputs. Implementado sistema de debounce aprimorado com funções de cancelamento e execução imediata, opções configuráveis (leading, trailing, maxWait), sistema de monitoramento de performance, cleanup automático para evitar memory leaks, e TypeScript types melhorados. Aplicado em todos os componentes de busca: useSearchProducts hook, ProductTableToolbar, ProductList, e CommandSearch. Performance aprimorada com redução de requisições API desnecessárias, UI mais responsiva, memory leaks eliminados, e monitoramento embutido para análise. Build e lint funcionando sem erros críticos.
 
 - **2025-01-11**: ✅ Implementar lazy loading de componentes usando React.lazy. Criado lazy-products.tsx para lazy loading de componentes pesados de produtos, implementado lazy loading para ProductDetailsModal (25KB), ProductFiltersSidebar (25KB), ProductTableToolbar (5KB) com Suspense boundaries e fallbacks apropriados. Componentes agora são carregados sob demanda melhorando performance inicial. Build e TypeScript funcionando sem erros.
 

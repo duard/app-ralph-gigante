@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge"
 
 import { Skeletons } from "@/components/ui/skeletons"
 
-import { useProducts } from "@/hooks/use-products"
+import { useProductsWithCache } from "@/hooks/use-products-with-cache"
 import type { Product } from "@/stores/products-store"
 import { formatProductCode, formatProductPrice, formatProductStatus } from "@/lib/utils/product-utils"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
@@ -120,10 +120,10 @@ export function ProductList({
     changePageSize,
     isLoading,
     error,
-    isRetrying,
+    isRefetching,
     retry,
     searchProducts
-  } = useProducts()
+  } = useProductsWithCache()
 
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -219,11 +219,11 @@ export function ProductList({
   if (error) {
     return (
       <ErrorState
-        error={error}
+        error={typeof error === 'string' ? error : error?.message || null}
         onRetry={retry}
-        isRetrying={isRetrying}
+        isRetrying={isRefetching}
         title="Erro ao carregar produtos"
-        description={`Não foi possível carregar a lista de produtos. ${error}`}
+        description={`Não foi possível carregar a lista de produtos. ${typeof error === 'string' ? error : error?.message || ''}`}
       />
     )
   }

@@ -2,6 +2,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { AppLayout } from '@/components/layouts/app-layout'
 import { AppRouter } from '@/components/router/app-router'
 import { ErrorBoundary } from '@/components/ui/error-boundary'
+import { QueryProvider } from '@/lib/react-query'
 import { useEffect } from 'react'
 import { initGTM } from '@/utils/analytics'
 import { initializeRoutePreloader } from '@/lib/utils/route-preloader'
@@ -20,29 +21,31 @@ function App() {
   }, []);
 
   return (
-    <ErrorBoundary
-      onError={(error, errorInfo) => {
-        // Log to console in development
-        if (process.env.NODE_ENV === 'development') {
-          console.error('App-level error:', error, errorInfo)
-        }
+    <QueryProvider>
+      <ErrorBoundary
+        onError={(error, errorInfo) => {
+          // Log to console in development
+          if (process.env.NODE_ENV === 'development') {
+            console.error('App-level error:', error, errorInfo)
+          }
+          
+          // In production, you might send to error reporting service
+          if (process.env.NODE_ENV === 'production') {
+            // Example: errorReportingService.captureException(error, { extra: errorInfo })
+            console.warn('Production app error:', error.message)
+          }
+        }}
+      >
+        <AppLayout>
+          <Router basename={basename}>
+            <AppRouter />
+          </Router>
+        </AppLayout>
         
-        // In production, you might send to error reporting service
-        if (process.env.NODE_ENV === 'production') {
-          // Example: errorReportingService.captureException(error, { extra: errorInfo })
-          console.warn('Production app error:', error.message)
-        }
-      }}
-    >
-      <AppLayout>
-        <Router basename={basename}>
-          <AppRouter />
-        </Router>
-      </AppLayout>
-      
-      {/* Code splitting debug component - only in development */}
-      <CodeSplittingDebug />
-    </ErrorBoundary>
+        {/* Code splitting debug component - only in development */}
+        <CodeSplittingDebug />
+      </ErrorBoundary>
+    </QueryProvider>
   )
 }
 
