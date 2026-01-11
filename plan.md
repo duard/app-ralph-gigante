@@ -17,9 +17,9 @@
 - [x] Configurar tsconfig.app.json
 - [x] Configurar tsconfig.node.json
 - [x] Criar types globais em src/types/global.d.ts
-- [ ] Criar tipos para API responses
-- [ ] Criar tipos para componentes React
-- [ ] Configurar path aliases (@/*)
+- [x] Criar tipos para API responses
+- [x] Criar tipos para componentes React
+- [x] Configurar path aliases (@/*)
 
 ### 1.3 Configuração Vite
 - [ ] Configurar vite.config.ts
