@@ -260,7 +260,7 @@
 ### 5.2 Criar Hooks de Produtos
 - [ ] Criar hook useProducts
 - [x] Criar hook useProduct
-- [ ] Criar hook useCreateProduct
+- [x] Criar hook useCreateProduct
 - [ ] Criar hook useUpdateProduct
 - [ ] Criar hook useDeleteProduct
 - [ ] Criar hook useSearchProducts
