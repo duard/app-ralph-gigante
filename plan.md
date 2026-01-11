@@ -5,8 +5,8 @@
 ### 1.1 Setup do Projeto Base
 - [x] Criar novo diretório para o projeto: `mkdir sankhya-products-dashboard && cd sankhya-products-dashboard`
 - [x] Copiar estrutura base do shadcn-dashboard-landing-template/vite-version
-- [ ] Atualizar package.json com novo nome e versão
-- [ ] Configurar .gitignore personalizado
+- [x] Atualizar package.json com novo nome e versão
+- [x] Configurar .gitignore personalizado
 - [ ] Criar estrutura de diretórios inicial
 - [ ] Configurar .env.example com variáveis necessárias
 - [ ] Configurar .env.local com valores de desenvolvimento
