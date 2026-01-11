@@ -17,6 +17,7 @@ const ProductTable: React.FC<{ products?: ProductRow[] }> = ({ products = [] }) 
         <tr>
           <th>Código</th>
           <th>Nome</th>
+          <th>Categoria</th>
           <th>Preço</th>
           <th>Estoque</th>
           <th>Status</th>
@@ -25,13 +26,14 @@ const ProductTable: React.FC<{ products?: ProductRow[] }> = ({ products = [] }) 
       <tbody>
         {products.length === 0 ? (
           <tr>
-            <td colSpan={5}>Nenhum produto disponível</td>
+            <td colSpan={6}>Nenhum produto disponível</td>
           </tr>
         ) : (
           products.map((p, idx) => (
             <tr key={p.id ?? idx}>
               <td>{p.code}</td>
               <td>{p.name}</td>
+              <td>{p.category ?? ''}</td>
               <td>{p.price.toLocaleString(undefined, { style: 'currency', currency: 'BRL' })}</td>
               <td>{p.stock}</td>
               <td>{p.status}</td>
