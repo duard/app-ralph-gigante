@@ -74,7 +74,7 @@
 - [x] Adicionar filtro por unidade de medida com select
 - [x] Suporte a combinação múltipla de filtros com estado global
 - [x] Botão "Limpar todos os filtros" que reseta filtros e recarrega lista
-- [ ] Sistema de presets de filtros salvos no localStorage
+- [x] Sistema de presets de filtros salvos no localStorage
 - [x] Exibir contagem de resultados em tempo real ao aplicar filtros
 - [x] Integrar filtros avançados na página de produtos com toggle show/hide
 
