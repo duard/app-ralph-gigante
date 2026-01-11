@@ -375,7 +375,7 @@
 - [ ] Implementar refetch manual
 
 ### 7.3 Implementar Filtros de Produtos
-- [ ] Criar ProductFilters component
+- [x] Criar ProductFilters component
 - [ ] Implementar filtro de busca (nome/código)
 - [ ] Implementar filtro de preço (range)
 - [ ] Implementar filtro de status (ativo/inativo)
