@@ -33,22 +33,23 @@ export function useAuth() {
 
                 const response = await authService.login(credentials);
 
-                if (response.success) {
-                    const { user, token, refreshToken } = response.data;
-
+                if (response.access_token) {
                     // Store tokens securely based on rememberMe
-                    authService.storeTokens(token, refreshToken, credentials.rememberMe);
-                    authService.setAuthHeader(token);
+                    authService.storeTokens(response.access_token, '', credentials.rememberMe); // Note: API doesn't return refresh token yet
+                    authService.setAuthHeader(response.access_token);
+
+                    // Fetch user data after login
+                    const user = await authService.getMe();
 
                     // Update store
-                    storeLogin(user, token, refreshToken);
+                    storeLogin(user, response.access_token, '');
 
                     toast.success(`Bem-vindo, ${user.name}!`);
                     navigate('/dashboard');
 
                     return { success: true };
                 } else {
-                    const errorMessage = response.message || 'Falha no login';
+                    const errorMessage = 'Falha no login';
                     setError(errorMessage);
                     toast.error(errorMessage);
                     return { success: false, error: errorMessage };
