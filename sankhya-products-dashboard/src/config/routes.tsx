@@ -1,5 +1,6 @@
 import { lazy } from 'react'
 import { Navigate } from 'react-router-dom'
+import { PublicLayout } from '@/components/layouts/public-layout'
 
 // Lazy load components for better performance
 const Landing = lazy(() => import('@/app/landing/page'))
@@ -56,7 +57,11 @@ export const routes: RouteConfig[] = [
   // Landing Page
   {
     path: "/landing",
-    element: <Landing />
+    element: (
+      <PublicLayout>
+        <Landing />
+      </PublicLayout>
+    )
   },
 
   // Dashboard Routes
@@ -104,61 +109,117 @@ export const routes: RouteConfig[] = [
   // Authentication Routes
   {
     path: "/auth/sign-in",
-    element: <SignIn />
+    element: (
+      <PublicLayout>
+        <SignIn />
+      </PublicLayout>
+    )
   },
   {
     path: "/auth/sign-in-2",
-    element: <SignIn2 />
+    element: (
+      <PublicLayout>
+        <SignIn2 />
+      </PublicLayout>
+    )
   },
   {
     path: "/auth/sign-in-3",
-    element: <SignIn3 />
+    element: (
+      <PublicLayout>
+        <SignIn3 />
+      </PublicLayout>
+    )
   },
   {
     path: "/auth/sign-up",
-    element: <SignUp />
+    element: (
+      <PublicLayout>
+        <SignUp />
+      </PublicLayout>
+    )
   },
   {
     path: "/auth/sign-up-2",
-    element: <SignUp2 />
+    element: (
+      <PublicLayout>
+        <SignUp2 />
+      </PublicLayout>
+    )
   },
   {
     path: "/auth/sign-up-3",
-    element: <SignUp3 />
+    element: (
+      <PublicLayout>
+        <SignUp3 />
+      </PublicLayout>
+    )
   },
   {
     path: "/auth/forgot-password",
-    element: <ForgotPassword />
+    element: (
+      <PublicLayout>
+        <ForgotPassword />
+      </PublicLayout>
+    )
   },
   {
     path: "/auth/forgot-password-2",
-    element: <ForgotPassword2 />
+    element: (
+      <PublicLayout>
+        <ForgotPassword2 />
+      </PublicLayout>
+    )
   },
   {
     path: "/auth/forgot-password-3",
-    element: <ForgotPassword3 />
+    element: (
+      <PublicLayout>
+        <ForgotPassword3 />
+      </PublicLayout>
+    )
   },
 
   // Error Pages
   {
     path: "/errors/unauthorized",
-    element: <Unauthorized />
+    element: (
+      <PublicLayout>
+        <Unauthorized />
+      </PublicLayout>
+    )
   },
   {
     path: "/errors/forbidden",
-    element: <Forbidden />
+    element: (
+      <PublicLayout>
+        <Forbidden />
+      </PublicLayout>
+    )
   },
   {
     path: "/errors/not-found",
-    element: <NotFound />
+    element: (
+      <PublicLayout>
+        <NotFound />
+      </PublicLayout>
+    )
   },
   {
     path: "/errors/internal-server-error",
-    element: <InternalServerError />
+    element: (
+      <PublicLayout>
+        <InternalServerError />
+      </PublicLayout>
+    )
   },
   {
     path: "/errors/under-maintenance",
-    element: <UnderMaintenance />
+    element: (
+      <PublicLayout>
+        <UnderMaintenance />
+      </PublicLayout>
+    )
   },
 
   // Settings Routes

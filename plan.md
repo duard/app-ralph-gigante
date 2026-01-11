@@ -56,13 +56,13 @@
 ## FASE 2: Infraestrutura e Configurações
 
 ### 2.1 Configuração de Rotas
-- [ ] Configurar React Router v7
-- [ ] Criar estrutura de rotas em src/config/routes.tsx
-- [ ] Criar layout público (sem autenticação)
+- [x] Configurar React Router v7
+- [x] Criar estrutura de rotas em src/config/routes.tsx
+- [x] Criar layout público (sem autenticação)
 - [ ] Criar layout protegido (com autenticação)
-- [ ] Criar layout de dashboard (com sidebar)
-- [ ] Configurar fallback routes (404)
-- [ ] Configurar rota de redirecionamento raiz
+- [x] Criar layout de dashboard (com sidebar)
+- [x] Configurar fallback routes (404)
+- [x] Configurar rota de redirecionamento raiz
 
 ### 2.2 Configuração de Tema
 - [ ] Configurar next-themes (dark/light mode)
