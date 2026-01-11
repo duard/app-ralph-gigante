@@ -68,7 +68,7 @@
 - [x] Configurar next-themes (dark/light mode)
 - [x] Criar ThemeProvider
 - [x] Criar hook useTheme
-- [ ] Configurar variáveis CSS para temas
+- [x] Configurar variáveis CSS para temas
 - [ ] Criar ThemeToggle component
 - [x] Configurar persistência de tema no localStorage
 
