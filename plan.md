@@ -93,7 +93,7 @@
 
 ### Dashboard e Métricas
 - [x] Criar componente DashboardCards com métricas: total produtos, ativos, inativos, sem estoque
-- [ ] Implementar gráfico de distribuição por categoria usando Recharts
+- [x] Implementar gráfico de distribuição por categoria usando Recharts
 - [ ] Criar gráfico de tendência de preços com dados históricos
 - [ ] Adicionar tabela de produtos mais vendidos (top 10)
 - [ ] Implementar tabela de produtos recentes (últimos adicionados)
@@ -340,6 +340,8 @@ src/
 ## Progress
 
 Add entries below this line:
+
+- **2025-01-11**: ✅ Implementado gráfico de distribuição por categoria usando Recharts. Criado componente CategoryDistributionChart que exibe distribuição de produtos por categoria com suporte a visualização em barras e pizza. O componente processa dados dinâmicos da store de produtos, calcula contagens por categoria e exibe as 10 principais categorias. Inclui controles para alternar entre tipos de gráfico, métricas resumidas (categoria principal, média por categoria) e design responsivo. Componente integrado ao dashboard layout ao lado do gráfico existente, com tratamento de estado vazio e conformidade com TypeScript strict. Componente localizado em `src/app/dashboard/components/category-distribution-chart.tsx`.
 
 - **2025-01-11**: ✅ Implementado histórico de preços de produtos com gráficos interativos. Criado hook `useProductPriceHistory` que consome endpoint `/tgfpro/consumo-periodo/{codprod}` da API, componente `PriceHistoryChart` com visualização em Recharts mostrando tendência de preços, métricas médias e variação percentual. Adicionado como nova aba no modal de detalhes do produto com períodos de 30/90 dias. Implementados indicadores visuais de tendência (alta/baixa/estável) e cards de resumo com preço médio e total de movimentações. Componentes localizados em `src/hooks/use-product-price-history.ts` e `src/components/products/price-history-chart.tsx`.
 
