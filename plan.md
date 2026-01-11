@@ -46,11 +46,11 @@
 - [x] Criar template de commit message
 
 ### 1.6 Setup de CI/CD
-- [ ] Criar arquivo .github/workflows/ci.yml
-- [ ] Configurar pipeline de testes
-- [ ] Configurar pipeline de build
-- [ ] Configurar pipeline de lint
-- [ ] Configurar pipeline de typecheck
+- [x] Criar arquivo .github/workflows/ci.yml
+- [x] Configurar pipeline de testes
+- [x] Configurar pipeline de build
+- [x] Configurar pipeline de lint
+- [x] Configurar pipeline de typecheck
 - [ ] Criar arquivo .github/workflows/deploy.yml (opcional)
 
 ## FASE 2: Infraestrutura e Configurações
