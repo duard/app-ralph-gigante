@@ -280,7 +280,7 @@
 ## FASE 6: Componentes de UI
 
 ### 6.1 Criar Componentes de Layout
-- [ ] Criar AppLayout component
+- [x] Criar AppLayout component
 - [ ] Criar DashboardLayout component
 - [ ] Criar Sidebar component
 - [ ] Criar SidebarItem component

@@ -1,6 +1,5 @@
 import { BrowserRouter as Router } from 'react-router-dom'
-import { ThemeProvider } from '@/components/theme-provider'
-import { SidebarConfigProvider } from '@/contexts/sidebar-context'
+import { AppLayout } from '@/components/layouts/app-layout'
 import { AppRouter } from '@/components/router/app-router'
 import { useEffect } from 'react'
 import { initGTM } from '@/utils/analytics'
@@ -15,15 +14,11 @@ function App() {
   }, []);
 
   return (
-    <div className="font-sans antialiased" style={{ fontFamily: 'var(--font-inter)' }}>
-      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme" attribute="class" enableSystem>
-        <SidebarConfigProvider>
-          <Router basename={basename}>
-            <AppRouter />
-          </Router>
-        </SidebarConfigProvider>
-      </ThemeProvider>
-    </div>
+    <AppLayout>
+      <Router basename={basename}>
+        <AppRouter />
+      </Router>
+    </AppLayout>
   )
 }
 
