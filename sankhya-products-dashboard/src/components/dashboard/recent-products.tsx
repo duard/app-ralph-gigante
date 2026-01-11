@@ -2,6 +2,7 @@ import * as React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Clock, Package, DollarSign, Calendar, ArrowUpDown } from "lucide-react"
 import { useProducts } from "@/hooks/use-products"
@@ -11,6 +12,8 @@ import { formatCurrency } from "@/lib/utils/product-utils"
 interface RecentProductsProps {
   className?: string
   limit?: number
+  period?: 'all' | '7' | '14' | '30'
+  showPeriodSelector?: boolean
 }
 
 interface RecentProductData {
@@ -28,16 +31,26 @@ interface RecentProductData {
   isNovo: boolean
 }
 
-export function RecentProducts({ className, limit = 10 }: RecentProductsProps) {
+export function RecentProducts({ 
+  className, 
+  limit = 10, 
+  period = 'all',
+  showPeriodSelector = false
+}: RecentProductsProps) {
   const { products, isLoading } = useProducts()
   const [sortBy, setSortBy] = React.useState<'cadastro' | 'modificacao'>('cadastro')
+  const [selectedPeriod, setSelectedPeriod] = React.useState(period)
   const [recentProducts, setRecentProducts] = React.useState<RecentProductData[]>([])
+
+  const handlePeriodChange = React.useCallback((newPeriod: typeof selectedPeriod) => {
+    setSelectedPeriod(newPeriod)
+  }, [])
 
   React.useEffect(() => {
     if (!products.length) return
 
     // Mock recent products data - in a real app, this would come from API with actual timestamps
-    const mockRecentData: RecentProductData[] = products
+    const productData = products
       .slice(0, Math.min(products.length, limit * 2)) // Get more products to filter
       .map((product) => {
         // Simulate different registration dates (from 1 to 90 days ago)
@@ -52,6 +65,15 @@ export function RecentProducts({ className, limit = 10 }: RecentProductsProps) {
         const categorias = ['Eletrônicos', 'Roupas', 'Alimentos', 'Ferramentas', 'Livros', 'Esportes']
         const fornecedores = ['Fornecedor A', 'Fornecedor B', 'Fornecedor C', 'Distribuidora X', 'Importadora Y']
 
+        // Filter by selected period
+        let includeProduct = true
+        if (selectedPeriod !== 'all') {
+          const maxDays = parseInt(selectedPeriod)
+          includeProduct = diasDesdeCadastro <= maxDays
+        }
+
+        if (!includeProduct) return null
+
         return {
           codprod: product.codprod,
           descricao: product.descrprod || `Produto ${product.codprod}`,
@@ -64,8 +86,13 @@ export function RecentProducts({ className, limit = 10 }: RecentProductsProps) {
           fornecedor: fornecedores[Math.floor(Math.random() * fornecedores.length)],
           diasDesdeCadastro,
           isNovo: diasDesdeCadastro <= 7 // Consider "new" if added within last 7 days
-        }
+        } as RecentProductData
       })
+
+    // Filter out null values
+    const mockRecentData: RecentProductData[] = productData.filter(
+      (item): item is RecentProductData => item !== null
+    )
 
     // Sort by selected criteria
     const sortedData = mockRecentData.sort((a, b) => {
@@ -77,7 +104,7 @@ export function RecentProducts({ className, limit = 10 }: RecentProductsProps) {
     }).slice(0, limit)
 
     setRecentProducts(sortedData)
-  }, [products, sortBy, limit])
+  }, [products, sortBy, limit, selectedPeriod])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('pt-BR', {
@@ -141,6 +168,19 @@ export function RecentProducts({ className, limit = 10 }: RecentProductsProps) {
           </CardDescription>
         </div>
         <div className="flex items-center gap-2">
+          {showPeriodSelector && (
+            <Select value={selectedPeriod} onValueChange={handlePeriodChange}>
+              <SelectTrigger className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todo período</SelectItem>
+                <SelectItem value="30">30 dias</SelectItem>
+                <SelectItem value="14">14 dias</SelectItem>
+                <SelectItem value="7">7 dias</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
           <Button
             variant={sortBy === 'cadastro' ? 'default' : 'outline'}
             size="sm"

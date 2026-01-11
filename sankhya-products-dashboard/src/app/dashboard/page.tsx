@@ -10,9 +10,9 @@ import {
   LazyLoadingFallback
 } from "@/components/lazy-dashboard"
 
-import { useDashboardMetrics } from "@/hooks/use-dashboard-metrics"
 import { useDashboardAutoRefresh } from "@/hooks/use-auto-refresh"
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
+import { type PeriodFilter } from "@/hooks/use-dashboard-metrics"
 
 import data from "./data/data.json"
 import pastPerformanceData from "./data/past-performance-data.json"
@@ -20,7 +20,7 @@ import keyPersonnelData from "./data/key-personnel-data.json"
 import focusDocumentsData from "./data/focus-documents-data.json"
 
 export default function Page() {
-  const metrics = useDashboardMetrics()
+  const [cardsPeriod, setCardsPeriod] = useState<PeriodFilter>('all')
 
   // Auto-refresh dashboard data every 5 minutes
   const { isEnabled, toggleAutoRefresh, refreshNow, timeUntilNextRefresh } = useDashboardAutoRefresh(async () => {
@@ -69,12 +69,9 @@ export default function Page() {
           </div>
 
            <DashboardCards
-             totalProducts={metrics.totalProducts}
-             activeProducts={metrics.activeProducts}
-             inactiveProducts={metrics.inactiveProducts}
-             outOfStockProducts={metrics.outOfStockProducts}
-             totalStockValue={metrics.totalStockValue}
-             averagePrice={metrics.averagePrice}
+             period={cardsPeriod}
+             onPeriodChange={setCardsPeriod}
+             showPeriodSelector={true}
            />
            <div className="grid gap-6 md:grid-cols-2">
              <ChartAreaInteractive />
