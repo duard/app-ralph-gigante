@@ -281,7 +281,7 @@
 
 ### 6.1 Criar Componentes de Layout
 - [x] Criar AppLayout component
-- [ ] Criar DashboardLayout component
+- [x] Criar DashboardLayout component
 - [ ] Criar Sidebar component
 - [ ] Criar SidebarItem component
 - [ ] Criar SidebarHeader component
