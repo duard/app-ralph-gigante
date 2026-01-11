@@ -51,7 +51,7 @@
 - [x] Configurar pipeline de build
 - [x] Configurar pipeline de lint
 - [x] Configurar pipeline de typecheck
-- [ ] Criar arquivo .github/workflows/deploy.yml (opcional)
+- [x] Criar arquivo .github/workflows/deploy.yml (opcional)
 
 ## FASE 2: Infraestrutura e Configurações
 
