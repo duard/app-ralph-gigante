@@ -397,6 +397,8 @@ src/
 
 Add entries below this line:
 
+- **2025-01-11**: ✅ Implementar tooltips em botões de ação usando Radix UI. Adicionados tooltips informativos em botões principais da aplicação incluindo ProductTableToolbar (exportações e ações), ProductTableViewOptions (personalização de colunas), DataTablePagination (navegação de páginas), DataTableRowActions (menu de ações), ModeToggle (alternância de tema), ErrorBoundary (botões de recuperação), SearchTrigger (atalho de teclado), e DataTable (cabeçalhos ordenáveis). Corrigidos erros TypeScript em add-task-modal.tsx. Build e lint funcionando sem erros críticos.
+
 - **2025-01-11**: ✅ Implementadas animações em modais e drawers usando Framer Motion. Adicionado pacote framer-motion, criados componentes AnimatedDialog e AnimatedDrawer com animações suaves de entrada/saída, atualizado ProductDetailsModal com animações de elementos sequenciais, botões com interações hover/tap, e transições entre abas. Aplicadas animações também a ImportModal e AddTaskModal. Build e TypeScript funcionando sem erros.
 
 - **2025-01-11**: ✅ Atualizado README com instruções completas de setup e desenvolvimento. Documentação abrangente incluindo pré-requisitos, instalação, configuração de ambiente, autenticação, estrutura do projeto, comandos úteis, testes, deploy e troubleshooting. Incluídos exemplos de curl para API, estrutura de pastas detalhada, stack tecnológica completa, e convenções de código. Build e lint funcionando sem erros.
