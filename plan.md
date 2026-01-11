@@ -42,8 +42,8 @@
 - [x] Configurar .gitignore
 - [x] Instalar e configurar Husky
 - [x] Configurar pre-commit hook (lint-staged)
-- [ ] Configurar commit-msg hook (commitlint)
-- [ ] Criar template de commit message
+- [x] Configurar commit-msg hook (commitlint)
+- [x] Criar template de commit message
 
 ### 1.6 Setup de CI/CD
 - [ ] Criar arquivo .github/workflows/ci.yml
