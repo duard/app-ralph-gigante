@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Search, X, Filter } from "lucide-react"
-import useProductsStore from "@/stores/products-store"
+import { useProductsStore } from "@/stores/products-store"
 import { useProducts } from "@/hooks/use-products"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"

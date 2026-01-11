@@ -27,7 +27,7 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
                 if (!token) {
                     // No token, redirect to login
                     logout();
-                    navigate('/auth/sign-in', {
+                    navigate('/auth/entrar', {
                         state: { from: location },
                         replace: true,
                     });

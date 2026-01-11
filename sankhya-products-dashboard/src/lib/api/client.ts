@@ -98,7 +98,7 @@ apiClient.interceptors.response.use(
             toast.error('Sessão expirada. Por favor, faça login novamente.');
 
             // Redirect to login page
-            window.location.href = '/auth/sign-in';
+            window.location.href = '/auth/entrar';
 
             return Promise.reject(error);
         }

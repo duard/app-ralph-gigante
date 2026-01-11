@@ -47,7 +47,10 @@ export const authService = {
      * Login with username and password
      */
     async login(credentials: LoginRequest): Promise<LoginResponse> {
-        return post<LoginResponse>('/auth/login', credentials);
+        return post<LoginResponse>('/auth/login', {
+            username: credentials.username,
+            password: credentials.password,
+        });
     },
 
     /**

@@ -12,7 +12,7 @@ interface ProtectedRouteProps {
  */
 export function ProtectedRoute({
     children,
-    redirectTo = '/auth/sign-in',
+    redirectTo = '/auth/entrar',
     requiredRoles,
 }: ProtectedRouteProps) {
     const { isAuthenticated, user } = useAuthStore();

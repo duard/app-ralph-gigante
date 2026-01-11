@@ -138,7 +138,7 @@ export function LandingNavbar() {
             </a>
           </Button>
           <Button variant="ghost" asChild className="cursor-pointer">
-            <a href={getAppUrl("/auth/sign-in")}>Sign In</a>
+            <a href={getAppUrl("/auth/entrar")}>Entrar</a>
           </Button>
           <Button asChild className="cursor-pointer">
             <a href={getAppUrl("/auth/sign-up")}>Get Started</a>
@@ -257,7 +257,7 @@ export function LandingNavbar() {
 
                   <div className="grid grid-cols-2 gap-3">
                     <Button variant="outline" size="lg" asChild className="cursor-pointer">
-                      <a href={getAppUrl("/auth/sign-in")}>Sign In</a>
+                      <a href={getAppUrl("/auth/entrar")}>Entrar</a>
                     </Button>
                     <Button asChild size="lg" className="cursor-pointer" >
                       <a href={getAppUrl("/auth/sign-up")}>Get Started</a>

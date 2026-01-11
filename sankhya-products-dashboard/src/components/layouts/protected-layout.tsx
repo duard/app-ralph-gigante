@@ -35,7 +35,7 @@ export function ProtectedLayout({ children }: ProtectedLayoutProps) {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/auth/sign-in" replace />
+    return <Navigate to="/auth/entrar" replace />
   }
 
   return (

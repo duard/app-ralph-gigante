@@ -15,12 +15,12 @@ export function UnderMaintenanceError() {
       />
       <div className='text-center'>
         <h1 className='mb-4 text-3xl font-bold'>503</h1>
-        <h2 className="mb-3 text-2xl font-semibold">Under Maintenance</h2>
-        <p>The service is currently unavailable. Please try again later.</p>
+        <h2 className="mb-3 text-2xl font-semibold">Em Manutenção</h2>
+        <p>O serviço está temporariamente indisponível. Por favor, tente novamente mais tarde.</p>
         <div className='mt-6 flex items-center justify-center gap-4 md:mt-8'>
-          <Button className='cursor-pointer' onClick={() => navigate('/dashboard')}>Go Back Home</Button>
+          <Button className='cursor-pointer' onClick={() => navigate('/dashboard')}>Voltar ao Início</Button>
           <Button variant='outline' className='flex cursor-pointer items-center gap-1' onClick={() => navigate('#')}>
-            Contact Us
+            Contate-nos
           </Button>
         </div>
       </div>

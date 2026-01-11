@@ -35,6 +35,7 @@ export interface ProductFilters {
     search?: string;
     status?: 'all' | 'active' | 'inactive';
     category?: string;
+    unit?: string;
     priceMin?: number;
     priceMax?: number;
     stockMin?: number;
@@ -114,6 +115,7 @@ const defaultFilters: ProductFilters = {
     search: '',
     status: 'all',
     category: '',
+    unit: '',
     sortBy: 'codprod',
     sortOrder: 'asc',
 };
@@ -263,7 +265,14 @@ export const useProductsStore = create<ProductsState>()(
                 // Filter by category
                 if (filters.category) {
                     filtered = filtered.filter(
-                        (p) => p.codgrupoprod?.toString() === filters.category
+                        (p) => p.descrgrupoprod === filters.category
+                    );
+                }
+
+                // Filter by unit
+                if (filters.unit) {
+                    filtered = filtered.filter(
+                        (p) => p.codvol === filters.unit
                     );
                 }
 

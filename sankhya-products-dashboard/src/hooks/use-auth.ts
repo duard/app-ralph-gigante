@@ -45,7 +45,7 @@ export function useAuth() {
                     storeLogin(user, response.access_token, '');
 
                     toast.success(`Bem-vindo, ${user.name}!`);
-                    navigate('/dashboard');
+                    navigate('/bem-vindo');
 
                     return { success: true };
                 } else {
@@ -73,7 +73,7 @@ export function useAuth() {
             authService.clearAuthHeader();
             storeLogout();
             toast.success('Logout realizado com sucesso');
-            navigate('/auth/sign-in');
+            navigate('/auth/entrar');
         }
     }, [navigate, storeLogout]);
 

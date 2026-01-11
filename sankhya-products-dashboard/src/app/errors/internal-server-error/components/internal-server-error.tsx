@@ -15,12 +15,12 @@ export function InternalServerError() {
       />
       <div className='text-center'>
         <h1 className='mb-4 text-3xl font-bold'>500</h1>
-        <h2 className="mb-3 text-2xl font-semibold">Internal Server Error</h2>
-        <p>Something went wrong on our end. We're working to fix the issue. Please try again later.</p>
+        <h2 className="mb-3 text-2xl font-semibold">Erro Interno do Servidor</h2>
+        <p>Algo deu errado do nosso lado. Estamos trabalhando para corrigir o problema. Por favor, tente novamente mais tarde.</p>
         <div className='mt-6 flex items-center justify-center gap-4 md:mt-8'>
-          <Button className='cursor-pointer' onClick={() => navigate('/dashboard')}>Go Back Home</Button>
+          <Button className='cursor-pointer' onClick={() => navigate('/dashboard')}>Voltar ao Início</Button>
           <Button variant='outline' className='flex cursor-pointer items-center gap-1' onClick={() => navigate('')}>
-            Contact Us
+            Contate-nos
           </Button>
         </div>
       </div>

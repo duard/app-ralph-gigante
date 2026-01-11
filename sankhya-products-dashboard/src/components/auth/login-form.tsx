@@ -65,16 +65,15 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
     return (
         <form onSubmit={onSubmit} className="space-y-5">
-            {/* Username field */}
             <div className="space-y-2">
-                <Label htmlFor="username">Usuário</Label>
+                <Label htmlFor="username" className="text-sm font-medium">Usuário</Label>
                 <Input
                     id="username"
                     type="text"
                     placeholder="Digite seu usuário"
                     autoComplete="username"
                     disabled={isLoading}
-                    className="h-11"
+                    className="h-11 px-4 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-primary/20"
                     value={username}
                     onChange={(e) => {
                         setUsername(e.target.value);
@@ -86,9 +85,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                 )}
             </div>
 
-            {/* Password field */}
             <div className="space-y-2">
-                <Label htmlFor="password">Senha</Label>
+                <Label htmlFor="password" className="text-sm font-medium">Senha</Label>
                 <div className="relative">
                     <Input
                         id="password"
@@ -96,7 +94,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                         placeholder="Digite sua senha"
                         autoComplete="current-password"
                         disabled={isLoading}
-                        className="h-11 pr-10"
+                        className="h-11 px-4 pr-10 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-primary/20"
                         value={password}
                         onChange={(e) => {
                             setPassword(e.target.value);
@@ -107,14 +105,14 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="absolute right-0 top-0 h-11 w-11 hover:bg-transparent"
+                        className="absolute right-0 top-0 h-11 w-11 hover:bg-transparent text-muted-foreground hover:text-foreground"
                         onClick={() => setShowPassword(!showPassword)}
                         disabled={isLoading}
                     >
                         {showPassword ? (
-                            <EyeOff className="h-4 w-4 text-muted-foreground" />
+                            <EyeOff className="h-4 w-4" />
                         ) : (
-                            <Eye className="h-4 w-4 text-muted-foreground" />
+                            <Eye className="h-4 w-4" />
                         )}
                         <span className="sr-only">
                             {showPassword ? 'Ocultar senha' : 'Mostrar senha'}
@@ -126,7 +124,6 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                 )}
             </div>
 
-            {/* Remember me and forgot password */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                     <Checkbox
@@ -137,7 +134,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                     />
                     <Label
                         htmlFor="rememberMe"
-                        className="text-sm font-normal cursor-pointer"
+                        className="text-sm font-normal cursor-pointer text-muted-foreground"
                     >
                         Lembrar-me
                     </Label>
@@ -151,10 +148,9 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                 </Link>
             </div>
 
-            {/* Submit button */}
             <Button
                 type="submit"
-                className="w-full h-11 text-base font-semibold"
+                className="w-full h-11 text-base font-semibold shadow-md transition-all hover:shadow-lg"
                 disabled={isLoading}
             >
                 {isLoading ? (
@@ -170,7 +166,6 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                 )}
             </Button>
 
-            {/* Sign up link */}
             <div className="text-center text-sm text-muted-foreground">
                 Não tem uma conta?{' '}
                 <Link

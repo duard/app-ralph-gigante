@@ -36,6 +36,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { useDebounce } from "@/lib/utils/debounce"
+import { ProductFiltersSidebar } from "./product-filters-sidebar"
 
 const columns: ColumnDef<Product>[] = [
   {
@@ -87,44 +88,6 @@ const columns: ColumnDef<Product>[] = [
     header: "Unidade",
     cell: ({ row }) => row.getValue("codvol") || "-",
     enableSorting: true,
-  },
-  {
-    id: "actions",
-    header: "Ações",
-    cell: ({ row }) => {
-      const product = row.original
-      return (
-        <div className="flex items-center gap-2">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => {
-                setSelectedProduct(product)
-                setIsDetailsModalOpen(true)
-              }}
-            >
-              Ver
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => onEditProduct?.(product)}
-            >
-            Editar
-          </Button>
-          <Button variant="ghost" size="sm" className="text-destructive">
-            Excluir
-          </Button>
-        </div>
-      )
-    },
-  },
-  {
-    accessorKey: "codvol",
-    header: "Unidade",
-    cell: ({ row }) => row.getValue("codvol") || "-",
-    enableSorting: true,
-    enableHiding: true,
   },
 ]
 
@@ -292,7 +255,14 @@ export function ProductList({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex gap-6">
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block">
+        <ProductFiltersSidebar className="w-80" />
+      </div>
+      
+      {/* Main Content */}
+      <div className="flex-1 space-y-4">
       <ProductTableToolbar
         table={table}
         onSearch={(value) => {
@@ -405,6 +375,7 @@ export function ProductList({
         onClose={handleCloseModal}
         onEdit={handleModalEdit}
       />
+      </div>
     </div>
   )
 }

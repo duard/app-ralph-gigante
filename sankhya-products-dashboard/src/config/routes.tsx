@@ -15,6 +15,7 @@ const Users = lazy(() => import('@/app/users/page'))
 const FAQs = lazy(() => import('@/app/faqs/page'))
 const Pricing = lazy(() => import('@/app/pricing/page'))
 const Produtos = lazy(() => import('@/app/produtos/page'))
+const BemVindo = lazy(() => import('@/app/bem-vindo/page'))
 
 // Auth pages
 const SignIn = lazy(() => import('@/app/auth/sign-in/page'))
@@ -49,11 +50,21 @@ export interface RouteConfig {
 }
 
 export const routes: RouteConfig[] = [
-  // Default route - redirect to dashboard
+  // Default route - redirect to welcome page
   // Use relative path "dashboard" instead of "/dashboard" for basename compatibility
   {
     path: "/",
-    element: <Navigate to="dashboard" replace />
+    element: <Navigate to="bem-vindo" replace />
+  },
+
+  // Bem-Vindo Page
+  {
+    path: "/bem-vindo",
+    element: (
+      <ProtectedRoute>
+        <BemVindo />
+      </ProtectedRoute>
+    )
   },
 
   // Landing Page
@@ -152,15 +163,15 @@ export const routes: RouteConfig[] = [
      )
    },
 
-  // Authentication Routes
-  {
-    path: "/auth/sign-in",
-    element: (
-      <PublicLayout>
-        <SignIn />
-      </PublicLayout>
-    )
-  },
+   // Authentication Routes
+   {
+     path: "/auth/entrar",
+     element: (
+       <PublicLayout>
+         <SignIn />
+       </PublicLayout>
+     )
+   },
   {
     path: "/auth/sign-in-2",
     element: (
