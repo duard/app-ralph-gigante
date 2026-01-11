@@ -1,0 +1,159 @@
+{
+  "project": "sankhya-products-dashboard",
+  "branchName": "feature/tgfpro-dashboard",
+  "description": "Complete TGFPRO products dashboard with advanced filters, metrics, UI enhancements and performance optimizations",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Create ProductFiltersSidebar component with collapsible layout",
+      "description": "As a user, I want a sidebar with advanced filters to narrow down product searches.",
+      "acceptanceCriteria": [
+        "Create ProductFiltersSidebar component in src/components/products/",
+        "Implement collapsible sidebar with toggle button",
+        "Add basic layout structure with form elements",
+        "Integrate with products page layout",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Implement price range filter with slider",
+      "description": "As a user, I want to filter products by price range using a slider.",
+      "acceptanceCriteria": [
+        "Install and configure react-range for price slider",
+        "Add min/max price inputs with slider control",
+        "Update product filters state to include price range",
+        "Apply price filter to API calls",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Add status filter (active/inactive)",
+      "description": "As a user, I want to filter products by their active/inactive status.",
+      "acceptanceCriteria": [
+        "Add radio buttons or select for status filter",
+        "Include 'All', 'Active', 'Inactive' options",
+        "Update filters state and API integration",
+        "Show filtered results correctly",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Implement category/group filter with API integration",
+      "description": "As a user, I want to filter products by category using data from /tgfgru endpoint.",
+      "acceptanceCriteria": [
+        "Create hook to fetch groups from /tgfgru",
+        "Add dropdown select for group filter",
+        "Populate dropdown with API data",
+        "Apply group filter to product queries",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Create DashboardCards component with key metrics",
+      "description": "As a user, I want to see key metrics on the dashboard like total products, active/inactive counts.",
+      "acceptanceCriteria": [
+        "Create DashboardCards component in src/components/dashboard/",
+        "Display total products count",
+        "Show active vs inactive product counts",
+        "Add out of stock count if available",
+        "Use shadcn Card components",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "Implement category distribution chart",
+      "description": "As a user, I want to see a chart showing product distribution by categories.",
+      "acceptanceCriteria": [
+        "Install and configure Recharts",
+        "Create chart component for category distribution",
+        "Fetch data from products API grouped by category",
+        "Display pie or bar chart",
+        "Integrate into dashboard page",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Add dark/light theme toggle with persistence",
+      "description": "As a user, I want to switch between dark and light themes with my preference saved.",
+      "acceptanceCriteria": [
+        "Add theme toggle button to header/sidebar",
+        "Implement theme switching logic",
+        "Persist theme choice in localStorage",
+        "Apply theme to entire application",
+        "Test theme switching works correctly"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Implement lazy loading for components",
+      "description": "As a developer, I want components to load lazily to improve initial bundle size.",
+      "acceptanceCriteria": [
+        "Convert heavy components to use React.lazy",
+        "Add Suspense boundaries with loading fallbacks",
+        "Verify lazy loading works in dev and build",
+        "Check bundle splitting in build output",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Add unit tests for custom hooks",
+      "description": "As a developer, I want unit tests for custom hooks to ensure reliability.",
+      "acceptanceCriteria": [
+        "Set up Vitest and Testing Library",
+        "Create tests for useProducts hook",
+        "Create tests for useAuth hook",
+        "Achieve >70% coverage for hooks",
+        "Tests pass in CI"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Configure Prettier for consistent formatting",
+      "description": "As a developer, I want consistent code formatting with Prettier.",
+      "acceptanceCriteria": [
+        "Install and configure Prettier",
+        "Set up 2-space indentation",
+        "Configure Prettier with project conventions",
+        "Add format script to package.json",
+        "Integrate with ESLint if possible"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}

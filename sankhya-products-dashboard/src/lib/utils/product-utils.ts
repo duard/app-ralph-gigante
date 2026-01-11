@@ -20,6 +20,13 @@ export function formatProductPrice(price: number): string {
   }).format(price);
 }
 
+export function formatCurrency(price: number): string {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(price);
+}
+
 export function formatProductStatus(status: string): string {
   return status === 'S' ? 'Ativo' : 'Inativo';
 }

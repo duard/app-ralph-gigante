@@ -17,6 +17,7 @@ const DEFAULT_TIMEOUT = 30000;
 const apiClient: AxiosInstance = axios.create({
     baseURL: API_BASE_URL,
     timeout: DEFAULT_TIMEOUT,
+    withCredentials: false, // Match API CORS config
     headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
@@ -26,16 +27,27 @@ const apiClient: AxiosInstance = axios.create({
 // Request interceptor - adds authorization token if available
 apiClient.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
+        console.log('[API Request]', config.method?.toUpperCase(), config.url, {
+            baseURL: config.baseURL,
+            headers: config.headers,
+            data: config.data,
+            params: config.params
+        });
+
         // Get token from stored tokens
         const { token } = authService.getStoredTokens();
 
         if (token && config.headers) {
             config.headers.Authorization = `Bearer ${token}`;
+            console.log('[API Request] Token added to headers');
+        } else {
+            console.log('[API Request] No token available');
         }
 
         return config;
     },
     (error: AxiosError) => {
+        console.error('[API Request Error]', error);
         return Promise.reject(error);
     }
 );
@@ -43,6 +55,10 @@ apiClient.interceptors.request.use(
 // Response interceptor - handles errors globally
 apiClient.interceptors.response.use(
     (response: AxiosResponse) => {
+        console.log('[API Response]', response.status, response.config.method?.toUpperCase(), response.config.url, {
+            data: response.data,
+            headers: response.headers
+        });
         return response;
     },
     async (error: AxiosError) => {
@@ -119,6 +135,11 @@ apiClient.interceptors.response.use(
             toast.error(`Erro: ${error.message}`);
         }
 
+        console.error('[API Response Error]', error.response?.status, error.config?.method?.toUpperCase(), error.config?.url, {
+            message: error.message,
+            response: error.response?.data,
+            headers: error.response?.headers
+        });
         return Promise.reject(error);
     }
 );

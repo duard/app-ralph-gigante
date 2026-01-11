@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Card, CardContent } from "@/components/ui/card"
-import { formatProductCode, formatProductPrice, formatProductStatus, formatDate } from "@/lib/utils/product-utils"
+import { formatProductCode, formatProductPrice, formatProductStatus, formatDate, formatCurrency } from "@/lib/utils/product-utils"
 import type { Product } from "@/stores/products-store"
+import { useProductPriceHistory } from "@/hooks/use-product-price-history"
+import { PriceHistoryChart } from "./price-history-chart"
 import {
   Package,
   DollarSign,
@@ -18,8 +20,10 @@ import {
   ArrowLeft,
   ArrowRight,
   Edit,
-  ImageIcon
+  TrendingUp,
+  Clock
 } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface ProductDetailsModalProps {
   product: Product | null
@@ -42,11 +46,39 @@ export function ProductDetailsModal({
   hasPrevious = false,
   hasNext = false
 }: ProductDetailsModalProps) {
+  const [activeTab, setActiveTab] = React.useState("details")
+  
+  const {
+    priceHistory,
+    isLoading: isLoadingPriceHistory,
+    fetchLast30Days,
+    fetchLast90Days,
+    getAveragePrice,
+    getPriceTrend
+  } = useProductPriceHistory()
+
+  // Load price history when tab changes to price-history
+  React.useEffect(() => {
+    if (activeTab === "price-history" && product?.codprod && !priceHistory) {
+      fetchLast30Days(product.codprod)
+    }
+  }, [activeTab, product?.codprod, fetchLast30Days, priceHistory])
+
   if (!product) return null
 
   const handleEdit = () => {
     if (onEdit) {
       onEdit(product)
+    }
+  }
+
+  const handlePeriodChange = (period: '30' | '90') => {
+    if (product?.codprod) {
+      if (period === '30') {
+        fetchLast30Days(product.codprod)
+      } else {
+        fetchLast90Days(product.codprod)
+      }
     }
   }
 
@@ -97,7 +129,20 @@ export function ProductDetailsModal({
           </DrawerHeader>
 
           <ScrollArea className="max-h-[70vh] px-6 py-4">
-            <div className="space-y-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="details" className="flex items-center gap-2">
+                  <Package className="h-4 w-4" />
+                  Detalhes
+                </TabsTrigger>
+                <TabsTrigger value="price-history" className="flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4" />
+                  Histórico de Preços
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="details" className="mt-6">
+                <div className="space-y-6">
               {/* Product Image */}
               {product.imagem && (
                 <div className="flex justify-center">
@@ -232,7 +277,7 @@ export function ProductDetailsModal({
               </div>
 
               {/* Additional Information */}
-              {(product.codund || product.codtipoprod || product.pesoliq || product.codfab) && (
+              {(product.codvol || product.pesoliq || product.codmarca || product.ncm) && (
                 <>
                   <Separator />
                   <div className="space-y-4">
@@ -241,17 +286,17 @@ export function ProductDetailsModal({
                     </h4>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {product.codund && (
+                      {product.codvol && (
                         <div>
-                          <p className="text-sm font-medium">Unidade de Estoque</p>
-                          <p className="text-sm">{product.codund}</p>
+                          <p className="text-sm font-medium">Unidade de Venda</p>
+                          <p className="text-sm">{product.codvol}</p>
                         </div>
                       )}
                       
-                      {product.codtipoprod && (
+                      {product.ncm && (
                         <div>
-                          <p className="text-sm font-medium">Tipo de Produto</p>
-                          <p className="text-sm">{product.codtipoprod}</p>
+                          <p className="text-sm font-medium">NCM</p>
+                          <p className="text-sm">{product.ncm}</p>
                         </div>
                       )}
                       
@@ -262,10 +307,10 @@ export function ProductDetailsModal({
                         </div>
                       )}
                       
-                      {product.codfab && (
+                      {product.pesobruto && (
                         <div>
-                          <p className="text-sm font-medium">Fabricante</p>
-                          <p className="text-sm">{product.codfab}</p>
+                          <p className="text-sm font-medium">Peso Bruto</p>
+                          <p className="text-sm">{product.pesobruto} kg</p>
                         </div>
                       )}
                     </div>
@@ -274,7 +319,7 @@ export function ProductDetailsModal({
               )}
 
               {/* Timestamp Information */}
-              {(product.dtinclusao || product.dhalter) && (
+              {(product.dtcad || product.dtalter) && (
                 <>
                   <Separator />
                   <div className="space-y-4">
@@ -283,22 +328,22 @@ export function ProductDetailsModal({
                     </h4>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {product.dtinclusao && (
+                      {product.dtcad && (
                         <div className="flex items-center gap-3">
                           <Calendar className="h-4 w-4 text-muted-foreground" />
                           <div>
                             <p className="text-sm font-medium">Data de Inclusão</p>
-                            <p className="text-sm">{formatDate(product.dtinclusao)}</p>
+                            <p className="text-sm">{formatDate(product.dtcad)}</p>
                           </div>
                         </div>
                       )}
                       
-                      {product.dhalter && (
+                      {product.dtalter && (
                         <div className="flex items-center gap-3">
                           <Calendar className="h-4 w-4 text-muted-foreground" />
                           <div>
                             <p className="text-sm font-medium">Última Alteração</p>
-                            <p className="text-sm">{formatDate(product.dhalter)}</p>
+                            <p className="text-sm">{formatDate(product.dtalter)}</p>
                           </div>
                         </div>
                       )}
@@ -306,7 +351,63 @@ export function ProductDetailsModal({
                   </div>
                 </>
               )}
-            </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="price-history" className="mt-6">
+                <div className="space-y-6">
+                  <PriceHistoryChart
+                    data={priceHistory?.movimentacoes || []}
+                    isLoading={isLoadingPriceHistory}
+                    onPeriodChange={handlePeriodChange}
+                    averagePrice={getAveragePrice()}
+                    priceTrend={getPriceTrend()}
+                  />
+                  
+                  {/* Price History Summary */}
+                  {priceHistory && !isLoadingPriceHistory && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <Card className="p-4">
+                        <div className="flex items-center gap-3">
+                          <Clock className="h-5 w-5 text-muted-foreground" />
+                          <div>
+                            <p className="text-sm font-medium">Período</p>
+                            <p className="text-xs text-muted-foreground">
+                              {new Date(priceHistory.dataInicio).toLocaleDateString('pt-BR')} até {' '}
+                              {new Date(priceHistory.dataFim).toLocaleDateString('pt-BR')}
+                            </p>
+                          </div>
+                        </div>
+                      </Card>
+                      
+                      <Card className="p-4">
+                        <div className="flex items-center gap-3">
+                          <DollarSign className="h-5 w-5 text-muted-foreground" />
+                          <div>
+                            <p className="text-sm font-medium">Preço Médio</p>
+                            <p className="text-sm font-semibold text-green-600">
+                              {formatCurrency(getAveragePrice())}
+                            </p>
+                          </div>
+                        </div>
+                      </Card>
+                      
+                      <Card className="p-4">
+                        <div className="flex items-center gap-3">
+                          <Tag className="h-5 w-5 text-muted-foreground" />
+                          <div>
+                            <p className="text-sm font-medium">Movimentações</p>
+                            <p className="text-sm font-semibold">
+                              {priceHistory.totalMovimentacoes} registros
+                            </p>
+                          </div>
+                        </div>
+                      </Card>
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
+            </Tabs>
           </ScrollArea>
 
           <div className="border-t px-6 py-4">
