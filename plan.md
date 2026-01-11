@@ -66,17 +66,17 @@
 - [x] Botão de edição rápida
 
 ### Filtros Avançados
-- [ ] Criar componente ProductFiltersSidebar com layout colapsável
-- [ ] Implementar filtro de preço com range slider usando react-range
-- [ ] Adicionar filtro por código/produto com input de texto
-- [ ] Criar filtro por status (ativo/inativo) com radio buttons
-- [ ] Implementar filtro por grupo/categoria com dropdown populado da API /tgfgru
-- [ ] Adicionar filtro por unidade de medida com select
-- [ ] Suporte a combinação múltipla de filtros com estado global
-- [ ] Botão "Limpar todos os filtros" que reseta filtros e recarrega lista
+- [x] Criar componente ProductFiltersSidebar com layout colapsável
+- [x] Implementar filtro de preço com range slider usando react-range
+- [x] Adicionar filtro por código/produto com input de texto
+- [x] Criar filtro por status (ativo/inativo) com radio buttons
+- [x] Implementar filtro por grupo/categoria com dropdown populado da API /tgfgru
+- [x] Adicionar filtro por unidade de medida com select
+- [x] Suporte a combinação múltipla de filtros com estado global
+- [x] Botão "Limpar todos os filtros" que reseta filtros e recarrega lista
 - [ ] Sistema de presets de filtros salvos no localStorage
-- [ ] Exibir contagem de resultados em tempo real ao aplicar filtros
-- [ ] Integrar filtros avançados na página de produtos com toggle show/hide
+- [x] Exibir contagem de resultados em tempo real ao aplicar filtros
+- [x] Integrar filtros avançados na página de produtos com toggle show/hide
 
 ### Gestão de Produtos (CRUD - mas comente modo leitura, nos não editamos, ou incluimos, ou excluimod)
 - [x] A tela deve conter todas OPERACOES CRUD, mas não edita, não excluir, não incluir VERDADEIRAMENTE, somente le dados
@@ -219,6 +219,78 @@ npm run preview
 
 ## Notes
 
+### Fluxo de Autenticação
+
+O sistema de autenticação foi redesenhado para receber tokens da API Sankhya externa em vez de gerar tokens JWT próprios.
+
+#### Arquitetura de Autenticação
+
+```
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│  API Sankhya    │────▶│  Nossa API       │────▶│  Frontend       │
+│  Externa        │     │  (Pass-through)  │     │  (React)        │
+│                 │     │                  │     │                 │
+│  POST /auth/login    │  POST /auth/login │     │  Input: token   │
+│  Recebe: username    │  Recebe: token    │     │  Output: token  │
+│  Retorna: JWT        │  Retorna: JWT     │     │  Armazena JWT   │
+└─────────────────┘     └──────────────────┘     └─────────────────┘
+```
+
+#### Fluxo de Login
+
+1. **Obtenção do Token Externo**: O usuário obtém o token JWT da API Sankhya externa
+   - Endpoint: `POST https://api-nestjs-sankhya-read-producao.gigantao.net/auth/login`
+   - Body: `{ "username": "CONVIDADO", "password": "guest123" }`
+   - Response: `{ "access_token": "eyJhbGciOiJIUzI1NiIs..." }`
+
+2. **Envio para Nossa API**: O frontend envia o token externo para nossa API
+   - Endpoint: `POST http://localhost:3000/auth/login`
+   - Body: `{ "token": "eyJhbGciOiJIUzI1NiIs..." }`
+   - Nossa API valida o token externo (verifica formato e expiração)
+
+3. **Armazenamento**: O token é armazenado no localStorage/sessionStorage
+   - Usado em todas as requisições subsequentes via header `Authorization: Bearer <token>`
+
+#### Atualizações no Frontend
+
+- **LoginForm**: Alterado para aceitar token em vez de username/password
+- **AuthStore**: Mantido interface similar, mas processa token externo
+- **AuthService**: Simplified para passar token diretamente
+- **Rotas**: Após login, redireciona para `/bem-vindo` (tela de boas-vindas)
+
+#### Tela de Boas-Vindas (`/bem-vind`)
+
+A tela de boas-vindas é exibida após o login bem-sucedido com:
+- Saudação personalizada com nome do usuário
+- Visão geral do sistema
+- Links rápidos para principais funcionalidades
+- Botão para acessar o dashboard principal
+
+#### Endpoints da API
+
+| Endpoint | Método | Descrição |
+|----------|--------|-----------|
+| `/auth/login` | POST | Recebe token externo e retorna validação |
+| `/profile/me` | GET | Retorna dados do usuário (protegido) |
+
+#### Exemplo de Uso (cURL)
+
+```bash
+# 1. Obter token da API Sankhya externa
+TOKEN=$(curl -s -X POST https://api-nestjs-sankhya-read-producao.gigantao.net/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"CONVIDADO","password":"guest123"}' | jq -r '.access_token')
+
+# 2. Enviar token para nossa API
+curl -s -X POST http://localhost:3000/auth/login \
+  -H 'Content-Type: application/json' \
+  -d "{\"token\":\"$TOKEN\"}"
+
+# 3. Usar o token para rotas protegidas
+curl -s http://localhost:3000/tgfpro?page=1 \
+  -H "Authorization: Bearer $TOKEN"
+```
+
 ### API Endpoints Principais
 - **Auth**: POST /auth/login, POST /auth/refresh, GET /auth/me
 - **Produtos**: GET /tgfpro, GET /tgfpro/:codprod
@@ -341,7 +413,11 @@ src/
 
 Add entries below this line:
 
+- **2025-01-11**: ✅ Verificado e marcado como concluído o filtro de preço com range slider. O filtro já estava completamente implementado usando o componente Slider do Radix UI (uma escolha melhor que react-range, já que está nas dependências do projeto). O implementação inclui: cálculo dinâmico de faixa de preço baseado nos produtos disponíveis, controle deslizante com step apropriado, feedback visual mostrando min/máx/valores atuais, integração completa com a Zustand store para filtragem, e badge de filtro ativo com opção de limpar. O filtro está localizado na ProductFiltersSidebar nas linhas 264-290 e funciona perfeitamente com o sistema de filtragem global.
+
 - **2025-01-11**: ✅ Implementado gráfico de distribuição por categoria usando Recharts. Criado componente CategoryDistributionChart que exibe distribuição de produtos por categoria com suporte a visualização em barras e pizza. O componente processa dados dinâmicos da store de produtos, calcula contagens por categoria e exibe as 10 principais categorias. Inclui controles para alternar entre tipos de gráfico, métricas resumidas (categoria principal, média por categoria) e design responsivo. Componente integrado ao dashboard layout ao lado do gráfico existente, com tratamento de estado vazio e conformidade com TypeScript strict. Componente localizado em `src/app/dashboard/components/category-distribution-chart.tsx`.
+
+- **2025-01-11**: ✅ Implementada sidebar de filtros de produtos avançados com layout colapsível. Criado componente ProductFiltersSidebar com múltiplos filtros (busca, status, categoria, unidade, faixa de preço), seções colapsíveis, indicadores de filtros ativos, e integração com Zustand store. Componente integrado à página de produtos com layout responsivo (desktop sidebar, mobile trigger) e suporte a filters combinados. Localizado em `src/components/products/product-filters-sidebar.tsx` e `src/components/products/product-list.tsx`.
 
 - **2025-01-11**: ✅ Implementado histórico de preços de produtos com gráficos interativos. Criado hook `useProductPriceHistory` que consome endpoint `/tgfpro/consumo-periodo/{codprod}` da API, componente `PriceHistoryChart` com visualização em Recharts mostrando tendência de preços, métricas médias e variação percentual. Adicionado como nova aba no modal de detalhes do produto com períodos de 30/90 dias. Implementados indicadores visuais de tendência (alta/baixa/estável) e cards de resumo com preço médio e total de movimentações. Componentes localizados em `src/hooks/use-product-price-history.ts` e `src/components/products/price-history-chart.tsx`.
 
