@@ -35,6 +35,7 @@ export function useProducts() {
     } = useProductsStore();
 
     const [searchResults, setSearchResults] = useState<Product[]>([]);
+    const [cache] = useState(new Map<string, any>());
 
     /**
      * Fetch all products from API
@@ -45,9 +46,32 @@ export function useProducts() {
                 setLoading(true);
                 setError(null);
 
+                // Create cache key from params
+                const cacheKey = JSON.stringify(params || {});
+
+                // Check cache first
+                if (cache.has(cacheKey)) {
+                    const cachedResponse = cache.get(cacheKey);
+                    setProducts(cachedResponse.data);
+
+                    if (cachedResponse.meta) {
+                        setPagination({
+                            page: cachedResponse.meta.page,
+                            pageSize: cachedResponse.meta.pageSize,
+                            total: cachedResponse.meta.total,
+                            totalPages: cachedResponse.meta.totalPages,
+                        });
+                    }
+
+                    return cachedResponse;
+                }
+
                 const response = await productService.getProducts(params);
 
                 if (response.success && response.data) {
+                    // Cache the response
+                    cache.set(cacheKey, response);
+
                     setProducts(response.data);
 
                     if (response.meta) {
@@ -70,7 +94,7 @@ export function useProducts() {
                 setLoading(false);
             }
         },
-        [setProducts, setPagination, setLoading, setError]
+        [setProducts, setPagination, setLoading, setError, cache]
     );
 
     /**

@@ -265,7 +265,7 @@
 - [x] Criar hook useDeleteProduct
 - [x] Criar hook useSearchProducts
 - [x] Criar hook useProductFilters
-- [ ] Implementar cache queries
+- [x] Implementar cache queries
 - [ ] Implementar refetch automático
 - [ ] Implementar optimistic updates
 
