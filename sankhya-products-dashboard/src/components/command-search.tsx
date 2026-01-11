@@ -7,24 +7,20 @@ import {
   Search,
   LayoutPanelLeft,
   LayoutDashboard,
-  Mail,
-  CheckSquare,
-  MessageCircle,
-  Calendar,
-  Shield,
-  AlertTriangle,
+  Package,
+  BarChart3,
+  Filter,
+  FileSpreadsheet,
+  Download,
   Settings,
   HelpCircle,
-  CreditCard,
-  User,
-  Bell,
-  Link2,
-  Palette,
   type LucideIcon,
 } from "lucide-react"
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
+import { useProducts } from "@/hooks/use-products"
+import { toast } from "sonner"
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -112,9 +108,11 @@ CommandItem.displayName = CommandPrimitive.Item.displayName
 
 interface SearchItem {
   title: string
-  url: string
+  url?: string
   group: string
   icon?: LucideIcon
+  subtitle?: string
+  productCode?: number
 }
 
 interface CommandSearchProps {
@@ -125,47 +123,77 @@ interface CommandSearchProps {
 export function CommandSearch({ open, onOpenChange }: CommandSearchProps) {
   const navigate = useNavigate()
   const commandRef = React.useRef<HTMLDivElement>(null)
+  const [searchQuery, setSearchQuery] = React.useState("")
+  const [isLoading, setIsLoading] = React.useState(false)
+  const { searchProducts } = useProducts()
 
-  const searchItems: SearchItem[] = [
+  const staticItems: SearchItem[] = [
     // Dashboards
-    { title: "Dashboard 1", url: "/dashboard", group: "Dashboards", icon: LayoutDashboard },
-    { title: "Dashboard 2", url: "/dashboard-2", group: "Dashboards", icon: LayoutPanelLeft },
+    { title: "Dashboard", url: "/dashboard", group: "Navegação", icon: LayoutDashboard },
+    { title: "Bem-Vindo", url: "/bem-vindo", group: "Navegação", icon: LayoutPanelLeft },
 
-    // Apps
-    { title: "Mail", url: "/mail", group: "Apps", icon: Mail },
-    { title: "Tasks", url: "/tasks", group: "Apps", icon: CheckSquare },
-    { title: "Chat", url: "/chat", group: "Apps", icon: MessageCircle },
-    { title: "Calendar", url: "/calendar", group: "Apps", icon: Calendar },
+    // Products
+    { title: "Lista de Produtos", url: "/produtos", group: "Navegação", icon: Package },
+    { title: "Análise de Produtos", url: "/produtos/analise", group: "Navegação", icon: BarChart3 },
+    { title: "Filtros Avançados", url: "/produtos/filtros", group: "Navegação", icon: Filter },
+    { title: "Exportação de Dados", url: "/produtos/exportar", group: "Navegação", icon: FileSpreadsheet },
 
-    // Auth Pages
-    { title: "Sign In 1", url: "/auth/sign-in", group: "Auth Pages", icon: Shield },
-    { title: "Sign In 2", url: "/auth/sign-in-2", group: "Auth Pages", icon: Shield },
-    { title: "Sign Up 1", url: "/auth/sign-up", group: "Auth Pages", icon: Shield },
-    { title: "Sign Up 2", url: "/auth/sign-up-2", group: "Auth Pages", icon: Shield },
-    { title: "Forgot Password 1", url: "/auth/forgot-password", group: "Auth Pages", icon: Shield },
-    { title: "Forgot Password 2", url: "/auth/forgot-password-2", group: "Auth Pages", icon: Shield },
-
-    // Errors
-    { title: "Unauthorized", url: "/errors/unauthorized", group: "Errors", icon: AlertTriangle },
-    { title: "Forbidden", url: "/errors/forbidden", group: "Errors", icon: AlertTriangle },
-    { title: "Not Found", url: "/errors/not-found", group: "Errors", icon: AlertTriangle },
-    { title: "Internal Server Error", url: "/errors/internal-server-error", group: "Errors", icon: AlertTriangle },
-    { title: "Under Maintenance", url: "/errors/under-maintenance", group: "Errors", icon: AlertTriangle },
-
-    // Settings
-    { title: "User Settings", url: "/settings/user", group: "Settings", icon: User },
-    { title: "Account Settings", url: "/settings/account", group: "Settings", icon: Settings },
-    { title: "Plans & Billing", url: "/settings/billing", group: "Settings", icon: CreditCard },
-    { title: "Appearance", url: "/settings/appearance", group: "Settings", icon: Palette },
-    { title: "Notifications", url: "/settings/notifications", group: "Settings", icon: Bell },
-    { title: "Connections", url: "/settings/connections", group: "Settings", icon: Link2 },
-
-    // Pages
-    { title: "FAQs", url: "/faqs", group: "Pages", icon: HelpCircle },
-    { title: "Pricing", url: "/pricing", group: "Pages", icon: CreditCard },
+    // Other
+    { title: "Relatórios", url: "/relatorios", group: "Navegação", icon: Download },
+    { title: "Configurações", url: "/configuracoes", group: "Navegação", icon: Settings },
+    { title: "Ajuda", url: "/ajuda", group: "Navegação", icon: HelpCircle },
   ]
 
-  const groupedItems = searchItems.reduce((acc, item) => {
+  const [productResults, setProductResults] = React.useState<SearchItem[]>([])
+
+  // Search products when query changes
+  React.useEffect(() => {
+    const searchForProducts = async () => {
+      if (!searchQuery.trim()) {
+        setProductResults([])
+        return
+      }
+
+      setIsLoading(true)
+      try {
+        const results = await searchProducts(searchQuery)
+        if (results && results.length > 0) {
+          const productItems: SearchItem[] = results.map((product) => ({
+            title: product.descrprod || `Produto #${product.codprod}`,
+            subtitle: `Código: ${product.codprod} | Preço: R$ ${(product.vlrvenda || 0).toFixed(2)}`,
+            productCode: product.codprod,
+            group: "Produtos",
+            icon: Package,
+          }))
+          setProductResults(productItems)
+        } else {
+          setProductResults([])
+        }
+      } catch (error) {
+        console.error("Search error:", error)
+        toast.error("Erro ao buscar produtos")
+        setProductResults([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    const timeoutId = setTimeout(searchForProducts, 300)
+    return () => clearTimeout(timeoutId)
+  }, [searchQuery, searchProducts])
+
+  // Combine static items with product results
+  const allSearchItems = React.useMemo(() => {
+    if (searchQuery.trim()) {
+      // Show only product results when searching
+      return productResults
+    } else {
+      // Show static navigation items when not searching
+      return staticItems
+    }
+  }, [searchQuery, productResults])
+
+  const groupedItems = allSearchItems.reduce((acc, item) => {
     if (!acc[item.group]) {
       acc[item.group] = []
     }
@@ -173,9 +201,7 @@ export function CommandSearch({ open, onOpenChange }: CommandSearchProps) {
     return acc
   }, {} as Record<string, SearchItem[]>)
 
-  const handleSelect = (url: string) => {
-    navigate(url)
-    onOpenChange(false)
+  const handleSelect = (item: SearchItem) => {
     // Bounce effect like Vercel
     if (commandRef.current) {
       commandRef.current.style.transform = 'scale(0.96)'
@@ -185,36 +211,95 @@ export function CommandSearch({ open, onOpenChange }: CommandSearchProps) {
         }
       }, 100)
     }
+
+    if (item.productCode) {
+      // Navigate to product details
+      navigate(`/produtos/${item.productCode}`)
+      toast.success(`Navegando para ${item.title}`)
+    } else if (item.url) {
+      // Navigate to regular page
+      navigate(item.url)
+    }
+
+    onOpenChange(false)
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="overflow-hidden p-0 shadow-2xl border border-zinc-200 dark:border-zinc-800 max-w-[640px]">
-        <DialogTitle className="sr-only">Command Search</DialogTitle>
+        <DialogTitle className="sr-only">Busca Rápida - Sankhya Center</DialogTitle>
         <Command
           ref={commandRef}
           className="transition-transform duration-100 ease-out"
         >
-          <CommandInput placeholder="What do you need?" autoFocus />
+          <CommandInput 
+            placeholder="Buscar produtos ou navegar..." 
+            autoFocus 
+            value={searchQuery}
+            onValueChange={setSearchQuery}
+          />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            {Object.entries(groupedItems).map(([group, items]) => (
+            {isLoading && (
+              <div className="flex items-center justify-center h-12 text-sm text-zinc-500 dark:text-zinc-400">
+                Buscando produtos...
+              </div>
+            )}
+            
+            {!isLoading && searchQuery.trim() && productResults.length === 0 && (
+              <CommandEmpty>
+                Nenhum produto encontrado para "{searchQuery}"
+              </CommandEmpty>
+            )}
+            
+            {!isLoading && !searchQuery.trim() && Object.entries(groupedItems).map(([group, items]) => (
               <CommandGroup key={group} heading={group}>
                 {items.map((item) => {
                   const Icon = item.icon
                   return (
                     <CommandItem
-                      key={item.url}
+                      key={item.url || item.title}
                       value={item.title}
-                      onSelect={() => handleSelect(item.url)}
+                      onSelect={() => handleSelect(item)}
                     >
                       {Icon && <Icon className="mr-2 h-4 w-4" />}
-                      {item.title}
+                      <div className="flex flex-col">
+                        <span>{item.title}</span>
+                        {item.subtitle && (
+                          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                            {item.subtitle}
+                          </span>
+                        )}
+                      </div>
                     </CommandItem>
                   )
                 })}
               </CommandGroup>
             ))}
+            
+            {!isLoading && searchQuery.trim() && productResults.length > 0 && (
+              <CommandGroup heading="Produtos">
+                {productResults.map((item) => {
+                  const Icon = item.icon
+                  return (
+                    <CommandItem
+                      key={item.productCode}
+                      value={`${item.title} ${item.subtitle}`}
+                      onSelect={() => handleSelect(item)}
+                    >
+                      {Icon && <Icon className="mr-2 h-4 w-4" />}
+                      <div className="flex flex-col">
+                        <span>{item.title}</span>
+                        {item.subtitle && (
+                          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                            {item.subtitle}
+                          </span>
+                        )}
+                      </div>
+                    </CommandItem>
+                  )
+                })}
+              </CommandGroup>
+            )}
           </CommandList>
         </Command>
       </DialogContent>
@@ -229,8 +314,8 @@ export function SearchTrigger({ onClick }: { onClick: () => void }) {
       className="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-8 px-3 py-1 relative w-full justify-start text-muted-foreground sm:pr-12 md:w-36 lg:w-56"
     >
       <Search className="mr-2 h-3.5 w-3.5" />
-      <span className="hidden lg:inline-flex">Search...</span>
-      <span className="inline-flex lg:hidden">Search...</span>
+      <span className="hidden lg:inline-flex">Buscar produtos...</span>
+      <span className="inline-flex lg:hidden">Buscar...</span>
       <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-4 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
         <span className="text-xs">⌘</span>K
       </kbd>
