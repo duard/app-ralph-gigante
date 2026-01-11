@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
+import { Skeleton } from "@/components/ui/skeleton"
 import { useProducts } from "@/hooks/use-products"
 import { Product } from "@/stores/products-store"
 import { formatProductCode, formatProductPrice, formatProductStatus } from "@/lib/utils/product-utils"
@@ -21,6 +22,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 const columns: ColumnDef<Product>[] = [
   {
@@ -92,6 +101,47 @@ const columns: ColumnDef<Product>[] = [
   },
 ]
 
+function ProductListSkeleton() {
+  return (
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead><Skeleton className="h-4 w-16" /></TableHead>
+            <TableHead><Skeleton className="h-4 w-24" /></TableHead>
+            <TableHead><Skeleton className="h-4 w-12" /></TableHead>
+            <TableHead><Skeleton className="h-4 w-16" /></TableHead>
+            <TableHead><Skeleton className="h-4 w-12" /></TableHead>
+            <TableHead><Skeleton className="h-4 w-20" /></TableHead>
+            <TableHead><Skeleton className="h-4 w-16" /></TableHead>
+            <TableHead><Skeleton className="h-4 w-16" /></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {Array.from({ length: 10 }).map((_, index) => (
+            <TableRow key={index}>
+              <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+              <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Skeleton className="h-8 w-12" />
+                  <Skeleton className="h-8 w-12" />
+                  <Skeleton className="h-8 w-12" />
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
+
 export function ProductList() {
   const {
     filteredProducts,
@@ -103,7 +153,7 @@ export function ProductList() {
   } = useProducts()
 
   if (isLoading) {
-    return <div className="flex items-center justify-center p-8">Carregando produtos...</div>
+    return <ProductListSkeleton />
   }
 
   if (error) {

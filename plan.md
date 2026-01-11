@@ -50,7 +50,7 @@
 - [x] Controles de paginação (page, perPage)
 - [x] Indicador de total, página atual e última página
 - [ ] Virtualização de lista para 1000+ produtos
-- [ ] Estados de loading (skeletons)
+- [x] Estados de loading (skeletons)
 - [ ] Estados vazios (empty states)
 - [ ] Estados de erro com retry
 
