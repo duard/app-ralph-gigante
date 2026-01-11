@@ -51,7 +51,7 @@
 - [x] Indicador de total, página atual e última página
 - [ ] Virtualização de lista para 1000+ produtos
 - [x] Estados de loading (skeletons)
-- [ ] Estados vazios (empty states)
+ - [x] Estados vazios (empty states)
 - [ ] Estados de erro com retry
 
 ### Detalhes do Produto

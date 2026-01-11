@@ -14,6 +14,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Package,
 } from "lucide-react"
 import {
   Select,
@@ -85,7 +86,7 @@ const columns: ColumnDef<Product>[] = [
   {
     id: "actions",
     header: "Ações",
-    cell: ({ row }) => (
+    cell: ({ row: _row }) => (
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="sm">
           Ver
@@ -142,6 +143,18 @@ function ProductListSkeleton() {
   )
 }
 
+function EmptyState() {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 text-center">
+      <Package className="h-12 w-12 text-muted-foreground mb-4" />
+      <h3 className="text-lg font-semibold mb-2">Nenhum produto encontrado</h3>
+      <p className="text-muted-foreground max-w-sm">
+        Não há produtos disponíveis no momento. Tente ajustar os filtros ou recarregar a página.
+      </p>
+    </div>
+  )
+}
+
 export function ProductList() {
   const {
     filteredProducts,
@@ -162,7 +175,7 @@ export function ProductList() {
 
   return (
     <div className="space-y-4">
-      <DataTable columns={columns} data={filteredProducts} />
+      <DataTable columns={columns} data={filteredProducts} emptyState={<EmptyState />} />
       <div className="flex items-center justify-between px-2">
         <div className="flex-1 text-sm text-muted-foreground">
           {pagination.total > 0 && (
