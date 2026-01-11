@@ -54,6 +54,25 @@ export interface Pagination {
 }
 
 /**
+ * Table column visibility
+ */
+export type TableColumnId =
+  | 'codprod'
+  | 'descrprod'
+  | 'vlrvenda'
+  | 'estoque'
+  | 'ativo'
+  | 'descrgrupoprod'
+  | 'codvol'
+  | 'codgrupoprod'
+  | 'reffab'
+  | 'vlrcusto'
+  | 'ncm'
+  | 'actions';
+
+export type TableColumnVisibility = Record<TableColumnId, boolean>;
+
+/**
  * Products state
  */
 interface ProductsState {
@@ -63,6 +82,7 @@ interface ProductsState {
     selectedProducts: number[];
     filters: ProductFilters;
     pagination: Pagination;
+    columnVisibility: TableColumnVisibility;
     isLoading: boolean;
     error: string | null;
 
@@ -78,6 +98,8 @@ interface ProductsState {
     setFilters: (filters: Partial<ProductFilters>) => void;
     resetFilters: () => void;
     setPagination: (pagination: Partial<Pagination>) => void;
+    setColumnVisibility: (columnId: TableColumnId, visible: boolean) => void;
+    resetColumnVisibility: () => void;
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;
 
@@ -103,6 +125,21 @@ const defaultPagination: Pagination = {
     totalPages: 0,
 };
 
+const defaultColumnVisibility: TableColumnVisibility = {
+    codprod: true,
+    descrprod: true,
+    vlrvenda: true,
+    estoque: true,
+    ativo: true,
+    descrgrupoprod: false,
+    codvol: false,
+    codgrupoprod: false,
+    reffab: false,
+    vlrcusto: false,
+    ncm: false,
+    actions: true,
+};
+
 /**
  * Products store with filter persistence
  */
@@ -115,6 +152,7 @@ export const useProductsStore = create<ProductsState>()(
             selectedProducts: [],
             filters: defaultFilters,
             pagination: defaultPagination,
+            columnVisibility: defaultColumnVisibility,
             isLoading: false,
             error: null,
 
@@ -184,6 +222,16 @@ export const useProductsStore = create<ProductsState>()(
                 set((state) => ({
                     pagination: { ...state.pagination, ...pagination },
                 })),
+
+            setColumnVisibility: (columnId: TableColumnId, visible: boolean) =>
+                set((state) => ({
+                    columnVisibility: {
+                        ...state.columnVisibility,
+                        [columnId]: visible,
+                    },
+                })),
+
+            resetColumnVisibility: () => set({ columnVisibility: defaultColumnVisibility }),
 
             setLoading: (isLoading) => set({ isLoading }),
 

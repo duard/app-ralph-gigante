@@ -15,6 +15,7 @@ export interface ProductPayload {
     estmin?: number;
     ativo?: 'S' | 'N';
     codgrupoprod?: number;
+    descrgrupoprod?: string;
     codmarca?: number;
     ncm?: string;
     cest?: string;

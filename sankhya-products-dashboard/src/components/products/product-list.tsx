@@ -1,28 +1,29 @@
 "use client"
 
 import * as React from "react"
-import { ColumnDef } from "@tanstack/react-table"
+import {
+  type ColumnDef,
+  type ColumnFiltersState,
+  type SortingState,
+  type VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { DataTable } from "@/components/ui/data-table"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useProducts } from "@/hooks/use-products"
-import { Product } from "@/stores/products-store"
+import type { Product } from "@/stores/products-store"
 import { formatProductCode, formatProductPrice, formatProductStatus } from "@/lib/utils/product-utils"
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-  Package,
-} from "lucide-react"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { ProductTableToolbar } from "./product-table-toolbar"
+import { DataTablePagination } from "@/components/ui/data-table-pagination"
+import { Package } from "lucide-react"
 import {
   Table,
   TableBody,
@@ -100,6 +101,13 @@ const columns: ColumnDef<Product>[] = [
       </div>
     ),
   },
+  {
+    accessorKey: "codvol",
+    header: "Unidade",
+    cell: ({ row }) => row.getValue("codvol") || "-",
+    enableSorting: true,
+    enableHiding: true,
+  },
 ]
 
 function ProductListSkeleton() {
@@ -155,7 +163,13 @@ function EmptyState() {
   )
 }
 
-export function ProductList() {
+interface ProductListProps {
+  onAddProduct?: () => void
+}
+
+export function ProductList({
+  onAddProduct,
+}: ProductListProps) {
   const {
     filteredProducts,
     pagination,
@@ -164,6 +178,42 @@ export function ProductList() {
     isLoading,
     error
   } = useProducts()
+
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = React.useState({})
+  const [searchValue, setSearchValue] = React.useState("")
+
+  const table = useReactTable({
+    data: filteredProducts,
+    columns,
+    state: {
+      sorting,
+      columnVisibility,
+      rowSelection,
+      columnFilters,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    manualPagination: true,
+    pageCount: pagination.totalPages,
+  })
+
+  // Update table pagination when external pagination changes
+  React.useEffect(() => {
+    table.setPageIndex(pagination.page - 1)
+    table.setPageSize(pagination.pageSize)
+  }, [pagination.page, pagination.pageSize, table])
 
   if (isLoading) {
     return <ProductListSkeleton />
@@ -175,75 +225,68 @@ export function ProductList() {
 
   return (
     <div className="space-y-4">
-      <DataTable columns={columns} data={filteredProducts} emptyState={<EmptyState />} />
-      <div className="flex items-center justify-between px-2">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {pagination.total > 0 && (
-            <>Mostrando {((pagination.page - 1) * pagination.pageSize) + 1} a {Math.min(pagination.page * pagination.pageSize, pagination.total)} de {pagination.total} produtos</>
-          )}
-        </div>
-        <div className="flex items-center space-x-6 lg:space-x-8">
-          <div className="flex items-center space-x-2">
-            <p className="text-sm font-medium">Produtos por página</p>
-            <Select
-              value={`${pagination.pageSize}`}
-              onValueChange={(value) => changePageSize(Number(value))}
-            >
-              <SelectTrigger className="h-8 w-[70px]">
-                <SelectValue placeholder={pagination.pageSize} />
-              </SelectTrigger>
-              <SelectContent side="top">
-                {[10, 20, 30, 40, 50].map((pageSize) => (
-                  <SelectItem key={pageSize} value={`${pageSize}`}>
-                    {pageSize}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              className="hidden h-8 w-8 p-0 lg:flex"
-              onClick={() => goToPage(1)}
-              disabled={pagination.page <= 1}
-            >
-              <span className="sr-only">Primeira página</span>
-              <ChevronsLeft />
-            </Button>
-            <Button
-              variant="outline"
-              className="h-8 w-8 p-0"
-              onClick={() => goToPage(pagination.page - 1)}
-              disabled={pagination.page <= 1}
-            >
-              <span className="sr-only">Página anterior</span>
-              <ChevronLeft />
-            </Button>
-            <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-              Página {pagination.page} de {pagination.totalPages}
-            </div>
-            <Button
-              variant="outline"
-              className="h-8 w-8 p-0"
-              onClick={() => goToPage(pagination.page + 1)}
-              disabled={pagination.page >= pagination.totalPages}
-            >
-              <span className="sr-only">Próxima página</span>
-              <ChevronRight />
-            </Button>
-            <Button
-              variant="outline"
-              className="hidden h-8 w-8 p-0 lg:flex"
-              onClick={() => goToPage(pagination.totalPages)}
-              disabled={pagination.page >= pagination.totalPages}
-            >
-              <span className="sr-only">Última página</span>
-              <ChevronsRight />
-            </Button>
-          </div>
-        </div>
+      <ProductTableToolbar
+        table={table}
+        onSearch={setSearchValue}
+        onAddProduct={onAddProduct}
+        searchValue={searchValue}
+      />
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  )
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  <EmptyState />
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
+      <DataTablePagination 
+        table={table}
+        pagination={pagination}
+        goToPage={goToPage}
+        changePageSize={changePageSize}
+      />
     </div>
   )
 }
