@@ -35,7 +35,7 @@ interface DataTableProps<TData, TValue> {
   onAddTask?: (task: Task) => void
 }
 
-export function DataTable<TData, TValue>({
+function DataTable<TData, TValue>({
   columns,
   data,
   onAddTask,
@@ -127,3 +127,7 @@ export function DataTable<TData, TValue>({
     </div>
   )
 }
+
+const MemoizedDataTable = React.memo(DataTable) as typeof DataTable
+export default MemoizedDataTable
+export { MemoizedDataTable as DataTable }

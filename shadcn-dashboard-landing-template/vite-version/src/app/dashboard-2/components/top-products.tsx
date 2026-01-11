@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 import { Eye, Star, TrendingUp } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -59,7 +60,7 @@ const products = [
   },
 ]
 
-export function TopProducts() {
+export const TopProducts = React.memo(function TopProducts() {
   return (
     <Card className="cursor-pointer">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -120,4 +121,4 @@ export function TopProducts() {
       </CardContent>
     </Card>
   )
-}
+})

@@ -140,7 +140,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function ChartAreaInteractive() {
+export const ChartAreaInteractive = React.memo(function ChartAreaInteractive() {
   const isMobile = useIsMobile()
   const [timeRange, setTimeRange] = React.useState("90d")
 
@@ -150,7 +150,7 @@ export function ChartAreaInteractive() {
     }
   }, [isMobile])
 
-  const filteredData = chartData.filter((item) => {
+  const filteredData = React.useMemo(() => chartData.filter((item) => {
     const date = new Date(item.date)
     const referenceDate = new Date("2024-06-30")
     let daysToSubtract = 90
@@ -162,7 +162,7 @@ export function ChartAreaInteractive() {
     const startDate = new Date(referenceDate)
     startDate.setDate(startDate.getDate() - daysToSubtract)
     return date >= startDate
-  })
+  }), [timeRange])
 
   return (
     <Card className="@container/card">
@@ -288,4 +288,4 @@ export function ChartAreaInteractive() {
       </CardContent>
     </Card>
   )
-}
+})

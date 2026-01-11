@@ -108,7 +108,7 @@ import {
 } from "@/components/ui/tabs"
 
 // Create a separate component for the drag handle
-function DragHandle({ id }: { id: number }) {
+const DragHandle = React.memo(({ id }: { id: number }) => {
   const { attributes, listeners } = useSortable({
     id,
   })
@@ -125,7 +125,8 @@ function DragHandle({ id }: { id: number }) {
       <span className="sr-only">Drag to reorder</span>
     </Button>
   )
-}
+})
+DragHandle.displayName = 'DragHandle'
 
 const columns: ColumnDef<z.infer<typeof schema>>[] = [
   {
@@ -302,7 +303,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
 ]
 
-function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
+const DraggableRow = React.memo(({ row }: { row: Row<z.infer<typeof schema>> }) => {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
     id: row.original.id,
   })
@@ -325,9 +326,10 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
       ))}
     </TableRow>
   )
-}
+})
+DraggableRow.displayName = 'DraggableRow'
 
-export function DataTable({
+export const DataTable = React.memo(function DataTable({
   data: initialData,
   pastPerformanceData = [],
   keyPersonnelData = [],
@@ -526,7 +528,7 @@ export function DataTable({
   }
 
   // Component for rendering table content
-  const TableContent = ({ 
+  const TableContent = React.memo(({ 
     currentTable, 
     currentDataIds, 
     handleCurrentDragEnd 
@@ -665,7 +667,8 @@ export function DataTable({
         </div>
       </div>
     </>
-  )
+  ))
+  TableContent.displayName = 'TableContent'
 
   return (
     <Tabs
@@ -906,7 +909,7 @@ export function DataTable({
       </TabsContent>
     </Tabs>
   )
-}
+})
 
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },
@@ -928,7 +931,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
+const TableCellViewer = React.memo(({ item }: { item: z.infer<typeof schema> }) => {
   const isMobile = useIsMobile()
 
   return (
@@ -1085,4 +1088,5 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
       </DrawerContent>
     </Drawer>
   )
-}
+})
+TableCellViewer.displayName = 'TableCellViewer'

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import * as React from "react"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
@@ -33,7 +34,7 @@ const chartConfig = {
   },
 }
 
-export function SalesChart() {
+export const SalesChart = React.memo(function SalesChart() {
   const [timeRange, setTimeRange] = useState("12m")
 
   return (
@@ -112,4 +113,4 @@ export function SalesChart() {
       </CardContent>
     </Card>
   )
-}
+})

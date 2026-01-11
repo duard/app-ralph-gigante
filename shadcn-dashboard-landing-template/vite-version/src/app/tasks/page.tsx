@@ -7,7 +7,7 @@ import { ArrowUp, BarChart3, CheckCircle2, Clock, ListTodo } from "lucide-react"
 import { BaseLayout } from "@/components/layouts/base-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { columns } from "./components/columns"
-import { DataTable } from "./components/data-table"
+import DataTable from "./components/data-table"
 import { taskSchema, type Task } from "./data/schema"
 import tasksData from "./data/tasks.json"
 

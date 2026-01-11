@@ -40,7 +40,7 @@ const chartConfig = {
   },
 }
 
-export function RevenueBreakdown() {
+export const RevenueBreakdown = React.memo(function RevenueBreakdown() {
   const id = "revenue-breakdown"
   const [activeCategory, setActiveCategory] = React.useState("sales")
 
@@ -201,4 +201,4 @@ export function RevenueBreakdown() {
       </CardContent>
     </Card>
   )
-}
+})
