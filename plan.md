@@ -84,14 +84,14 @@
 - [x] Implementar exportação CSV usando react-csv
 - [x] Adicionar exportação Excel usando xlsx
 - [x] Criar exportação PDF usando jsPDF ou react-pdf
-- [ ] Sistema de atualização automática a cada 5 minutos para métricas em tempo real
+- [x] Sistema de atualização automática a cada 5 minutos para métricas em tempo real
 
 ### UI/UX
 - [ ] Melhorar layout responsivo com breakpoints mobile-first usando Tailwind
 - [ ] Implementar navegação lateral (sidebar) com menus expansíveis
 - [x] Adicionar breadcrumb de navegação usando react-router
 - [ ] Criar barra de busca global no header
-- [ ] Configurar notificações toast usando Sonner em todas as ações
+- [x] Configurar notificações toast usando Sonner em todas as ações
 - [ ] Padronizar loading states com skeletons consistentes
 - [ ] Implementar error boundaries para capturar erros de UI
 - [ ] Adicionar animações em modais e drawers usando Framer Motion

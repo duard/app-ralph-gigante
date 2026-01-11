@@ -84,7 +84,7 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
       setNewPresetName("")
       setIsCreatingPreset(false)
       toast.success("Preset salvo com sucesso!")
-    } catch (error) {
+    } catch (_error) {
       toast.error("Erro ao salvar preset")
     }
   }
@@ -99,7 +99,7 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
       filterPresetsStore.deletePreset(presetId)
       setSavedPresets(filterPresetsStore.getPresets())
       toast.success(`Preset "${presetName}" excluído`)
-    } catch (error) {
+    } catch (_error) {
       toast.error("Erro ao excluir preset")
     }
   }
@@ -165,6 +165,7 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
 
   const handleClearFilters = () => {
     resetFilters()
+    toast.success("Filtros limpos com sucesso")
   }
 
   const activeFiltersCount = React.useMemo(() => {

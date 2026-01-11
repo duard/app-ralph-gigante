@@ -2,6 +2,7 @@
 import { AlertTriangle, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { toast } from "sonner"
 
 interface ErrorStateProps {
   error: string | null
@@ -35,7 +36,10 @@ export function ErrorState({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={onRetry}
+                  onClick={() => {
+                    toast.loading("Tentando novamente...");
+                    onRetry();
+                  }}
                   disabled={isRetrying}
                   className="gap-2"
                 >

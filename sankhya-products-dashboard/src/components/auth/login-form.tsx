@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Eye, EyeOff, LogIn, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -54,8 +55,13 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             rememberMe,
         });
 
-        if (result.success && onSuccess) {
-            onSuccess();
+        if (result.success) {
+            toast.success("Login realizado com sucesso!");
+            if (onSuccess) {
+                onSuccess();
+            }
+        } else {
+            toast.error(result.error || "Erro ao fazer login. Verifique suas credenciais.");
         }
     };
 

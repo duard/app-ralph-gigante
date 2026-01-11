@@ -2,6 +2,7 @@
 
 import { X, Download } from "lucide-react"
 import type { Table } from "@tanstack/react-table"
+import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -69,7 +70,10 @@ export function ProductTableToolbar<TData>({
         {isFiltered && (
           <Button
             variant="ghost"
-            onClick={() => table.resetColumnFilters()}
+            onClick={() => {
+              table.resetColumnFilters();
+              toast.success("Filtros limpos com sucesso");
+            }}
             className="h-8 px-2 lg:px-3"
           >
             Limpar
@@ -87,10 +91,12 @@ export function ProductTableToolbar<TData>({
               const rows = table.getRowModel().rows;
               const products: CSVProductRow[] = rows.map(row => row.original as CSVProductRow);
               const date = new Date().toISOString().split('T')[0];
+              toast.loading("Exportando Excel...");
               await downloadExcel(products, `produtos-${date}.xlsx`);
+              toast.success("Excel exportado com sucesso!");
             } catch (error) {
               console.error('Erro ao exportar Excel:', error);
-              // You could add a toast notification here
+              toast.error("Erro ao exportar Excel. Tente novamente.");
             }
           }}
           className="h-8"
@@ -106,10 +112,12 @@ export function ProductTableToolbar<TData>({
               const rows = table.getRowModel().rows;
               const products: CSVProductRow[] = rows.map(row => row.original as CSVProductRow);
               const date = new Date().toISOString().split('T')[0];
+              toast.loading("Exportando PDF...");
               await downloadPDF(products, `produtos-${date}.pdf`);
+              toast.success("PDF exportado com sucesso!");
             } catch (error) {
               console.error('Erro ao exportar PDF:', error);
-              // You could add a toast notification here
+              toast.error("Erro ao exportar PDF. Tente novamente.");
             }
           }}
           className="h-8"
@@ -121,10 +129,17 @@ export function ProductTableToolbar<TData>({
           variant="outline"
           size="sm"
           onClick={() => {
-            const rows = table.getRowModel().rows;
-            const products: CSVProductRow[] = rows.map(row => row.original as CSVProductRow);
-            const date = new Date().toISOString().split('T')[0];
-            downloadCSV(products, `produtos-${date}.csv`);
+            try {
+              const rows = table.getRowModel().rows;
+              const products: CSVProductRow[] = rows.map(row => row.original as CSVProductRow);
+              const date = new Date().toISOString().split('T')[0];
+              toast.loading("Exportando CSV...");
+              downloadCSV(products, `produtos-${date}.csv`);
+              toast.success("CSV exportado com sucesso!");
+            } catch (error) {
+              console.error('Erro ao exportar CSV:', error);
+              toast.error("Erro ao exportar CSV. Tente novamente.");
+            }
           }}
           className="h-8"
         >
@@ -132,7 +147,10 @@ export function ProductTableToolbar<TData>({
           Exportar CSV
         </Button>
         {onAddProduct && (
-          <Button onClick={onAddProduct} className="h-8">
+          <Button onClick={() => {
+            onAddProduct();
+            toast.success("Modo de criação ativado");
+          }} className="h-8">
             <Plus className="mr-2 h-4 w-4" />
             Novo Produto
           </Button>

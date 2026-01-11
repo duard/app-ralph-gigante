@@ -13,6 +13,7 @@ import {
 import { useDashboardAutoRefresh } from "@/hooks/use-auto-refresh"
 import { Suspense, useState } from "react"
 import { type PeriodFilter } from "@/hooks/use-dashboard-metrics"
+import { toast } from "sonner"
 
 import data from "./data/data.json"
 import pastPerformanceData from "./data/past-performance-data.json"
@@ -25,6 +26,7 @@ export default function Page() {
   // Auto-refresh dashboard data every 5 minutes
   const { isEnabled, toggleAutoRefresh, refreshNow, timeUntilNextRefresh } = useDashboardAutoRefresh(async () => {
     // Force re-fetch of products and metrics
+    toast.loading("Atualizando dados...");
     window.location.reload()
   })
 
@@ -50,13 +52,19 @@ export default function Page() {
             </div>
             <div className="flex items-center gap-2">
               <button
-                onClick={refreshNow}
+                onClick={() => {
+                  toast.loading("Atualizando dados...");
+                  refreshNow();
+                }}
                 className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
               >
                 Atualizar Agora
               </button>
               <button
-                onClick={toggleAutoRefresh}
+                onClick={() => {
+                  toggleAutoRefresh();
+                  toast.success(isEnabled ? "Auto-refresh desativado" : "Auto-refresh ativado");
+                }}
                 className={`px-3 py-1 text-sm rounded transition-colors ${
                   isEnabled
                     ? "bg-red-100 text-red-800 hover:bg-red-200"

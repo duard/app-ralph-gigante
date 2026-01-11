@@ -24,6 +24,7 @@ import {
   Clock
 } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { toast } from "sonner"
 
 interface ProductDetailsModalProps {
   product: Product | null
@@ -67,7 +68,8 @@ export function ProductDetailsModal({
   if (!product) return null
 
   const handleEdit = () => {
-    if (onEdit) {
+    if (onEdit && product) {
+      toast.success(`Modo de edição ativado para ${product.descrprod}`)
       onEdit(product)
     }
   }
@@ -103,7 +105,12 @@ export function ProductDetailsModal({
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={onPrevious}
+                  onClick={() => {
+                    if (hasPrevious && onPrevious) {
+                      onPrevious();
+                      toast.info("Navegando para produto anterior");
+                    }
+                  }}
                   disabled={!hasPrevious}
                 >
                   <ArrowLeft className="h-4 w-4" />
@@ -111,7 +118,12 @@ export function ProductDetailsModal({
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={onNext}
+                  onClick={() => {
+                    if (hasNext && onNext) {
+                      onNext();
+                      toast.info("Navegando para próximo produto");
+                    }
+                  }}
                   disabled={!hasNext}
                 >
                   <ArrowRight className="h-4 w-4" />
