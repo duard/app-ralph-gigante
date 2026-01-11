@@ -15,6 +15,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import { useVirtualizer } from "@tanstack/react-virtual"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -208,7 +209,10 @@ export function ProductList({
   const [searchValue, setSearchValue] = React.useState("")
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null)
   const [isDetailsModalOpen, setIsDetailsModalOpen] = React.useState(false)
-
+  
+  // Virtualization setup
+  const tableContainerRef = React.useRef<HTMLDivElement>(null)
+  
   // Debounced search for API calls
   const debouncedSearchProducts = useDebounce((query: unknown) => {
     const searchQuery = query as string
@@ -247,7 +251,13 @@ export function ProductList({
     table.setPageSize(pagination.pageSize)
   }, [pagination.page, pagination.pageSize, table])
 
-
+  // Virtualization setup - create after table is initialized
+  const virtualizer = useVirtualizer({
+    count: table.getRowModel().rows.length,
+    getScrollElement: () => tableContainerRef.current,
+    estimateSize: () => 57, // Approximate row height
+    overscan: 5,
+  })
 
   const handleEditProduct = (product: Product) => {
     if (onEditProduct) {
@@ -294,54 +304,93 @@ export function ProductList({
         searchValue={searchValue}
       />
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
+        <div 
+          ref={tableContainerRef}
+          className="h-[600px] overflow-auto"
+        >
+          <div className="min-w-full">
+            {/* Fixed header */}
+            <div className="sticky top-0 z-10 bg-background border-b">
+              <table className="w-full">
+                <thead>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id} className="border-b">
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <th 
+                            key={header.id} 
+                            colSpan={header.colSpan}
+                            className="px-4 py-3 text-left font-medium text-sm text-muted-foreground bg-background"
+                          >
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                          </th>
+                        )
+                      })}
+                    </tr>
                   ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                </thead>
+              </table>
+            </div>
+
+            {/* Virtualized body */}
+            <div
+              style={{
+                height: `${virtualizer.getTotalSize()}px`,
+                width: '100%',
+                position: 'relative',
+              }}
+            >
+              {table.getRowModel().rows?.length ? (
+                virtualizer.getVirtualItems().map((virtualItem) => {
+                  const row = table.getRowModel().rows[virtualItem.index]
+                  return (
+                    <div
+                      key={row.id}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: `${virtualItem.size}px`,
+                        transform: `translateY(${virtualItem.start}px)`,
+                      }}
+                    >
+                      <table className="w-full">
+                        <tbody>
+                          <tr 
+                            className="border-b hover:bg-muted/50 data-[state=selected]:bg-muted"
+                            data-state={row.getIsSelected() && "selected"}
+                          >
+                            {row.getVisibleCells().map((cell) => (
+                              <td 
+                                key={cell.id}
+                                className="px-4 py-3 align-middle"
+                              >
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext()
+                                )}
+                              </td>
+                            ))}
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  )
+                })
+              ) : (
+                <div className="flex items-center justify-center h-24">
                   <EmptyState />
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
       <DataTablePagination 
         table={table}
