@@ -259,7 +259,7 @@
 
 ### 5.2 Criar Hooks de Produtos
 - [ ] Criar hook useProducts
-- [ ] Criar hook useProduct
+- [x] Criar hook useProduct
 - [ ] Criar hook useCreateProduct
 - [ ] Criar hook useUpdateProduct
 - [ ] Criar hook useDeleteProduct
@@ -358,8 +358,8 @@
 ## FASE 7: Página de Produtos (Listagem)
 
 ### 7.1 Criar Rota e Layout de Produtos
-- [ ] Criar rota /produtos
-- [ ] Criar página src/app/produtos/page.tsx
+- [x] Criar rota /produtos
+- [x] Criar página src/app/produtos/page.tsx
 - [ ] Criar layout específico de produtos
 - [ ] Configurar meta tags e SEO
 

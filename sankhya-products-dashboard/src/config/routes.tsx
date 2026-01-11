@@ -13,6 +13,7 @@ const Calendar = lazy(() => import('@/app/calendar/page'))
 const Users = lazy(() => import('@/app/users/page'))
 const FAQs = lazy(() => import('@/app/faqs/page'))
 const Pricing = lazy(() => import('@/app/pricing/page'))
+const Produtos = lazy(() => import('@/app/produtos/page'))
 
 // Auth pages
 const SignIn = lazy(() => import('@/app/auth/sign-in/page'))
@@ -90,6 +91,10 @@ export const routes: RouteConfig[] = [
   {
     path: "/calendar",
     element: <Calendar />
+  },
+  {
+    path: "/produtos",
+    element: <Produtos />
   },
 
   // Content Pages
