@@ -8,8 +8,8 @@
 - [x] Atualizar package.json com novo nome e versão
 - [x] Configurar .gitignore personalizado
 - [x] Criar estrutura de diretórios inicial
-- [ ] Configurar .env.example com variáveis necessárias
-- [ ] Configurar .env.local com valores de desenvolvimento
+- [x] Configurar .env.example com variáveis necessárias
+- [x] Configurar .env.local com valores de desenvolvimento
 - [ ] Atualizar README.md com descrição do projeto
 
 ### 1.2 Configuração TypeScript
