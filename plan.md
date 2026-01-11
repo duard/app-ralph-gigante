@@ -366,7 +366,7 @@
 
 ### 7.2 Implementar Listagem de Produtos
 - [x] Criar ProductList component
-- [ ] Implementar tabela de produtos
+- [x] Implementar tabela de produtos
 - [ ] Configurar colunas da tabela
 - [ ] Implementar ordenação de colunas
 - [ ] Implementar paginação
