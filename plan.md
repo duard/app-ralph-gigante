@@ -45,7 +45,7 @@
 - [x] Grid/Table de produtos com paginação
 - [x] Colunas configuráveis: codprod, descricao, codvol, unidade, preco, status
  - [x] Ordenação por todas as colunas clicáveis
-- [ ] Filtros por nome, código, preço, status
+- [x] Filtros por nome, código, preço, status
 - [ ] Busca em tempo real com debounce (300ms)
 - [x] Controles de paginação (page, perPage)
 - [x] Indicador de total, página atual e última página
