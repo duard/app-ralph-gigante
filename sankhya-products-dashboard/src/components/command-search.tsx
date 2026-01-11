@@ -18,6 +18,7 @@ import {
 } from "lucide-react"
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
+import { LoadingState } from "@/components/ui/loading"
 import { cn } from "@/lib/utils"
 import { useProducts } from "@/hooks/use-products"
 import { toast } from "sonner"
@@ -240,8 +241,12 @@ export function CommandSearch({ open, onOpenChange }: CommandSearchProps) {
           />
           <CommandList>
             {isLoading && (
-              <div className="flex items-center justify-center h-12 text-sm text-zinc-500 dark:text-zinc-400">
-                Buscando produtos...
+              <div className="flex items-center justify-center h-12">
+                <LoadingState 
+                  type="spinner" 
+                  size="sm" 
+                  message="Buscando produtos..."
+                />
               </div>
             )}
             

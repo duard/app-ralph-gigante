@@ -14,9 +14,9 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
 import { formatCurrency } from "@/lib/utils/product-utils"
 import { TrendingUp, TrendingDown, Minus, Calendar } from "lucide-react"
+import { LoadingState } from "@/components/ui/loading"
 import type { PriceHistoryEntry } from "@/hooks/use-product-price-history"
 
 interface PriceHistoryChartProps {
@@ -110,14 +110,12 @@ export function PriceHistoryChart({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <Skeleton className="h-4 w-20" />
-            <Skeleton className="h-[300px] w-full" />
-            <div className="flex gap-2">
-              <Skeleton className="h-8 w-24" />
-              <Skeleton className="h-8 w-24" />
-            </div>
-          </div>
+          <LoadingState 
+            type="spinner" 
+            size="md" 
+            message="Carregando histórico de preços..."
+            className="h-[300px]"
+          />
         </CardContent>
       </Card>
     )

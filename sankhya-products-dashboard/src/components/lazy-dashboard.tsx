@@ -1,4 +1,5 @@
 import * as React from "react"
+import { LoadingState } from "@/components/ui/loading"
 
 // Lazy load dashboard components
 export const LazyPriceTrendChart = React.lazy(() =>
@@ -28,8 +29,11 @@ export const LazyCategoryDistributionChart = React.lazy(() =>
 // Loading component
 export function LazyLoadingFallback() {
   return (
-    <div className="flex items-center justify-center h-64">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-    </div>
+    <LoadingState 
+      type="spinner" 
+      size="md" 
+      message="Carregando componente..."
+      className="h-64"
+    />
   )
 }

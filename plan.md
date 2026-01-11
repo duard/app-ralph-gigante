@@ -92,7 +92,7 @@
 - [x] Adicionar breadcrumb de navegação usando react-router
 - [ ] Criar barra de busca global no header
 - [x] Configurar notificações toast usando Sonner em todas as ações
-- [ ] Padronizar loading states com skeletons consistentes
+- [x] Padronizar loading states com skeletons consistentes
 - [ ] Implementar error boundaries para capturar erros de UI
 - [ ] Adicionar animações em modais e drawers usando Framer Motion
 - [ ] Incluir tooltips em botões de ação usando Radix UI
@@ -397,6 +397,10 @@ src/
 ## Progress
 
 Add entries below this line:
+
+- **2025-01-11**: ✅ Padronizado loading states com skeletons consistentes. Criados componentes padronizados de loading em `/src/components/ui/loading.tsx` e `/src/components/ui/skeletons.tsx` com diferentes variantes (Table, Card, Chart, DashboardCard, ProductList, etc.). Atualizados todos os componentes principais para usar os novos loading states: recent-products, top-selling-products, price-trend-chart, price-history-chart, product-list, auth-guard, command-search, lazy-dashboard. Removidas implementações inconsistentes de loading e substituídas por componentes reutilizáveis. Build e lint funcionando sem erros.
+
+- **2025-01-11**: ✅ Implementada barra de busca global no header com integração de produtos. Substituída busca genérica por busca específica de produtos Sankhya Center, integrada com API usando hook useProducts, adicionado debounce de 300ms, exibição de resultados com código e preço formatado, navegação rápida para páginas principais quando sem busca, atualizado placeholder e texto para português, feedback visual e navegação direta para detalhes do produto. Build e lint funcionando sem erros críticos.
 
 - **2025-01-11**: ✅ Implementada navegação lateral (sidebar) com menus expansíveis para Sankhya Center. Atualizado AppSidebar com branding específico Sankhya Center, reorganizada navegação em seções: Principal (Bem-Vindo, Dashboard), Produtos (Lista, Análise, Filtros Avançados, Exportação), Sistema (Relatórios, Usuários, Configurações) e Ajuda (Documentação, Planos, API). Traduzidos labels para português, adicionados ícones apropriados (Package, Building, etc.), configurados menus expansíveis para sub-itens, removida navegação genérica não relevante. Build e lint funcionando sem erros críticos.
 

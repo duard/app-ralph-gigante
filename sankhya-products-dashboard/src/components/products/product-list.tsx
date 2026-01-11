@@ -18,25 +18,22 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual"
 import { Badge } from "@/components/ui/badge"
 
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeletons } from "@/components/ui/skeletons"
+
 import { useProducts } from "@/hooks/use-products"
 import type { Product } from "@/stores/products-store"
 import { formatProductCode, formatProductPrice, formatProductStatus } from "@/lib/utils/product-utils"
 import { ProductTableToolbar } from "./product-table-toolbar"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
 import { ErrorState } from "@/components/ui/error-state"
-import { ProductDetailsModal } from "./product-details-modal"
 import { Package } from "lucide-react"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { ProductDetailsModal } from "./product-details-modal"
+
+
 import { useDebounce } from "@/lib/utils/debounce"
 import { ProductFiltersSidebar } from "./product-filters-sidebar"
+
+
 
 const columns: ColumnDef<Product>[] = [
   {
@@ -91,46 +88,7 @@ const columns: ColumnDef<Product>[] = [
   },
 ]
 
-function ProductListSkeleton() {
-  return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead><Skeleton className="h-4 w-16" /></TableHead>
-            <TableHead><Skeleton className="h-4 w-24" /></TableHead>
-            <TableHead><Skeleton className="h-4 w-12" /></TableHead>
-            <TableHead><Skeleton className="h-4 w-16" /></TableHead>
-            <TableHead><Skeleton className="h-4 w-12" /></TableHead>
-            <TableHead><Skeleton className="h-4 w-20" /></TableHead>
-            <TableHead><Skeleton className="h-4 w-16" /></TableHead>
-            <TableHead><Skeleton className="h-4 w-16" /></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {Array.from({ length: 10 }).map((_, index) => (
-            <TableRow key={index}>
-              <TableCell><Skeleton className="h-4 w-12" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-32" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-12" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-              <TableCell><Skeleton className="h-4 w-12" /></TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Skeleton className="h-8 w-12" />
-                  <Skeleton className="h-8 w-12" />
-                  <Skeleton className="h-8 w-12" />
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  )
-}
+
 
 function EmptyState() {
   return (
@@ -239,7 +197,12 @@ export function ProductList({
   }
 
   if (isLoading) {
-    return <ProductListSkeleton />
+    return (
+      <Skeletons.Table 
+        rows={10}
+        columns={7}
+      />
+    )
   }
 
   if (error) {

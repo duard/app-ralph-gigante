@@ -16,10 +16,12 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { TrendingUp, TrendingDown, Minus, BarChart3, LineChartIcon } from "lucide-react"
+
 import { useProducts } from "@/hooks/use-products"
 import { useProductPriceHistory } from "@/hooks/use-product-price-history"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
+import { LoadingState } from "@/components/ui/loading"
 
 // Define CustomTooltip outside component to avoid creation during render
 const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) => {
@@ -225,7 +227,11 @@ export function PriceTrendChart({ className, height = 400 }: PriceTrendChartProp
 
         {isLoading && (
           <div className="text-center py-8">
-            <p>Carregando tendências de preços...</p>
+            <LoadingState 
+              type="spinner" 
+              size="md" 
+              message="Carregando tendências de preços..."
+            />
           </div>
         )}
 

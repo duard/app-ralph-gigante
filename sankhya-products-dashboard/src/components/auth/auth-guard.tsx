@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/stores/auth-store';
 import { authService } from '@/lib/api/auth-service';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { LoadingState } from '@/components/ui/loading';
 
 interface AuthGuardProps {
     children: React.ReactNode;
@@ -68,7 +68,11 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
         return (
             fallback || (
                 <div className="flex min-h-screen items-center justify-center">
-                    <LoadingSpinner className="h-8 w-8" />
+                    <LoadingState 
+                    type="spinner" 
+                    size="md" 
+                    message="Verificando autenticação..."
+                  />
                 </div>
             )
         );

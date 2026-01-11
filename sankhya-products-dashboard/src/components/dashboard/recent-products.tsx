@@ -8,6 +8,7 @@ import { Clock, Package, DollarSign, Calendar, ArrowUpDown } from "lucide-react"
 import { useProducts } from "@/hooks/use-products"
 import { cn } from "@/lib/utils"
 import { formatCurrency } from "@/lib/utils/product-utils"
+import { CardLoading } from "@/components/ui/loading"
 
 interface RecentProductsProps {
   className?: string
@@ -133,25 +134,11 @@ export function RecentProducts({
 
   if (isLoading) {
     return (
-      <Card className={cn("", className)}>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
-            Produtos Recentes
-          </CardTitle>
-          <CardDescription>Carregando produtos recentes...</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <CardLoading 
+        isLoading={isLoading} 
+        lines={5}
+        className={className}
+      />
     )
   }
 

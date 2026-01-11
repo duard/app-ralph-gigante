@@ -8,6 +8,7 @@ import { Trophy, TrendingUp, Package, DollarSign, BarChart3 } from "lucide-react
 import { useProducts } from "@/hooks/use-products"
 import { cn } from "@/lib/utils"
 import { formatCurrency } from "@/lib/utils/product-utils"
+import { CardLoading } from "@/components/ui/loading"
 
 interface TopSellingProductsProps {
   className?: string
@@ -103,25 +104,11 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
 
   if (isLoading) {
     return (
-      <Card className={cn("", className)}>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Trophy className="h-5 w-5" />
-            Produtos Mais Vendidos
-          </CardTitle>
-          <CardDescription>Carregando dados de vendas...</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <CardLoading 
+        isLoading={isLoading} 
+        lines={5}
+        className={className}
+      />
     )
   }
 
