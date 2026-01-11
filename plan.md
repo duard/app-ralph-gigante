@@ -37,7 +37,7 @@
  - [x] Logout funcional removendo tokens
 - [ ] Rota protegida redirecionando para login se não autenticado
 - [x] Exibição de dados do usuário logado (GET /auth/me)
-- [ ] Persistência de sessão via localStorage
+ - [x] Persistência de sessão via localStorage
 - [ ] Loading states durante autenticação
 - [ ] Tratamento de erros de autenticação com feedback visual
 
