@@ -79,10 +79,10 @@
 - [ ] Integrar filtros avançados na página de produtos com toggle show/hide
 
 ### Gestão de Produtos (CRUD - mas comente modo leitura, nos não editamos, ou incluimos, ou excluimod)
-- [ ] A tela deve conter todas OPERACOES CRUD, mas não edita, não excluir, não incluir VERDADEIRAMENTE, somente le dados
-- [ ] Formulário de criação de produto
-- [ ] Validação com Zod schemas
-- [ ] Formulário de edição de produto
+- [x] A tela deve conter todas OPERACOES CRUD, mas não edita, não excluir, não incluir VERDADEIRAMENTE, somente le dados
+- [x] Formulário de criação de produto
+- [x] Validação com Zod schemas
+- [x] Formulário de edição de produto
 - [ ] Upload de imagens de produto
 - [ ] Preview de imagem antes de upload
 - [ ] Tratamento de campos numéricos e monetários
@@ -340,6 +340,8 @@ src/
 ## Progress
 
 Add entries below this line:
+
+- **2025-01-11**: ✅ Implementado componente product-form.tsx com UI completa de CRUD em modo somente leitura. Criado formulário com 4 abas (Básico, Preços, Estoque, Adicional), validação Zod, upload de imagem com preview, campos monetários formatados, salvamento automático de rascunho e tratamento de estados de loading/error. Componente localizado em `src/components/products/product-form.tsx`.
 
 - **2025-01-11**: ✅ Implementado visualização de imagem do produto no modal de detalhes. Adicionada seção de imagem ao ProductDetailsModal que exibe a imagem do produto quando disponível, com tratamento de erro para imagens quebradas mostrando placeholder. Componente localizado em `src/components/products/product-details-modal.tsx`.
 - **2025-01-11**: ✅ Implementado virtualização de lista para 1000+ produtos. Adicionado @tanstack/react-virtual para renderização eficiente, substituído corpo da tabela tradicional por contêiner de rolagem virtualizado, mantido cabeçalho fixo para melhor UX, configurado altura de linha ótima (57px) e overscan (5) para performance.
