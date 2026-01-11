@@ -201,7 +201,7 @@
 - [x] Criar LogoutButton component
 
 ### 3.8 Testar Autenticação
-- [ ] Testar login com credenciais válidas
+ - [x] Testar login com credenciais válidas
 - [ ] Testar login com credenciais inválidas
 - [ ] Testar persistência de sessão
 - [ ] Testar refresh de token
