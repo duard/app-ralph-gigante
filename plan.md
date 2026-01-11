@@ -143,7 +143,7 @@
 - [x] Configuração de ambiente (.env)
 - [ ] Scripts de build e deploy
 - [ ] CI/CD pipeline configurado
-- [ ] Linting configurado (ESLint)
+- [x] Linting configurado (ESLint)
 - [ ] Prettier configurado
 - [ ] Husky pre-commit hooks
 - [ ] TypeScript strict mode
