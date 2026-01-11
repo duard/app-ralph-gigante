@@ -2,9 +2,10 @@
 
 import React from 'react'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { AnimatedDialog } from '@/components/ui/animated-dialog'
 import { Textarea } from '@/components/ui/textarea'
 import type { ImportedTheme } from '@/types/theme-customizer'
+import { motion } from 'framer-motion'
 
 interface ImportModalProps {
   open: boolean
@@ -63,20 +64,30 @@ export function ImportModal({ open, onOpenChange, onImport }: ImportModalProps) 
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} modal={true}>
-      <DialogContent className="max-w-4xl w-[90vw]">
-        <DialogHeader>
-          <DialogTitle>Import Custom CSS</DialogTitle>
-          <DialogDescription>
-            Paste your CSS theme below. Include both <code>:root</code> (light mode) and <code>.dark</code> (dark mode) sections with CSS variables like <code>--primary</code>, <code>--background</code>, etc. The theme will automatically switch between light and dark modes.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Textarea
-              id="theme-css"
-              className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm max-h-[400px] min-h-[300px] font-mono text-sm text-foreground overflow-y-auto resize-none"
-              placeholder={`:root {
+    <AnimatedDialog 
+      isOpen={open} 
+      onClose={() => onOpenChange(false)}
+      title="Import Custom CSS"
+      description="Paste your CSS theme below. Include both :root (light mode) and .dark (dark mode) sections with CSS variables like --primary, --background, etc. The theme will automatically switch between light and dark modes."
+      showCloseButton={true}
+      className="max-w-4xl w-[90vw]"
+    >
+      <motion.div 
+        className="space-y-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, duration: 0.3 }}
+      >
+        <motion.div 
+          className="space-y-2"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.3 }}
+        >
+          <Textarea
+            id="theme-css"
+            className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm max-h-[400px] min-h-[300px] font-mono text-sm text-foreground overflow-y-auto resize-none"
+            placeholder={`:root {
   --background: 0 0% 100%;
   --foreground: oklch(0.52 0.13 144.17);
   --primary: #3e2723;
@@ -88,20 +99,28 @@ export function ImportModal({ open, onOpenChange, onImport }: ImportModalProps) 
   --primary: rgb(46, 125, 50);
   /* And more */
 }`}
-              value={importText}
-              onChange={(e) => setImportText(e.target.value)}
-            />
-          </div>
-          <div className="flex gap-2 justify-end">
+            value={importText}
+            onChange={(e) => setImportText(e.target.value)}
+          />
+        </motion.div>
+        <motion.div 
+          className="flex gap-2 justify-end"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.3 }}
+        >
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button variant="outline" onClick={() => onOpenChange(false)} className="cursor-pointer">
               Cancel
             </Button>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button onClick={processImport} disabled={!importText.trim()} className="cursor-pointer">
               Import Theme
             </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </AnimatedDialog>
   )
 }

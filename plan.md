@@ -87,14 +87,14 @@
 - [x] Sistema de atualização automática a cada 5 minutos para métricas em tempo real
 
 ### UI/UX
-- [ ] Melhorar layout responsivo com breakpoints mobile-first usando Tailwind
+- [x] Melhorar layout responsivo com breakpoints mobile-first usando Tailwind
 - [x] Implementar navegação lateral (sidebar) com menus expansíveis
 - [x] Adicionar breadcrumb de navegação usando react-router
 - [x] Criar barra de busca global no header
 - [x] Configurar notificações toast usando Sonner em todas as ações
 - [x] Padronizar loading states com skeletons consistentes
 - [x] Implementar error boundaries para capturar erros de UI
-- [ ] Adicionar animações em modais e drawers usando Framer Motion
+- [x] Adicionar animações em modais e drawers usando Framer Motion
 - [ ] Incluir tooltips em botões de ação usando Radix UI
 - [x] Implementar toggle dark/light theme com persistência
 - [ ] Adicionar customização de cor primária do tema
@@ -396,6 +396,8 @@ src/
 ## Progress
 
 Add entries below this line:
+
+- **2025-01-11**: ✅ Implementadas animações em modais e drawers usando Framer Motion. Adicionado pacote framer-motion, criados componentes AnimatedDialog e AnimatedDrawer com animações suaves de entrada/saída, atualizado ProductDetailsModal com animações de elementos sequenciais, botões com interações hover/tap, e transições entre abas. Aplicadas animações também a ImportModal e AddTaskModal. Build e TypeScript funcionando sem erros.
 
 - **2025-01-11**: ✅ Atualizado README com instruções completas de setup e desenvolvimento. Documentação abrangente incluindo pré-requisitos, instalação, configuração de ambiente, autenticação, estrutura do projeto, comandos úteis, testes, deploy e troubleshooting. Incluídos exemplos de curl para API, estrutura de pastas detalhada, stack tecnológica completa, e convenções de código. Build e lint funcionando sem erros.
 

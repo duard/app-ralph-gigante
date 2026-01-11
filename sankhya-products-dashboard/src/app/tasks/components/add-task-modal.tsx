@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Plus } from "lucide-react"
 import { z } from "zod"
+import { motion } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -13,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { AnimatedDialog } from "@/components/ui/animated-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -122,23 +124,28 @@ export function AddTaskModal({ onAddTask, trigger }: AddTaskModalProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button variant="default" size="sm" className="cursor-pointer">
-            <Plus className="w-4 h-4" />
-            Add Task
-          </Button>
-        )}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[525px]">
-        <DialogHeader>
-          <DialogTitle>Add New Task</DialogTitle>
-          <DialogDescription>
-            Create a new task to track work and progress. Fill in the details below.
-          </DialogDescription>
-        </DialogHeader>
-
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          {trigger || (
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button variant="default" size="sm" className="cursor-pointer">
+                <Plus className="w-4 h-4" />
+                Add Task
+              </Button>
+            </motion.div>
+          )}
+        </DialogTrigger>
+      </Dialog>
+      
+      <AnimatedDialog 
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        title="Add New Task"
+        description="Create a new task to track work and progress. Fill in the details below."
+        showCloseButton={true}
+        className="sm:max-w-[525px]"
+      >
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Task Title */}
           <div className="space-y-2">
@@ -249,8 +256,27 @@ export function AddTaskModal({ onAddTask, trigger }: AddTaskModalProps) {
               Create Task
             </Button>
           </div>
+          {/* Action Buttons */}
+          <motion.div 
+            className="flex justify-end space-x-2 pt-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.3 }}
+          >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button type="button" variant="outline" onClick={handleCancel} className="cursor-pointer">
+                Cancel
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button type="submit" className="cursor-pointer">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Task
+              </Button>
+            </motion.div>
+          </motion.div>
         </form>
-      </DialogContent>
-    </Dialog>
+      </AnimatedDialog>
+    </>
   )
 }
