@@ -35,7 +35,7 @@
 - [x] Renovação automática de token ao expirar (401 → refresh)
 - [x] Interceptores Axios para adicionar Authorization header
  - [x] Logout funcional removendo tokens
-- [ ] Rota protegida redirecionando para login se não autenticado
+- [x] Rota protegida redirecionando para login se não autenticado
 - [x] Exibição de dados do usuário logado (GET /auth/me)
  - [x] Persistência de sessão via localStorage
 - [x] Loading states durante autenticação
