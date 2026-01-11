@@ -38,10 +38,10 @@
 - [x] Adicionar scripts no package.json para lint e format
 
 ### 1.5 Configuração Git e Hooks
-- [ ] Inicializar repositório Git
-- [ ] Configurar .gitignore
-- [ ] Instalar e configurar Husky
-- [ ] Configurar pre-commit hook (lint-staged)
+- [x] Inicializar repositório Git
+- [x] Configurar .gitignore
+- [x] Instalar e configurar Husky
+- [x] Configurar pre-commit hook (lint-staged)
 - [ ] Configurar commit-msg hook (commitlint)
 - [ ] Criar template de commit message
 
