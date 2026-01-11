@@ -262,7 +262,7 @@
 - [x] Criar hook useProduct
 - [x] Criar hook useCreateProduct
 - [x] Criar hook useUpdateProduct
-- [ ] Criar hook useDeleteProduct
+- [x] Criar hook useDeleteProduct
 - [ ] Criar hook useSearchProducts
 - [ ] Criar hook useProductFilters
 - [ ] Implementar cache queries
