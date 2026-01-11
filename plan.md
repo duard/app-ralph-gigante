@@ -98,7 +98,7 @@
 - [ ] Adicionar tabela de produtos mais vendidos (top 10)
 - [ ] Implementar tabela de produtos recentes (últimos adicionados)
 - [ ] Adicionar filtro de período (hoje, semana, mês) para métricas
-- [ ] Implementar exportação CSV usando react-csv
+- [x] Implementar exportação CSV usando react-csv
 - [ ] Adicionar exportação Excel usando xlsx
 - [ ] Criar exportação PDF usando jsPDF ou react-pdf
 - [ ] Sistema de atualização automática a cada 5 minutos para métricas em tempo real
@@ -349,3 +349,5 @@ Add entries below this line:
 - **2025-01-11**: ✅ Implementado virtualização de lista para 1000+ produtos. Adicionado @tanstack/react-virtual para renderização eficiente, substituído corpo da tabela tradicional por contêiner de rolagem virtualizado, mantido cabeçalho fixo para melhor UX, configurado altura de linha ótima (57px) e overscan (5) para performance.
 - **2025-01-11**: ✅ Implementado modal/drawer de detalhes do produto com informações completas do TGFPRO, navegação entre produtos e botão de edição rápida. Componente criado em `src/components/products/product-details-modal.tsx` e integrado na tabela de produtos.
 - **2025-01-11**: ✅ Implementado busca em tempo real com debounce de 300ms. Criado utilitário `useDebounce` em `src/lib/utils/debounce.ts`, atualizado `ProductTableToolbar` para busca responsiva e `ProductList` para chamadas API debounced. A busca agora filtra localmente imediatamente para feedback visual e faz chamadas API com 300ms de debounce.
+
+- **2025-01-11**: ✅ Implementada exportação CSV de produtos usando react-csv. Adicionadas funções `productsToCSV` e `downloadCSV` em `src/lib/utils/product-utils.ts` para converter produtos em formato CSV e realizar download. Adicionado botão "Exportar CSV" na barra de ferramentas da tabela de produtos que exporta todos os produtos visíveis com colunas: Código, Nome/Descrição, Ref. Fabricante, Unidade, Preço Venda, Preço Custo, Estoque, Estoque Mínimo, Status, Categoria, NCM, Peso Líquido, Peso Bruto. O arquivo é baixado com nome formatado `produtos-YYYY-MM-DD.csv`.

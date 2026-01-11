@@ -1,6 +1,6 @@
 "use client"
 
-import { X } from "lucide-react"
+import { X, Download } from "lucide-react"
 import type { Table } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { ProductTableViewOptions } from "./product-table-view-options"
 import { Plus, Search } from "lucide-react"
 import { useDebounce } from "@/lib/utils/debounce"
+import { downloadCSV, type CSVProductRow } from "@/lib/utils/product-utils"
 
 interface ProductTableToolbarProps<TData> {
   table: Table<TData>
@@ -78,6 +79,20 @@ export function ProductTableToolbar<TData>({
       </div>
       <div className="flex items-center space-x-2">
         <ProductTableViewOptions table={table} />
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            const rows = table.getRowModel().rows;
+            const products: CSVProductRow[] = rows.map(row => row.original as CSVProductRow);
+            const date = new Date().toISOString().split('T')[0];
+            downloadCSV(products, `produtos-${date}.csv`);
+          }}
+          className="h-8"
+        >
+          <Download className="mr-2 h-4 w-4" />
+          Exportar CSV
+        </Button>
         {onAddProduct && (
           <Button onClick={onAddProduct} className="h-8">
             <Plus className="mr-2 h-4 w-4" />
