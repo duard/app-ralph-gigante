@@ -13,10 +13,10 @@
 - [x] Atualizar README.md com descrição do projeto
 
 ### 1.2 Configuração TypeScript
-- [ ] Configurar tsconfig.json com strict mode
-- [ ] Configurar tsconfig.app.json
-- [ ] Configurar tsconfig.node.json
-- [ ] Criar types globais em src/types/global.d.ts
+- [x] Configurar tsconfig.json com strict mode
+- [x] Configurar tsconfig.app.json
+- [x] Configurar tsconfig.node.json
+- [x] Criar types globais em src/types/global.d.ts
 - [ ] Criar tipos para API responses
 - [ ] Criar tipos para componentes React
 - [ ] Configurar path aliases (@/*)
