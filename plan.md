@@ -376,7 +376,7 @@
 
 ### 7.3 Implementar Filtros de Produtos
 - [x] Criar ProductFilters component
-- [ ] Implementar filtro de busca (nome/código)
+- [x] Implementar filtro de busca (nome/código)
 - [ ] Implementar filtro de preço (range)
 - [ ] Implementar filtro de status (ativo/inativo)
 - [ ] Implementar filtro de categoria
