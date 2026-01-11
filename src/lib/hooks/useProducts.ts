@@ -10,6 +10,8 @@ export const useProducts = (filters?: ProductFilters) => {
       return response.data as ProductListResponse
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   })
 }
 

@@ -266,7 +266,7 @@
 - [x] Criar hook useSearchProducts
 - [x] Criar hook useProductFilters
 - [x] Implementar cache queries
-- [ ] Implementar refetch automático
+- [x] Implementar refetch automático
 - [ ] Implementar optimistic updates
 
 ### 5.3 Criar Store de Produtos
