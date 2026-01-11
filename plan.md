@@ -93,7 +93,7 @@
 - [x] Criar barra de busca global no header
 - [x] Configurar notificações toast usando Sonner em todas as ações
 - [x] Padronizar loading states com skeletons consistentes
-- [ ] Implementar error boundaries para capturar erros de UI
+- [x] Implementar error boundaries para capturar erros de UI
 - [ ] Adicionar animações em modais e drawers usando Framer Motion
 - [ ] Incluir tooltips em botões de ação usando Radix UI
 - [x] Implementar toggle dark/light theme com persistência
@@ -119,7 +119,7 @@
 
 
 ### Documentação
-- [ ] Atualizar README com instruções completas de setup e desenvolvimento
+- [x] Atualizar README com instruções completas de setup e desenvolvimento
 - [ ] Criar documentação de componentes internos usando Storybook
 - [ ] Documentar API Client com exemplos de uso
 - [ ] Criar guia de estilos e convenções do projeto
@@ -396,6 +396,10 @@ src/
 ## Progress
 
 Add entries below this line:
+
+- **2025-01-11**: ✅ Atualizado README com instruções completas de setup e desenvolvimento. Documentação abrangente incluindo pré-requisitos, instalação, configuração de ambiente, autenticação, estrutura do projeto, comandos úteis, testes, deploy e troubleshooting. Incluídos exemplos de curl para API, estrutura de pastas detalhada, stack tecnológica completa, e convenções de código. Build e lint funcionando sem erros.
+
+- **2025-01-11**: ✅ Implementados error boundaries para capturar erros de UI. Criado ErrorBoundary component principal com fallback UI, opções de recuperação e logging. Implementado DataErrorBoundary específico para componentes de data fetching. Adicionados error boundaries no dashboard, produtos e router principal. Incluídas notificações toast para erros, funcionalidade de retry e tratamento diferenciado para desenvolvimento/produção. Suporte para componentes fallback customizados. Build e TypeScript funcionando sem erros.
 
 - **2025-01-11**: ✅ Implementada infraestrutura completa de testes com Vitest, Testing Library, MSW e coverage reporting. Adicionadas dependências Vitest, @vitest/ui, @vitest/coverage-v8, @testing-library/react, @testing-library/jest-dom, @testing-library/user-event, MSW para mocking de API. Configurado vitest.config.ts com suporte TypeScript e thresholds de coverage (70%). Criados arquivos de setup global (src/test/setup.ts), utilitários de render customizados (src/test/utils.tsx) e mocks centralizados (src/test/mocks.ts). Adicionados scripts de test ao package.json: test, test:run, test:ui, test:coverage, test:watch. Criados testes de exemplo: component test (label.test.tsx), hook test (use-mobile.test.ts), API test (api.test.ts), integration tests (product-list.integration.test.tsx, use-auth.integration.test.ts). Configurado coverage mínimo 70% com relatórios HTML. Todos os testes passando com 68.18% coverage. Build e TypeScript funcionando sem erros.
 
