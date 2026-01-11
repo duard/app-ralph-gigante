@@ -21,6 +21,28 @@ import { useProductPriceHistory } from "@/hooks/use-product-price-history"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 
+// Define CustomTooltip outside component to avoid creation during render
+const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload
+    const formatCurrency = (value: number) => {
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      }).format(value)
+    }
+    return (
+      <div className="bg-white p-3 border rounded-lg shadow-lg">
+        <p className="font-medium">{`Data: ${label}`}</p>
+        <p className="text-blue-600">{`Preço: ${formatCurrency(data.price)}`}</p>
+        <p className="text-gray-600">{`Quantidade: ${data.quantity} un`}</p>
+        <p className="text-sm text-gray-500">{`Tipo: ${data.type}`}</p>
+      </div>
+    )
+  }
+  return null
+}
+
 interface PriceTrendChartProps {
   className?: string
   height?: number
@@ -47,86 +69,86 @@ export function PriceTrendChart({ className, height = 400 }: PriceTrendChartProp
   const [detailedData, setDetailedData] = React.useState<any[]>([])
 
   // Load price trends for top products
-  React.useEffect(() => {
-    const loadPriceTrends = async () => {
-      if (!products.length) return
+  const loadPriceTrends = React.useCallback(async () => {
+    if (!products.length) return
 
-      try {
-        // Get top 10 products by price for trend analysis
-        const topProducts = products
-          .filter(p => p.vlrvenda && p.vlrvenda > 0)
-          .sort((a, b) => (b.vlrvenda || 0) - (a.vlrvenda || 0))
-          .slice(0, 10)
+    try {
+      // Get top 10 products by price for trend analysis
+      const topProducts = products
+        .filter(p => p.vlrvenda && p.vlrvenda > 0)
+        .sort((a, b) => (b.vlrvenda || 0) - (a.vlrvenda || 0))
+        .slice(0, 10)
 
-        const trends: PriceTrendData[] = []
+      const trends: PriceTrendData[] = []
 
-        for (const product of topProducts) {
-          try {
-            const history = await (period === '30' ? fetchLast30Days(product.codprod) : fetchLast90Days(product.codprod))
+      for (const product of topProducts) {
+        try {
+          const history = await (period === '30' ? fetchLast30Days(product.codprod) : fetchLast90Days(product.codprod))
 
-            if (history && history.movimentacoes.length > 0) {
-              const avgPrice = getAveragePrice()
-              const trend = getPriceTrend()
+          if (history && history.movimentacoes.length > 0) {
+            const avgPrice = getAveragePrice()
+            const trend = getPriceTrend()
 
-              trends.push({
-                product: product.descrprod || `Produto ${product.codprod}`,
-                codprod: product.codprod,
-                averagePrice: avgPrice,
-                priceChange: trend.percentage,
-                trend: trend.trend as 'increase' | 'decrease' | 'stable',
-                dataPoints: history.movimentacoes.length,
-                lastUpdated: history.dataFim
-              })
-            }
-          } catch (error) {
-            // Skip products with no history data
-            console.warn(`Could not load price history for product ${product.codprod}`)
+            trends.push({
+              product: product.descrprod || `Produto ${product.codprod}`,
+              codprod: product.codprod,
+              averagePrice: avgPrice,
+              priceChange: trend.percentage,
+              trend: trend.trend as 'increase' | 'decrease' | 'stable',
+              dataPoints: history.movimentacoes.length,
+              lastUpdated: history.dataFim
+            })
           }
+        } catch (_error) {
+          // Skip products with no history data
+          console.warn(`Could not load price history for product ${product.codprod}`)
         }
-
-        setPriceTrends(trends)
-      } catch (error) {
-        console.error('Error loading price trends:', error)
-        toast.error('Erro ao carregar tendências de preços')
       }
-    }
 
-    loadPriceTrends()
+      setPriceTrends(trends)
+    } catch (error) {
+      console.error('Error loading price trends:', error)
+      toast.error('Erro ao carregar tendências de preços')
+    }
   }, [products, period, fetchLast30Days, fetchLast90Days, getAveragePrice, getPriceTrend])
 
-  // Load detailed chart data when a product is selected
   React.useEffect(() => {
-    const loadDetailedData = async () => {
-      if (!selectedProduct) {
-        setDetailedData([])
-        return
-      }
+    loadPriceTrends()
+  }, [loadPriceTrends])
 
-      try {
-        const history = await (period === '30' ? fetchLast30Days(selectedProduct) : fetchLast90Days(selectedProduct))
-
-        if (history && history.movimentacoes.length > 0) {
-          // Transform data for chart
-          const chartData = history.movimentacoes
-            .filter(mov => mov.data_referencia && mov.preco_unitario)
-            .sort((a, b) => new Date(a.data_referencia).getTime() - new Date(b.data_referencia).getTime())
-            .map(mov => ({
-              date: new Date(mov.data_referencia).toLocaleDateString('pt-BR'),
-              price: mov.preco_unitario || 0,
-              quantity: Math.abs(mov.quantidade_mov || 0),
-              type: mov.tipo_movimentacao || 'Movimentação'
-            }))
-
-          setDetailedData(chartData)
-        }
-      } catch (error) {
-        console.error('Error loading detailed price data:', error)
-        toast.error('Erro ao carregar dados detalhados do produto')
-      }
+  // Load detailed chart data when a product is selected
+  const loadDetailedData = React.useCallback(async () => {
+    if (!selectedProduct) {
+      setDetailedData([])
+      return
     }
 
-    loadDetailedData()
+    try {
+      const history = await (period === '30' ? fetchLast30Days(selectedProduct) : fetchLast90Days(selectedProduct))
+
+      if (history && history.movimentacoes.length > 0) {
+        // Transform data for chart
+        const chartData = history.movimentacoes
+          .filter(mov => mov.data_referencia && mov.preco_unitario)
+          .sort((a, b) => new Date(a.data_referencia).getTime() - new Date(b.data_referencia).getTime())
+          .map(mov => ({
+            date: new Date(mov.data_referencia).toLocaleDateString('pt-BR'),
+            price: mov.preco_unitario || 0,
+            quantity: Math.abs(mov.quantidade_mov || 0),
+            type: mov.tipo_movimentacao || 'Movimentação'
+          }))
+
+        setDetailedData(chartData)
+      }
+    } catch (error) {
+      console.error('Error loading detailed price data:', error)
+      toast.error('Erro ao carregar dados detalhados do produto')
+    }
   }, [selectedProduct, period, fetchLast30Days, fetchLast90Days])
+
+  React.useEffect(() => {
+    loadDetailedData()
+  }, [loadDetailedData])
 
   const handlePeriodChange = (newPeriod: '30' | '90') => {
     setPeriod(newPeriod)
@@ -161,21 +183,6 @@ export function PriceTrendChart({ className, height = 400 }: PriceTrendChartProp
       style: 'currency',
       currency: 'BRL'
     }).format(value)
-  }
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload
-      return (
-        <div className="bg-white p-3 border rounded-lg shadow-lg">
-          <p className="font-medium">{`Data: ${label}`}</p>
-          <p className="text-blue-600">{`Preço: ${formatCurrency(data.price)}`}</p>
-          <p className="text-gray-600">{`Quantidade: ${data.quantity} un`}</p>
-          <p className="text-sm text-gray-500">{`Tipo: ${data.type}`}</p>
-        </div>
-      )
-    }
-    return null
   }
 
   return (
