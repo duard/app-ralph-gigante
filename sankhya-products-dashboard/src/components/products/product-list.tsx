@@ -34,6 +34,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { useDebounce } from "@/lib/utils/debounce"
 
 const columns: ColumnDef<Product>[] = [
   {
@@ -93,18 +94,21 @@ const columns: ColumnDef<Product>[] = [
       const product = row.original
       return (
         <div className="flex items-center gap-2">
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={() => handleViewProduct(product)}
-          >
-            Ver
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={() => handleEditProduct(product)}
-          >
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => {
+                setSelectedProduct(product)
+                setIsDetailsModalOpen(true)
+              }}
+            >
+              Ver
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => onEditProduct?.(product)}
+            >
             Editar
           </Button>
           <Button variant="ghost" size="sm" className="text-destructive">
@@ -193,7 +197,8 @@ export function ProductList({
     isLoading,
     error,
     isRetrying,
-    retry
+    retry,
+    searchProducts
   } = useProducts()
 
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -203,6 +208,14 @@ export function ProductList({
   const [searchValue, setSearchValue] = React.useState("")
   const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null)
   const [isDetailsModalOpen, setIsDetailsModalOpen] = React.useState(false)
+
+  // Debounced search for API calls
+  const debouncedSearchProducts = useDebounce((query: unknown) => {
+    const searchQuery = query as string
+    if (searchQuery.trim()) {
+      searchProducts(searchQuery)
+    }
+  }, 300)
 
   const table = useReactTable({
     data: filteredProducts,
@@ -234,10 +247,7 @@ export function ProductList({
     table.setPageSize(pagination.pageSize)
   }, [pagination.page, pagination.pageSize, table])
 
-  const handleViewProduct = (product: Product) => {
-    setSelectedProduct(product)
-    setIsDetailsModalOpen(true)
-  }
+
 
   const handleEditProduct = (product: Product) => {
     if (onEditProduct) {
@@ -275,7 +285,11 @@ export function ProductList({
     <div className="space-y-4">
       <ProductTableToolbar
         table={table}
-        onSearch={setSearchValue}
+        onSearch={(value) => {
+          setSearchValue(value)
+          // Trigger debounced API search
+          debouncedSearchProducts(value)
+        }}
         onAddProduct={onAddProduct}
         searchValue={searchValue}
       />

@@ -1,12 +1,13 @@
 "use client"
 
-import { Cross2Icon } from "@radix-ui/react-icons"
+import { X } from "lucide-react"
 import type { Table } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ProductTableViewOptions } from "./product-table-view-options"
-import { Plus, Search, X } from "lucide-react"
+import { Plus, Search } from "lucide-react"
+import { useDebounce } from "@/lib/utils/debounce"
 
 interface ProductTableToolbarProps<TData> {
   table: Table<TData>
@@ -23,9 +24,23 @@ export function ProductTableToolbar<TData>({
 }: ProductTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
 
+  // Debounced search with 300ms delay for API calls
+  const debouncedOnSearch = useDebounce((value: unknown) => {
+    onSearch?.(value as string)
+  }, 300)
+
+  // Immediate local filter for UI responsiveness
   const handleSearchChange = (value: string) => {
-    onSearch?.(value)
+    // Update local state immediately for responsive UI
+    if (onSearch) {
+      onSearch(value)
+    }
+    
+    // Update table filter immediately for local filtering
     table.getColumn("descrprod")?.setFilterValue(value || undefined)
+    
+    // Trigger debounced search for API calls
+    debouncedOnSearch(value)
   }
 
   return (
@@ -57,7 +72,7 @@ export function ProductTableToolbar<TData>({
             className="h-8 px-2 lg:px-3"
           >
             Limpar
-            <Cross2Icon className="ml-2 h-4 w-4" />
+            <X className="ml-2 h-4 w-4" />
           </Button>
         )}
       </div>

@@ -414,11 +414,11 @@ export function useProducts() {
             await refresh();
             setRetryCount(0);
             toast.success('Dados carregados com sucesso após tentativa');
-        } catch (err) {
-            if (retryCount >= 3) {
-                toast.error('Número máximo de tentativas alcançado. Verifique sua conexão.');
-            }
-        } finally {
+            } catch (_err) {
+                if (retryCount >= 3) {
+                    toast.error('Número máximo de tentativas alcançado. Verifique sua conexão.');
+                }
+            } finally {
             setIsRetrying(false);
         }
     }, [error, isRetrying, retryCount, refresh]);
