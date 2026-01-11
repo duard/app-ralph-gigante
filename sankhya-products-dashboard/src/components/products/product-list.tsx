@@ -23,6 +23,7 @@ import type { Product } from "@/stores/products-store"
 import { formatProductCode, formatProductPrice, formatProductStatus } from "@/lib/utils/product-utils"
 import { ProductTableToolbar } from "./product-table-toolbar"
 import { DataTablePagination } from "@/components/ui/data-table-pagination"
+import { ErrorState } from "@/components/ui/error-state"
 import { Package } from "lucide-react"
 import {
   Table,
@@ -176,7 +177,9 @@ export function ProductList({
     goToPage,
     changePageSize,
     isLoading,
-    error
+    error,
+    isRetrying,
+    retry
   } = useProducts()
 
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -220,7 +223,15 @@ export function ProductList({
   }
 
   if (error) {
-    return <div className="flex items-center justify-center p-8 text-destructive">Erro ao carregar produtos: {error}</div>
+    return (
+      <ErrorState
+        error={error}
+        onRetry={retry}
+        isRetrying={isRetrying}
+        title="Erro ao carregar produtos"
+        description={`Não foi possível carregar a lista de produtos. ${error}`}
+      />
+    )
   }
 
   return (

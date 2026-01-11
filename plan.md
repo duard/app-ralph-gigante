@@ -43,7 +43,7 @@
 
 ### Listagem de Produtos
 - [x] Grid/Table de produtos com paginação
-- [ ] Colunas configuráveis: codprod, descricao, codvol, unidade, preco, status
+- [x] Colunas configuráveis: codprod, descricao, codvol, unidade, preco, status
  - [x] Ordenação por todas as colunas clicáveis
 - [ ] Filtros por nome, código, preço, status
 - [ ] Busca em tempo real com debounce (300ms)

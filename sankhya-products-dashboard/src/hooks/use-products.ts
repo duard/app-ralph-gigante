@@ -393,6 +393,36 @@ export function useProducts() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const [retryCount, setRetryCount] = useState(0);
+    const [isRetrying, setIsRetrying] = useState(false);
+
+    /**
+     * Retry last failed request with exponential backoff
+     */
+    const retry = useCallback(async () => {
+        if (!error || isRetrying) return;
+
+        setIsRetrying(true);
+        setRetryCount(prev => prev + 1);
+
+        // Exponential backoff: 1s, 2s, 4s, 8s, 16s max
+        const delay = Math.min(1000 * Math.pow(2, retryCount), 16000);
+        
+        await new Promise(resolve => setTimeout(resolve, delay));
+
+        try {
+            await refresh();
+            setRetryCount(0);
+            toast.success('Dados carregados com sucesso após tentativa');
+        } catch (err) {
+            if (retryCount >= 3) {
+                toast.error('Número máximo de tentativas alcançado. Verifique sua conexão.');
+            }
+        } finally {
+            setIsRetrying(false);
+        }
+    }, [error, isRetrying, retryCount, refresh]);
+
     return {
         // State
         products,
@@ -404,6 +434,8 @@ export function useProducts() {
         isLoading,
         error,
         searchResults,
+        isRetrying,
+        retryCount,
 
         // Computed
         activeCount: getActiveProductsCount(),
@@ -419,6 +451,7 @@ export function useProducts() {
         deleteProducts,
         searchProducts,
         refresh,
+        retry,
 
         // Filters & Pagination
         setFilters: applyFilters,
