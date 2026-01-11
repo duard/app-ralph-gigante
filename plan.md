@@ -80,7 +80,7 @@
 - [x] Implementar tabela de produtos recentes (últimos adicionados)
 - [x] Sistema de atualização automática a cada 5 minutos para métricas em tempo real
 - [x] Implementar lazy loading de componentes usando React.lazy
-- [ ] Adicionar filtro de período (hoje, semana, mês) para métricas
+- [x] Adicionar filtro de período (hoje, semana, mês) para métricas
 - [x] Implementar exportação CSV usando react-csv
 - [ ] Adicionar exportação Excel usando xlsx
 - [ ] Criar exportação PDF usando jsPDF ou react-pdf
@@ -391,6 +391,8 @@ src/
 - Não implementar operações reais de CRUD (somente leitura)
 - Se build e lint passarem sem erros, fazer commit e push
 - Usar Ralph para implementar tarefas de forma autônoma
+
+- **2025-01-11**: ✅ Adicionados filtros de período para métricas do dashboard e produtos recentes. Implementado componente DashboardCards com filtros de período (hoje, semana, mês, todo período), atualizado hook useDashboardMetrics com lógica de filtragem por data usando campos dtcad/dtalter, adicionado seletor de período ao componente RecentProducts, e mantida compatibilidade com versão legada. Build e lint funcionando sem erros críticos.
 
 ## Progress
 
