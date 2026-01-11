@@ -27,6 +27,7 @@ const columns: ColumnDef<Product>[] = [
     accessorKey: "codprod",
     header: "Código",
     cell: ({ row }) => formatProductCode(row.getValue("codprod")),
+    enableSorting: true,
   },
   {
     accessorKey: "descrprod",
@@ -36,16 +37,19 @@ const columns: ColumnDef<Product>[] = [
         {row.getValue("descrprod")}
       </div>
     ),
+    enableSorting: true,
   },
   {
     accessorKey: "vlrvenda",
     header: "Preço",
     cell: ({ row }) => formatProductPrice(row.getValue("vlrvenda")),
+    enableSorting: true,
   },
   {
     accessorKey: "estoque",
     header: "Estoque",
     cell: ({ row }) => row.getValue("estoque") || 0,
+    enableSorting: true,
   },
   {
     accessorKey: "ativo",
@@ -55,16 +59,19 @@ const columns: ColumnDef<Product>[] = [
         {formatProductStatus(row.getValue("ativo"))}
       </Badge>
     ),
+    enableSorting: true,
   },
   {
     accessorKey: "descrgrupoprod",
     header: "Categoria",
     cell: ({ row }) => row.getValue("descrgrupoprod") || "-",
+    enableSorting: true,
   },
   {
     accessorKey: "codvol",
     header: "Unidade",
     cell: ({ row }) => row.getValue("codvol") || "-",
+    enableSorting: true,
   },
   {
     id: "actions",
