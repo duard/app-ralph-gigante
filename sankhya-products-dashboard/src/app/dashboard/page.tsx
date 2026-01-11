@@ -2,6 +2,7 @@ import { BaseLayout } from "@/components/layouts/base-layout"
 import { ChartAreaInteractive } from "./components/chart-area-interactive"
 import { DataTable } from "./components/data-table"
 import { DashboardCards } from "./components/dashboard-cards"
+import { CategoryDistributionChart } from "./components/category-distribution-chart"
 
 import { useDashboardMetrics } from "@/hooks/use-dashboard-metrics"
 
@@ -24,7 +25,10 @@ export default function Page() {
             totalStockValue={metrics.totalStockValue}
             averagePrice={metrics.averagePrice}
           />
-          <ChartAreaInteractive />
+          <div className="grid gap-6 md:grid-cols-2">
+            <ChartAreaInteractive />
+            <CategoryDistributionChart />
+          </div>
         </div>
         <div className="@container/main">
           <DataTable

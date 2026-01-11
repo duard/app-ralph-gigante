@@ -58,7 +58,7 @@
 - [x] Modal/Drawer para detalhes do produto
 - [x] Exibição completa dos campos do TGFPRO
 - [x] Imagem do produto (se disponível)
-- [ ] Histórico de preços (via API endpoints)
+- [x] Histórico de preços (via API endpoints)
 - [x] Informações relacionadas (grupo, classe, seção)
 - [x] Estoque disponível
 - [x] Animações de entrada/saída
@@ -340,6 +340,8 @@ src/
 ## Progress
 
 Add entries below this line:
+
+- **2025-01-11**: ✅ Implementado histórico de preços de produtos com gráficos interativos. Criado hook `useProductPriceHistory` que consome endpoint `/tgfpro/consumo-periodo/{codprod}` da API, componente `PriceHistoryChart` com visualização em Recharts mostrando tendência de preços, métricas médias e variação percentual. Adicionado como nova aba no modal de detalhes do produto com períodos de 30/90 dias. Implementados indicadores visuais de tendência (alta/baixa/estável) e cards de resumo com preço médio e total de movimentações. Componentes localizados em `src/hooks/use-product-price-history.ts` e `src/components/products/price-history-chart.tsx`.
 
 - **2025-01-11**: ✅ Implementado componente breadcrumb-nav.tsx com navegação por breadcrumb usando react-router. Criado componente que utiliza useLocation para obter o caminho atual, gera itens de breadcrumb baseados nos segmentos da URL e integra com os componentes de breadcrumb do shadcn-ui. O componente foi adicionado ao BaseLayout para aparecer em todas as páginas protegidas. Componente localizado em `src/components/breadcrumb-nav.tsx`.
 
