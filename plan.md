@@ -292,7 +292,7 @@
 - [ ] Criar Footer component
 
 ### 6.2 Criar Componentes de Tabela
-- [ ] Criar DataTable component base
+- [x] Criar DataTable component base
 - [ ] Criar ProductTable component
 - [ ] Criar TableColumn component
 - [ ] Criar TableHeader component
