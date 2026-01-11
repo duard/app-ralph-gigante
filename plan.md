@@ -713,7 +713,7 @@
 
 ### 12.6 Testes de Integração - Autenticação
 - [ ] Testar fluxo de login completo
-- [ ] Testar fluxo de logout
+ - [x] Testar fluxo de logout
 - [ ] Testar refresh de token
 - [ ] Testar rotas protegidas
  - [x] Testar persistência de sessão
