@@ -126,23 +126,57 @@ export function useProducts() {
     );
 
     /**
-     * Create a new product
+     * Create a new product with optimistic update
      */
     const createProduct = useCallback(
         async (data: ProductPayload) => {
+            // Create optimistic product
+            const optimisticProduct: Product = {
+                id: Date.now(), // Temporary ID
+                codprod: Date.now(), // Temporary code
+                descrprod: data.descrprod || '',
+                reffab: data.reffab,
+                codvol: data.codvol,
+                vlrvenda: data.vlrvenda,
+                vlrcusto: data.vlrcusto,
+                estoque: data.estoque,
+                estmin: data.estmin,
+                ativo: data.ativo || 'S',
+                codgrupoprod: data.codgrupoprod,
+                descrgrupoprod: data.descrgrupoprod,
+                codmarca: data.codmarca,
+                ncm: data.ncm,
+                cest: data.cest,
+                pesoliq: data.pesoliq,
+                pesobruto: data.pesobruto,
+                observacao: data.observacao,
+                imagem: data.imagem,
+                dtcad: new Date().toISOString(),
+                dtalter: new Date().toISOString(),
+            };
+
+            // Add optimistic product immediately
+            addProduct(optimisticProduct);
+
             try {
                 setLoading(true);
 
                 const response = await productService.createProduct(data);
 
                 if (response.success && response.data) {
-                    addProduct(response.data);
+                    // Replace optimistic product with real data
+                    storeUpdateProduct(optimisticProduct.codprod, response.data);
                     toast.success('Produto criado com sucesso');
                     return response.data;
                 }
 
+                // Remove optimistic product if failed
+                removeProduct(optimisticProduct.codprod);
                 return null;
             } catch (err) {
+                // Remove optimistic product on error
+                removeProduct(optimisticProduct.codprod);
+
                 const errorMessage = err instanceof Error ? err.message : 'Erro ao criar produto';
                 setError(errorMessage);
                 toast.error(errorMessage);
@@ -151,27 +185,40 @@ export function useProducts() {
                 setLoading(false);
             }
         },
-        [addProduct, setLoading, setError]
+        [addProduct, storeUpdateProduct, removeProduct, setLoading, setError]
     );
 
     /**
-     * Update an existing product
+     * Update an existing product with optimistic update
      */
     const updateProduct = useCallback(
         async (id: number, data: Partial<ProductPayload>) => {
+            // Get current product for rollback
+            const currentProduct = products.find(p => p.codprod === id);
+            if (!currentProduct) return null;
+
+            // Apply optimistic update
+            storeUpdateProduct(id, data);
+
             try {
                 setLoading(true);
 
                 const response = await productService.updateProduct(id, data);
 
                 if (response.success && response.data) {
+                    // Update with server response (in case server modifies data)
                     storeUpdateProduct(id, response.data);
                     toast.success('Produto atualizado com sucesso');
                     return response.data;
                 }
 
+                // Revert optimistic update
+                storeUpdateProduct(id, currentProduct);
                 return null;
             } catch (err) {
+                // Revert optimistic update
+                storeUpdateProduct(id, currentProduct);
+
                 const errorMessage = err instanceof Error ? err.message : 'Erro ao atualizar produto';
                 setError(errorMessage);
                 toast.error(errorMessage);
@@ -180,27 +227,38 @@ export function useProducts() {
                 setLoading(false);
             }
         },
-        [storeUpdateProduct, setLoading, setError]
+        [products, storeUpdateProduct, setLoading, setError]
     );
 
     /**
-     * Delete a product
+     * Delete a product with optimistic update
      */
     const deleteProduct = useCallback(
         async (id: number) => {
+            // Get product for rollback
+            const productToDelete = products.find(p => p.codprod === id);
+            if (!productToDelete) return false;
+
+            // Apply optimistic delete
+            removeProduct(id);
+
             try {
                 setLoading(true);
 
                 const response = await productService.deleteProduct(id);
 
                 if (response.success) {
-                    removeProduct(id);
                     toast.success('Produto excluído com sucesso');
                     return true;
                 }
 
+                // Revert optimistic delete
+                addProduct(productToDelete);
                 return false;
             } catch (err) {
+                // Revert optimistic delete
+                addProduct(productToDelete);
+
                 const errorMessage = err instanceof Error ? err.message : 'Erro ao excluir produto';
                 setError(errorMessage);
                 toast.error(errorMessage);
@@ -209,28 +267,38 @@ export function useProducts() {
                 setLoading(false);
             }
         },
-        [removeProduct, setLoading, setError]
+        [products, removeProduct, addProduct, setLoading, setError]
     );
 
     /**
-     * Delete multiple products
+     * Delete multiple products with optimistic update
      */
     const deleteProducts = useCallback(
         async (ids: number[]) => {
+            // Get products for rollback
+            const productsToDelete = products.filter(p => ids.includes(p.codprod));
+
+            // Apply optimistic delete
+            ids.forEach((id) => removeProduct(id));
+            clearSelection();
+
             try {
                 setLoading(true);
 
                 const response = await productService.deleteProducts(ids);
 
                 if (response.success) {
-                    ids.forEach((id) => removeProduct(id));
-                    clearSelection();
                     toast.success(`${ids.length} produto(s) excluído(s) com sucesso`);
                     return true;
                 }
 
+                // Revert optimistic delete
+                productsToDelete.forEach(product => addProduct(product));
                 return false;
             } catch (err) {
+                // Revert optimistic delete
+                productsToDelete.forEach(product => addProduct(product));
+
                 const errorMessage = err instanceof Error ? err.message : 'Erro ao excluir produtos';
                 setError(errorMessage);
                 toast.error(errorMessage);
@@ -239,7 +307,7 @@ export function useProducts() {
                 setLoading(false);
             }
         },
-        [removeProduct, clearSelection, setLoading, setError]
+        [products, removeProduct, addProduct, clearSelection, setLoading, setError]
     );
 
     /**
