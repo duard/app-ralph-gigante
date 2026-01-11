@@ -42,13 +42,13 @@
 - [ ] Tratamento de erros de autenticação com feedback visual
 
 ### Listagem de Produtos
-- [ ] Grid/Table de produtos com paginação
+- [x] Grid/Table de produtos com paginação
 - [ ] Colunas configuráveis: codprod, descricao, codvol, unidade, preco, status
 - [ ] Ordenação por todas as colunas clicáveis
 - [ ] Filtros por nome, código, preço, status
 - [ ] Busca em tempo real com debounce (300ms)
-- [ ] Controles de paginação (page, perPage)
-- [ ] Indicador de total, página atual e última página
+- [x] Controles de paginação (page, perPage)
+- [x] Indicador de total, página atual e última página
 - [ ] Virtualização de lista para 1000+ produtos
 - [ ] Estados de loading (skeletons)
 - [ ] Estados vazios (empty states)
