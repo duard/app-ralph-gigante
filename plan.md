@@ -196,8 +196,8 @@
 - [x] Criar AuthProvider component
 - [x] Criar AuthGuard component
 - [x] Criar RequireAuth component (integrado no ProtectedRoute)
-- [ ] Criar UserMenu dropdown
-- [ ] Criar UserAvatar component
+- [x] Criar UserMenu dropdown
+- [x] Criar UserAvatar component
 - [x] Criar LogoutButton component
 
 ### 3.8 Testar Autenticação
