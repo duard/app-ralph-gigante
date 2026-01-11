@@ -10,7 +10,7 @@
 - [x] Criar estrutura de diretórios inicial
 - [x] Configurar .env.example com variáveis necessárias
 - [x] Configurar .env.local com valores de desenvolvimento
-- [ ] Atualizar README.md com descrição do projeto
+- [x] Atualizar README.md com descrição do projeto
 
 ### 1.2 Configuração TypeScript
 - [ ] Configurar tsconfig.json com strict mode
