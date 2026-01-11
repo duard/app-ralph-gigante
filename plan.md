@@ -52,7 +52,7 @@
 - [ ] Virtualização de lista para 1000+ produtos
 - [x] Estados de loading (skeletons)
  - [x] Estados vazios (empty states)
-- [ ] Estados de erro com retry
+- [x] Estados de erro com retry
 
 ### Detalhes do Produto
 - [ ] Modal/Drawer para detalhes do produto
