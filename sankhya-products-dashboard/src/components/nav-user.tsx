@@ -10,7 +10,8 @@ import {
 import { Link } from "react-router-dom"
 
 import { UserAvatar } from "@/components/user-avatar"
-import { User, useAuthStore } from "@/stores/auth-store"
+import type { User } from "@/stores/auth-store"
+import { useAuthStore } from "@/stores/auth-store"
 import {
   DropdownMenu,
   DropdownMenuContent,

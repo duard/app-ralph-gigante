@@ -1,13 +1,17 @@
 "use client"
 
 import * as React from "react"
-import { 
-  Search, 
-  X, 
-  ChevronLeft, 
-  ChevronRight, 
+import {
+  Search,
+  X,
+  ChevronLeft,
+  ChevronRight,
   SlidersHorizontal,
-  RotateCcw 
+  RotateCcw,
+  Save,
+  Bookmark,
+  Trash2,
+  Plus
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -19,7 +23,9 @@ import { Badge } from "@/components/ui/badge"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { useProductsStore } from "@/stores/products-store"
 import { useProducts } from "@/hooks/use-products"
+import { filterPresetsStore, type FilterPreset } from "@/lib/stores/filter-presets-store"
 import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 
 interface ProductFiltersSidebarProps {
   className?: string
@@ -35,6 +41,68 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
   const [basicFiltersOpen, setBasicFiltersOpen] = React.useState(true)
   const [priceFiltersOpen, setPriceFiltersOpen] = React.useState(true)
   const [categoryFiltersOpen, setCategoryFiltersOpen] = React.useState(true)
+  const [presetsOpen, setPresetsOpen] = React.useState(false)
+
+  // Presets state
+  const [savedPresets, setSavedPresets] = React.useState<FilterPreset[]>([])
+  const [newPresetName, setNewPresetName] = React.useState("")
+  const [isCreatingPreset, setIsCreatingPreset] = React.useState(false)
+
+  // Load presets on mount
+  React.useEffect(() => {
+    setSavedPresets(filterPresetsStore.getPresets())
+  }, [])
+
+  // Check if there are any active filters
+  const hasActiveFilters = React.useMemo(() => {
+    return !!(filters?.search || filters?.status !== 'all' ||
+             filters?.category || filters?.unit ||
+             (filters?.priceMin && filters?.priceMin > 0) ||
+             (filters?.priceMax && filters?.priceMax < Infinity))
+  }, [filters])
+
+  // Preset management functions
+  const handleSavePreset = () => {
+    if (!newPresetName.trim()) {
+      toast.error("Digite um nome para o preset")
+      return
+    }
+
+    if (!hasActiveFilters) {
+      toast.error("Não há filtros ativos para salvar")
+      return
+    }
+
+    try {
+      filterPresetsStore.savePreset({
+        name: newPresetName.trim(),
+        description: `Filtros salvos em ${new Date().toLocaleDateString('pt-BR')}`,
+        filters: { ...filters },
+      })
+
+      setSavedPresets(filterPresetsStore.getPresets())
+      setNewPresetName("")
+      setIsCreatingPreset(false)
+      toast.success("Preset salvo com sucesso!")
+    } catch (error) {
+      toast.error("Erro ao salvar preset")
+    }
+  }
+
+  const handleLoadPreset = (preset: FilterPreset) => {
+    setFilters(preset.filters)
+    toast.success(`Preset "${preset.name}" carregado`)
+  }
+
+  const handleDeletePreset = (presetId: string, presetName: string) => {
+    try {
+      filterPresetsStore.deletePreset(presetId)
+      setSavedPresets(filterPresetsStore.getPresets())
+      toast.success(`Preset "${presetName}" excluído`)
+    } catch (error) {
+      toast.error("Erro ao excluir preset")
+    }
+  }
   
   const searchValue = filters?.search ?? ""
   const statusValue = filters?.status ?? 'all'
@@ -71,17 +139,6 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
     filters?.priceMin ?? priceRange.min,
     filters?.priceMax ?? priceRange.max
   ]
-
-  const hasActiveFilters = React.useMemo(() => {
-    return !!(
-      filters?.search ||
-      filters?.status !== 'all' ||
-      filters?.category ||
-      filters?.unit ||
-      (filters?.priceMin !== undefined && filters.priceMin > priceRange.min) ||
-      (filters?.priceMax !== undefined && filters.priceMax < priceRange.max)
-    )
-  }, [filters, priceRange])
 
   const handleSearchChange = (value: string) => {
     setFilters({ search: value })
@@ -347,6 +404,143 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
           </>
         )}
       </div>
+
+      {/* Filter Presets Section */}
+      <Collapsible open={presetsOpen} onOpenChange={setPresetsOpen}>
+        <CollapsibleTrigger asChild>
+          <Button
+            variant="ghost"
+            className="w-full justify-between px-4 py-2 h-auto font-normal hover:bg-muted/50"
+          >
+            <div className="flex items-center gap-2">
+              <Bookmark className="h-4 w-4" />
+              <span>Presets de Filtros</span>
+              {savedPresets.length > 0 && (
+                <Badge variant="secondary" className="ml-auto">
+                  {savedPresets.length}
+                </Badge>
+              )}
+            </div>
+            {presetsOpen ? (
+              <ChevronRight className="h-4 w-4 rotate-90" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="px-4 pb-4 space-y-3">
+          {/* Create new preset */}
+          {isCreatingPreset ? (
+            <div className="space-y-2 p-3 border rounded-lg bg-muted/20">
+              <Input
+                placeholder="Nome do preset"
+                value={newPresetName}
+                onChange={(e) => setNewPresetName(e.target.value)}
+                className="h-8"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSavePreset()
+                  } else if (e.key === 'Escape') {
+                    setIsCreatingPreset(false)
+                    setNewPresetName("")
+                  }
+                }}
+              />
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  onClick={handleSavePreset}
+                  disabled={!newPresetName.trim() || !hasActiveFilters}
+                  className="h-7"
+                >
+                  <Save className="h-3 w-3 mr-1" />
+                  Salvar
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setIsCreatingPreset(false)
+                    setNewPresetName("")
+                  }}
+                  className="h-7"
+                >
+                  Cancelar
+                </Button>
+              </div>
+              {!hasActiveFilters && (
+                <p className="text-xs text-muted-foreground">
+                  Aplique alguns filtros antes de salvar
+                </p>
+              )}
+            </div>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsCreatingPreset(true)}
+              className="w-full h-8"
+              disabled={!hasActiveFilters}
+            >
+              <Plus className="h-3 w-3 mr-1" />
+              Novo Preset
+            </Button>
+          )}
+
+          {/* Saved presets list */}
+          {savedPresets.length > 0 && (
+            <div className="space-y-2">
+              <Separator />
+              <div className="space-y-1 max-h-40 overflow-y-auto">
+                {savedPresets.map((preset) => (
+                  <div
+                    key={preset.id}
+                    className="flex items-center justify-between p-2 rounded border bg-card hover:bg-muted/50 transition-colors"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">
+                        {preset.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {preset.createdAt.toLocaleDateString('pt-BR')}
+                      </p>
+                    </div>
+                    <div className="flex gap-1 ml-2">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleLoadPreset(preset)}
+                        className="h-7 w-7 p-0"
+                        title="Carregar preset"
+                      >
+                        <SlidersHorizontal className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleDeletePreset(preset.id, preset.name)}
+                        className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                        title="Excluir preset"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {savedPresets.length === 0 && !isCreatingPreset && (
+            <p className="text-xs text-muted-foreground text-center py-4">
+              Nenhum preset salvo ainda
+            </p>
+          )}
+        </CollapsibleContent>
+      </Collapsible>
+
+      <Separator />
 
       {/* Footer with results count */}
       <div className="p-4 border-t bg-muted/20">
