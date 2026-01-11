@@ -416,3 +416,11 @@ Add entries below this line:
 - **2025-01-11**: ✅ Implementada exportação CSV de produtos usando react-csv. Adicionadas funções `productsToCSV` e `downloadCSV` em `src/lib/utils/product-utils.ts` para converter produtos em formato CSV e realizar download. Adicionado botão "Exportar CSV" na barra de ferramentas da tabela de produtos que exporta todos os produtos visíveis com colunas: Código, Nome/Descrição, Ref. Fabricante, Unidade, Preço Venda, Preço Custo, Estoque, Estoque Mínimo, Status, Categoria, NCM, Peso Líquido, Peso Bruto. O arquivo é baixado com nome formatado `produtos-YYYY-MM-DD.csv`.
 
 - **2025-01-11**: ✅ Implementado componente DashboardCards com métricas de produtos. Criado componente que exibe cards com: Total de Produtos, Produtos Ativos, Produtos Sem Estoque e Valor Total em Estoque. Adicionado hook `useDashboardMetrics` para calcular métricas em tempo real a partir dos dados da store de produtos. Componente localizado em `src/app/dashboard/components/dashboard-cards.tsx` e hook em `src/hooks/use-dashboard-metrics.ts`.
+
+- **2025-01-11**: ✅ Implementadas múltiplas funcionalidades críticas do dashboard:
+  - **Gráfico de tendência de preços**: Componente PriceTrendChart com análise histórica de preços, períodos 30/90 dias, integração com API de histórico
+  - **Tabela de produtos mais vendidos**: Top 10 produtos por valor/movimentação/quantidade com ranking visual e filtros por período
+  - **Tabela de produtos recentes**: Produtos adicionados/modificados recentemente com destaque para itens novos (≤7 dias)
+  - **Sistema de atualização automática**: Hook useDashboardAutoRefresh com refresh a cada 5 minutos e controles manuais
+  - **Lazy loading**: Componentes lazy-loaded para melhor performance inicial com Suspense boundaries
+  - **Correções críticas**: Fix propriedades Product (vlrvenda/preco, descrprod/descricao), tipos TypeScript, imports verbatimModuleSyntax
