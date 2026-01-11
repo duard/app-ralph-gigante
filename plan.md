@@ -228,11 +228,11 @@
 - [ ] Criar mensagens de erro customizadas
 
 ### 4.3 Criar Constantes de Produtos
-- [ ] Criar constantes de colunas da tabela
-- [ ] Criar constantes de opções de ordenação
-- [ ] Criar constantes de opções de filtro
-- [ ] Criar constantes de status de produto
-- [ ] Criar constantes de unidades de medida
+- [x] Criar constantes de colunas da tabela
+- [x] Criar constantes de opções de ordenação
+- [x] Criar constantes de opções de filtro
+- [x] Criar constantes de status de produto
+- [x] Criar constantes de unidades de medida
 
 ### 4.4 Criar Utilitários de Produtos
 - [ ] Criar formatProductCode
