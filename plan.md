@@ -30,12 +30,12 @@
 - [x] Otimizar configuração de assets
 
 ### 1.4 Configuração ESLint e Prettier
-- [ ] Configurar eslint.config.js
-- [ ] Configurar plugins React e TypeScript
-- [ ] Configurar regras de linting personalizadas
-- [ ] Configurar .prettierrc
-- [ ] Configurar .prettierignore
-- [ ] Adicionar scripts no package.json para lint e format
+- [x] Configurar eslint.config.js
+- [x] Configurar plugins React e TypeScript
+- [x] Configurar regras de linting personalizadas
+- [x] Configurar .prettierrc
+- [x] Configurar .prettierignore
+- [x] Adicionar scripts no package.json para lint e format
 
 ### 1.5 Configuração Git e Hooks
 - [ ] Inicializar repositório Git
