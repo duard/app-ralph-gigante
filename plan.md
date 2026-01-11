@@ -7,7 +7,7 @@
 - [x] Copiar estrutura base do shadcn-dashboard-landing-template/vite-version
 - [x] Atualizar package.json com novo nome e versão
 - [x] Configurar .gitignore personalizado
-- [ ] Criar estrutura de diretórios inicial
+- [x] Criar estrutura de diretórios inicial
 - [ ] Configurar .env.example com variáveis necessárias
 - [ ] Configurar .env.local com valores de desenvolvimento
 - [ ] Atualizar README.md com descrição do projeto
