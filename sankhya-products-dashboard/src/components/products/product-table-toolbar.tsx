@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { ProductTableViewOptions } from "./product-table-view-options"
 import { Plus, Search } from "lucide-react"
 import { useDebounce } from "@/lib/utils/debounce"
-import { downloadCSV, type CSVProductRow } from "@/lib/utils/product-utils"
+import { downloadCSV, downloadExcel, type CSVProductRow } from "@/lib/utils/product-utils"
 
 interface ProductTableToolbarProps<TData> {
   table: Table<TData>
@@ -79,6 +79,25 @@ export function ProductTableToolbar<TData>({
       </div>
       <div className="flex items-center space-x-2">
         <ProductTableViewOptions table={table} />
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={async () => {
+            try {
+              const rows = table.getRowModel().rows;
+              const products: CSVProductRow[] = rows.map(row => row.original as CSVProductRow);
+              const date = new Date().toISOString().split('T')[0];
+              await downloadExcel(products, `produtos-${date}.xlsx`);
+            } catch (error) {
+              console.error('Erro ao exportar Excel:', error);
+              // You could add a toast notification here
+            }
+          }}
+          className="h-8"
+        >
+          <Download className="mr-2 h-4 w-4" />
+          Exportar Excel
+        </Button>
         <Button
           variant="outline"
           size="sm"
