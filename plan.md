@@ -25,36 +25,40 @@
 - **Type Safety**: TypeScript strict mode, Zod schemas para validação
 - **Accessibility**: WCAG 2.1 AA compliant
 - **Responsiveness**: Mobile-first, suporte a dark/light mode
- 
+
 ## Acceptance Criteria
+
 - A tela deve conter todas OPERACOES CRUD, mas não edita, não excluir, não incluir VERDADEIRAMENTE, somente le dados
 
 ### Autenticação e Segurança
+
 - [x] Sistema de login funcional consumindo POST /auth/login
 - [x] Armazenamento seguro de tokens (access_token e refresh_token)
 - [x] Renovação automática de token ao expirar (401 → refresh)
 - [x] Interceptores Axios para adicionar Authorization header
- - [x] Logout funcional removendo tokens
+- [x] Logout funcional removendo tokens
 - [x] Rota protegida redirecionando para login se não autenticado
 - [x] Exibição de dados do usuário logado (GET /auth/me)
- - [x] Persistência de sessão via localStorage
+- [x] Persistência de sessão via localStorage
 - [x] Loading states durante autenticação
 - [x] Tratamento de erros de autenticação com feedback visual
 
 ### Listagem de Produtos
+
 - [x] Grid/Table de produtos com paginação
 - [x] Colunas configuráveis: codprod, descricao, codvol, unidade, preco, status
- - [x] Ordenação por todas as colunas clicáveis
+- [x] Ordenação por todas as colunas clicáveis
 - [x] Filtros por nome, código, preço, status
 - [x] Busca em tempo real com debounce (300ms)
 - [x] Controles de paginação (page, perPage)
 - [x] Indicador de total, página atual e última página
 - [x] Virtualização de lista para 1000+ produtos
 - [x] Estados de loading (skeletons)
- - [x] Estados vazios (empty states)
+- [x] Estados vazios (empty states)
 - [x] Estados de erro com retry
 
 ### Detalhes do Produto
+
 - [x] Modal/Drawer para detalhes do produto
 - [x] Exibição completa dos campos do TGFPRO
 - [x] Imagem do produto (se disponível)
@@ -66,6 +70,7 @@
 - [x] Botão de edição rápida
 
 ### Filtros Avançados
+
 - [x] Criar componente ProductFiltersSidebar com layout colapsável
 - [x] Implementar filtro de preço com range slider usando react-range
 - [x] Adicionar filtro por código/produto com input de texto
@@ -87,6 +92,7 @@
 - [x] Sistema de atualização automática a cada 5 minutos para métricas em tempo real
 
 ### UI/UX
+
 - [x] Melhorar layout responsivo com breakpoints mobile-first usando Tailwind
 - [x] Implementar navegação lateral (sidebar) com menus expansíveis
 - [x] Adicionar breadcrumb de navegação usando react-router
@@ -101,6 +107,7 @@
 - [x] Criar transições suaves entre páginas com page transitions
 
 ### Performance
+
 - [x] Implementar lazy loading de componentes usando React.lazy
 - [x] Configurar code splitting por rotas com React Router
 - [x] Adicionar memoização em componentes pesados usando React.memo
@@ -112,13 +119,14 @@
 - [ ] Melhorar Lighthouse score com otimizações de performance
 
 ### Testes
+
 - [x] Criar testes unitários para hooks customizados usando Vitest
 - [x] Implementar testes de componentes principais com Testing Library
 - [x] Adicionar testes de integração com API usando MSW para mocks
 - [x] Configurar coverage mínimo de 70% com Vite
 
-
 ### Documentação
+
 - [x] Atualizar README com instruções completas de setup e desenvolvimento
 - [ ] Criar documentação de componentes internos usando Storybook
 - [ ] Documentar API Client com exemplos de uso
@@ -126,11 +134,12 @@
 - [ ] Documentar arquitetura do projeto (estrutura de pastas, stores, etc.)
 
 ### DevOps
+
 - [x] Configuração de ambiente (.env)
 - [ ] Criar scripts de build e deploy para produção
 - [ ] Configurar CI/CD pipeline com GitHub Actions
 - [x] Linting configurado (ESLint)
-- [ ] Configurar Prettier para formatação consistente
+- [x] Configurar Prettier para formatação consistente
 - [ ] Implementar Husky pre-commit hooks para lint e tests
 - [x] TypeScript strict mode ativado
 - [ ] Adicionar health check endpoint na API
@@ -141,6 +150,7 @@
 ## Verification
 
 ### Automação de Testes
+
 ```bash
 # Executar testes unitários
 pnpm test
@@ -162,6 +172,7 @@ pnpm preview
 ```
 
 ### Testes Manuais
+
 1. **Autenticação**: Fazer login com CONVIDADO/guest123, verificar token, logout
 2. **Listagem**: Navegar para /produtos, verificar lista, paginação, ordenação
 3. **Filtros**: Aplicar filtros, verificar resultados, limpar filtros
@@ -178,6 +189,7 @@ pnpm preview
 14. **Performance**: Verificar Lighthouse scores, bundle size
 
 ### Checklist de Verificação
+
 - [ ] Aplicação inicia sem erros
 - [ ] Login funciona corretamente
 - [ ] Produtos listados corretamente
@@ -243,6 +255,7 @@ O sistema de autenticação foi redesenhado para receber tokens da API Sankhya e
 #### Tela de Boas-Vindas (`/bem-vind`)
 
 A tela de boas-vindas é exibida após o login bem-sucedido com:
+
 - Saudação personalizada com nome do usuário
 - Visão geral do sistema
 - Links rápidos para principais funcionalidades
@@ -250,10 +263,10 @@ A tela de boas-vindas é exibida após o login bem-sucedido com:
 
 #### Endpoints da API
 
-| Endpoint | Método | Descrição |
-|----------|--------|-----------|
-| `/auth/login` | POST | Recebe token externo e retorna validação |
-| `/profile/me` | GET | Retorna dados do usuário (protegido) |
+| Endpoint      | Método | Descrição                                |
+| ------------- | ------ | ---------------------------------------- |
+| `/auth/login` | POST   | Recebe token externo e retorna validação |
+| `/profile/me` | GET    | Retorna dados do usuário (protegido)     |
 
 #### Exemplo de Uso (cURL)
 
@@ -274,12 +287,14 @@ curl -s http://localhost:3000/tgfpro?page=1 \
 ```
 
 ### API Endpoints Principais
+
 - **Auth**: POST /auth/login, POST /auth/refresh, GET /auth/me
 - **Produtos**: GET /tgfpro, GET /tgfpro/:codprod
 - **Grupos**: GET /tgfgru
 - **Teste**: GET /tgfpro/admin/test
 
 ### Estrutura da API Response
+
 ```typescript
 interface ProductsResponse {
   data: Product[];
@@ -302,6 +317,7 @@ interface Product {
 ```
 
 ### Arquitetura do App
+
 ```
 src/
 ├── app/
@@ -335,11 +351,13 @@ src/
 ```
 
 ### Estados Globais (Zustand)
+
 - `authStore`: token, user, isAuthenticated
 - `productsStore`: products, filters, pagination
 - `uiStore`: theme, sidebar, notifications
 
 ### Convenções
+
 - Components: PascalCase (ProductTable.tsx)
 - Hooks: camelCase prefix "use" (useProducts.ts)
 - Types/Interfaces: PascalCase (Product.ts)
@@ -348,6 +366,7 @@ src/
 - Testes: `.spec.ts` ou `.test.ts`
 
 ### Design System
+
 - Fonte: Inter (padrão shadcn)
 - Cores: Primária customizável (padrão: blue-600)
 - Espaçamento: 4px grid system
@@ -356,6 +375,7 @@ src/
 - Animations: Framer Motion ou CSS transitions
 
 ### Tarefas API (api-sankhya-center)
+
 - [x] Autenticação JWT implementada
 - [x] Endpoints TGFPRO produtos funcionando
 - [x] Documentação Swagger completa
@@ -369,6 +389,7 @@ src/
 - [ ] Adicionar métricas de performance (response times)
 
 ### Tarefas Frontend (sankhya-products-dashboard)
+
 - [x] Autenticação e login funcionando
 - [x] Listagem de produtos com paginação
 - [x] Virtualização implementada
@@ -382,6 +403,7 @@ src/
 - [ ] Completar documentação e DevOps
 
 ### Notas de Desenvolvimento
+
 - Sempre usar `pnpm` para gerenciar dependências
 - Executar `pnpm build` para verificar erros antes de commit
 - Executar `pnpm lint` e corrigir issues de linting
