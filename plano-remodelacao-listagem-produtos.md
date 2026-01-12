@@ -9,6 +9,9 @@ Remodelar completamente a tela de listagem de produtos do sistema Sankhya Center
 - **Interface completa** integrando todas as tabelas Sankhya
 - **UX/UI aprimorada** com componentes shadcn/ui
 
+## ⚠️ IMPORTANTE
+**IGNORAR campo IMAGEM (BLOB)** - Este campo causa problemas de performance na API e NÃO deve ser incluído em queries ou interfaces.
+
 ## 🎯 Problemas Identificados
 
 ### 1. Backend - Interfaces Incompletas
@@ -326,7 +329,6 @@ ORDER BY PRO.DESCRPROD
      pesoliq?: number;
      pesobruto?: number;
      observacao?: string;
-     imagem?: string;
      dtcad?: string;
      dtalter?: string;
      
