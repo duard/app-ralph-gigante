@@ -1,10 +1,6 @@
 "use client"
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -21,9 +17,15 @@ export function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
+        <Button
+          variant="ghost"
+          className="relative h-8 w-8 rounded-full cursor-pointer"
+        >
           <Avatar className="h-9 w-9 cursor-pointer">
-            <AvatarImage src="https://notion-avatars.netlify.app/api/avatar/?preset=female-2" alt="@shadcn" />
+            <AvatarImage
+              src="https://notion-avatars.netlify.app/api/avatar/?preset=female-2"
+              alt="@shadcn"
+            />
             <AvatarFallback>SC</AvatarFallback>
           </Avatar>
         </Button>
@@ -51,7 +53,9 @@ export function UserNav() {
             Settings
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">New Team</DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer">
+            New Team
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer">

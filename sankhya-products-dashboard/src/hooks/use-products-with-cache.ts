@@ -54,7 +54,7 @@ export function useProductsWithCache(params?: ProductSearchParams) {
       pageSize: params?.pageSize || 10,
     },
   };
-  
+
   console.log('[useProductsWithCache] Query params:', queryParams);
   const productsQuery = useProductsQuery(queryParams);
   const createProductMutation = useCreateProductMutation();

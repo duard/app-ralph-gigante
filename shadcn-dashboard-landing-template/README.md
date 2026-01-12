@@ -10,7 +10,6 @@
 
 ![Dashboard Preview](vite-version/public/dashboard.png)
 
-
 <div align="center">
 
 🎯 <a href="https://shadcnstore.com/templates/dashboard/shadcn-dashboard-landing-template/dashboard" target="_blank">**View Live Demo**</a> | 🧩 <a href="https://shadcnstore.com/blocks" target="_blank">**Explore Premium Blocks**</a>
@@ -20,7 +19,6 @@
 Introducing a sleek, modern, and open-source admin dashboard template built with the latest web technologies, including React + TypeScript + Vite and Next.js + TypeScript. Powered by shadcn/ui v3 and Tailwind CSS v4, this project offers a clean, responsive, and highly customizable UI. Developed and maintained by [ShadcnStore](https://shadcnstore.com), this free and open-source template is designed to accelerate your development process. Whether you're building an admin panel, SaaS dashboard, or launching an AI-driven product, this dashboard provides a beautiful, production-ready interface for your application — complete with a seamless dashboard and a fully-featured landing page to help you hit the ground running.
 
 🚀 **Free & Open Source** by [**ShadcnStore**](https://shadcnstore.com) - Your gateway to premium UI components and templates.
-
 
 ---
 
@@ -245,6 +243,7 @@ This template includes a powerful **live theme customizer** powered by **tweakcn
 ### **Custom Theme Creation**
 
 #### **Adding Custom Themes to the Customizer**
+
 To add your own custom themes to the live customizer, create theme objects in your theme configuration:
 
 ```typescript
@@ -265,12 +264,13 @@ export const customTheme = {
       primary: "210 100% 60%",
       "primary-foreground": "210 100% 15%",
       // Dark mode variants
-    }
-  }
+    },
+  },
 }
 ```
 
 #### **Manual CSS Variable Customization**
+
 To directly modify theme colors, update your CSS variables in `globals.css` or `index.css`:
 
 ```css
@@ -294,12 +294,14 @@ To directly modify theme colors, update your CSS variables in `globals.css` or `
 If you want to remove the theme customizer from your project:
 
 #### **Vite Version:**
+
 1. Remove the theme customizer component: `src/components/theme-customizer.tsx`
 2. Remove the theme customizer button from your layout
 3. Remove theme-related imports from your main layout file
 4. Delete the `src/components/theme-customizer/` folder if it exists
 
 #### **Next.js Version:**
+
 1. Remove the theme customizer component: `src/components/theme-customizer.tsx`
 2. Remove the theme customizer button from `src/app/layout.tsx`
 3. Remove theme-related imports from your layout files
@@ -361,7 +363,7 @@ If you want to remove the theme customizer from your project:
 ### **🔐 Authentication**
 
 - **Login** - 3 login page variants with different layouts
-- **Sign Up** - 3 registration page variants with different designs  
+- **Sign Up** - 3 registration page variants with different designs
 - **Forgot Password** - 3 password recovery page variants
 
 ### **⚙️ Settings & Profile**

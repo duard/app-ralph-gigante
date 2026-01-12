@@ -4,13 +4,13 @@ import * as React from "react"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
-import { ThemeCustomizer, ThemeCustomizerTrigger } from "@/components/theme-customizer"
+import {
+  ThemeCustomizer,
+  ThemeCustomizerTrigger,
+} from "@/components/theme-customizer"
 import { UpgradeToProButton } from "@/components/upgrade-to-pro-button"
 import { useSidebarConfig } from "@/hooks/use-sidebar-config"
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/components/ui/sidebar"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
 interface BaseLayoutProps {
   children: React.ReactNode
@@ -48,7 +48,9 @@ export function BaseLayout({ children, title, description }: BaseLayoutProps) {
                   {title && (
                     <div className="px-4 lg:px-6">
                       <div className="flex flex-col gap-2">
-                        <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">
+                          {title}
+                        </h1>
                         {description && (
                           <p className="text-muted-foreground">{description}</p>
                         )}
@@ -72,7 +74,9 @@ export function BaseLayout({ children, title, description }: BaseLayoutProps) {
                   {title && (
                     <div className="px-4 lg:px-6">
                       <div className="flex flex-col gap-2">
-                        <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">
+                          {title}
+                        </h1>
                         {description && (
                           <p className="text-muted-foreground">{description}</p>
                         )}

@@ -82,6 +82,7 @@ npx shadcn@latest add [nome-do-componente]
 ## API
 
 A aplicação se conecta à API do Sankhya Center para:
+
 - Autenticação de usuários
 - CRUD de produtos
 - Busca e filtros de produtos

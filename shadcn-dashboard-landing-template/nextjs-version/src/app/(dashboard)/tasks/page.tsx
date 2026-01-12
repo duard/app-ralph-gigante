@@ -4,7 +4,13 @@ import { useEffect, useState } from "react"
 import { z } from "zod"
 import { ArrowUp, BarChart3, CheckCircle2, Clock, ListTodo } from "lucide-react"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { columns } from "./components/columns"
 import { DataTable } from "./components/data-table"
 import { taskSchema, type Task } from "./data/schema"
@@ -35,15 +41,15 @@ export default function TaskPage() {
   }, [])
 
   const handleAddTask = (newTask: Task) => {
-    setTasks(prev => [newTask, ...prev])
+    setTasks((prev) => [newTask, ...prev])
   }
 
   // Calculate statistics
   const stats = {
     total: tasks.length,
-    completed: tasks.filter(t => t.status === "completed").length,
-    inProgress: tasks.filter(t => t.status === "in progress").length,
-    pending: tasks.filter(t => t.status === "pending").length,
+    completed: tasks.filter((t) => t.status === "completed").length,
+    inProgress: tasks.filter((t) => t.status === "in progress").length,
+    pending: tasks.filter((t) => t.status === "pending").length,
   }
 
   if (loading) {
@@ -84,12 +90,17 @@ export default function TaskPage() {
             <CardContent>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-muted-foreground text-sm font-medium">Total Tasks</p>
+                  <p className="text-muted-foreground text-sm font-medium">
+                    Total Tasks
+                  </p>
                   <div className="mt-1 flex items-baseline gap-2">
                     <span className="text-2xl font-bold">{stats.total}</span>
                     <span className="flex items-center gap-0.5 text-sm text-green-500">
                       <ArrowUp className="size-3.5" />
-                      {stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0}%
+                      {stats.total > 0
+                        ? Math.round((stats.completed / stats.total) * 100)
+                        : 0}
+                      %
                     </span>
                   </div>
                 </div>
@@ -104,9 +115,13 @@ export default function TaskPage() {
             <CardContent>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-muted-foreground text-sm font-medium">Completed</p>
+                  <p className="text-muted-foreground text-sm font-medium">
+                    Completed
+                  </p>
                   <div className="mt-1 flex items-baseline gap-2">
-                    <span className="text-2xl font-bold">{stats.completed}</span>
+                    <span className="text-2xl font-bold">
+                      {stats.completed}
+                    </span>
                     <span className="flex items-center gap-0.5 text-sm text-green-500">
                       <ArrowUp className="size-3.5" />
                       {Math.round((stats.completed / stats.total) * 100)}%
@@ -124,9 +139,13 @@ export default function TaskPage() {
             <CardContent>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-muted-foreground text-sm font-medium">In Progress</p>
+                  <p className="text-muted-foreground text-sm font-medium">
+                    In Progress
+                  </p>
                   <div className="mt-1 flex items-baseline gap-2">
-                    <span className="text-2xl font-bold">{stats.inProgress}</span>
+                    <span className="text-2xl font-bold">
+                      {stats.inProgress}
+                    </span>
                     <span className="flex items-center gap-0.5 text-sm text-green-500">
                       <ArrowUp className="size-3.5" />
                       {Math.round((stats.inProgress / stats.total) * 100)}%
@@ -144,7 +163,9 @@ export default function TaskPage() {
             <CardContent>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-muted-foreground text-sm font-medium">Pending</p>
+                  <p className="text-muted-foreground text-sm font-medium">
+                    Pending
+                  </p>
                   <div className="mt-1 flex items-baseline gap-2">
                     <span className="text-2xl font-bold">{stats.pending}</span>
                     <span className="flex items-center gap-0.5 text-sm text-orange-500">
@@ -170,7 +191,11 @@ export default function TaskPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <DataTable data={tasks} columns={columns} onAddTask={handleAddTask} />
+            <DataTable
+              data={tasks}
+              columns={columns}
+              onAddTask={handleAddTask}
+            />
           </CardContent>
         </Card>
       </div>

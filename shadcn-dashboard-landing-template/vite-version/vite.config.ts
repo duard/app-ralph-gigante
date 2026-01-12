@@ -12,6 +12,8 @@ export default defineConfig({
     },
   },
   define: {
-    'import.meta.env.VITE_BASENAME': JSON.stringify(process.env.VITE_BASENAME || ''),
-  }
+    "import.meta.env.VITE_BASENAME": JSON.stringify(
+      process.env.VITE_BASENAME || ""
+    ),
+  },
 })

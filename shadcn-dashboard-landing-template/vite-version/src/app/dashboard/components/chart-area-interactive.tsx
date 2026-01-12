@@ -25,10 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
 export const description = "An interactive area chart"
 
@@ -150,19 +147,23 @@ export const ChartAreaInteractive = React.memo(function ChartAreaInteractive() {
     }
   }, [isMobile])
 
-  const filteredData = React.useMemo(() => chartData.filter((item) => {
-    const date = new Date(item.date)
-    const referenceDate = new Date("2024-06-30")
-    let daysToSubtract = 90
-    if (timeRange === "30d") {
-      daysToSubtract = 30
-    } else if (timeRange === "7d") {
-      daysToSubtract = 7
-    }
-    const startDate = new Date(referenceDate)
-    startDate.setDate(startDate.getDate() - daysToSubtract)
-    return date >= startDate
-  }), [timeRange])
+  const filteredData = React.useMemo(
+    () =>
+      chartData.filter((item) => {
+        const date = new Date(item.date)
+        const referenceDate = new Date("2024-06-30")
+        let daysToSubtract = 90
+        if (timeRange === "30d") {
+          daysToSubtract = 30
+        } else if (timeRange === "7d") {
+          daysToSubtract = 7
+        }
+        const startDate = new Date(referenceDate)
+        startDate.setDate(startDate.getDate() - daysToSubtract)
+        return date >= startDate
+      }),
+    [timeRange]
+  )
 
   return (
     <Card className="@container/card">
@@ -260,7 +261,9 @@ export const ChartAreaInteractive = React.memo(function ChartAreaInteractive() {
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => {
-                    return new Date(value as string | number | Date).toLocaleDateString("en-US", {
+                    return new Date(
+                      value as string | number | Date
+                    ).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
                     })

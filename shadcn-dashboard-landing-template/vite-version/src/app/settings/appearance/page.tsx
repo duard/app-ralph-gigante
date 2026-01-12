@@ -14,7 +14,13 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const appearanceFormSchema = z.object({
   theme: z.enum(["light", "dark"]),
@@ -133,7 +139,10 @@ export default function AppearanceSettings() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Font Family</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger className="cursor-pointer">
                         <SelectValue placeholder="Select a font" />
@@ -155,7 +164,10 @@ export default function AppearanceSettings() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Font Size</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger className="cursor-pointer">
                         <SelectValue placeholder="Select font size" />
@@ -179,7 +191,10 @@ export default function AppearanceSettings() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Sidebar Width</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger className="cursor-pointer">
                         <SelectValue placeholder="Select sidebar width" />
@@ -201,7 +216,10 @@ export default function AppearanceSettings() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Content Width</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger className="cursor-pointer">
                         <SelectValue placeholder="Select content width" />
@@ -222,7 +240,13 @@ export default function AppearanceSettings() {
               <Button type="submit" className="cursor-pointer">
                 Save Preferences
               </Button>
-              <Button variant="outline" type="button" className="cursor-pointer">Cancel</Button>
+              <Button
+                variant="outline"
+                type="button"
+                className="cursor-pointer"
+              >
+                Cancel
+              </Button>
             </div>
           </form>
         </Form>

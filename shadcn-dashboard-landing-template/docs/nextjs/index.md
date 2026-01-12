@@ -16,12 +16,14 @@ The Next.js version is optimized for:
 ## Key Features
 
 ### 🔄 Advanced Rendering Options
+
 - Server-side rendering (SSR) for dynamic content
 - Static site generation (SSG) for optimal performance
 - Incremental static regeneration (ISR)
 - Client-side rendering where appropriate
 
 ### 🚀 Next.js 15 Features
+
 - App Router with nested layouts
 - Server Components by default
 - Streaming and Suspense integration
@@ -29,12 +31,14 @@ The Next.js version is optimized for:
 - Edge Runtime support
 
 ### 📄 File-Based Routing
+
 - Automatic route generation from file structure
 - Nested layouts and loading states
 - Error boundaries and not-found pages
 - Dynamic routes with parameters
 
 ### ⚡ Performance Optimizations
+
 - Automatic code splitting
 - Image optimization with next/image
 - Font optimization with next/font
@@ -91,47 +95,47 @@ nextjs-version/
 The `next.config.ts` includes optimized settings:
 
 ```typescript
-import type { NextConfig } from 'next'
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   // Enable experimental features
   experimental: {
     turbo: {
       rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
+        "*.svg": {
+          loaders: ["@svgr/webpack"],
+          as: "*.js",
         },
       },
     },
   },
-  
+
   // Image optimization
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
       {
-        protocol: 'https',
-        hostname: 'avatar.vercel.sh',
+        protocol: "https",
+        hostname: "avatar.vercel.sh",
       },
     ],
   },
-  
+
   // Performance optimizations
   poweredByHeader: false,
   compress: true,
-  
+
   // Bundle analyzer (development only)
-  ...(process.env.ANALYZE === 'true' && {
+  ...(process.env.ANALYZE === "true" && {
     webpack: (config, { isServer }) => {
       if (!isServer) {
-        const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+        const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer")
         config.plugins.push(
           new BundleAnalyzerPlugin({
-            analyzerMode: 'static',
+            analyzerMode: "static",
             openAnalyzer: false,
           })
         )
@@ -150,13 +154,13 @@ Next.js version uses `next/font` for optimal font loading:
 
 ```typescript
 // src/lib/fonts.ts
-import { Inter } from 'next/font/google'
+import { Inter } from "next/font/google"
 
 export const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-  variable: '--font-inter',
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-inter",
 })
 ```
 
@@ -281,10 +285,10 @@ interface UserPageProps {
 
 export default async function UserPage({ params }: UserPageProps) {
   const { id } = await params
-  
+
   // Fetch user data (this could be from an API)
   const user = await getUserById(id)
-  
+
   return (
     <div>
       <h1>User Profile: {user.name}</h1>
@@ -297,7 +301,7 @@ export default async function UserPage({ params }: UserPageProps) {
 export async function generateMetadata({ params }: UserPageProps) {
   const { id } = await params
   const user = await getUserById(id)
-  
+
   return {
     title: `${user.name} - User Profile`,
     description: `Profile page for ${user.name}`,
@@ -320,7 +324,7 @@ import { getAnalyticsData } from '@/lib/analytics'
 export default async function AnalyticsPage() {
   // Data fetching happens on the server
   const data = await getAnalyticsData()
-  
+
   return (
     <div>
       <h1>Analytics Dashboard</h1>
@@ -347,7 +351,7 @@ interface AnalyticsChartProps {
 
 export function AnalyticsChart({ data }: AnalyticsChartProps) {
   const [timeframe, setTimeframe] = useState('7d')
-  
+
   return (
     <div>
       {/* Interactive chart component */}
@@ -369,25 +373,25 @@ Implement authentication and route protection:
 
 ```typescript
 // src/middleware.ts
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 
 export function middleware(request: NextRequest) {
   // Check authentication for protected routes
   const isAuthenticated = checkAuth(request)
-  const isAuthPage = request.nextUrl.pathname.startsWith('/auth')
-  const isProtectedRoute = request.nextUrl.pathname.startsWith('/dashboard')
-  
+  const isAuthPage = request.nextUrl.pathname.startsWith("/auth")
+  const isProtectedRoute = request.nextUrl.pathname.startsWith("/dashboard")
+
   // Redirect to login if not authenticated
   if (isProtectedRoute && !isAuthenticated) {
-    return NextResponse.redirect(new URL('/auth/login', request.url))
+    return NextResponse.redirect(new URL("/auth/login", request.url))
   }
-  
+
   // Redirect to dashboard if authenticated user visits auth pages
   if (isAuthPage && isAuthenticated) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    return NextResponse.redirect(new URL("/dashboard", request.url))
   }
-  
+
   return NextResponse.next()
 }
 
@@ -400,13 +404,13 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 }
 
 function checkAuth(request: NextRequest) {
   // Implement your authentication logic
-  const token = request.cookies.get('auth-token')
+  const token = request.cookies.get("auth-token")
   return !!token
 }
 ```
@@ -454,17 +458,19 @@ Generate metadata dynamically:
 
 ```typescript
 // src/app/(dashboard)/users/[id]/page.tsx
-export async function generateMetadata({ params }: UserPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: UserPageProps): Promise<Metadata> {
   const { id } = await params
   const user = await getUserById(id)
-  
+
   return {
     title: `${user.name} - User Profile`,
     description: `Profile page for ${user.name}`,
     openGraph: {
       title: `${user.name} - User Profile`,
       description: `Profile page for ${user.name}`,
-      images: [user.avatar || '/default-avatar.png'],
+      images: [user.avatar || "/default-avatar.png"],
     },
   }
 }

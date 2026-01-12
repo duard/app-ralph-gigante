@@ -12,18 +12,21 @@ import {
 } from "@/components/ui/select"
 
 interface AccountSwitcherProps {
-  isCollapsed: boolean;
+  isCollapsed: boolean
   accounts: {
-    label: string;
-    email: string;
-    icon: React.ReactNode;
-  }[];
+    label: string
+    email: string
+    icon: React.ReactNode
+  }[]
 }
 
-export function AccountSwitcher({ isCollapsed, accounts }: AccountSwitcherProps) {
+export function AccountSwitcher({
+  isCollapsed,
+  accounts,
+}: AccountSwitcherProps) {
   const [selectedAccount, setSelectedAccount] = React.useState<string>(
     accounts[0].email
-  );
+  )
 
   return (
     <Select defaultValue={selectedAccount} onValueChange={setSelectedAccount}>
@@ -38,7 +41,10 @@ export function AccountSwitcher({ isCollapsed, accounts }: AccountSwitcherProps)
         <SelectValue placeholder="Select an account">
           {accounts.find((account) => account.email === selectedAccount)?.icon}
           <span className={cn("ml-2", isCollapsed && "hidden")}>
-            {accounts.find((account) => account.email === selectedAccount)?.label}
+            {
+              accounts.find((account) => account.email === selectedAccount)
+                ?.label
+            }
           </span>
         </SelectValue>
       </SelectTrigger>
@@ -53,5 +59,5 @@ export function AccountSwitcher({ isCollapsed, accounts }: AccountSwitcherProps)
         ))}
       </SelectContent>
     </Select>
-  );
+  )
 }

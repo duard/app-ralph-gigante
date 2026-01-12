@@ -18,18 +18,21 @@ The template includes a **complete theme customization system** that allows:
 Access via the **gear icon** in the header to customize:
 
 ### Colors
+
 - Primary, secondary, accent colors
 - Background and foreground variants
 - Border and muted tones
 - Destructive action colors
 
 ### Layout
+
 - Sidebar position (left/right)
 - Sidebar width and behavior
 - Header styles and positioning
 - Content spacing and typography
 
 ### Modes
+
 - Light/dark mode toggle
 - System preference detection
 - Automatic theme switching
@@ -37,6 +40,7 @@ Access via the **gear icon** in the header to customize:
 ## Technical Implementation
 
 **CSS Variables**
+
 ```css
 :root {
   --background: 0 0% 100%;
@@ -47,11 +51,13 @@ Access via the **gear icon** in the header to customize:
 ```
 
 **React Hook**
+
 ```typescript
 const [config, setConfig] = useTheme()
 ```
 
 **Customizer Component**
+
 ```tsx
 <ThemeCustomizer />
 ```
@@ -59,6 +65,7 @@ const [config, setConfig] = useTheme()
 ## Integration
 
 The theme system works through:
+
 - **CSS custom properties** for all colors and spacing
 - **Tailwind CSS classes** that reference CSS variables
 - **React Context** for theme state management

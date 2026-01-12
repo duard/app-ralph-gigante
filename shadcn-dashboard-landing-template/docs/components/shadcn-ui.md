@@ -249,8 +249,8 @@ const cardVariants = cva(
 Extend components with custom classes:
 
 ```typescript
-<Button 
-  variant="outline" 
+<Button
+  variant="outline"
   className="bg-gradient-to-r from-blue-500 to-purple-600 text-white"
 >
   Custom Button

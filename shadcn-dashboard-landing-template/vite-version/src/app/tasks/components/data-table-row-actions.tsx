@@ -36,15 +36,25 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem className="cursor-pointer">View Task</DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">Edit Task</DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          View Task
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          Edit Task
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer">Duplicate</DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">Mark as Favorite</DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          Duplicate
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          Mark as Favorite
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer" variant="destructive">
           Delete
-          <DropdownMenuShortcut className="text-destructive">⌘⌫</DropdownMenuShortcut>
+          <DropdownMenuShortcut className="text-destructive">
+            ⌘⌫
+          </DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

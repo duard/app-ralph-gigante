@@ -4,17 +4,17 @@ This guide helps you decide between the Vite and Next.js versions of the Shadcn 
 
 ## Framework Comparison
 
-| Feature | Vite Version | Next.js Version |
-|---------|-------------|----------------|
-| **Build Tool** | Vite | Next.js (Turbopack) |
-| **Routing** | React Router DOM | App Router |
-| **Rendering** | Client-side (SPA) | SSR/SSG + Client |
-| **Development** | Lightning-fast HMR | Fast Refresh |
-| **Font Loading** | HTML `<link>` tags | `next/font` optimization |
-| **Image Optimization** | Manual optimization | Built-in `next/image` |
-| **Bundle Size** | Smaller initial bundle | Larger but optimized chunks |
-| **SEO** | Limited (SPA) | Excellent (SSR/SSG) |
-| **Deployment** | Static hosting | Static + Server options |
+| Feature                | Vite Version           | Next.js Version             |
+| ---------------------- | ---------------------- | --------------------------- |
+| **Build Tool**         | Vite                   | Next.js (Turbopack)         |
+| **Routing**            | React Router DOM       | App Router                  |
+| **Rendering**          | Client-side (SPA)      | SSR/SSG + Client            |
+| **Development**        | Lightning-fast HMR     | Fast Refresh                |
+| **Font Loading**       | HTML `<link>` tags     | `next/font` optimization    |
+| **Image Optimization** | Manual optimization    | Built-in `next/image`       |
+| **Bundle Size**        | Smaller initial bundle | Larger but optimized chunks |
+| **SEO**                | Limited (SPA)          | Excellent (SSR/SSG)         |
+| **Deployment**         | Static hosting         | Static + Server options     |
 
 ## When to Choose Vite
 
@@ -39,7 +39,7 @@ This guide helps you decide between the Vite and Next.js versions of the Shadcn 
 
 ```javascript
 // Example: Admin dashboard with client-side routing
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 function App() {
   return (
@@ -101,6 +101,7 @@ export default function Dashboard() {
 Both versions maintain **100% feature parity** for:
 
 ### ✅ Identical Features:
+
 - **Component Library**: Same shadcn/ui v3 components
 - **Theme Customizer**: Identical theming capabilities
 - **Page Templates**: All 30+ pages available in both
@@ -111,6 +112,7 @@ Both versions maintain **100% feature parity** for:
 ### ⚠️ Implementation Differences:
 
 #### Font Loading
+
 ```javascript
 // Vite: HTML link tags
 // vite-version/index.html
@@ -124,32 +126,37 @@ export const inter = Inter({ subsets: ['latin'] })
 ```
 
 #### Navigation
+
 ```javascript
 // Vite: React Router DOM
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from "react-router-dom"
 
 // Next.js: Next.js Link and hooks
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 ```
 
 ## Performance Comparison
 
 ### Development Performance
+
 - **Vite**: ~50ms HMR updates
 - **Next.js**: ~100-200ms Fast Refresh
 
 ### Build Performance
+
 - **Vite**: Faster initial builds
 - **Next.js**: Better production optimization
 
 ### Runtime Performance
+
 - **Vite**: Smaller initial bundle, faster first load
 - **Next.js**: Better long-term caching, faster subsequent loads
 
 ## Deployment Options
 
 ### Vite Deployment
+
 ```bash
 # Build for production
 pnpm build
@@ -159,6 +166,7 @@ pnpm build
 ```
 
 **Supported Platforms:**
+
 - Vercel (static)
 - Netlify
 - GitHub Pages
@@ -166,6 +174,7 @@ pnpm build
 - Any static hosting provider
 
 ### Next.js Deployment
+
 ```bash
 # Build for production
 pnpm build
@@ -175,6 +184,7 @@ pnpm build
 ```
 
 **Supported Platforms:**
+
 - Vercel (recommended)
 - Railway
 - DigitalOcean App Platform
@@ -186,12 +196,14 @@ pnpm build
 Both versions share the same component structure, making migration possible:
 
 ### Vite → Next.js Migration
+
 1. Copy `src/components` and `src/lib` directories
 2. Adapt routing from React Router to App Router
 3. Update font loading to use `next/font`
 4. Adjust build configuration
 
 ### Next.js → Vite Migration
+
 1. Copy `src/components` and `src/lib` directories
 2. Set up React Router DOM for navigation
 3. Update font loading to HTML links
@@ -199,22 +211,23 @@ Both versions share the same component structure, making migration possible:
 
 ## Decision Matrix
 
-| Your Priority | Recommended Version |
-|---------------|-------------------|
-| **Fastest development** | Vite |
-| **SEO requirements** | Next.js |
-| **Simple deployment** | Vite |
-| **Marketing site + dashboard** | Next.js |
-| **Admin tools only** | Vite |
-| **E-commerce integration** | Next.js |
-| **Team learning curve** | Vite (simpler) |
-| **Enterprise requirements** | Next.js |
+| Your Priority                  | Recommended Version |
+| ------------------------------ | ------------------- |
+| **Fastest development**        | Vite                |
+| **SEO requirements**           | Next.js             |
+| **Simple deployment**          | Vite                |
+| **Marketing site + dashboard** | Next.js             |
+| **Admin tools only**           | Vite                |
+| **E-commerce integration**     | Next.js             |
+| **Team learning curve**        | Vite (simpler)      |
+| **Enterprise requirements**    | Next.js             |
 
 ## Getting Started
 
 Once you've chosen your framework:
 
 ### For Vite Version:
+
 ```bash
 cd vite-version
 pnpm install
@@ -222,6 +235,7 @@ pnpm dev
 ```
 
 ### For Next.js Version:
+
 ```bash
 cd nextjs-version
 pnpm install

@@ -27,6 +27,7 @@ The software is provided "as is" without warranty of any kind.
 ### Dependencies
 
 Key dependencies and their licenses:
+
 - **React** - MIT License
 - **Next.js** - MIT License
 - **Tailwind CSS** - MIT License
@@ -40,6 +41,7 @@ Components are based on **shadcn/ui** which is also MIT licensed.
 ## Attribution
 
 While not required, attribution is appreciated:
+
 - Link back to the original repository
 - Mention in your project credits
 - Share your projects with the community
@@ -47,6 +49,7 @@ While not required, attribution is appreciated:
 ## Commercial Support
 
 For extended licensing or commercial support:
+
 - **Email**: [licensing@shadcnstore.com](mailto:licensing@shadcnstore.com)
 - **Custom Licensing** - Tailored terms available
 - **White-Label Rights** - Remove attribution requirements

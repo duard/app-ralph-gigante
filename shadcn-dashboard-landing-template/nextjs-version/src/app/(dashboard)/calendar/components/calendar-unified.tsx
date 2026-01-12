@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { 
-  ChevronLeft, 
-  ChevronRight, 
+import {
+  ChevronLeft,
+  ChevronRight,
   Calendar as CalendarIcon,
   Clock,
   MapPin,
@@ -13,27 +13,43 @@ import {
   List,
   ChevronDown,
   Menu,
-  Plus
+  Plus,
 } from "lucide-react"
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday, isSameDay } from "date-fns"
+import {
+  format,
+  addMonths,
+  subMonths,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  isSameMonth,
+  isToday,
+  isSameDay,
+} from "date-fns"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Calendar } from "@/components/ui/calendar"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { 
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger 
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { 
+import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
 import { type CalendarEvent } from "../types"
@@ -49,16 +65,18 @@ interface CalendarMainProps {
 export function CalendarMain({ eventDates = [] }: CalendarMainProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [currentDate, setCurrentDate] = useState(new Date())
-  const [viewMode, setViewMode] = useState<"month" | "week" | "day" | "list">("month")
+  const [viewMode, setViewMode] = useState<"month" | "week" | "day" | "list">(
+    "month"
+  )
   const [showEventDialog, setShowEventDialog] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
   const [showCalendarSheet, setShowCalendarSheet] = useState(false)
 
   // Convert JSON events to CalendarEvent objects with proper Date objects
-  const sampleEvents: CalendarEvent[] = eventsData.map(event => ({
+  const sampleEvents: CalendarEvent[] = eventsData.map((event) => ({
     ...event,
     date: new Date(event.date),
-    type: event.type as "meeting" | "event" | "personal" | "task" | "reminder"
+    type: event.type as "meeting" | "event" | "personal" | "task" | "reminder",
   }))
 
   const monthStart = startOfMonth(currentDate)
@@ -67,18 +85,25 @@ export function CalendarMain({ eventDates = [] }: CalendarMainProps) {
   // Extend to show full weeks (including previous/next month days)
   const calendarStart = new Date(monthStart)
   calendarStart.setDate(calendarStart.getDate() - monthStart.getDay())
-  
+
   const calendarEnd = new Date(monthEnd)
   calendarEnd.setDate(calendarEnd.getDate() + (6 - monthEnd.getDay()))
-  
-  const calendarDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd })
+
+  const calendarDays = eachDayOfInterval({
+    start: calendarStart,
+    end: calendarEnd,
+  })
 
   const getEventsForDay = (date: Date) => {
-    return sampleEvents.filter(event => isSameDay(event.date, date))
+    return sampleEvents.filter((event) => isSameDay(event.date, date))
   }
 
   const navigateMonth = (direction: "prev" | "next") => {
-    setCurrentDate(direction === "prev" ? subMonths(currentDate, 1) : addMonths(currentDate, 1))
+    setCurrentDate(
+      direction === "prev"
+        ? subMonths(currentDate, 1)
+        : addMonths(currentDate, 1)
+    )
   }
 
   const goToToday = () => {
@@ -105,14 +130,17 @@ export function CalendarMain({ eventDates = [] }: CalendarMainProps) {
   }
 
   const renderCalendarGrid = () => {
-    const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    
+    const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
     return (
       <div className="flex-1 bg-background">
         {/* Calendar Header */}
         <div className="grid grid-cols-7 border-b">
-          {weekDays.map(day => (
-            <div key={day} className="p-4 text-center font-medium text-sm text-muted-foreground border-r last:border-r-0">
+          {weekDays.map((day) => (
+            <div
+              key={day}
+              className="p-4 text-center font-medium text-sm text-muted-foreground border-r last:border-r-0"
+            >
               {day}
             </div>
           ))}
@@ -138,11 +166,13 @@ export function CalendarMain({ eventDates = [] }: CalendarMainProps) {
                 onClick={() => handleDateSelect(day)}
               >
                 {/* Date Number */}
-                <div className={cn(
-                  "text-sm font-medium mb-1",
-                  isDayToday && "text-blue-600 dark:text-blue-400"
-                )}>
-                  {format(day, 'd')}
+                <div
+                  className={cn(
+                    "text-sm font-medium mb-1",
+                    isDayToday && "text-blue-600 dark:text-blue-400"
+                  )}
+                >
+                  {format(day, "d")}
                 </div>
 
                 {/* Events */}
@@ -186,7 +216,7 @@ export function CalendarMain({ eventDates = [] }: CalendarMainProps) {
             Event
           </Button>
         </div>
-        
+
         {/* Date Picker */}
         <Calendar
           mode="single"
@@ -194,10 +224,10 @@ export function CalendarMain({ eventDates = [] }: CalendarMainProps) {
           onSelect={(date) => date && handleDateSelect(date)}
           className="rounded-md border"
           modifiers={{
-            eventDay: eventDates.map(ed => ed.date)
+            eventDay: eventDates.map((ed) => ed.date),
           }}
           modifiersStyles={{
-            eventDay: { fontWeight: 'bold' }
+            eventDay: { fontWeight: "bold" },
           }}
         />
       </div>
@@ -210,7 +240,7 @@ export function CalendarMain({ eventDates = [] }: CalendarMainProps) {
             <Plus className="h-4 w-4" />
           </Button>
         </div>
-        
+
         <div className="space-y-2">
           {calendarsData.map((calendar) => (
             <div key={calendar.id} className="flex items-center space-x-2">
@@ -230,7 +260,7 @@ export function CalendarMain({ eventDates = [] }: CalendarMainProps) {
         <div className="hidden xl:block w-80 flex-shrink-0">
           {renderSidebar()}
         </div>
-        
+
         {/* Main Calendar Panel */}
         <div className="flex-1 min-w-0">
           {/* Calendar Toolbar */}
@@ -249,13 +279,21 @@ export function CalendarMain({ eventDates = [] }: CalendarMainProps) {
 
                 {/* Month Navigation */}
                 <div className="flex items-center space-x-2">
-                  <Button variant="ghost" size="sm" onClick={() => navigateMonth("prev")}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigateMonth("prev")}
+                  >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
                   <h2 className="text-lg font-semibold min-w-[140px] text-center">
-                    {format(currentDate, 'MMMM yyyy')}
+                    {format(currentDate, "MMMM yyyy")}
                   </h2>
-                  <Button variant="ghost" size="sm" onClick={() => navigateMonth("next")}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigateMonth("next")}
+                  >
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
@@ -278,7 +316,13 @@ export function CalendarMain({ eventDates = [] }: CalendarMainProps) {
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">
                       <Grid3X3 className="h-4 w-4 mr-1" />
-                      {viewMode === "month" ? "Month" : viewMode === "week" ? "Week" : viewMode === "day" ? "Day" : "List"}
+                      {viewMode === "month"
+                        ? "Month"
+                        : viewMode === "week"
+                          ? "Week"
+                          : viewMode === "day"
+                            ? "Day"
+                            : "List"}
                       <ChevronDown className="h-4 w-4 ml-1" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -328,24 +372,24 @@ export function CalendarMain({ eventDates = [] }: CalendarMainProps) {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{selectedEvent?.title}</DialogTitle>
-            <DialogDescription>
-              Event details and information
-            </DialogDescription>
+            <DialogDescription>Event details and information</DialogDescription>
           </DialogHeader>
           {selectedEvent && (
             <div className="space-y-4 pt-4">
               <div className="flex items-center space-x-2 text-sm">
                 <Clock className="h-4 w-4 text-muted-foreground" />
-                <span>{selectedEvent.time} • {selectedEvent.duration}</span>
+                <span>
+                  {selectedEvent.time} • {selectedEvent.duration}
+                </span>
               </div>
-              
+
               {selectedEvent.location && (
                 <div className="flex items-center space-x-2 text-sm">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                   <span>{selectedEvent.location}</span>
                 </div>
               )}
-              
+
               {selectedEvent.attendees.length > 0 && (
                 <div className="flex items-center space-x-2 text-sm">
                   <Users className="h-4 w-4 text-muted-foreground" />
@@ -368,7 +412,10 @@ export function CalendarMain({ eventDates = [] }: CalendarMainProps) {
               )}
 
               <div className="flex items-center space-x-2 pt-4">
-                <Badge variant="secondary" className={cn("text-white", selectedEvent.color)}>
+                <Badge
+                  variant="secondary"
+                  className={cn("text-white", selectedEvent.color)}
+                >
                   {selectedEvent.type}
                 </Badge>
               </div>

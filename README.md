@@ -12,7 +12,7 @@ Este projeto consiste em uma aplicação full-stack para gestão de produtos do 
 
 ## 📋 Pré-requisitos
 
-- Node.js 18+ 
+- Node.js 18+
 - pnpm (recomendado) ou npm
 - API Sankhya Center rodando em `http://localhost:3000`
 - Git
@@ -20,6 +20,7 @@ Este projeto consiste em uma aplicação full-stack para gestão de produtos do 
 ## 🛠️ Stack Tecnológico
 
 ### Frontend (sankhya-products-dashboard)
+
 - **Framework**: React 19.2.3 + Vite 7.3.0
 - **Linguagem**: TypeScript 5.9.3
 - **Estilização**: Tailwind CSS 4.1.18 + shadcn/ui
@@ -33,6 +34,7 @@ Este projeto consiste em uma aplicação full-stack para gestão de produtos do 
 - **Testes**: Vitest + Testing Library + MSW
 
 ### Backend (api-sankhya-center)
+
 - **Framework**: NestJS
 - **Banco de Dados**: Integração com Sankhya ERP
 - **Autenticação**: JWT
@@ -65,14 +67,18 @@ pnpm install
 ### 3. Configurar Variáveis de Ambiente
 
 #### Frontend (sankhya-products-dashboard)
+
 Crie um arquivo `.env.local`:
+
 ```env
 VITE_API_URL=http://localhost:3000
 VITE_APP_NAME=Sankhya Center
 ```
 
 #### Backend (api-sankhya-center)
+
 Configure o arquivo `.env`:
+
 ```env
 PORT=3000
 JWT_SECRET=seu-jwt-secret
@@ -84,24 +90,29 @@ SANKHYA_PASSWORD=guest123
 ### 4. Iniciar os Serviços
 
 #### Iniciar Backend API
+
 ```bash
 cd api-sankhya-center
 pnpm run start:dev
 ```
+
 A API estará disponível em `http://localhost:3000`
 
 #### Iniciar Frontend
+
 ```bash
 cd sankhya-products-dashboard
 pnpm dev
 ```
+
 O dashboard estará disponível em `http://localhost:5173`
 
 ## 🔐 Autenticação
 
 O sistema utiliza um fluxo de autenticação com pass-through da API Sankhya:
 
-1. **Obter Token Externo**: 
+1. **Obter Token Externo**:
+
    ```bash
    curl -X POST https://api-nestjs-sankhya-read-producao.gigantao.net/auth/login \
      -H 'Content-Type: application/json' \
@@ -109,6 +120,7 @@ O sistema utiliza um fluxo de autenticação com pass-through da API Sankhya:
    ```
 
 2. **Enviar Token para API Local**:
+
    ```bash
    curl -X POST http://localhost:3000/auth/login \
      -H 'Content-Type: application/json' \
@@ -145,6 +157,7 @@ z-ralph-code/
 ## 🧪 Testes
 
 ### Frontend
+
 ```bash
 cd sankhya-products-dashboard
 
@@ -162,6 +175,7 @@ pnpm test:ui
 ```
 
 ### Backend
+
 ```bash
 cd api-sankhya-center
 
@@ -180,6 +194,7 @@ pnpm test:cov
 ### Comandos Úteis
 
 #### Frontend
+
 ```bash
 cd sankhya-products-dashboard
 
@@ -206,6 +221,7 @@ pnpm typecheck
 ```
 
 #### Backend
+
 ```bash
 cd api-sankhya-center
 
@@ -244,6 +260,7 @@ npx shadcn@latest add [nome-do-componente]
 ## 📊 Funcionalidades
 
 ### Dashboard Principal
+
 - Cards com métricas em tempo real
 - Gráficos de tendências de preços
 - Produtos mais vendidos (top 10)
@@ -251,6 +268,7 @@ npx shadcn@latest add [nome-do-componente]
 - Atualização automática a cada 5 minutos
 
 ### Gestão de Produtos
+
 - Listagem com paginação e virtualização
 - Filtros avançados (preço, status, categoria)
 - Busca em tempo real com debounce
@@ -259,6 +277,7 @@ npx shadcn@latest add [nome-do-componente]
 - Exportação (CSV, Excel, PDF)
 
 ### Autenticação
+
 - Login com JWT
 - Refresh token automático
 - Persistência de sessão
@@ -267,27 +286,33 @@ npx shadcn@latest add [nome-do-componente]
 ## 🌐 API Endpoints
 
 ### Autenticação
+
 - `POST /auth/login` - Login
 - `GET /auth/me` - Informações do usuário
 
 ### Produtos (TGFPRO)
+
 - `GET /tgfpro` - Listar produtos
 - `GET /tgfpro/:id` - Detalhes do produto
 - `GET /tgfgru` - Grupos de produtos
 
 ### Documentação
+
 Acesse `http://localhost:3000/api` para documentação Swagger
 
 ## 🚀 Deploy
 
 ### Frontend
+
 ```bash
 cd sankhya-products-dashboard
 pnpm build
 ```
+
 O build será gerado em `dist/`
 
 ### Backend
+
 ```bash
 cd api-sankhya-center
 pnpm build
@@ -304,6 +329,7 @@ pnpm start:prod
 4. **Build falhando**: Verifique `pnpm typecheck` e `pnpm lint`
 
 ### Logs
+
 - Frontend: Browser console
 - Backend: Terminal ou arquivos de log
 

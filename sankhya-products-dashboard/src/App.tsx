@@ -1,12 +1,10 @@
-import { BrowserRouter as Router } from 'react-router-dom';
 import { AppLayout } from '@/components/layouts/app-layout';
 import { AppRouter } from '@/components/router/app-router';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { QueryProvider } from '@/lib/react-query';
-import { useEffect } from 'react';
 import { initGTM } from '@/utils/analytics';
-import { initializeRoutePreloader } from '@/lib/utils/route-preloader';
-import { CodeSplittingDebug } from '@/components/debug/code-splitting-debug';
+import { useEffect } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 // Get basename from environment (for deployment) or use empty string for development
 const basename = import.meta.env.VITE_BASENAME || '';
@@ -43,7 +41,7 @@ function App() {
         </AppLayout>
 
         {/* Code splitting debug component - only in development */}
-        <CodeSplittingDebug />
+        {/* <CodeSplittingDebug /> */}
       </ErrorBoundary>
     </QueryProvider>
   );

@@ -1,19 +1,26 @@
 "use client"
 
 import { useState } from "react"
-import { Check, ChevronRight, Plus, Eye, EyeOff, MoreHorizontal } from "lucide-react"
+import {
+  Check,
+  ChevronRight,
+  Plus,
+  Eye,
+  EyeOff,
+  MoreHorizontal,
+} from "lucide-react"
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger 
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 
@@ -46,47 +53,97 @@ const enhancedCalendars: CalendarGroup[] = [
   {
     name: "My Calendars",
     items: [
-      { id: "personal", name: "Personal", color: "bg-blue-500", visible: true, type: "personal" },
-      { id: "work", name: "Work", color: "bg-green-500", visible: true, type: "work" },
-      { id: "family", name: "Family", color: "bg-pink-500", visible: true, type: "personal" }
-    ]
+      {
+        id: "personal",
+        name: "Personal",
+        color: "bg-blue-500",
+        visible: true,
+        type: "personal",
+      },
+      {
+        id: "work",
+        name: "Work",
+        color: "bg-green-500",
+        visible: true,
+        type: "work",
+      },
+      {
+        id: "family",
+        name: "Family",
+        color: "bg-pink-500",
+        visible: true,
+        type: "personal",
+      },
+    ],
   },
   {
     name: "Favorites",
     items: [
-      { id: "holidays", name: "Holidays", color: "bg-red-500", visible: true, type: "shared" },
-      { id: "birthdays", name: "Birthdays", color: "bg-purple-500", visible: true, type: "personal" }
-    ]
+      {
+        id: "holidays",
+        name: "Holidays",
+        color: "bg-red-500",
+        visible: true,
+        type: "shared",
+      },
+      {
+        id: "birthdays",
+        name: "Birthdays",
+        color: "bg-purple-500",
+        visible: true,
+        type: "personal",
+      },
+    ],
   },
   {
     name: "Other",
     items: [
-      { id: "travel", name: "Travel", color: "bg-orange-500", visible: false, type: "personal" },
-      { id: "reminders", name: "Reminders", color: "bg-yellow-500", visible: true, type: "personal" },
-      { id: "deadlines", name: "Deadlines", color: "bg-red-600", visible: true, type: "work" }
-    ]
-  }
+      {
+        id: "travel",
+        name: "Travel",
+        color: "bg-orange-500",
+        visible: false,
+        type: "personal",
+      },
+      {
+        id: "reminders",
+        name: "Reminders",
+        color: "bg-yellow-500",
+        visible: true,
+        type: "personal",
+      },
+      {
+        id: "deadlines",
+        name: "Deadlines",
+        color: "bg-red-600",
+        visible: true,
+        type: "work",
+      },
+    ],
+  },
 ]
 
 export function Calendars({
   onCalendarToggle,
   onCalendarEdit,
   onCalendarDelete,
-  onNewCalendar
+  onNewCalendar,
 }: CalendarsProps) {
   const [calendarData, setCalendarData] = useState(enhancedCalendars)
 
   const handleToggleVisibility = (calendarId: string) => {
-    setCalendarData(prev => prev.map(group => ({
-      ...group,
-      items: group.items.map(item => 
-        item.id === calendarId 
-          ? { ...item, visible: !item.visible }
-          : item
-      )
-    })))
-    
-    const calendar = calendarData.flatMap(g => g.items).find(c => c.id === calendarId)
+    setCalendarData((prev) =>
+      prev.map((group) => ({
+        ...group,
+        items: group.items.map((item) =>
+          item.id === calendarId ? { ...item, visible: !item.visible } : item
+        ),
+      }))
+    )
+
+    const calendar = calendarData
+      .flatMap((g) => g.items)
+      .find((c) => c.id === calendarId)
     if (calendar) {
       onCalendarToggle?.(calendarId, !calendar.visible)
     }
@@ -96,10 +153,7 @@ export function Calendars({
     <div className="space-y-4">
       {calendarData.map((calendar, index) => (
         <div key={calendar.name}>
-          <Collapsible
-            defaultOpen={index === 0}
-            className="group/collapsible"
-          >
+          <Collapsible defaultOpen={index === 0} className="group/collapsible">
             <CollapsibleTrigger className="flex items-center justify-between w-full p-2 hover:bg-accent hover:text-accent-foreground rounded-md cursor-pointer">
               <span className="text-sm font-medium">{calendar.name}</span>
               <div className="flex items-center gap-1">
@@ -129,7 +183,7 @@ export function Calendars({
                           onClick={() => handleToggleVisibility(item.id)}
                           className={cn(
                             "flex aspect-square size-4 shrink-0 items-center justify-center rounded-sm border transition-all cursor-pointer",
-                            item.visible 
+                            item.visible
                               ? cn("border-transparent text-white", item.color)
                               : "border-border bg-transparent"
                           )}
@@ -138,7 +192,7 @@ export function Calendars({
                         </button>
 
                         {/* Calendar Name */}
-                        <span 
+                        <span
                           className={cn(
                             "flex-1 truncate text-sm cursor-pointer",
                             !item.visible && "text-muted-foreground"
@@ -168,20 +222,20 @@ export function Calendars({
                             </div>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" side="right">
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                               onClick={() => onCalendarEdit?.(item.id)}
                               className="cursor-pointer"
                             >
                               Edit calendar
                             </DropdownMenuItem>
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                               onClick={() => handleToggleVisibility(item.id)}
                               className="cursor-pointer"
                             >
                               {item.visible ? "Hide" : "Show"} calendar
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                               onClick={() => onCalendarDelete?.(item.id)}
                               className="cursor-pointer text-destructive"
                             >

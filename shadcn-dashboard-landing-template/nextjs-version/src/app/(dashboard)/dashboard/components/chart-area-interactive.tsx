@@ -25,10 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
 export const description = "An interactive area chart"
 
@@ -260,7 +257,9 @@ export function ChartAreaInteractive() {
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => {
-                    return new Date(value as string | number | Date).toLocaleDateString("en-US", {
+                    return new Date(
+                      value as string | number | Date
+                    ).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
                     })

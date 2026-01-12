@@ -85,8 +85,8 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <BaseLayout 
-      title="Analytics" 
+    <BaseLayout
+      title="Analytics"
       description="View your analytics data and insights"
     >
       <div className="space-y-6">
@@ -96,7 +96,7 @@ export default function AnalyticsPage() {
             Track your performance and insights
           </p>
         </div>
-        
+
         <AnalyticsCharts data={data} />
       </div>
     </BaseLayout>
@@ -128,7 +128,7 @@ function App() {
           {/* Public routes */}
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
-          
+
           {/* Protected routes with layout */}
           <Route path="/" element={<BaseLayout />}>
             <Route index element={<Navigate to="/dashboard" replace />} />
@@ -136,7 +136,7 @@ function App() {
             <Route path="analytics" element={<Analytics />} />
             {/* More routes */}
           </Route>
-          
+
           {/* Catch-all route */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
@@ -166,10 +166,10 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   if (!isAuthenticated) {
     // Redirect to login with return URL
     return (
-      <Navigate 
-        to="/login" 
-        state={{ from: location.pathname }} 
-        replace 
+      <Navigate
+        to="/login"
+        state={{ from: location.pathname }}
+        replace
       />
     )
   }
@@ -186,8 +186,8 @@ Use Zustand for global state management:
 
 ```typescript
 // src/hooks/use-sidebar-config.ts
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 interface SidebarState {
   isCollapsed: boolean
@@ -207,7 +207,7 @@ export const useSidebarConfig = create<SidebarState>()(
       toggle: () => set({ isCollapsed: !get().isCollapsed }),
     }),
     {
-      name: 'sidebar-config',
+      name: "sidebar-config",
       partialize: (state) => ({ isCollapsed: state.isCollapsed }),
     }
   )
@@ -224,7 +224,7 @@ function UsersTable() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(0)
   const [sorting, setSorting] = useState<SortingState>([])
-  
+
   const { data, isLoading } = useUsers({
     search,
     page,
@@ -250,7 +250,7 @@ The project uses Tailwind CSS v4 with the Vite plugin:
 
 ```typescript
 // vite.config.ts
-import tailwindcss from '@tailwindcss/vite'
+import tailwindcss from "@tailwindcss/vite"
 
 export default defineConfig({
   plugins: [
@@ -266,7 +266,7 @@ Theme colors are defined as CSS variables:
 
 ```css
 /* src/index.css */
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @layer base {
   :root {
@@ -353,15 +353,15 @@ Code quality rules for React and TypeScript:
 export default [
   {
     extends: [
-      'eslint:recommended',
-      '@typescript-eslint/recommended',
-      'plugin:react/recommended',
-      'plugin:react-hooks/recommended',
+      "eslint:recommended",
+      "@typescript-eslint/recommended",
+      "plugin:react/recommended",
+      "plugin:react-hooks/recommended",
     ],
     rules: {
-      'react/react-in-jsx-scope': 'off',
-      '@typescript-eslint/no-unused-vars': 'error',
-      'prefer-const': 'error',
+      "react/react-in-jsx-scope": "off",
+      "@typescript-eslint/no-unused-vars": "error",
+      "prefer-const": "error",
     },
   },
 ]
@@ -379,9 +379,7 @@ Recommended VS Code settings:
     "source.organizeImports": true,
     "source.fixAll.eslint": true
   },
-  "tailwindCSS.experimental.classRegex": [
-    ["cn\\(([^)]*)\\)", "'([^']*)'"]
-  ]
+  "tailwindCSS.experimental.classRegex": [["cn\\(([^)]*)\\)", "'([^']*)'"]]
 }
 ```
 
@@ -512,16 +510,19 @@ pnmp dev --force
 ### Common Debugging Scenarios
 
 **Component not re-rendering:**
+
 - Check if props are properly passed
 - Verify state updates are immutable
 - Use React DevTools to inspect component tree
 
 **Routing issues:**
+
 - Check route definitions in App.tsx
 - Verify navigation links use correct paths
 - Check for route conflicts or overlaps
 
 **Style not applying:**
+
 - Verify Tailwind classes are correct
 - Check CSS variable definitions
 - Use browser DevTools to inspect computed styles

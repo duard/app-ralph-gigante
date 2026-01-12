@@ -13,7 +13,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { type Message, type User } from "../use-chat"
 
@@ -23,7 +23,11 @@ interface MessageListProps {
   currentUserId?: string
 }
 
-export function MessageList({ messages, users, currentUserId = "current-user" }: MessageListProps) {
+export function MessageList({
+  messages,
+  users,
+  currentUserId = "current-user",
+}: MessageListProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
   const previousMessageCountRef = useRef(0)
@@ -32,7 +36,8 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
 
   // Reset scroll behavior when switching conversations
   useEffect(() => {
-    const currentConversationId = messages.length > 0 ? messages[0]?.id?.split('-')[0] : null
+    const currentConversationId =
+      messages.length > 0 ? messages[0]?.id?.split("-")[0] : null
     if (currentConversationId !== previousConversationRef.current) {
       isInitialLoadRef.current = true
       previousConversationRef.current = currentConversationId
@@ -49,7 +54,10 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
     }
 
     // Only auto-scroll if new messages were added
-    if (messages.length > previousMessageCountRef.current && bottomRef.current) {
+    if (
+      messages.length > previousMessageCountRef.current &&
+      bottomRef.current
+    ) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" })
     }
 
@@ -66,10 +74,10 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
         email: "you@example.com",
         lastSeen: new Date().toISOString(),
         role: "Developer",
-        department: "Engineering"
+        department: "Engineering",
       }
     }
-    return users.find(user => user.id === userId)
+    return users.find((user) => user.id === userId)
   }
 
   const formatMessageTime = (timestamp: string) => {
@@ -103,7 +111,9 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
     if (index === 0) return false
 
     const prevMessage = messages[index - 1]
-    const timeDiff = new Date(message.timestamp).getTime() - new Date(prevMessage.timestamp).getTime()
+    const timeDiff =
+      new Date(message.timestamp).getTime() -
+      new Date(prevMessage.timestamp).getTime()
 
     return prevMessage.senderId === message.senderId && timeDiff < 5 * 60 * 1000 // 5 minutes
   }
@@ -120,7 +130,7 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
       } else {
         groups.push({
           date: messageDate,
-          messages: [message]
+          messages: [message],
         })
       }
     })
@@ -160,7 +170,10 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
                 const isOwnMessage = message.senderId === currentUserId
                 const showAvatar = shouldShowAvatar(message, messageIndex)
                 const showName = shouldShowName(message, messageIndex)
-                const isConsecutive = isConsecutiveMessage(message, messageIndex)
+                const isConsecutive = isConsecutiveMessage(
+                  message,
+                  messageIndex
+                )
 
                 return (
                   <div
@@ -178,7 +191,11 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
                           <Avatar className="h-8 w-8 cursor-pointer">
                             <AvatarImage src={user.avatar} alt={user.name} />
                             <AvatarFallback className="text-xs">
-                              {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                              {user.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")
+                                .slice(0, 2)}
                             </AvatarFallback>
                           </Avatar>
                         )}
@@ -186,7 +203,12 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
                     )}
 
                     {/* Message content */}
-                    <div className={cn("flex-1 max-w-[70%]", isOwnMessage && "flex flex-col items-end")}>
+                    <div
+                      className={cn(
+                        "flex-1 max-w-[70%]",
+                        isOwnMessage && "flex flex-col items-end"
+                      )}
+                    >
                       {/* Sender name for group messages */}
                       {showName && user && !isOwnMessage && (
                         <div className="text-sm font-medium text-foreground mb-1">
@@ -219,19 +241,23 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
                                   )}
                                 >
                                   <span>{reaction.emoji}</span>
-                                  <span className="text-muted-foreground">{reaction.count}</span>
+                                  <span className="text-muted-foreground">
+                                    {reaction.count}
+                                  </span>
                                 </div>
                               ))}
                             </div>
                           )}
 
                           {/* Timestamp and status */}
-                          <div className={cn(
-                            "flex items-center gap-1 mt-1 text-xs",
-                            isOwnMessage
-                              ? "text-primary-foreground/70 justify-end"
-                              : "text-muted-foreground"
-                          )}>
+                          <div
+                            className={cn(
+                              "flex items-center gap-1 mt-1 text-xs",
+                              isOwnMessage
+                                ? "text-primary-foreground/70 justify-end"
+                                : "text-muted-foreground"
+                            )}
+                          >
                             <span>{formatMessageTime(message.timestamp)}</span>
                             {message.isEdited && (
                               <span className="italic">(edited)</span>

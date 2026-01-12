@@ -56,9 +56,15 @@ export function DataTableToolbar<TData>({
     }
   }
 
-  const statusFilter = table.getColumn("status")?.getFilterValue() as string | undefined
-  const categoryFilter = table.getColumn("category")?.getFilterValue() as string | undefined
-  const priorityFilter = table.getColumn("priority")?.getFilterValue() as string | undefined
+  const statusFilter = table.getColumn("status")?.getFilterValue() as
+    | string
+    | undefined
+  const categoryFilter = table.getColumn("category")?.getFilterValue() as
+    | string
+    | undefined
+  const priorityFilter = table.getColumn("priority")?.getFilterValue() as
+    | string
+    | undefined
 
   return (
     <div className="space-y-4">
@@ -74,7 +80,9 @@ export function DataTableToolbar<TData>({
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all" className="cursor-pointer">All Status</SelectItem>
+              <SelectItem value="all" className="cursor-pointer">
+                All Status
+              </SelectItem>
               {statuses.map((status) => (
                 <SelectItem
                   key={status.value}
@@ -101,7 +109,9 @@ export function DataTableToolbar<TData>({
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all" className="cursor-pointer">All Categories</SelectItem>
+              <SelectItem value="all" className="cursor-pointer">
+                All Categories
+              </SelectItem>
               {categories.map((category) => (
                 <SelectItem
                   key={category.value}
@@ -123,7 +133,9 @@ export function DataTableToolbar<TData>({
               <SelectValue placeholder="Priority" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all" className="cursor-pointer">All Priorities</SelectItem>
+              <SelectItem value="all" className="cursor-pointer">
+                All Priorities
+              </SelectItem>
               {priorities.map((priority) => (
                 <SelectItem
                   key={priority.value}

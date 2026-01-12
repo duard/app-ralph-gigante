@@ -103,6 +103,7 @@ pnpm dev
 ```
 
 The application will be available at:
+
 - **Local**: http://localhost:3000
 - **Network**: http://192.168.x.x:3000 (for testing on devices)
 
@@ -185,7 +186,7 @@ const dbUrl = process.env.DATABASE_URL
 // Route structure
 src/app/
 ├── page.tsx                    # / (Home)
-├── (dashboard)/               
+├── (dashboard)/
 │   ├── dashboard/
 │   │   └── page.tsx           # /dashboard
 │   ├── analytics/
@@ -287,7 +288,7 @@ const data = {
       icon: LayoutDashboard,
     },
     // Add your custom pages here
-  ]
+  ],
 }
 ```
 
@@ -348,15 +349,16 @@ If you encounter issues:
 
 ## Framework Comparison
 
-| Feature | Next.js Version | Vite Version |
-|---------|----------------|--------------|
-| **Routing** | File-based App Router | React Router DOM |
-| **Performance** | SSR + Static Export | Client-side rendering |
-| **Build Speed** | Turbopack (fast) | Vite (very fast) |
-| **Bundle Size** | Optimized chunks | Tree-shaking |
-| **Deployment** | Vercel optimized | Static hosting |
-| **Learning Curve** | Next.js patterns | Standard React |
+| Feature            | Next.js Version       | Vite Version          |
+| ------------------ | --------------------- | --------------------- |
+| **Routing**        | File-based App Router | React Router DOM      |
+| **Performance**    | SSR + Static Export   | Client-side rendering |
+| **Build Speed**    | Turbopack (fast)      | Vite (very fast)      |
+| **Bundle Size**    | Optimized chunks      | Tree-shaking          |
+| **Deployment**     | Vercel optimized      | Static hosting        |
+| **Learning Curve** | Next.js patterns      | Standard React        |
 
 Choose based on your project needs:
+
 - **Next.js**: Better for SEO, server-side rendering, and full-stack applications
 - **Vite**: Better for SPAs, faster development, and client-side applications

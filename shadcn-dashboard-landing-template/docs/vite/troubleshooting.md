@@ -28,12 +28,14 @@ pnpm dev --port 5174
 **Solutions:**
 
 1. **Clear Vite cache:**
+
    ```bash
    rm -rf node_modules/.vite
    pnpm dev
    ```
 
 2. **Optimize dependencies:**
+
    ```bash
    pnpm dev --force
    ```
@@ -44,12 +46,12 @@ pnpm dev --port 5174
    export default defineConfig({
      optimizeDeps: {
        include: [
-         'react',
-         'react-dom',
-         'react-router-dom',
-         '@tanstack/react-table',
-         'recharts',
-         'zustand',
+         "react",
+         "react-dom",
+         "react-router-dom",
+         "@tanstack/react-table",
+         "recharts",
+         "zustand",
        ],
      },
    })
@@ -62,28 +64,30 @@ pnpm dev --port 5174
 **Solutions:**
 
 1. **Check path aliases:**
+
    ```typescript
    // vite.config.ts
-   import path from 'path'
-   
+   import path from "path"
+
    export default defineConfig({
      resolve: {
        alias: {
-         '@': path.resolve(__dirname, './src'),
+         "@": path.resolve(__dirname, "./src"),
        },
      },
    })
    ```
 
 2. **Verify file extensions:**
+
    ```typescript
    // Correct imports
-   import { Button } from '@/components/ui/button'
-   import type { User } from '@/types/user'
-   
+   import { Button } from "@/components/ui/button"
+   import type { User } from "@/types/user"
+
    // Avoid these
-   import { Button } from '@/components/ui/button.tsx' // ❌
-   import { User } from '@/types/user.ts' // ❌
+   import { Button } from "@/components/ui/button.tsx" // ❌
+   import { User } from "@/types/user.ts" // ❌
    ```
 
 3. **Check tsconfig paths:**
@@ -106,34 +110,37 @@ pnpm dev --port 5174
 **Solutions:**
 
 1. **Check Tailwind configuration:**
+
    ```typescript
    // tailwind.config.ts
-   import type { Config } from 'tailwindcss'
-   
+   import type { Config } from "tailwindcss"
+
    const config: Config = {
      content: [
-       './index.html',
-       './src/**/*.{js,ts,jsx,tsx}', // Make sure this matches your file structure
+       "./index.html",
+       "./src/**/*.{js,ts,jsx,tsx}", // Make sure this matches your file structure
      ],
      // ... rest of config
    }
    ```
 
 2. **Verify CSS imports:**
+
    ```css
    /* src/index.css */
-   @import 'tailwindcss'; /* Make sure this is present */
-   
+   @import "tailwindcss"; /* Make sure this is present */
+
    @layer base {
      /* Your custom styles */
    }
    ```
 
 3. **Check for CSS conflicts:**
+
    ```typescript
    // Use cn utility for conditional classes
    import { cn } from '@/lib/utils'
-   
+
    function Component({ className }: { className?: string }) {
      return (
        <div className={cn('default-classes', className)}>
@@ -152,26 +159,29 @@ pnpm dev --port 5174
 **Solutions:**
 
 1. **Run type checking separately:**
+
    ```bash
    pnpm type-check
    ```
 
 2. **Common type issues:**
+
    ```typescript
    // Fix missing types
    npm install @types/react @types/react-dom
-   
+
    // Fix import type issues
    import type { ComponentProps } from 'react' // ✅
    import { ComponentProps } from 'react' // ❌ for types only
    ```
 
 3. **Strict mode issues:**
+
    ```typescript
    // Handle potential undefined values
    const user = data?.user // ✅
    const name = user?.name ?? 'Unknown' // ✅
-   
+
    // Or disable strict mode temporarily
    // tsconfig.json
    {
@@ -188,27 +198,29 @@ pnpm dev --port 5174
 **Solutions:**
 
 1. **Analyze bundle:**
+
    ```bash
    pnpm add -D rollup-plugin-visualizer
-   
+
    # Add to vite.config.ts
    import { visualizer } from 'rollup-plugin-visualizer'
-   
+
    export default defineConfig({
      plugins: [
        visualizer({ filename: 'dist/stats.html', open: true })
      ]
    })
-   
+
    pnpm build
    ```
 
 2. **Implement code splitting:**
+
    ```typescript
    // Lazy load heavy components
    const HeavyChart = lazy(() => import('@/components/heavy-chart'))
    const Dashboard = lazy(() => import('@/app/(dashboard)/page'))
-   
+
    function App() {
      return (
        <Suspense fallback={<div>Loading...</div>}>
@@ -228,9 +240,9 @@ pnpm dev --port 5174
        rollupOptions: {
          output: {
            manualChunks: {
-             vendor: ['react', 'react-dom'],
-             router: ['react-router-dom'],
-             ui: ['@radix-ui/react-dialog'],
+             vendor: ["react", "react-dom"],
+             router: ["react-router-dom"],
+             ui: ["@radix-ui/react-dialog"],
            },
          },
        },
@@ -265,6 +277,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 **Solutions:**
 
 1. **Check route definitions:**
+
    ```typescript
    // App.tsx - Ensure routes are properly defined
    function App() {
@@ -282,9 +295,10 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```
 
 2. **Fix navigation links:**
+
    ```typescript
    import { Link } from 'react-router-dom'
-   
+
    // Use Link for internal navigation
    <Link to="/dashboard">Dashboard</Link> // ✅
    <a href="/dashboard">Dashboard</a> // ❌ (causes full page reload)
@@ -307,20 +321,21 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 **Solutions:**
 
 1. **Check store configuration:**
+
    ```typescript
-   import { create } from 'zustand'
-   import { persist } from 'zustand/middleware'
-   
+   import { create } from "zustand"
+   import { persist } from "zustand/middleware"
+
    const useStore = create<State>()(
      persist(
        (set, get) => ({
          // State and actions
        }),
        {
-         name: 'app-storage', // Storage key
-         partialize: (state) => ({ 
+         name: "app-storage", // Storage key
+         partialize: (state) => ({
            // Only persist specific fields
-           theme: state.theme 
+           theme: state.theme,
          }),
        }
      )
@@ -328,32 +343,34 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```
 
 2. **Debug store updates:**
+
    ```typescript
    // Add logging to actions
    const useStore = create<State>((set, get) => ({
      updateUser: (user) => {
-       console.log('Updating user:', user)
+       console.log("Updating user:", user)
        set({ user })
      },
    }))
    ```
 
 3. **Handle hydration issues:**
+
    ```typescript
    import { useEffect, useState } from 'react'
-   
+
    function Component() {
      const [hydrated, setHydrated] = useState(false)
      const store = useStore()
-   
+
      useEffect(() => {
        setHydrated(true)
      }, [])
-   
+
      if (!hydrated) {
        return <div>Loading...</div>
      }
-   
+
      return <div>{store.data}</div>
    }
    ```
@@ -365,6 +382,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 **Solutions:**
 
 1. **Check CSS variable definitions:**
+
    ```css
    /* src/index.css */
    :root {
@@ -372,7 +390,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
      --foreground: 222.2 84% 4.9%;
      /* Ensure all required variables are defined */
    }
-   
+
    .dark {
      --background: 222.2 84% 4.9%;
      --foreground: 210 40% 98%;
@@ -381,10 +399,11 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```
 
 2. **Verify theme provider setup:**
+
    ```typescript
    // main.tsx
    import { ThemeProvider } from '@/components/theme-provider'
-   
+
    ReactDOM.createRoot(document.getElementById('root')!).render(
      <React.StrictMode>
        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
@@ -395,14 +414,15 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```
 
 3. **Debug theme switching:**
+
    ```typescript
    import { useTheme } from '@/components/theme-provider'
-   
+
    function Component() {
      const { theme, setTheme } = useTheme()
-     
+
      console.log('Current theme:', theme)
-     
+
      return (
        <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
          Toggle theme
@@ -420,11 +440,12 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 **Solutions:**
 
 1. **Implement lazy loading:**
+
    ```typescript
    // Split large components
    const Dashboard = lazy(() => import('@/app/(dashboard)/page'))
    const HeavyChart = lazy(() => import('@/components/heavy-chart'))
-   
+
    // Use Suspense with meaningful fallbacks
    <Suspense fallback={<DashboardSkeleton />}>
      <Dashboard />
@@ -432,10 +453,11 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```
 
 2. **Optimize images:**
+
    ```typescript
    // Use appropriate image formats and sizes
-   <img 
-     src="/images/hero.webp" 
+   <img
+     src="/images/hero.webp"
      alt="Hero"
      loading="lazy"
      width={800}
@@ -446,8 +468,14 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 3. **Preload critical resources:**
    ```html
    <!-- In index.html -->
-   <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin>
-   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link
+     rel="preload"
+     href="/fonts/inter.woff2"
+     as="font"
+     type="font/woff2"
+     crossorigin
+   />
+   <link rel="preconnect" href="https://fonts.googleapis.com" />
    ```
 
 ### Memory Leaks
@@ -457,34 +485,36 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 **Solutions:**
 
 1. **Clean up event listeners:**
+
    ```typescript
    useEffect(() => {
      const handleResize = () => {
        // Handle resize
      }
-     
-     window.addEventListener('resize', handleResize)
-     
+
+     window.addEventListener("resize", handleResize)
+
      return () => {
-       window.removeEventListener('resize', handleResize)
+       window.removeEventListener("resize", handleResize)
      }
    }, [])
    ```
 
 2. **Cancel async operations:**
+
    ```typescript
    useEffect(() => {
      const controller = new AbortController()
-     
-     fetch('/api/data', { signal: controller.signal })
-       .then(response => response.json())
-       .then(data => setData(data))
-       .catch(error => {
-         if (error.name !== 'AbortError') {
-           console.error('Fetch error:', error)
+
+     fetch("/api/data", { signal: controller.signal })
+       .then((response) => response.json())
+       .then((data) => setData(data))
+       .catch((error) => {
+         if (error.name !== "AbortError") {
+           console.error("Fetch error:", error)
          }
        })
-     
+
      return () => {
        controller.abort()
      }
@@ -492,12 +522,13 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```
 
 3. **Avoid memory leaks in timers:**
+
    ```typescript
    useEffect(() => {
      const interval = setInterval(() => {
        // Update something
      }, 1000)
-     
+
      return () => clearInterval(interval)
    }, [])
    ```
@@ -511,6 +542,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 **Solutions:**
 
 1. **Check variable naming:**
+
    ```bash
    # Variables must start with VITE_
    VITE_API_URL=http://localhost:3001 ✅
@@ -518,6 +550,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```
 
 2. **Verify file names:**
+
    ```bash
    .env                # Loaded in all environments
    .env.local          # Loaded in all environments (ignored by git)
@@ -526,10 +559,11 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```
 
 3. **Check variable usage:**
+
    ```typescript
    // Access environment variables
    const apiUrl = import.meta.env.VITE_API_URL
-   
+
    // Type-safe access
    interface ImportMetaEnv {
      readonly VITE_API_URL: string
@@ -544,18 +578,20 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 **Solutions:**
 
 1. **Test production build locally:**
+
    ```bash
    pnpm build
    pnpm preview
    ```
 
 2. **Check for development-only code:**
+
    ```typescript
    // Remove or conditionally include development tools
    if (import.meta.env.DEV) {
-     console.log('Development mode')
+     console.log("Development mode")
    }
-   
+
    // Don't ship with React DevTools
    const isDevelopment = import.meta.env.DEV
    ```
@@ -577,10 +613,11 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    - Profile component performance
 
 2. **Vite DevTools:**
+
    ```bash
    # Enable verbose logging
    DEBUG=vite:* pnpm dev
-   
+
    # Enable HMR debugging
    DEBUG=vite:hmr pnpm dev
    ```
@@ -594,15 +631,15 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 
 ```typescript
 // Add strategic console logs
-console.log('Component mounted:', { props, state })
-console.log('API response:', data)
-console.log('Route changed:', location.pathname)
+console.log("Component mounted:", { props, state })
+console.log("API response:", data)
+console.log("Route changed:", location.pathname)
 
 // Use performance markers
-performance.mark('component-start')
+performance.mark("component-start")
 // Component logic
-performance.mark('component-end')
-performance.measure('component-time', 'component-start', 'component-end')
+performance.mark("component-end")
+performance.measure("component-time", "component-start", "component-end")
 ```
 
 ## Getting Help

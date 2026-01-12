@@ -5,21 +5,25 @@ The modern technologies powering the template.
 ## Core Technologies
 
 **Frontend**
+
 - React 19 with TypeScript 5.x
 - Vite or Next.js 15 for building
 - shadcn/ui v3 with Radix UI primitives
 - Tailwind CSS v4 for styling
 
 **State & Data**
+
 - Zustand for state management
 - React Hook Form with Zod validation
 - TanStack Table for data tables
 
 **Charts & Icons**
+
 - Recharts for chart components
 - Lucide React for icons
 
 **Theme System**
+
 - tweakcn for live theme customization
 - CSS variables for theming
 - HSL color space for better color manipulation
@@ -27,11 +31,13 @@ The modern technologies powering the template.
 ## Development Tools
 
 **Code Quality**
+
 - ESLint and Prettier for formatting
 - TypeScript for type safety
 - Strict linting configurations
 
 **Build & Performance**
+
 - Hot module replacement
 - Code splitting and tree shaking
 - Bundle optimization

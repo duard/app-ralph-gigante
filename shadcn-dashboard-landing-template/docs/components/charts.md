@@ -114,8 +114,8 @@ const advancedConfig = {
     color: "hsl(var(--chart-1))",
     theme: {
       light: "#3b82f6",
-      dark: "#60a5fa"
-    }
+      dark: "#60a5fa",
+    },
   },
   showGrid: true,
   showLegend: true,
@@ -295,7 +295,7 @@ function InteractiveChart({ data }: { data: any[] }) {
           Quarterly
         </Button>
       </div>
-      
+
       <AreaChart
         data={data}
         categories={["revenue", "profit"]}
@@ -337,7 +337,7 @@ Charts use CSS variables for consistent theming:
 
 ```typescript
 function ThemedChart({ data, theme }: { data: any[], theme: 'light' | 'dark' }) {
-  const chartColors = theme === 'dark' 
+  const chartColors = theme === 'dark'
     ? ['#60a5fa', '#34d399', '#fbbf24']
     : ['#3b82f6', '#10b981', '#f59e0b']
 

@@ -11,28 +11,28 @@ interface ColorScheme {
   // Primary brand colors
   primary: string
   primaryForeground: string
-  
+
   // Secondary colors
   secondary: string
   secondaryForeground: string
-  
+
   // Semantic colors
   destructive: string
   constructive: string
   warning: string
-  
+
   // Surface colors
   background: string
   foreground: string
   card: string
   cardForeground: string
-  
+
   // Interactive elements
   muted: string
   mutedForeground: string
   accent: string
   accentForeground: string
-  
+
   // Borders and separators
   border: string
   input: string
@@ -53,17 +53,17 @@ export const themeColors = {
     200: "214 32% 91%",
     // ... more shades
   },
-  
+
   // Semantic colors
   primary: {
     light: "210 100% 50%",
-    dark: "210 100% 60%"
+    dark: "210 100% 60%",
   },
-  
+
   secondary: {
     light: "210 40% 96%",
-    dark: "210 40% 16%"
-  }
+    dark: "210 40% 16%",
+  },
 }
 ```
 
@@ -74,19 +74,19 @@ interface LayoutConfig {
   // Sidebar settings
   sidebarWidth: number
   sidebarCollapsedWidth: number
-  
+
   // Header settings
   headerHeight: number
-  
+
   // Spacing
   containerPadding: number
   contentSpacing: number
-  
+
   // Border radius
   borderRadius: number
-  
+
   // Menu layout
-  menuLayout: 'vertical' | 'horizontal'
+  menuLayout: "vertical" | "horizontal"
 }
 ```
 
@@ -108,7 +108,7 @@ const layoutConfig = {
   content: {
     maxWidth: 1200,
     padding: 24,
-  }
+  },
 }
 ```
 
@@ -121,7 +121,7 @@ interface TypographyConfig {
     sans: string[]
     mono: string[]
   }
-  
+
   // Font sizes
   fontSize: {
     xs: string
@@ -129,18 +129,18 @@ interface TypographyConfig {
     base: string
     lg: string
     xl: string
-    '2xl': string
-    '3xl': string
-    '4xl': string
+    "2xl": string
+    "3xl": string
+    "4xl": string
   }
-  
+
   // Line heights
   lineHeight: {
     tight: string
     normal: string
     relaxed: string
   }
-  
+
   // Font weights
   fontWeight: {
     normal: string
@@ -161,18 +161,18 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans: ["Inter", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
       },
       fontSize: {
-        xs: ['0.75rem', { lineHeight: '1rem' }],
-        sm: ['0.875rem', { lineHeight: '1.25rem' }],
-        base: ['1rem', { lineHeight: '1.5rem' }],
-        lg: ['1.125rem', { lineHeight: '1.75rem' }],
-        xl: ['1.25rem', { lineHeight: '1.75rem' }],
-      }
-    }
-  }
+        xs: ["0.75rem", { lineHeight: "1rem" }],
+        sm: ["0.875rem", { lineHeight: "1.25rem" }],
+        base: ["1rem", { lineHeight: "1.5rem" }],
+        lg: ["1.125rem", { lineHeight: "1.75rem" }],
+        xl: ["1.25rem", { lineHeight: "1.75rem" }],
+      },
+    },
+  },
 }
 ```
 
@@ -184,28 +184,28 @@ export default {
 const buttonConfig = {
   variants: {
     default: {
-      background: 'hsl(var(--primary))',
-      foreground: 'hsl(var(--primary-foreground))',
-      hover: 'hsl(var(--primary) / 0.9)',
+      background: "hsl(var(--primary))",
+      foreground: "hsl(var(--primary-foreground))",
+      hover: "hsl(var(--primary) / 0.9)",
     },
     outline: {
-      border: 'hsl(var(--border))',
-      background: 'transparent',
-      hover: 'hsl(var(--accent))',
-    }
+      border: "hsl(var(--border))",
+      background: "transparent",
+      hover: "hsl(var(--accent))",
+    },
   },
   sizes: {
     sm: {
-      height: '36px',
-      padding: '0 12px',
-      fontSize: '14px',
+      height: "36px",
+      padding: "0 12px",
+      fontSize: "14px",
     },
     default: {
-      height: '40px',
-      padding: '0 16px',
-      fontSize: '16px',
-    }
-  }
+      height: "40px",
+      padding: "0 16px",
+      fontSize: "16px",
+    },
+  },
 }
 ```
 
@@ -214,21 +214,21 @@ const buttonConfig = {
 ```typescript
 const cardConfig = {
   base: {
-    borderRadius: '8px',
-    border: '1px solid hsl(var(--border))',
-    background: 'hsl(var(--card))',
-    color: 'hsl(var(--card-foreground))',
-    shadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
+    borderRadius: "8px",
+    border: "1px solid hsl(var(--border))",
+    background: "hsl(var(--card))",
+    color: "hsl(var(--card-foreground))",
+    shadow: "0 1px 3px 0 rgb(0 0 0 / 0.1)",
   },
   variants: {
     elevated: {
-      shadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+      shadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
     },
     outlined: {
-      border: '2px solid hsl(var(--border))',
-      shadow: 'none',
-    }
-  }
+      border: "2px solid hsl(var(--border))",
+      shadow: "none",
+    },
+  },
 }
 ```
 
@@ -243,13 +243,13 @@ interface AnimationConfig {
     normal: string
     slow: string
   }
-  
+
   easing: {
     default: string
     bounce: string
     elastic: string
   }
-  
+
   transitions: {
     colors: boolean
     transform: boolean
@@ -263,20 +263,20 @@ interface AnimationConfig {
 ```typescript
 const animationConfig = {
   duration: {
-    fast: '150ms',
-    normal: '300ms',
-    slow: '500ms',
+    fast: "150ms",
+    normal: "300ms",
+    slow: "500ms",
   },
   easing: {
-    default: 'cubic-bezier(0.4, 0, 0.2, 1)',
-    bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-    elastic: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+    default: "cubic-bezier(0.4, 0, 0.2, 1)",
+    bounce: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+    elastic: "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
   },
   transitions: {
     colors: true,
     transform: true,
     opacity: true,
-  }
+  },
 }
 ```
 
@@ -293,12 +293,12 @@ The theme customizer automatically generates CSS variables:
   --primary-foreground: 210 40% 98%;
   --secondary: 210 40% 96%;
   --secondary-foreground: 222.2 84% 4.9%;
-  
+
   /* Layout */
   --sidebar-width: 280px;
   --header-height: 64px;
   --border-radius: 8px;
-  
+
   /* Animation */
   --transition-duration: 300ms;
   --transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
@@ -313,7 +313,7 @@ The theme customizer automatically generates CSS variables:
   --primary-foreground: 210 40% 8%;
   --secondary: 210 40% 16%;
   --secondary-foreground: 210 40% 98%;
-  
+
   --background: 222.2 84% 4.9%;
   --foreground: 210 40% 98%;
   --card: 222.2 84% 4.9%;
@@ -354,21 +354,21 @@ Create and register custom color palettes:
 ```typescript
 const customPalettes = {
   ocean: {
-    name: 'Ocean Blue',
+    name: "Ocean Blue",
     colors: {
-      primary: 'hsl(210, 100%, 50%)',
-      secondary: 'hsl(210, 50%, 90%)',
-      accent: 'hsl(25, 100%, 60%)',
-    }
+      primary: "hsl(210, 100%, 50%)",
+      secondary: "hsl(210, 50%, 90%)",
+      accent: "hsl(25, 100%, 60%)",
+    },
   },
   forest: {
-    name: 'Forest Green',
+    name: "Forest Green",
     colors: {
-      primary: 'hsl(120, 60%, 40%)',
-      secondary: 'hsl(120, 30%, 90%)',
-      accent: 'hsl(45, 100%, 50%)',
-    }
-  }
+      primary: "hsl(120, 60%, 40%)",
+      secondary: "hsl(120, 30%, 90%)",
+      accent: "hsl(45, 100%, 50%)",
+    },
+  },
 }
 ```
 
@@ -379,15 +379,15 @@ Implement theme validation:
 ```typescript
 const validateTheme = (theme: Theme): boolean => {
   // Check required properties
-  const requiredColors = ['primary', 'secondary', 'background', 'foreground']
-  
+  const requiredColors = ["primary", "secondary", "background", "foreground"]
+
   for (const color of requiredColors) {
     if (!theme.colors[color]) {
       console.error(`Missing required color: ${color}`)
       return false
     }
   }
-  
+
   // Validate color format
   const colorRegex = /^hsl\(\d+,?\s*\d+%?,?\s*\d+%?\)$/
   for (const [key, value] of Object.entries(theme.colors)) {
@@ -396,7 +396,7 @@ const validateTheme = (theme: Theme): boolean => {
       return false
     }
   }
-  
+
   return true
 }
 ```
@@ -409,15 +409,15 @@ const validateTheme = (theme: Theme): boolean => {
 const performanceConfig = {
   // Debounce theme updates
   updateDebounce: 100,
-  
+
   // Batch CSS variable updates
   batchUpdates: true,
-  
+
   // Use requestAnimationFrame for smooth transitions
   useRAF: true,
-  
+
   // Preload common themes
-  preloadThemes: ['light', 'dark', 'auto'],
+  preloadThemes: ["light", "dark", "auto"],
 }
 ```
 
@@ -427,10 +427,10 @@ const performanceConfig = {
 const memoryConfig = {
   // Maximum number of cached themes
   maxCachedThemes: 10,
-  
+
   // Clear unused themes after timeout
   cleanupTimeout: 5 * 60 * 1000, // 5 minutes
-  
+
   // Use weak references for event listeners
   useWeakRefs: true,
 }

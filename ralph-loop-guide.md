@@ -3,6 +3,7 @@
 ## Pré-requisitos
 
 1. **Instalar o comando /ralph do OpenCode** (caso ainda não esteja instalado):
+
 ```bash
 npx shadcn@latest add https://brennanmceachran.github.io/agent-utils/ralph-loop-opencode.json
 ```
@@ -47,12 +48,14 @@ No OpenCode, mude para o agente **Ralph** e execute:
 ```
 
 **Parâmetros:**
+
 - `@prd-app-produtos-sankhya.md` - Caminho para o arquivo PRD
 - `50` - Número máximo de iterações (pode ser ajustado)
 
 ### Passo 3: Acompanhar o progresso
 
 O Ralph Loop irá:
+
 1. Ler o PRD
 2. Executar tasks progressivamente
 3. Atualizar a seção **Progress** no PRD após cada iteração
@@ -61,6 +64,7 @@ O Ralph Loop irá:
 ### Passo 4: Interagir durante a execução (opcional)
 
 Se precisar direcionar o agente:
+
 1. Digite uma mensagem e pressione Enter
 2. O OpenCode irá inserir sua mensagem na próxima oportunidade
 3. O agente será guiado na direção correta
@@ -68,6 +72,7 @@ Se precisar direcionar o agente:
 ### Passo 5: Parar o loop
 
 Pressione `Ctrl+C` ou execute:
+
 ```bash
 /ralph stop
 ```
@@ -132,11 +137,13 @@ Use modelos com alto reasoning para melhores resultados:
 ### 1. Comece com poucas iterações
 
 Primeira vez:
+
 ```bash
 /ralph @prd-app-produtos-sankhya.md 5
 ```
 
 Ajuste conforme necessário:
+
 ```bash
 /ralph @prd-app-produtos-sankhya.md 25
 # ou
@@ -150,6 +157,7 @@ Quanto mais específicos os critérios, melhor o Ralph executará as tasks.
 ### 3. Documente tudo nas Notes
 
 Use a seção **Notes** para lembrar o loop sobre:
+
 - API endpoints específicos
 - Convenções de código
 - Decisões arquiteturais
@@ -158,6 +166,7 @@ Use a seção **Notes** para lembrar o loop sobre:
 ### 4. Mantenha o PRD atualizado
 
 Se mudar os requisitos:
+
 1. Pare o loop (`Ctrl+C`)
 2. Atualize o PRD
 3. Reinicie o loop
@@ -165,6 +174,7 @@ Se mudar os requisitos:
 ### 5. Revise o progresso regularmente
 
 O Ralph pode executar por horas sem supervisão, mas é bom revisar:
+
 - A cada 10-15 iterações
 - Se encontrar erros repetidos
 - Se o progresso parecer estagnado
@@ -176,6 +186,7 @@ O Ralph pode executar por horas sem supervisão, mas é bom revisar:
 **Causa**: Seções obrigatórias estão vazias ou faltando.
 
 **Solução**: Verifique se as seguintes seções existem e não estão vazias:
+
 - Goal
 - Acceptance Criteria
 - Verification
@@ -192,6 +203,7 @@ O Ralph pode executar por horas sem supervisão, mas é bom revisar:
 **Causa**: Dependências faltando ou ambiente não configurado.
 
 **Solução**: Verifique se:
+
 - A API está rodando em localhost:3000
 - Node.js e pnpm/npm estão instalados
 - Dependências do template foram instaladas
@@ -205,18 +217,21 @@ O Ralph pode executar por horas sem supervisão, mas é bom revisar:
 ## Fluxo de Trabalho Sugerido
 
 ### Iteração 1-5: Setup Inicial
+
 - Copiar template
 - Configurar projeto
 - Instalar dependências
 - Configurar estrutura base
 
 ### Iteração 6-15: Infraestrutura
+
 - Configurar rotas
 - Configurar temas
 - Configurar componentes shadcn-ui
 - Configurar Axios e stores
 
 ### Iteração 16-25: Autenticação
+
 - Criar tipos
 - Criar API client
 - Criar hooks
@@ -224,6 +239,7 @@ O Ralph pode executar por horas sem supervisão, mas é bom revisar:
 - Testar autenticação
 
 ### Iteração 26-40: Produtos (Listagem)
+
 - Criar tipos de produtos
 - Criar API client de produtos
 - Criar hooks de produtos
@@ -231,32 +247,38 @@ O Ralph pode executar por horas sem supervisão, mas é bom revisar:
 - Implementar filtros
 
 ### Iteração 41-50: Detalhes e CRUD
+
 - Implementar modal de detalhes
 - Implementar formulário de produto
 - Implementar edição e exclusão
 
 ### Iteração 51-60: Dashboard
+
 - Criar cards de métricas
 - Criar gráficos
 - Criar tabelas de destaque
 
 ### Iteração 61-70: UX/UI
+
 - Implementar dark mode
 - Implementar animações
 - Implementar loading states
 - Implementar responsividade
 
 ### Iteração 71-80: Testes
+
 - Configurar ambiente de testes
 - Criar testes de componentes
 - Criar testes de integração
 
 ### Iteração 81-85: Documentação
+
 - Criar README
 - Documentar API
 - Criar Style Guide
 
 ### Iteração 86-90: Performance e Deploy
+
 - Otimizar build
 - Configurar deploy
 - Configurar monitoramento
@@ -266,6 +288,7 @@ O Ralph pode executar por horas sem supervisão, mas é bom revisar:
 Quando o Ralph encontrar `RALPH_DONE` ou completar todas as tasks:
 
 1. **Revise o Progresso**
+
    ```bash
    cat prd-app-produtos-sankhya.md
    ```
@@ -276,6 +299,7 @@ Quando o Ralph encontrar `RALPH_DONE` ou completar todas as tasks:
    - Teste manualmente as funcionalidades críticas
 
 3. **Build de produção**
+
    ```bash
    cd sankhya-products-dashboard
    npm run build

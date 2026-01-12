@@ -20,7 +20,8 @@ export function SiteFooter() {
             </Link>
           </div>
           <p className="text-xs text-muted-foreground">
-            Building beautiful, accessible blocks, templates and dashboards for modern web applications.
+            Building beautiful, accessible blocks, templates and dashboards for
+            modern web applications.
           </p>
         </div>
       </div>

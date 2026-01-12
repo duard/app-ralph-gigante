@@ -42,7 +42,7 @@ export default function UsersPage() {
 
   const handleAddUser = (userData: UserFormValues) => {
     const newUser: User = {
-      id: Math.max(...users.map(u => u.id)) + 1,
+      id: Math.max(...users.map((u) => u.id)) + 1,
       name: userData.name,
       email: userData.email,
       avatar: generateAvatar(userData.name),
@@ -50,14 +50,14 @@ export default function UsersPage() {
       plan: userData.plan,
       billing: userData.billing,
       status: userData.status,
-      joinedDate: new Date().toISOString().split('T')[0],
-      lastLogin: new Date().toISOString().split('T')[0],
+      joinedDate: new Date().toISOString().split("T")[0],
+      lastLogin: new Date().toISOString().split("T")[0],
     }
-    setUsers(prev => [newUser, ...prev])
+    setUsers((prev) => [newUser, ...prev])
   }
 
   const handleDeleteUser = (id: number) => {
-    setUsers(prev => prev.filter(user => user.id !== id))
+    setUsers((prev) => prev.filter((user) => user.id !== id))
   }
 
   const handleEditUser = (user: User) => {
@@ -67,18 +67,17 @@ export default function UsersPage() {
   }
 
   return (
-    <BaseLayout 
-      title="Users" 
+    <BaseLayout
+      title="Users"
       description="Manage your users and their permissions"
     >
       <div className="flex flex-col gap-4">
         <div className="@container/main px-4 lg:px-6">
           <StatCards />
         </div>
-        
+
         <div className="@container/main px-4 lg:px-6 mt-8 lg:mt-12">
-         
-          <DataTable 
+          <DataTable
             users={users}
             onDeleteUser={handleDeleteUser}
             onEditUser={handleEditUser}

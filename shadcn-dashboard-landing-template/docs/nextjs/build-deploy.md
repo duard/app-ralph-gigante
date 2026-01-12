@@ -36,23 +36,23 @@ Configure build optimizations in `next.config.ts`:
 
 ```typescript
 // next.config.ts
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   // Enable output file tracing for smaller deployments
-  output: 'standalone',
-  
+  output: "standalone",
+
   // Optimize package imports to reduce bundle size
   experimental: {
     optimizePackageImports: [
-      'lucide-react',
-      '@radix-ui/react-icons',
-      'recharts',
-      'react-hook-form',
-      '@tanstack/react-table'
+      "lucide-react",
+      "@radix-ui/react-icons",
+      "recharts",
+      "react-hook-form",
+      "@tanstack/react-table",
     ],
   },
-  
+
   // Configure webpack for additional optimizations
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -64,30 +64,30 @@ const nextConfig: NextConfig = {
     }
     return config
   },
-  
+
   // Image optimization settings
   images: {
-    formats: ['image/webp', 'image/avif'],
+    formats: ["image/webp", "image/avif"],
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
     ],
   },
-  
+
   // Compression settings
   compress: true,
-  
+
   // Enable experimental features for better performance
   experimental: {
     serverActions: {
-      allowedOrigins: ['localhost:3000', 'yourdomain.com']
+      allowedOrigins: ["localhost:3000", "yourdomain.com"],
     },
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig
 ```
 
 ### Bundle Analysis
@@ -144,10 +144,10 @@ Add runtime environment validation:
 
 ```typescript
 // lib/env.ts
-import { z } from 'zod'
+import { z } from "zod"
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(['development', 'production', 'test']),
+  NODE_ENV: z.enum(["development", "production", "test"]),
   NEXT_PUBLIC_APP_URL: z.string().url(),
   DATABASE_URL: z.string().optional(),
   NEXTAUTH_SECRET: z.string().min(1),
@@ -172,7 +172,7 @@ export const env = envSchema.parse({
    ```bash
    # Install Vercel CLI
    pnpm add -g vercel
-   
+
    # Login and deploy
    vercel login
    vercel
@@ -319,13 +319,13 @@ docker run -p 3000:3000 shadcn-admin
 
 ```yaml
 # docker-compose.yml
-version: '3.8'
+version: "3.8"
 
 services:
   app:
     build: .
     ports:
-      - '3000:3000'
+      - "3000:3000"
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -336,8 +336,8 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - '80:80'
-      - '443:443'
+      - "80:80"
+      - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./ssl:/etc/nginx/ssl
@@ -353,7 +353,7 @@ For static hosting (GitHub Pages, S3, etc.):
 ```typescript
 // next.config.ts
 const nextConfig: NextConfig = {
-  output: 'export',
+  output: "export",
   trailingSlash: true,
   images: {
     unoptimized: true, // Required for static export
@@ -387,18 +387,18 @@ npm install -g pm2
 module.exports = {
   apps: [
     {
-      name: 'shadcn-admin',
-      script: 'server.js',
-      cwd: '/path/to/app',
-      instances: 'max',
-      exec_mode: 'cluster',
+      name: "shadcn-admin",
+      script: "server.js",
+      cwd: "/path/to/app",
+      instances: "max",
+      exec_mode: "cluster",
       env: {
-        NODE_ENV: 'production',
+        NODE_ENV: "production",
         PORT: 3000,
       },
-      error_file: '/var/log/pm2/shadcn-admin-error.log',
-      out_file: '/var/log/pm2/shadcn-admin-out.log',
-      log_file: '/var/log/pm2/shadcn-admin.log',
+      error_file: "/var/log/pm2/shadcn-admin-error.log",
+      out_file: "/var/log/pm2/shadcn-admin-out.log",
+      log_file: "/var/log/pm2/shadcn-admin.log",
     },
   ],
 }
@@ -429,11 +429,13 @@ Optimize for Core Web Vitals:
 ```typescript
 // lib/performance.ts
 export function reportWebVitals(metric: any) {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     // Send to analytics
-    gtag('event', metric.name, {
-      value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
-      event_category: 'Web Vitals',
+    gtag("event", metric.name, {
+      value: Math.round(
+        metric.name === "CLS" ? metric.value * 1000 : metric.value
+      ),
+      event_category: "Web Vitals",
       event_label: metric.id,
       non_interaction: true,
     })
@@ -441,7 +443,7 @@ export function reportWebVitals(metric: any) {
 }
 
 // app/layout.tsx
-import { reportWebVitals } from '@/lib/performance'
+import { reportWebVitals } from "@/lib/performance"
 
 export { reportWebVitals }
 ```
@@ -489,14 +491,14 @@ export function OptimizedImage({
 
 ```typescript
 // lib/fonts.ts
-import { Inter } from 'next/font/google'
+import { Inter } from "next/font/google"
 
 export const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
   preload: true,
-  fallback: ['system-ui', 'arial'],
+  fallback: ["system-ui", "arial"],
 })
 ```
 
@@ -512,7 +514,7 @@ pnpm add @sentry/nextjs
 
 ```typescript
 // sentry.client.config.ts
-import * as Sentry from '@sentry/nextjs'
+import * as Sentry from "@sentry/nextjs"
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -521,7 +523,7 @@ Sentry.init({
 })
 
 // sentry.server.config.ts
-import * as Sentry from '@sentry/nextjs'
+import * as Sentry from "@sentry/nextjs"
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -534,16 +536,16 @@ Sentry.init({
 ```typescript
 // lib/monitoring.ts
 export function trackPageView(url: string) {
-  if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_GA_ID) {
-    gtag('config', process.env.NEXT_PUBLIC_GA_ID, {
+  if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_GA_ID) {
+    gtag("config", process.env.NEXT_PUBLIC_GA_ID, {
       page_location: url,
     })
   }
 }
 
 export function trackEvent(action: string, category: string, label?: string) {
-  if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_GA_ID) {
-    gtag('event', action, {
+  if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_GA_ID) {
+    gtag("event", action, {
       event_category: category,
       event_label: label,
     })
@@ -561,23 +563,23 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: "/(.*)",
         headers: [
           {
-            key: 'X-Frame-Options',
-            value: 'DENY',
+            key: "X-Frame-Options",
+            value: "DENY",
           },
           {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
+            key: "X-Content-Type-Options",
+            value: "nosniff",
           },
           {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
           },
           {
-            key: 'Permissions-Policy',
-            value: 'geolocation=(), microphone=(), camera=()',
+            key: "Permissions-Policy",
+            value: "geolocation=(), microphone=(), camera=()",
           },
         ],
       },
@@ -590,15 +592,15 @@ const nextConfig: NextConfig = {
 
 ```typescript
 // middleware.ts
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 
 export function middleware(request: NextRequest) {
   const response = NextResponse.next()
 
   // Add CSP header
   response.headers.set(
-    'Content-Security-Policy',
+    "Content-Security-Policy",
     "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;"
   )
 
@@ -606,9 +608,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 }
 ```
 
@@ -629,31 +629,31 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'pnpm'
-      
+          node-version: "18"
+          cache: "pnpm"
+
       - name: Install pnpm
         run: npm install -g pnpm
-      
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: Run linting
         run: pnpm lint
-      
+
       - name: Run type checking
         run: pnpm type-check
-      
+
       - name: Run tests
         run: pnpm test
-      
+
       - name: Build application
         run: pnpm build
         env:
@@ -663,17 +663,17 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
+          vercel-args: "--prod"
 ```
 
 ## Backup and Maintenance
@@ -711,21 +711,21 @@ sudo nano /etc/logrotate.d/shadcn-admin
 
 ```typescript
 // app/api/health/route.ts
-import { NextResponse } from 'next/server'
+import { NextResponse } from "next/server"
 
 export async function GET() {
   try {
     // Check database connection
     // Check external services
-    
+
     return NextResponse.json({
-      status: 'healthy',
+      status: "healthy",
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
     })
   } catch (error) {
     return NextResponse.json(
-      { status: 'unhealthy', error: error.message },
+      { status: "unhealthy", error: error.message },
       { status: 500 }
     )
   }
@@ -771,7 +771,7 @@ ANALYZE=true pnpm build
 
 ```typescript
 // Add performance monitoring
-import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals'
+import { getCLS, getFID, getFCP, getLCP, getTTFB } from "web-vitals"
 
 getCLS(console.log)
 getFID(console.log)

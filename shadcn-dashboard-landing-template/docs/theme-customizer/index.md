@@ -1,4 +1,3 @@
-
 # Theme Customizer
 
 The Shadcn Dashboard & Landing template includes a powerful, real-time theme customizer built with [tweakcn](https://github.com/silicondeck/tweakcn). It lets you preview and adjust colors, dark/light mode, and UI variables instantly—across both Vite and Next.js versions.

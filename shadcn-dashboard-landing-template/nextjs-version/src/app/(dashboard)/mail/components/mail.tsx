@@ -17,7 +17,11 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { TooltipProvider } from "@/components/ui/tooltip"
@@ -31,14 +35,14 @@ import { Button } from "@/components/ui/button"
 
 interface MailProps {
   accounts: {
-    label: string;
-    email: string;
-    icon: React.ReactNode;
-  }[];
-  mails: Mail[];
-  defaultLayout?: number[];
-  defaultCollapsed?: boolean;
-  navCollapsedSize: number;
+    label: string
+    email: string
+    icon: React.ReactNode
+  }[]
+  mails: Mail[]
+  defaultLayout?: number[]
+  defaultCollapsed?: boolean
+  navCollapsedSize: number
 }
 
 export function Mail({
@@ -48,15 +52,15 @@ export function Mail({
   defaultCollapsed = false,
   navCollapsedSize,
 }: MailProps) {
-  const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed);
-  const [mail] = useMail();
+  const [isCollapsed, setIsCollapsed] = React.useState(defaultCollapsed)
+  const [mail] = useMail()
 
   return (
     <TooltipProvider delayDuration={0}>
       <ResizablePanelGroup
         direction="horizontal"
         onLayout={(sizes: number[]) => {
-          document.cookie = `react-resizable-panels:layout:mail=${JSON.stringify(sizes)}`;
+          document.cookie = `react-resizable-panels:layout:mail=${JSON.stringify(sizes)}`
         }}
         className="h-full items-stretch rounded-lg border overflow-hidden"
       >
@@ -67,14 +71,16 @@ export function Mail({
           minSize={15}
           maxSize={20}
           onCollapse={() => {
-            setIsCollapsed(true);
-            document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(true)}`;
+            setIsCollapsed(true)
+            document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(true)}`
           }}
           onResize={() => {
-            setIsCollapsed(false);
-            document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(false)}`;
+            setIsCollapsed(false)
+            document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(false)}`
           }}
-          className={cn(isCollapsed && "w-full transition-all duration-300 ease-in-out")}
+          className={cn(
+            isCollapsed && "w-full transition-all duration-300 ease-in-out"
+          )}
         >
           <div
             className={cn(
@@ -176,8 +182,12 @@ export function Mail({
             <div className="flex items-center px-4 py-1.5">
               <h1 className="text-foreground text-xl font-bold">Inbox</h1>
               <TabsList className="ml-auto">
-                <TabsTrigger value="all" className="cursor-pointer">All mail</TabsTrigger>
-                <TabsTrigger value="unread" className="cursor-pointer">Unread</TabsTrigger>
+                <TabsTrigger value="all" className="cursor-pointer">
+                  All mail
+                </TabsTrigger>
+                <TabsTrigger value="unread" className="cursor-pointer">
+                  Unread
+                </TabsTrigger>
               </TabsList>
             </div>
             <Separator />
@@ -199,9 +209,11 @@ export function Mail({
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel defaultSize={defaultLayout[2]} minSize={30}>
-          <MailDisplay mail={mails.find((item) => item.id === mail.selected) || null} />
+          <MailDisplay
+            mail={mails.find((item) => item.id === mail.selected) || null}
+          />
         </ResizablePanel>
       </ResizablePanelGroup>
     </TooltipProvider>
-  );
+  )
 }

@@ -48,7 +48,7 @@ pnpm dev
 After starting the development server, you should see:
 
 1. **Dashboard Interface** - Complete admin dashboard with sidebar navigation
-2. **Landing Page** - Marketing website template  
+2. **Landing Page** - Marketing website template
 3. **Theme Customizer** - Real-time theme editing panel
 4. **Hot Module Replacement** - Instant updates when you modify files
 
@@ -86,6 +86,7 @@ pnpm type-check   # TypeScript type checking
 ### 1. Explore the Dashboard
 
 Navigate to `http://localhost:5173` to see the main dashboard with:
+
 - Analytics charts and metrics
 - Data tables with sorting/filtering
 - Sidebar navigation
@@ -94,6 +95,7 @@ Navigate to `http://localhost:5173` to see the main dashboard with:
 ### 2. Check the Landing Page
 
 Visit `http://localhost:5173/landing` to see the marketing template with:
+
 - Hero section
 - Features showcase
 - Pricing plans
@@ -102,6 +104,7 @@ Visit `http://localhost:5173/landing` to see the marketing template with:
 ### 3. Try Theme Customization
 
 Click the customizer icon (bottom-right) to:
+
 - Change colors in real-time
 - Adjust layout spacing
 - Customize typography
@@ -110,6 +113,7 @@ Click the customizer icon (bottom-right) to:
 ### 4. Explore Page Templates
 
 Check out various page templates:
+
 - `http://localhost:5173/mail` - Email client interface
 - `http://localhost:5173/tasks` - Task management
 - `http://localhost:5173/chat` - Chat application

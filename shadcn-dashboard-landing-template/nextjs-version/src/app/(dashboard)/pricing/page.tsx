@@ -10,7 +10,7 @@ export default function PricingPage() {
   return (
     <div className="px-4 lg:px-6">
       {/* Pricing Cards */}
-      <section className='pb-12' id='pricing'>
+      <section className="pb-12" id="pricing">
         <PricingPlans mode="pricing" />
       </section>
 

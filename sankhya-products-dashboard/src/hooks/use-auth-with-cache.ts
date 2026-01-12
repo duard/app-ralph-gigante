@@ -121,7 +121,7 @@ export function useAuthWithCache() {
         if (response) {
           // Set tokens in store so queries can run
           setTokens(response.access_token, '');
-          
+
           return response;
         }
 
