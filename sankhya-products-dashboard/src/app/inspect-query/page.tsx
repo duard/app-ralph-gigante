@@ -62,7 +62,27 @@ export default function Page() {
     }
   };
 
-  const formatValue = (value: unknown): string => {
+  const formatValue = (key: string, value: unknown): string => {
+    // Se for timestamp de expiração (exp ou iat), formatar como data legível
+    if ((key === 'exp' || key === 'iat') && typeof value === 'number') {
+      const date = new Date(value * 1000);
+      const now = new Date();
+      const diff = date.getTime() - now.getTime();
+      const diffMinutes = Math.floor(diff / 60000);
+      const diffHours = Math.floor(diffMinutes / 60);
+      const diffDays = Math.floor(diffHours / 24);
+      
+      let relative = '';
+      if (key === 'exp') {
+        if (diffDays > 0) relative = ` (expira em ${diffDays} dias)`;
+        else if (diffHours > 0) relative = ` (expira em ${diffHours}h)`;
+        else if (diffMinutes > 0) relative = ` (expira em ${diffMinutes}min)`;
+        else relative = ' (EXPIRADO!)';
+      }
+      
+      return `${date.toLocaleString('pt-BR')}${relative}`;
+    }
+    
     if (typeof value === 'object' && value !== null) {
       return JSON.stringify(value, null, 2);
     }
@@ -70,68 +90,30 @@ export default function Page() {
   };
 
   return (
-    <BaseLayout title="Inspect Query" description="Inspecione o JWT token e execute queries na API">
+    <BaseLayout title="Inspect Query" description="Execute queries SQL e inspecione o JWT token">
       <div className="container mx-auto px-4 py-6 space-y-6">
-        {/* JWT Token Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Code className="h-5 w-5" />
-              JWT Token Decodificado
-            </CardTitle>
-            <CardDescription>Dados do token JWT atualmente autenticado</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {decodedToken ? (
-              <div className="space-y-4">
-                <div className="grid gap-4">
-                  {Object.entries(decodedToken).map(([key, value]) => (
-                    <div key={key} className="flex flex-col space-y-1">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="secondary" className="text-xs">
-                          {key}
-                        </Badge>
-                      </div>
-                      <ScrollArea className="max-h-32 w-full rounded-md border p-2">
-                        <pre className="text-sm whitespace-pre-wrap">{formatValue(value)}</pre>
-                      </ScrollArea>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <AlertCircle className="h-4 w-4" />
-                Nenhum token JWT encontrado ou inválido
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        <Separator />
-
-        {/* Query Execution Section */}
+        {/* Query Execution Section - PRIMEIRO */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Play className="h-5 w-5" />
-              Executar Inspect Query
+              Executar Query SQL
             </CardTitle>
             <CardDescription>
-              Digite uma query para executar na API e visualizar os resultados
+              Digite uma query SQL para executar diretamente no banco Sankhya
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="query" className="text-sm font-medium">
-                Query
+                Query SQL
               </label>
               <Textarea
                 id="query"
                 placeholder="Digite sua query aqui..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="min-h-24"
+                className="min-h-32 font-mono"
               />
             </div>
 
@@ -153,11 +135,49 @@ export default function Page() {
             {queryResult && (
               <div className="space-y-2">
                 <label className="text-sm font-medium">Resultado:</label>
-                <ScrollArea className="max-h-64 w-full rounded-md border p-4">
+                <ScrollArea className="max-h-96 w-full rounded-md border p-4">
                   <pre className="text-sm whitespace-pre-wrap">
                     {JSON.stringify(queryResult, null, 2)}
                   </pre>
                 </ScrollArea>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Separator />
+
+        {/* JWT Token Section - POR ÚLTIMO */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Code className="h-5 w-5" />
+              JWT Token Decodificado
+            </CardTitle>
+            <CardDescription>Informações do token de autenticação (legível)</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {decodedToken ? (
+              <div className="space-y-4">
+                <div className="grid gap-4">
+                  {Object.entries(decodedToken).map(([key, value]) => (
+                    <div key={key} className="flex flex-col space-y-1">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="secondary" className="text-xs font-mono">
+                          {key}
+                        </Badge>
+                      </div>
+                      <ScrollArea className="max-h-32 w-full rounded-md border p-2">
+                        <pre className="text-sm whitespace-pre-wrap">{formatValue(key, value)}</pre>
+                      </ScrollArea>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <AlertCircle className="h-4 w-4" />
+                Nenhum token JWT encontrado ou inválido
               </div>
             )}
           </CardContent>

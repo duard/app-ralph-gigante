@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Token</title>
+</head>
+<body>
+    <h1>Debug localStorage Token</h1>
+    <button onclick="checkToken()">Verificar Token</button>
+    <button onclick="testAPI()">Testar API</button>
+    <pre id="output"></pre>
+    
+    <script>
+        function checkToken() {
+            const output = document.getElementById('output');
+            const authStorage = localStorage.getItem('auth-storage');
+            const sankhyaToken = localStorage.getItem('sankhya-token');
+            
+            output.textContent = `
+auth-storage: ${authStorage}
+
+sankhya-token: ${sankhyaToken}
+
+Parsed auth-storage:
+${authStorage ? JSON.stringify(JSON.parse(authStorage), null, 2) : 'N/A'}
+            `;
+        }
+        
+        async function testAPI() {
+            const output = document.getElementById('output');
+            const authData = localStorage.getItem('auth-storage');
+            let token = null;
+            
+            if (authData) {
+                const parsed = JSON.parse(authData);
+                token = parsed.state?.token || parsed.token;
+            }
+            
+            if (!token) {
+                token = localStorage.getItem('sankhya-token');
+            }
+            
+            if (!token) {
+                output.textContent = 'Nenhum token encontrado!';
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:3000/tgfpro/with-stock-locations?page=1&perPage=5&ativo=S', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                output.textContent = `
+Status: ${response.status}
+                
+Response:
+${JSON.stringify(data, null, 2)}
+                `;
+            } catch (error) {
+                output.textContent = `Erro: ${error.message}`;
+            }
+        }
+        
+        // Auto-check on load
+        window.addEventListener('load', checkToken);
+    </script>
+</body>
+</html>
