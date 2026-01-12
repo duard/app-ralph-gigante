@@ -1,11 +1,11 @@
-import { BaseLayout } from "@/components/layouts/base-layout"
-import { MetricsOverview } from "./components/metrics-overview"
-import { SalesChart } from "./components/sales-chart"
-import { RecentTransactions } from "./components/recent-transactions"
-import { TopProducts } from "./components/top-products"
-import { CustomerInsights } from "./components/customer-insights"
-import { QuickActions } from "./components/quick-actions"
-import { RevenueBreakdown } from "./components/revenue-breakdown"
+import { BaseLayout } from '@/components/layouts/base-layout';
+import { MetricsOverview } from './components/metrics-overview';
+import { SalesChart } from './components/sales-chart';
+import { RecentTransactions } from './components/recent-transactions';
+import { TopProducts } from './components/top-products';
+import { CustomerInsights } from './components/customer-insights';
+import { QuickActions } from './components/quick-actions';
+import { RevenueBreakdown } from './components/revenue-breakdown';
 
 export default function Dashboard2() {
   return (
@@ -46,5 +46,5 @@ export default function Dashboard2() {
         </div>
       </div>
     </BaseLayout>
-  )
+  );
 }

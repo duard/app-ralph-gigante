@@ -1,19 +1,16 @@
-"use client"
+'use client';
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Logo } from "@/components/logo"
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Logo } from '@/components/logo';
 
-export function SignupForm3({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export function SignupForm3({ className, ...props }: React.ComponentProps<'div'>) {
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form className="p-6 md:p-8">
@@ -35,29 +32,16 @@ export function SignupForm3({
               <div className="grid grid-cols-2 gap-3">
                 <div className="grid gap-3">
                   <Label htmlFor="firstName">First Name</Label>
-                  <Input
-                    id="firstName"
-                    placeholder="John"
-                    required
-                  />
+                  <Input id="firstName" placeholder="John" required />
                 </div>
                 <div className="grid gap-3">
                   <Label htmlFor="lastName">Last Name</Label>
-                  <Input
-                    id="lastName"
-                    placeholder="Doe"
-                    required
-                  />
+                  <Input id="lastName" placeholder="Doe" required />
                 </div>
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                />
+                <Input id="email" type="email" placeholder="m@example.com" required />
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="password">Password</Label>
@@ -70,11 +54,11 @@ export function SignupForm3({
               <div className="flex items-center space-x-2">
                 <Checkbox id="terms" required />
                 <Label htmlFor="terms" className="text-sm">
-                  I agree to the{" "}
+                  I agree to the{' '}
                   <a href="#" className="underline underline-offset-4 hover:text-primary">
                     Terms of Service
-                  </a>{" "}
-                  and{" "}
+                  </a>{' '}
+                  and{' '}
                   <a href="#" className="underline underline-offset-4 hover:text-primary">
                     Privacy Policy
                   </a>
@@ -118,7 +102,7 @@ export function SignupForm3({
                 </Button>
               </div>
               <div className="text-center text-sm">
-                Already have an account?{" "}
+                Already have an account?{' '}
                 <a href="/auth/sign-in-3" className="underline underline-offset-4">
                   Sign in
                 </a>
@@ -135,9 +119,9 @@ export function SignupForm3({
         </CardContent>
       </Card>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our <a href="#">Terms of Service</a> and{' '}
+        <a href="#">Privacy Policy</a>.
       </div>
     </div>
-  )
+  );
 }

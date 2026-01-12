@@ -1,6 +1,6 @@
-import * as React from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Save,
   Upload,
@@ -14,224 +14,241 @@ import {
   RotateCcw,
   Loader2,
   EyeOff,
-} from "lucide-react"
-import { type Product } from "@/stores/products-store"
-import { productFormSchema, type ProductFormSchemaType } from "@/lib/validations/product-schemas"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { toast } from "sonner"
-import { useCreateProduct } from "@/hooks/use-create-product"
-import { useUpdateProduct } from "@/hooks/use-update-product"
+} from 'lucide-react';
+import { type Product } from '@/stores/products-store';
+import { productFormSchema, type ProductFormSchemaType } from '@/lib/validations/product-schemas';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
+import { useCreateProduct } from '@/hooks/use-create-product';
+import { useUpdateProduct } from '@/hooks/use-update-product';
 
 interface ProductFormProps {
-  product?: Product | null
-  mode?: "create" | "edit" | "view"
-  onClose?: () => void
-  onSuccess?: (product: Product) => void
+  product?: Product | null;
+  mode?: 'create' | 'edit' | 'view';
+  onClose?: () => void;
+  onSuccess?: (product: Product) => void;
 }
 
 const formatCurrency = (value: number): string => {
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(value)
-}
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(value);
+};
 
 const parseCurrency = (value: string): number => {
-  const cleaned = value.replace(/[^\d,]/g, "").replace(",", ".")
-  return parseFloat(cleaned) || 0
-}
+  const cleaned = value.replace(/[^\d,]/g, '').replace(',', '.');
+  return parseFloat(cleaned) || 0;
+};
 
-export function ProductForm({ product = null, mode = "create", onClose, onSuccess }: ProductFormProps) {
-  const { createProduct, isLoading: isCreating } = useCreateProduct()
-  const { updateProduct, isLoading: isUpdating } = useUpdateProduct()
-  const [imagePreview, setImagePreview] = React.useState<string | null>(null)
-  const [activeTab, setActiveTab] = React.useState("basic")
-  const [draftSaved, setDraftSaved] = React.useState(false)
-  const [lastAutoSave, setLastAutoSave] = React.useState<Date | null>(null)
+export function ProductForm({
+  product = null,
+  mode = 'create',
+  onClose,
+  onSuccess,
+}: ProductFormProps) {
+  const { createProduct, isLoading: isCreating } = useCreateProduct();
+  const { updateProduct, isLoading: isUpdating } = useUpdateProduct();
+  const [imagePreview, setImagePreview] = React.useState<string | null>(null);
+  const [activeTab, setActiveTab] = React.useState('basic');
+  const [draftSaved, setDraftSaved] = React.useState(false);
+  const [lastAutoSave, setLastAutoSave] = React.useState<Date | null>(null);
 
-  const isLoading = isCreating || isUpdating
-  const isReadOnly = mode === "view"
+  const isLoading = isCreating || isUpdating;
+  const isReadOnly = mode === 'view';
 
   const form = useForm<ProductFormSchemaType>({
     resolver: zodResolver(productFormSchema) as never,
     defaultValues: {
-      descrprod: product?.descrprod || "",
-      reffab: product?.reffab || "",
-      codvol: product?.codvol || "UN",
+      descrprod: product?.descrprod || '',
+      reffab: product?.reffab || '',
+      codvol: product?.codvol || 'UN',
       vlrvenda: product?.vlrvenda ?? undefined,
       vlrcusto: product?.vlrcusto ?? undefined,
       estoque: product?.estoque ?? undefined,
       estmin: product?.estmin ?? undefined,
-      ativo: product?.ativo || "S",
+      ativo: product?.ativo || 'S',
       codgrupoprod: product?.codgrupoprod ?? undefined,
       codmarca: product?.codmarca ?? undefined,
-      ncm: product?.ncm || "",
-      cest: product?.cest || "",
+      ncm: product?.ncm || '',
+      cest: product?.cest || '',
       pesoliq: product?.pesoliq ?? undefined,
       pesobruto: product?.pesobruto ?? undefined,
-      observacao: product?.observacao || "",
-      imagem: product?.imagem || "",
+      observacao: product?.observacao || '',
+      imagem: product?.imagem || '',
     },
-  })
+  });
 
-  const { register, handleSubmit, setValue, watch, formState: { errors, isDirty } } = form
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors, isDirty },
+  } = form;
 
-  const watchedValues = watch()
+  const watchedValues = watch();
 
   React.useEffect(() => {
     if (product?.imagem) {
-      setImagePreview(product.imagem)
+      setImagePreview(product.imagem);
     }
-  }, [product])
+  }, [product]);
 
   React.useEffect(() => {
     if (product?.imagem) {
-      setValue("imagem", product.imagem)
+      setValue('imagem', product.imagem);
     }
-  }, [product, setValue])
+  }, [product, setValue]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        toast.error("A imagem deve ter no máximo 5MB")
-        return
+        toast.error('A imagem deve ter no máximo 5MB');
+        return;
       }
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onload = (e) => {
-        const result = e.target?.result as string
-        setImagePreview(result)
-        setValue("imagem", result)
-      }
-      reader.readAsDataURL(file)
+        const result = e.target?.result as string;
+        setImagePreview(result);
+        setValue('imagem', result);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   const removeImage = () => {
-    setImagePreview(null)
-    setValue("imagem", "")
-  }
+    setImagePreview(null);
+    setValue('imagem', '');
+  };
 
   const handleAutoSave = React.useCallback(() => {
-    const draft = localStorage.getItem("product-draft")
-    const currentDraft = draft ? JSON.parse(draft) : {}
+    const draft = localStorage.getItem('product-draft');
+    const currentDraft = draft ? JSON.parse(draft) : {};
 
     const newDraft = {
       ...currentDraft,
       ...watchedValues,
       updatedAt: new Date().toISOString(),
-    }
+    };
 
-    localStorage.setItem("product-draft", JSON.stringify(newDraft))
-    setDraftSaved(true)
-    setLastAutoSave(new Date())
+    localStorage.setItem('product-draft', JSON.stringify(newDraft));
+    setDraftSaved(true);
+    setLastAutoSave(new Date());
 
-    setTimeout(() => setDraftSaved(false), 2000)
-  }, [watchedValues])
+    setTimeout(() => setDraftSaved(false), 2000);
+  }, [watchedValues]);
 
   React.useEffect(() => {
-    const savedDraft = localStorage.getItem("product-draft")
-    if (savedDraft && mode === "create") {
+    const savedDraft = localStorage.getItem('product-draft');
+    if (savedDraft && mode === 'create') {
       try {
-        const draft = JSON.parse(savedDraft)
+        const draft = JSON.parse(savedDraft);
         Object.keys(draft).forEach((key) => {
-          if (key !== "updatedAt" && draft[key] !== undefined) {
-            setValue(key as keyof ProductFormSchemaType, draft[key])
+          if (key !== 'updatedAt' && draft[key] !== undefined) {
+            setValue(key as keyof ProductFormSchemaType, draft[key]);
           }
-        })
-        toast.info("Rascunho recuperado com sucesso")
+        });
+        toast.info('Rascunho recuperado com sucesso');
       } catch (e) {
-        console.error("Erro ao recuperar rascunho:", e)
+        console.error('Erro ao recuperar rascunho:', e);
       }
     }
-  }, [mode, setValue])
+  }, [mode, setValue]);
 
   React.useEffect(() => {
-    if (isDirty && mode === "create") {
+    if (isDirty && mode === 'create') {
       const timer = setTimeout(() => {
-        handleAutoSave()
-      }, 2000)
+        handleAutoSave();
+      }, 2000);
 
-      return () => clearTimeout(timer)
+      return () => clearTimeout(timer);
     }
-  }, [isDirty, handleAutoSave, mode])
+  }, [isDirty, handleAutoSave, mode]);
 
   const onSubmit = async (data: ProductFormSchemaType) => {
     if (isReadOnly) {
-      toast.info("Modo somente leitura - operações não são permitidas")
-      return
+      toast.info('Modo somente leitura - operações não são permitidas');
+      return;
     }
 
     try {
-      let result
+      let result;
 
-      if (mode === "create") {
-        result = await createProduct(data)
+      if (mode === 'create') {
+        result = await createProduct(data);
         if (result) {
-          localStorage.removeItem("product-draft")
-          toast.success("Produto criado com sucesso (simulado)")
+          localStorage.removeItem('product-draft');
+          toast.success('Produto criado com sucesso (simulado)');
           if (onSuccess && result) {
-            onSuccess(result)
+            onSuccess(result);
           }
         }
-      } else if (mode === "edit" && product) {
-        result = await updateProduct(product.codprod, data)
+      } else if (mode === 'edit' && product) {
+        result = await updateProduct(product.codprod, data);
         if (result) {
-          toast.success("Produto atualizado com sucesso (simulado)")
+          toast.success('Produto atualizado com sucesso (simulado)');
           if (onSuccess && result) {
-            onSuccess(result)
+            onSuccess(result);
           }
         }
       }
     } catch {
-      toast.error("Erro ao salvar produto")
+      toast.error('Erro ao salvar produto');
     }
-  }
+  };
 
   const handleDelete = async () => {
     if (isReadOnly) {
-      toast.info("Modo somente leitura - operações não são permitidas")
-      return
+      toast.info('Modo somente leitura - operações não são permitidas');
+      return;
     }
 
-    toast.info("Exclusão não permitida em modo de demonstração")
-  }
+    toast.info('Exclusão não permitida em modo de demonstração');
+  };
 
   const handleClearDraft = () => {
-    localStorage.removeItem("product-draft")
-    setDraftSaved(false)
-    setLastAutoSave(null)
-    if (mode === "create") {
+    localStorage.removeItem('product-draft');
+    setDraftSaved(false);
+    setLastAutoSave(null);
+    if (mode === 'create') {
       form.reset({
-        descrprod: "",
-        reffab: "",
-        codvol: "UN",
+        descrprod: '',
+        reffab: '',
+        codvol: 'UN',
         vlrvenda: undefined,
         vlrcusto: undefined,
         estoque: undefined,
         estmin: undefined,
-        ativo: "S",
+        ativo: 'S',
         codgrupoprod: undefined,
         codmarca: undefined,
-        ncm: "",
-        cest: "",
+        ncm: '',
+        cest: '',
         pesoliq: undefined,
         pesobruto: undefined,
-        observacao: "",
-        imagem: "",
-      })
-      setImagePreview(null)
+        observacao: '',
+        imagem: '',
+      });
+      setImagePreview(null);
     }
-    toast.success("Rascunho limpo")
-  }
+    toast.success('Rascunho limpo');
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -260,7 +277,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                       id="descrprod"
                       placeholder="Nome completo do produto"
                       disabled={isLoading || isReadOnly}
-                      {...register("descrprod")}
+                      {...register('descrprod')}
                     />
                     {errors.descrprod && (
                       <p className="text-sm text-destructive">{errors.descrprod.message}</p>
@@ -273,7 +290,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                       id="reffab"
                       placeholder="Código de referência"
                       disabled={isLoading || isReadOnly}
-                      {...register("reffab")}
+                      {...register('reffab')}
                     />
                     {errors.reffab && (
                       <p className="text-sm text-destructive">{errors.reffab.message}</p>
@@ -283,8 +300,8 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                   <div className="space-y-2">
                     <Label htmlFor="codvol">Unidade de Medida</Label>
                     <Select
-                      value={watch("codvol") || "UN"}
-                      onValueChange={(value) => setValue("codvol", value)}
+                      value={watch('codvol') || 'UN'}
+                      onValueChange={(value) => setValue('codvol', value)}
                       disabled={isLoading || isReadOnly}
                     >
                       <SelectTrigger id="codvol">
@@ -309,8 +326,10 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                   <div className="space-y-2">
                     <Label htmlFor="codgrupoprod">Grupo/Categoria</Label>
                     <Select
-                      value={watch("codgrupoprod")?.toString() || ""}
-                      onValueChange={(value) => setValue("codgrupoprod", parseInt(value) || undefined)}
+                      value={watch('codgrupoprod')?.toString() || ''}
+                      onValueChange={(value) =>
+                        setValue('codgrupoprod', parseInt(value) || undefined)
+                      }
                       disabled={isLoading || isReadOnly}
                     >
                       <SelectTrigger id="codgrupoprod">
@@ -329,8 +348,8 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                   <div className="space-y-2">
                     <Label htmlFor="ativo">Status</Label>
                     <Select
-                      value={watch("ativo") || "S"}
-                      onValueChange={(value: "S" | "N") => setValue("ativo", value)}
+                      value={watch('ativo') || 'S'}
+                      onValueChange={(value: 'S' | 'N') => setValue('ativo', value)}
                       disabled={isLoading || isReadOnly}
                     >
                       <SelectTrigger id="ativo">
@@ -390,9 +409,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                             <Upload className="h-4 w-4 mr-2" />
                             Upload de Imagem
                           </Button>
-                          <span className="text-sm text-muted-foreground">
-                            PNG, JPG até 5MB
-                          </span>
+                          <span className="text-sm text-muted-foreground">PNG, JPG até 5MB</span>
                         </Label>
                       </div>
                     )}
@@ -422,10 +439,10 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                         placeholder="0,00"
                         disabled={isLoading || isReadOnly}
                         className="pl-9"
-                        value={watch("vlrvenda") ? formatCurrency(watch("vlrvenda")!) : ""}
+                        value={watch('vlrvenda') ? formatCurrency(watch('vlrvenda')!) : ''}
                         onChange={(e) => {
-                          const value = parseCurrency(e.target.value)
-                          setValue("vlrvenda", value)
+                          const value = parseCurrency(e.target.value);
+                          setValue('vlrvenda', value);
                         }}
                       />
                     </div>
@@ -444,10 +461,10 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                         placeholder="0,00"
                         disabled={isLoading || isReadOnly}
                         className="pl-9"
-                        value={watch("vlrcusto") ? formatCurrency(watch("vlrcusto")!) : ""}
+                        value={watch('vlrcusto') ? formatCurrency(watch('vlrcusto')!) : ''}
                         onChange={(e) => {
-                          const value = parseCurrency(e.target.value)
-                          setValue("vlrcusto", value)
+                          const value = parseCurrency(e.target.value);
+                          setValue('vlrcusto', value);
                         }}
                       />
                     </div>
@@ -463,7 +480,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                       placeholder="Observações adicionais sobre o produto..."
                       disabled={isLoading || isReadOnly}
                       rows={3}
-                      {...register("observacao")}
+                      {...register('observacao')}
                     />
                     {errors.observacao && (
                       <p className="text-sm text-destructive">{errors.observacao.message}</p>
@@ -471,14 +488,14 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                   </div>
                 </div>
 
-                {watch("vlrcusto") !== undefined && watch("vlrvenda") !== undefined && (
+                {watch('vlrcusto') !== undefined && watch('vlrvenda') !== undefined && (
                   <div className="p-4 bg-muted/50 rounded-lg">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">Margem de Lucro</span>
                       <Badge variant="outline">
-                        {watch("vlrcusto")! > 0
-                          ? `${(((watch("vlrvenda")! - watch("vlrcusto")!) / watch("vlrcusto")!) * 100).toFixed(1)}%`
-                          : "N/A"}
+                        {watch('vlrcusto')! > 0
+                          ? `${(((watch('vlrvenda')! - watch('vlrcusto')!) / watch('vlrcusto')!) * 100).toFixed(1)}%`
+                          : 'N/A'}
                       </Badge>
                     </div>
                   </div>
@@ -505,7 +522,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                       min="0"
                       placeholder="0"
                       disabled={isLoading || isReadOnly}
-                      {...register("estoque", { valueAsNumber: true })}
+                      {...register('estoque', { valueAsNumber: true })}
                     />
                     {errors.estoque && (
                       <p className="text-sm text-destructive">{errors.estoque.message}</p>
@@ -520,7 +537,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                       min="0"
                       placeholder="0"
                       disabled={isLoading || isReadOnly}
-                      {...register("estmin", { valueAsNumber: true })}
+                      {...register('estmin', { valueAsNumber: true })}
                     />
                     {errors.estmin && (
                       <p className="text-sm text-destructive">{errors.estmin.message}</p>
@@ -528,18 +545,18 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                   </div>
                 </div>
 
-                {watch("estoque") !== undefined && watch("estmin") !== undefined && (
+                {watch('estoque') !== undefined && watch('estmin') !== undefined && (
                   <div className="p-4 bg-muted/50 rounded-lg">
                     <div className="flex items-center gap-2">
-                      {watch("estoque")! <= (watch("estmin") || 0) ? (
+                      {watch('estoque')! <= (watch('estmin') || 0) ? (
                         <AlertCircle className="h-4 w-4 text-warning" />
                       ) : (
                         <CheckCircle2 className="h-4 w-4 text-success" />
                       )}
                       <span className="text-sm font-medium">
-                        {watch("estoque")! <= (watch("estmin") || 0)
-                          ? "Estoque abaixo do mínimo!"
-                          : "Estoque adequado"}
+                        {watch('estoque')! <= (watch('estmin') || 0)
+                          ? 'Estoque abaixo do mínimo!'
+                          : 'Estoque adequado'}
                       </span>
                     </div>
                   </div>
@@ -562,11 +579,9 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                       placeholder="00000000"
                       maxLength={8}
                       disabled={isLoading || isReadOnly}
-                      {...register("ncm")}
+                      {...register('ncm')}
                     />
-                    {errors.ncm && (
-                      <p className="text-sm text-destructive">{errors.ncm.message}</p>
-                    )}
+                    {errors.ncm && <p className="text-sm text-destructive">{errors.ncm.message}</p>}
                   </div>
 
                   <div className="space-y-2">
@@ -576,7 +591,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                       placeholder="0000000"
                       maxLength={7}
                       disabled={isLoading || isReadOnly}
-                      {...register("cest")}
+                      {...register('cest')}
                     />
                     {errors.cest && (
                       <p className="text-sm text-destructive">{errors.cest.message}</p>
@@ -592,7 +607,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                       step="0.001"
                       placeholder="0,000"
                       disabled={isLoading || isReadOnly}
-                      {...register("pesoliq", { valueAsNumber: true })}
+                      {...register('pesoliq', { valueAsNumber: true })}
                     />
                     {errors.pesoliq && (
                       <p className="text-sm text-destructive">{errors.pesoliq.message}</p>
@@ -608,7 +623,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
                       step="0.001"
                       placeholder="0,000"
                       disabled={isLoading || isReadOnly}
-                      {...register("pesobruto", { valueAsNumber: true })}
+                      {...register('pesobruto', { valueAsNumber: true })}
                     />
                     {errors.pesobruto && (
                       <p className="text-sm text-destructive">{errors.pesobruto.message}</p>
@@ -622,7 +637,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
 
         <div className="flex items-center justify-between pt-4 border-t">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            {mode === "create" && (
+            {mode === 'create' && (
               <>
                 {draftSaved ? (
                   <>
@@ -639,7 +654,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
           </div>
 
           <div className="flex items-center gap-2">
-            {mode === "create" && (
+            {mode === 'create' && (
               <Button
                 type="button"
                 variant="outline"
@@ -651,7 +666,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
               </Button>
             )}
 
-            {mode === "edit" && product && (
+            {mode === 'edit' && product && (
               <Button
                 type="button"
                 variant="destructive"
@@ -662,10 +677,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
               </Button>
             )}
 
-            <Button
-              type="submit"
-              disabled={isLoading || isReadOnly}
-            >
+            <Button type="submit" disabled={isLoading || isReadOnly}>
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -674,18 +686,13 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
               ) : (
                 <>
                   <Save className="h-4 w-4 mr-2" />
-                  {mode === "create" ? "Criar Produto" : "Salvar Alterações"}
+                  {mode === 'create' ? 'Criar Produto' : 'Salvar Alterações'}
                 </>
               )}
             </Button>
 
             {onClose && (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onClose}
-                disabled={isLoading}
-              >
+              <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
                 Cancelar
               </Button>
             )}
@@ -702,7 +709,7 @@ export function ProductForm({ product = null, mode = "create", onClose, onSucces
         )}
       </form>
     </div>
-  )
+  );
 }
 
-export default ProductForm
+export default ProductForm;

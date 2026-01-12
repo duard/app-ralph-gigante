@@ -1,19 +1,13 @@
-"use client"
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { useNavigate } from "react-router-dom"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { useNavigate } from 'react-router-dom';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import {
   Form,
   FormControl,
@@ -21,47 +15,44 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { toast } from "sonner"
-import { authService } from "@/lib/api/auth-service"
-import { useAuthStore } from "@/stores/auth-store"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+} from '@/components/ui/form';
+import { toast } from 'sonner';
+import { authService } from '@/lib/api/auth-service';
+import { useAuthStore } from '@/stores/auth-store';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const loginFormSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(1, "Password is required"),
-})
+  username: z.string().min(1, 'Username is required'),
+  password: z.string().min(1, 'Password is required'),
+});
 
-type LoginFormValues = z.infer<typeof loginFormSchema>
+type LoginFormValues = z.infer<typeof loginFormSchema>;
 
-export function LoginForm1({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  const navigate = useNavigate()
-  const { login, setLoading, setError, isLoading, error } = useAuthStore()
+export function LoginForm1({ className, ...props }: React.ComponentProps<'div'>) {
+  const navigate = useNavigate();
+  const { login, setLoading, setError, isLoading, error } = useAuthStore();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      username: "CONVIDADO",
-      password: "guest123",
+      username: 'CONVIDADO',
+      password: 'guest123',
     },
-  })
+  });
 
   const onSubmit = async (values: LoginFormValues) => {
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
       const response = await authService.login({
         username: values.username,
         password: values.password,
         rememberMe: false, // TODO: Add remember me checkbox to form
-      })
+      });
 
-      const token = response.access_token
-      const refreshToken = '' // No refresh token in this API
+      const token = response.access_token;
+      const refreshToken = ''; // No refresh token in this API
 
       // Create user object from username
       const user = {
@@ -70,36 +61,34 @@ export function LoginForm1({
         email: values.username,
         name: values.username,
         role: 'user',
-      }
+      };
 
       // Store tokens and update auth state
-      authService.storeTokens(token, refreshToken, false)
-      authService.setAuthHeader(token)
+      authService.storeTokens(token, refreshToken, false);
+      authService.setAuthHeader(token);
 
       // Update store
-      login(user, token, refreshToken)
+      login(user, token, refreshToken);
 
-      toast.success("Login realizado com sucesso!")
+      toast.success('Login realizado com sucesso!');
 
       // Redirect to dashboard
-      navigate("/dashboard")
+      navigate('/dashboard');
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Erro desconhecido"
-      setError(message)
-      toast.error(message)
+      const message = error instanceof Error ? error.message : 'Erro desconhecido';
+      setError(message);
+      toast.error(message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>
-            Enter your username below to login to your account
-          </CardDescription>
+          <CardDescription>Enter your username below to login to your account</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -113,10 +102,7 @@ export function LoginForm1({
                       <FormItem>
                         <FormLabel>Username</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="CONVIDADO"
-                            {...field}
-                          />
+                          <Input placeholder="CONVIDADO" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -144,7 +130,7 @@ export function LoginForm1({
                     )}
                   />
                   <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
-                    {isLoading ? "Logging in..." : "Login"}
+                    {isLoading ? 'Logging in...' : 'Login'}
                   </Button>
 
                   <Button variant="outline" className="w-full cursor-pointer" type="button">
@@ -158,7 +144,7 @@ export function LoginForm1({
                   </Button>
                 </div>
                 <div className="text-center text-sm">
-                  Don&apos;t have an account?{" "}
+                  Don&apos;t have an account?{' '}
                   <a href="/auth/sign-up" className="underline underline-offset-4">
                     Sign up
                   </a>
@@ -174,9 +160,9 @@ export function LoginForm1({
         </Alert>
       )}
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our <a href="#">Terms of Service</a> and{' '}
+        <a href="#">Privacy Policy</a>.
       </div>
     </div>
-  )
+  );
 }

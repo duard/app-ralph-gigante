@@ -20,7 +20,7 @@ class DebounceMonitor {
   recordCall(debounceId: string): void {
     const metrics = this.getMetrics(debounceId);
     metrics.totalCalls++;
-    
+
     const callTimes = this.callTimes.get(debounceId) || [];
     callTimes.push(Date.now());
     this.callTimes.set(debounceId, callTimes);
@@ -29,20 +29,22 @@ class DebounceMonitor {
   recordExecution(debounceId: string): void {
     const metrics = this.getMetrics(debounceId);
     metrics.executedCalls++;
-    
+
     const callTimes = this.callTimes.get(debounceId) || [];
     if (callTimes.length > 0) {
       const waitTime = Date.now() - callTimes.shift()!;
-      metrics.averageWaitTime = (metrics.averageWaitTime * (metrics.executedCalls - 1) + waitTime) / metrics.executedCalls;
+      metrics.averageWaitTime =
+        (metrics.averageWaitTime * (metrics.executedCalls - 1) + waitTime) / metrics.executedCalls;
       metrics.maxWaitTime = Math.max(metrics.maxWaitTime, waitTime);
-      metrics.minWaitTime = metrics.minWaitTime === 0 ? waitTime : Math.min(metrics.minWaitTime, waitTime);
+      metrics.minWaitTime =
+        metrics.minWaitTime === 0 ? waitTime : Math.min(metrics.minWaitTime, waitTime);
     }
   }
 
   recordCancellation(debounceId: string): void {
     const metrics = this.getMetrics(debounceId);
     metrics.cancelledCalls++;
-    
+
     const callTimes = this.callTimes.get(debounceId) || [];
     if (callTimes.length > 0) {
       callTimes.shift(); // Remove the cancelled call
@@ -184,9 +186,10 @@ export const analyzeDebouncePerformance = () => {
     }
   }
 
-  analysis.averageEfficiency = efficiencies.length > 0 
-    ? efficiencies.reduce((sum, eff) => sum + eff, 0) / efficiencies.length 
-    : 0;
+  analysis.averageEfficiency =
+    efficiencies.length > 0
+      ? efficiencies.reduce((sum, eff) => sum + eff, 0) / efficiencies.length
+      : 0;
 
   return analysis;
 };

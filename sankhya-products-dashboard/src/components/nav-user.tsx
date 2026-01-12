@@ -1,17 +1,11 @@
-"use client"
+'use client';
 
-import {
-  CreditCard,
-  EllipsisVertical,
-  LogOut,
-  BellDot,
-  CircleUser,
-} from "lucide-react"
-import { Link } from "react-router-dom"
+import { CreditCard, EllipsisVertical, LogOut, BellDot, CircleUser } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-import { UserAvatar } from "@/components/user-avatar"
-import type { User } from "@/stores/auth-store"
-import { useAuthStore } from "@/stores/auth-store"
+import { UserAvatar } from '@/components/user-avatar';
+import type { User } from '@/stores/auth-store';
+import { useAuthStore } from '@/stores/auth-store';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,25 +14,21 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
+} from '@/components/ui/sidebar';
 
-export function NavUser({
-  user,
-}: {
-  user: User
-}) {
-  const { isMobile } = useSidebar()
-  const { logout } = useAuthStore()
+export function NavUser({ user }: { user: User }) {
+  const { isMobile } = useSidebar();
+  const { logout } = useAuthStore();
 
   const handleLogout = () => {
-    logout()
-  }
+    logout();
+  };
 
   return (
     <SidebarMenu>
@@ -52,16 +42,14 @@ export function NavUser({
               <UserAvatar user={user} />
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
-                <span className="text-muted-foreground truncate text-xs">
-                  {user.email}
-                </span>
+                <span className="text-muted-foreground truncate text-xs">{user.email}</span>
               </div>
               <EllipsisVertical className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={4}
           >
@@ -70,9 +58,7 @@ export function NavUser({
                 <UserAvatar user={user} />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
-                  <span className="text-muted-foreground truncate text-xs">
-                    {user.email}
-                  </span>
+                  <span className="text-muted-foreground truncate text-xs">{user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -106,5 +92,5 @@ export function NavUser({
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

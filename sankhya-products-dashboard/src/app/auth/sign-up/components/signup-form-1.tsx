@@ -1,18 +1,12 @@
-"use client"
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import {
   Form,
   FormControl,
@@ -20,52 +14,49 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Checkbox } from "@/components/ui/checkbox"
+} from '@/components/ui/form';
+import { Checkbox } from '@/components/ui/checkbox';
 
-const signupFormSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string().min(6, "Please confirm your password"),
-  terms: z.boolean().refine(val => val === true, "You must agree to the terms"),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-})
+const signupFormSchema = z
+  .object({
+    firstName: z.string().min(1, 'First name is required'),
+    lastName: z.string().min(1, 'Last name is required'),
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+    confirmPassword: z.string().min(6, 'Please confirm your password'),
+    terms: z.boolean().refine((val) => val === true, 'You must agree to the terms'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
 
-type SignupFormValues = z.infer<typeof signupFormSchema>
+type SignupFormValues = z.infer<typeof signupFormSchema>;
 
-export function SignupForm1({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export function SignupForm1({ className, ...props }: React.ComponentProps<'div'>) {
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupFormSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
       terms: false,
     },
-  })
+  });
 
   function onSubmit(data: SignupFormValues) {
-    console.log("Signup attempt:", data)
+    console.log('Signup attempt:', data);
     // Here you would typically handle the signup
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Create Account</CardTitle>
-          <CardDescription>
-            Enter your information to create a new account
-          </CardDescription>
+          <CardDescription>Enter your information to create a new account</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -107,11 +98,7 @@ export function SignupForm1({
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="m@example.com"
-                            {...field}
-                          />
+                          <Input type="email" placeholder="m@example.com" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -176,7 +163,7 @@ export function SignupForm1({
                   </Button>
                 </div>
                 <div className="text-center text-sm">
-                  Already have an account?{" "}
+                  Already have an account?{' '}
                   <a href="/auth/sign-in" className="underline underline-offset-4">
                     Sign in
                   </a>
@@ -187,9 +174,9 @@ export function SignupForm1({
         </CardContent>
       </Card>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our <a href="#">Terms of Service</a> and{' '}
+        <a href="#">Privacy Policy</a>.
       </div>
     </div>
-  )
+  );
 }

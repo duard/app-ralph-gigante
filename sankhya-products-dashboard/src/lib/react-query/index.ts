@@ -1,5 +1,5 @@
 // Query Provider
-export { QueryProvider, queryClient } from './query-provider'
+export { QueryProvider, queryClient } from './query-provider';
 
 // Product Queries
 export {
@@ -18,7 +18,7 @@ export {
   useUpdateStockMutation,
   usePrefetchProduct,
   useInvalidateProducts,
-} from './product-queries'
+} from './product-queries';
 
 // Auth Queries
 export {
@@ -33,4 +33,4 @@ export {
   useResetPasswordMutation,
   usePrefetchCurrentUser,
   useInvalidateAuth,
-} from './auth-queries'
+} from './auth-queries';

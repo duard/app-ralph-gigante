@@ -1,16 +1,13 @@
-"use client"
+'use client';
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
-export function LoginForm2({
-  className,
-  ...props
-}: React.ComponentProps<"form">) {
+export function LoginForm2({ className, ...props }: React.ComponentProps<'form'>) {
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props} action="/dashboard">
+    <form className={cn('flex flex-col gap-6', className)} {...props} action="/dashboard">
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Login to your account</h1>
         <p className="text-muted-foreground text-sm text-balance">
@@ -20,7 +17,13 @@ export function LoginForm2({
       <div className="grid gap-6">
         <div className="grid gap-3">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="test@example.com" defaultValue="test@example.com" required />
+          <Input
+            id="email"
+            type="email"
+            placeholder="test@example.com"
+            defaultValue="test@example.com"
+            required
+          />
         </div>
         <div className="grid gap-3">
           <div className="flex items-center">
@@ -53,11 +56,11 @@ export function LoginForm2({
         </Button>
       </div>
       <div className="text-center text-sm">
-        Don&apos;t have an account?{" "}
+        Don&apos;t have an account?{' '}
         <a href="/auth/sign-up-2" className="underline underline-offset-4">
           Sign up
         </a>
       </div>
     </form>
-  )
+  );
 }

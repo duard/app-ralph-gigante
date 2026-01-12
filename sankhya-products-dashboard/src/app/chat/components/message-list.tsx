@@ -1,145 +1,146 @@
-"use client"
+'use client';
 
-import { useEffect, useRef } from "react"
-import { format, isToday, isYesterday } from "date-fns"
-import { CheckCheck, MoreHorizontal, Reply, Copy, Trash2 } from "lucide-react"
+import { useEffect, useRef } from 'react';
+import { format, isToday, isYesterday } from 'date-fns';
+import { CheckCheck, MoreHorizontal, Reply, Copy, Trash2 } from 'lucide-react';
 
-import { cn } from "@/lib/utils"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { cn } from '@/lib/utils';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { type Message, type User } from "@/app/chat/use-chat"
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { type Message, type User } from '@/app/chat/use-chat';
 
 interface MessageListProps {
-  messages: Message[]
-  users: User[]
-  currentUserId?: string
+  messages: Message[];
+  users: User[];
+  currentUserId?: string;
 }
 
-export function MessageList({ messages, users, currentUserId = "current-user" }: MessageListProps) {
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
-  const bottomRef = useRef<HTMLDivElement>(null)
-  const previousMessageCountRef = useRef(0)
-  const isInitialLoadRef = useRef(true)
-  const previousConversationRef = useRef<string | null>(null)
+export function MessageList({ messages, users, currentUserId = 'current-user' }: MessageListProps) {
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const previousMessageCountRef = useRef(0);
+  const isInitialLoadRef = useRef(true);
+  const previousConversationRef = useRef<string | null>(null);
 
   // Reset scroll behavior when switching conversations
   useEffect(() => {
-    const currentConversationId = messages.length > 0 ? messages[0]?.id?.split('-')[0] : null
+    const currentConversationId = messages.length > 0 ? messages[0]?.id?.split('-')[0] : null;
     if (currentConversationId !== previousConversationRef.current) {
-      isInitialLoadRef.current = true
-      previousConversationRef.current = currentConversationId
+      isInitialLoadRef.current = true;
+      previousConversationRef.current = currentConversationId;
     }
-  }, [messages])
+  }, [messages]);
 
   // Auto-scroll to bottom only when new messages are added (not on initial load)
   useEffect(() => {
     // Skip auto-scroll on initial load
     if (isInitialLoadRef.current) {
-      isInitialLoadRef.current = false
-      previousMessageCountRef.current = messages.length
-      return
+      isInitialLoadRef.current = false;
+      previousMessageCountRef.current = messages.length;
+      return;
     }
 
     // Only auto-scroll if new messages were added
     if (messages.length > previousMessageCountRef.current && bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth" })
+      bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
 
-    previousMessageCountRef.current = messages.length
-  }, [messages])
+    previousMessageCountRef.current = messages.length;
+  }, [messages]);
 
   const getUserById = (userId: string) => {
     if (userId === currentUserId) {
       return {
         id: currentUserId,
-        name: "You",
-        avatar: "https://notion-avatars.netlify.app/api/avatar/?preset=male-7",
-        status: "online" as const,
-        email: "you@example.com",
+        name: 'You',
+        avatar: 'https://notion-avatars.netlify.app/api/avatar/?preset=male-7',
+        status: 'online' as const,
+        email: 'you@example.com',
         lastSeen: new Date().toISOString(),
-        role: "Developer",
-        department: "Engineering"
-      }
+        role: 'Developer',
+        department: 'Engineering',
+      };
     }
-    return users.find(user => user.id === userId)
-  }
+    return users.find((user) => user.id === userId);
+  };
 
   const formatMessageTime = (timestamp: string) => {
-    const date = new Date(timestamp)
+    const date = new Date(timestamp);
     if (isToday(date)) {
-      return format(date, "HH:mm")
+      return format(date, 'HH:mm');
     } else if (isYesterday(date)) {
-      return `Yesterday ${format(date, "HH:mm")}`
+      return `Yesterday ${format(date, 'HH:mm')}`;
     } else {
-      return format(date, "MMM d, HH:mm")
+      return format(date, 'MMM d, HH:mm');
     }
-  }
+  };
 
   const shouldShowAvatar = (message: Message, index: number) => {
-    if (message.senderId === currentUserId) return false
-    if (index === 0) return true
+    if (message.senderId === currentUserId) return false;
+    if (index === 0) return true;
 
-    const prevMessage = messages[index - 1]
-    return prevMessage.senderId !== message.senderId
-  }
+    const prevMessage = messages[index - 1];
+    return prevMessage.senderId !== message.senderId;
+  };
 
   const shouldShowName = (message: Message, index: number) => {
-    if (message.senderId === currentUserId) return false
-    if (index === 0) return true
+    if (message.senderId === currentUserId) return false;
+    if (index === 0) return true;
 
-    const prevMessage = messages[index - 1]
-    return prevMessage.senderId !== message.senderId
-  }
+    const prevMessage = messages[index - 1];
+    return prevMessage.senderId !== message.senderId;
+  };
 
   const isConsecutiveMessage = (message: Message, index: number) => {
-    if (index === 0) return false
+    if (index === 0) return false;
 
-    const prevMessage = messages[index - 1]
-    const timeDiff = new Date(message.timestamp).getTime() - new Date(prevMessage.timestamp).getTime()
+    const prevMessage = messages[index - 1];
+    const timeDiff =
+      new Date(message.timestamp).getTime() - new Date(prevMessage.timestamp).getTime();
 
-    return prevMessage.senderId === message.senderId && timeDiff < 5 * 60 * 1000 // 5 minutes
-  }
+    return prevMessage.senderId === message.senderId && timeDiff < 5 * 60 * 1000; // 5 minutes
+  };
 
   const groupMessagesByDay = (messages: Message[]) => {
-    const groups: { date: string; messages: Message[] }[] = []
+    const groups: { date: string; messages: Message[] }[] = [];
 
     messages.forEach((message) => {
-      const messageDate = format(new Date(message.timestamp), "yyyy-MM-dd")
-      const lastGroup = groups[groups.length - 1]
+      const messageDate = format(new Date(message.timestamp), 'yyyy-MM-dd');
+      const lastGroup = groups[groups.length - 1];
 
       if (lastGroup && lastGroup.date === messageDate) {
-        lastGroup.messages.push(message)
+        lastGroup.messages.push(message);
       } else {
         groups.push({
           date: messageDate,
-          messages: [message]
-        })
+          messages: [message],
+        });
       }
-    })
+    });
 
-    return groups
-  }
+    return groups;
+  };
 
   const formatDateHeader = (dateString: string) => {
-    const date = new Date(dateString)
+    const date = new Date(dateString);
     if (isToday(date)) {
-      return "Today"
+      return 'Today';
     } else if (isYesterday(date)) {
-      return "Yesterday"
+      return 'Yesterday';
     } else {
-      return format(date, "EEEE, MMMM d")
+      return format(date, 'EEEE, MMMM d');
     }
-  }
+  };
 
-  const messageGroups = groupMessagesByDay(messages)
+  const messageGroups = groupMessagesByDay(messages);
 
   return (
     <ScrollArea className="flex-1 px-4" ref={scrollAreaRef}>
@@ -156,19 +157,19 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
             {/* Messages for this day */}
             <div className="space-y-1">
               {group.messages.map((message, messageIndex) => {
-                const user = getUserById(message.senderId)
-                const isOwnMessage = message.senderId === currentUserId
-                const showAvatar = shouldShowAvatar(message, messageIndex)
-                const showName = shouldShowName(message, messageIndex)
-                const isConsecutive = isConsecutiveMessage(message, messageIndex)
+                const user = getUserById(message.senderId);
+                const isOwnMessage = message.senderId === currentUserId;
+                const showAvatar = shouldShowAvatar(message, messageIndex);
+                const showName = shouldShowName(message, messageIndex);
+                const isConsecutive = isConsecutiveMessage(message, messageIndex);
 
                 return (
                   <div
                     key={message.id}
                     className={cn(
-                      "flex gap-3 group",
-                      isOwnMessage && "flex-row-reverse",
-                      isConsecutive && !isOwnMessage && "ml-12"
+                      'flex gap-3 group',
+                      isOwnMessage && 'flex-row-reverse',
+                      isConsecutive && !isOwnMessage && 'ml-12'
                     )}
                   >
                     {/* Avatar */}
@@ -178,7 +179,11 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
                           <Avatar className="h-8 w-8 cursor-pointer">
                             <AvatarImage src={user.avatar} alt={user.name} />
                             <AvatarFallback className="text-xs">
-                              {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                              {user.name
+                                .split(' ')
+                                .map((n) => n[0])
+                                .join('')
+                                .slice(0, 2)}
                             </AvatarFallback>
                           </Avatar>
                         )}
@@ -186,23 +191,24 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
                     )}
 
                     {/* Message content */}
-                    <div className={cn("flex-1 max-w-[70%]", isOwnMessage && "flex flex-col items-end")}>
+                    <div
+                      className={cn(
+                        'flex-1 max-w-[70%]',
+                        isOwnMessage && 'flex flex-col items-end'
+                      )}
+                    >
                       {/* Sender name for group messages */}
                       {showName && user && !isOwnMessage && (
-                        <div className="text-sm font-medium text-foreground mb-1">
-                          {user.name}
-                        </div>
+                        <div className="text-sm font-medium text-foreground mb-1">{user.name}</div>
                       )}
 
                       {/* Message bubble */}
                       <div className="relative group/message">
                         <div
                           className={cn(
-                            "rounded-lg px-3 py-2 text-sm break-words",
-                            isOwnMessage
-                              ? "bg-primary text-primary-foreground"
-                              : "bg-muted",
-                            isConsecutive && "mt-1"
+                            'rounded-lg px-3 py-2 text-sm break-words',
+                            isOwnMessage ? 'bg-primary text-primary-foreground' : 'bg-muted',
+                            isConsecutive && 'mt-1'
                           )}
                         >
                           <p>{message.content}</p>
@@ -214,8 +220,8 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
                                 <div
                                   key={idx}
                                   className={cn(
-                                    "inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs border cursor-pointer",
-                                    "bg-background/90 backdrop-blur-sm shadow-sm"
+                                    'inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs border cursor-pointer',
+                                    'bg-background/90 backdrop-blur-sm shadow-sm'
                                   )}
                                 >
                                   <span>{reaction.emoji}</span>
@@ -226,16 +232,16 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
                           )}
 
                           {/* Timestamp and status */}
-                          <div className={cn(
-                            "flex items-center gap-1 mt-1 text-xs",
-                            isOwnMessage
-                              ? "text-primary-foreground/70 justify-end"
-                              : "text-muted-foreground"
-                          )}>
-                            <span>{formatMessageTime(message.timestamp)}</span>
-                            {message.isEdited && (
-                              <span className="italic">(edited)</span>
+                          <div
+                            className={cn(
+                              'flex items-center gap-1 mt-1 text-xs',
+                              isOwnMessage
+                                ? 'text-primary-foreground/70 justify-end'
+                                : 'text-muted-foreground'
                             )}
+                          >
+                            <span>{formatMessageTime(message.timestamp)}</span>
+                            {message.isEdited && <span className="italic">(edited)</span>}
                             {isOwnMessage && (
                               <div className="flex">
                                 {/* Message status indicators */}
@@ -281,7 +287,7 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
                       </div>
                     </div>
                   </div>
-                )
+                );
               })}
             </div>
           </div>
@@ -291,5 +297,5 @@ export function MessageList({ messages, users, currentUserId = "current-user" }:
         <div ref={bottomRef} />
       </div>
     </ScrollArea>
-  )
+  );
 }

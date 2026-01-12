@@ -1,5 +1,5 @@
-import { LoginForm2 } from "./components/login-form-2"
-import { Logo } from "@/components/logo"
+import { LoginForm2 } from './components/login-form-2';
+import { Logo } from '@/components/logo';
 
 export default function LoginPage() {
   return (
@@ -27,5 +27,5 @@ export default function LoginPage() {
         />
       </div>
     </div>
-  )
+  );
 }

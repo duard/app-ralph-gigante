@@ -1,79 +1,79 @@
 /**
  * Route preloading utilities for better performance
- * 
+ *
  * These utilities help preload route chunks based on user behavior
  * to improve perceived performance and reduce loading times.
  */
 
-type ChunkName = 
+type ChunkName =
   | 'dashboard'
-  | 'produtos' 
+  | 'produtos'
   | 'auth'
   | 'settings'
   | 'errors'
   | 'communication'
   | 'tasks'
   | 'content'
-  | 'routes'
+  | 'routes';
 
 /**
  * Preload a specific route chunk
  */
 export function preloadRouteChunk(chunkName: ChunkName): Promise<void> {
   return new Promise((resolve, reject) => {
-    const link = document.createElement('link')
-    link.rel = 'prefetch'
-    link.href = `/assets/routes/${chunkName}-[hash].js`
-    link.as = 'script'
-    
-    link.onload = () => resolve()
-    link.onerror = () => reject(new Error(`Failed to preload chunk: ${chunkName}`))
-    
-    document.head.appendChild(link)
-  })
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = `/assets/routes/${chunkName}-[hash].js`;
+    link.as = 'script';
+
+    link.onload = () => resolve();
+    link.onerror = () => reject(new Error(`Failed to preload chunk: ${chunkName}`));
+
+    document.head.appendChild(link);
+  });
 }
 
 /**
  * Intelligent preloading based on user interaction patterns
  */
 export class RoutePreloader {
-  private static instance: RoutePreloader
-  private preloadedChunks = new Set<ChunkName>()
-  private observer: IntersectionObserver | null = null
+  private static instance: RoutePreloader;
+  private preloadedChunks = new Set<ChunkName>();
+  private observer: IntersectionObserver | null = null;
 
   private constructor() {
-    this.setupIntersectionObserver()
-    this.setupEventListeners()
+    this.setupIntersectionObserver();
+    this.setupEventListeners();
   }
 
   static getInstance(): RoutePreloader {
     if (!RoutePreloader.instance) {
-      RoutePreloader.instance = new RoutePreloader()
+      RoutePreloader.instance = new RoutePreloader();
     }
-    return RoutePreloader.instance
+    return RoutePreloader.instance;
   }
 
   /**
    * Preload chunks when links enter viewport
    */
   private setupIntersectionObserver(): void {
-    if (!('IntersectionObserver' in window)) return
+    if (!('IntersectionObserver' in window)) return;
 
     this.observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const link = entry.target as HTMLElement
-            const chunkName = this.getChunkNameFromLink(link)
-            
+            const link = entry.target as HTMLElement;
+            const chunkName = this.getChunkNameFromLink(link);
+
             if (chunkName && !this.preloadedChunks.has(chunkName)) {
-              this.preloadChunk(chunkName)
+              this.preloadChunk(chunkName);
             }
           }
-        })
+        });
       },
       { threshold: 0.1, rootMargin: '50px' }
-    )
+    );
   }
 
   /**
@@ -81,51 +81,51 @@ export class RoutePreloader {
    */
   private setupEventListeners(): void {
     // Preload on hover with debounce
-    let hoverTimeout: NodeJS.Timeout
-    
+    let hoverTimeout: NodeJS.Timeout;
+
     document.addEventListener('mouseover', (e) => {
-      const target = e.target as HTMLElement
-      const link = target.closest('a[href]') as HTMLElement | null
-      
+      const target = e.target as HTMLElement;
+      const link = target.closest('a[href]') as HTMLElement | null;
+
       if (link) {
-        clearTimeout(hoverTimeout)
+        clearTimeout(hoverTimeout);
         hoverTimeout = setTimeout(() => {
-          const chunkName = this.getChunkNameFromLink(link)
+          const chunkName = this.getChunkNameFromLink(link);
           if (chunkName && !this.preloadedChunks.has(chunkName)) {
-            this.preloadChunk(chunkName)
+            this.preloadChunk(chunkName);
           }
-        }, 100) // Small delay to avoid unnecessary preloads
+        }, 100); // Small delay to avoid unnecessary preloads
       }
-    })
+    });
 
     document.addEventListener('mouseout', () => {
-      clearTimeout(hoverTimeout)
-    })
+      clearTimeout(hoverTimeout);
+    });
 
     // Preload on focus for keyboard navigation
     document.addEventListener('focusin', (e) => {
-      const target = e.target as HTMLElement
-      const link = target.closest('a[href]') as HTMLElement | null
-      
+      const target = e.target as HTMLElement;
+      const link = target.closest('a[href]') as HTMLElement | null;
+
       if (link) {
-        const chunkName = this.getChunkNameFromLink(link)
+        const chunkName = this.getChunkNameFromLink(link);
         if (chunkName && !this.preloadedChunks.has(chunkName)) {
-          this.preloadChunk(chunkName)
+          this.preloadChunk(chunkName);
         }
       }
-    })
+    });
   }
 
   /**
    * Extract chunk name from link href
    */
   private getChunkNameFromLink(link: HTMLElement): ChunkName | null {
-    const href = link.getAttribute('href') || ''
-    
+    const href = link.getAttribute('href') || '';
+
     // Map routes to chunk names
     const routeToChunk: Record<string, ChunkName> = {
       '/dashboard': 'dashboard',
-      '/dashboard-2': 'dashboard', 
+      '/dashboard-2': 'dashboard',
       '/bem-vindo': 'dashboard',
       '/landing': 'dashboard',
       '/produtos': 'produtos',
@@ -138,17 +138,17 @@ export class RoutePreloader {
       '/users': 'content',
       '/faqs': 'content',
       '/pricing': 'content',
-      '/errors': 'errors'
-    }
+      '/errors': 'errors',
+    };
 
     // Find matching chunk by checking if href starts with any route prefix
     for (const [route, chunk] of Object.entries(routeToChunk)) {
       if (href.startsWith(route)) {
-        return chunk
+        return chunk;
       }
     }
 
-    return null
+    return null;
   }
 
   /**
@@ -156,11 +156,11 @@ export class RoutePreloader {
    */
   private async preloadChunk(chunkName: ChunkName): Promise<void> {
     try {
-      await preloadRouteChunk(chunkName)
-      this.preloadedChunks.add(chunkName)
-      console.log(`✅ Preloaded route chunk: ${chunkName}`)
+      await preloadRouteChunk(chunkName);
+      this.preloadedChunks.add(chunkName);
+      console.log(`✅ Preloaded route chunk: ${chunkName}`);
     } catch (error) {
-      console.warn(`❌ Failed to preload route chunk: ${chunkName}`, error)
+      console.warn(`❌ Failed to preload route chunk: ${chunkName}`, error);
     }
   }
 
@@ -168,11 +168,11 @@ export class RoutePreloader {
    * Preload multiple route chunks
    */
   public async preloadChunks(chunkNames: ChunkName[]): Promise<void> {
-    const promises = chunkNames.map(chunkName => this.preloadChunk(chunkName))
+    const promises = chunkNames.map((chunkName) => this.preloadChunk(chunkName));
     try {
-      await Promise.all(promises)
+      await Promise.all(promises);
     } catch (error) {
-      console.warn('Some route chunks failed to preload:', error)
+      console.warn('Some route chunks failed to preload:', error);
     }
   }
 
@@ -180,12 +180,12 @@ export class RoutePreloader {
    * Observe links for preloading
    */
   public observeLinks(): void {
-    if (!this.observer) return
+    if (!this.observer) return;
 
-    const links = document.querySelectorAll('a[href]') as NodeListOf<HTMLElement>
-    links.forEach(link => {
-      this.observer!.observe(link)
-    })
+    const links = document.querySelectorAll('a[href]') as NodeListOf<HTMLElement>;
+    links.forEach((link) => {
+      this.observer!.observe(link);
+    });
   }
 
   /**
@@ -197,11 +197,11 @@ export class RoutePreloader {
       '/produtos': ['dashboard', 'settings'],
       '/auth': ['dashboard'],
       '/settings': ['dashboard', 'produtos'],
-      '/': ['dashboard', 'auth']
-    }
+      '/': ['dashboard', 'auth'],
+    };
 
-    const chunksToPreload = likelyRoutes[currentPath] || likelyRoutes['/']
-    this.preloadChunks(chunksToPreload)
+    const chunksToPreload = likelyRoutes[currentPath] || likelyRoutes['/'];
+    this.preloadChunks(chunksToPreload);
   }
 
   /**
@@ -209,10 +209,17 @@ export class RoutePreloader {
    */
   public preloadAllChunks(): void {
     const allChunks: ChunkName[] = [
-      'dashboard', 'produtos', 'auth', 'settings', 
-      'errors', 'communication', 'tasks', 'content', 'routes'
-    ]
-    this.preloadChunks(allChunks)
+      'dashboard',
+      'produtos',
+      'auth',
+      'settings',
+      'errors',
+      'communication',
+      'tasks',
+      'content',
+      'routes',
+    ];
+    this.preloadChunks(allChunks);
   }
 }
 
@@ -220,25 +227,25 @@ export class RoutePreloader {
  * Hook for React components to use route preloading
  */
 export function useRoutePreloader(): RoutePreloader {
-  return RoutePreloader.getInstance()
+  return RoutePreloader.getInstance();
 }
 
 /**
  * Initialize route preloader in the application
  */
 export function initializeRoutePreloader(): void {
-  const preloader = RoutePreloader.getInstance()
-  
+  const preloader = RoutePreloader.getInstance();
+
   // Start observing links after DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-      preloader.observeLinks()
-    })
+      preloader.observeLinks();
+    });
   } else {
-    preloader.observeLinks()
+    preloader.observeLinks();
   }
 
   // Preload likely routes based on current path
-  const currentPath = window.location.pathname
-  preloader.preloadLikelyRoutes(currentPath)
+  const currentPath = window.location.pathname;
+  preloader.preloadLikelyRoutes(currentPath);
 }

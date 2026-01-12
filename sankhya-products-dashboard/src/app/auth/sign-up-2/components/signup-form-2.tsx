@@ -1,17 +1,14 @@
-"use client"
+'use client';
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 
-export function SignupForm2({
-  className,
-  ...props
-}: React.ComponentProps<"form">) {
+export function SignupForm2({ className, ...props }: React.ComponentProps<'form'>) {
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <form className={cn('flex flex-col gap-6', className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Create your account</h1>
         <p className="text-muted-foreground text-sm text-balance">
@@ -44,11 +41,11 @@ export function SignupForm2({
         <div className="flex items-center space-x-2">
           <Checkbox id="terms" required />
           <Label htmlFor="terms" className="text-sm">
-            I agree to the{" "}
+            I agree to the{' '}
             <a href="#" className="underline underline-offset-4 hover:text-primary">
               Terms of Service
-            </a>{" "}
-            and{" "}
+            </a>{' '}
+            and{' '}
             <a href="#" className="underline underline-offset-4 hover:text-primary">
               Privacy Policy
             </a>
@@ -73,11 +70,11 @@ export function SignupForm2({
         </Button>
       </div>
       <div className="text-center text-sm">
-        Already have an account?{" "}
+        Already have an account?{' '}
         <a href="/auth/sign-in-2" className="underline underline-offset-4">
           Sign in
         </a>
       </div>
     </form>
-  )
+  );
 }

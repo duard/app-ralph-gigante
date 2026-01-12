@@ -1,48 +1,48 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { Moon, Sun } from "lucide-react"
+import * as React from 'react';
+import { Moon, Sun } from 'lucide-react';
 
-import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { useTheme } from "@/hooks/use-theme"
-import { useCircularTransition } from "@/hooks/use-circular-transition"
-import "./theme-customizer/circular-transition.css"
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useTheme } from '@/hooks/use-theme';
+import { useCircularTransition } from '@/hooks/use-circular-transition';
+import './theme-customizer/circular-transition.css';
 
 interface ModeToggleProps {
-  variant?: "outline" | "ghost" | "default"
+  variant?: 'outline' | 'ghost' | 'default';
 }
 
-export function ModeToggle({ variant = "outline" }: ModeToggleProps) {
-  const { theme } = useTheme()
-  const { toggleTheme } = useCircularTransition()
+export function ModeToggle({ variant = 'outline' }: ModeToggleProps) {
+  const { theme } = useTheme();
+  const { toggleTheme } = useCircularTransition();
 
   // Simple, reliable dark mode detection with re-sync
-  const [isDarkMode, setIsDarkMode] = React.useState(false)
+  const [isDarkMode, setIsDarkMode] = React.useState(false);
 
   React.useEffect(() => {
     const updateMode = () => {
-      if (theme === "dark") {
-        setIsDarkMode(true)
-      } else if (theme === "light") {
-        setIsDarkMode(false)
+      if (theme === 'dark') {
+        setIsDarkMode(true);
+      } else if (theme === 'light') {
+        setIsDarkMode(false);
       } else {
-        setIsDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches)
+        setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
       }
-    }
+    };
 
-    updateMode()
+    updateMode();
 
     // Listen for system theme changes
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
-    mediaQuery.addEventListener("change", updateMode)
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', updateMode);
 
-    return () => mediaQuery.removeEventListener("change", updateMode)
-  }, [theme])
+    return () => mediaQuery.removeEventListener('change', updateMode);
+  }, [theme]);
 
   const handleToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
-    toggleTheme(event)
-  }
+    toggleTheme(event);
+  };
 
   return (
     <Tooltip>
@@ -59,14 +59,12 @@ export function ModeToggle({ variant = "outline" }: ModeToggleProps) {
           ) : (
             <Moon className="h-[1.2rem] w-[1.2rem] transition-transform duration-300 rotate-0 scale-100" />
           )}
-          <span className="sr-only">
-            Switch to {isDarkMode ? "light" : "dark"} mode
-          </span>
+          <span className="sr-only">Switch to {isDarkMode ? 'light' : 'dark'} mode</span>
         </Button>
       </TooltipTrigger>
       <TooltipContent>
-        <p>Alternar para modo {isDarkMode ? "claro" : "escuro"}</p>
+        <p>Alternar para modo {isDarkMode ? 'claro' : 'escuro'}</p>
       </TooltipContent>
     </Tooltip>
-  )
+  );
 }

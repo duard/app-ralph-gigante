@@ -1,4 +1,8 @@
-import { get, post, put, del } from './client';
+import { sankhyaClient } from './client';
+
+// Sankhya API URL for direct fetch calls
+const SANKHYA_API_URL =
+  import.meta.env.VITE_SANKHYA_API_URL || 'https://api-nestjs-sankhya-read-producao.gigantao.net';
 import type { Product, ProductFilters } from '@/stores/products-store';
 import type { ApiResponse, PaginatedResponse, SortParams } from '@/types/api';
 
@@ -6,195 +10,220 @@ import type { ApiResponse, PaginatedResponse, SortParams } from '@/types/api';
  * Product create/update payload
  */
 export interface ProductPayload {
-    descrprod: string;
-    reffab?: string;
-    codvol?: string;
-    vlrvenda?: number;
-    vlrcusto?: number;
-    estoque?: number;
-    estmin?: number;
-    ativo?: 'S' | 'N';
-    codgrupoprod?: number;
-    descrgrupoprod?: string;
-    codmarca?: number;
-    ncm?: string;
-    cest?: string;
-    pesoliq?: number;
-    pesobruto?: number;
-    observacao?: string;
-    imagem?: string;
+  descrprod: string;
+  reffab?: string;
+  codvol?: string;
+  vlrvenda?: number;
+  vlrcusto?: number;
+  estoque?: number;
+  estmin?: number;
+  ativo?: 'S' | 'N';
+  codgrupoprod?: number;
+  descrgrupoprod?: string;
+  codmarca?: number;
+  ncm?: string;
+  cest?: string;
+  pesoliq?: number;
+  pesobruto?: number;
+  observacao?: string;
+  imagem?: string;
 }
 
 /**
  * Product search params
  */
 export interface ProductSearchParams {
-    query?: string;
-    filters?: ProductFilters;
-    sort?: SortParams[];
-    pagination?: {
-        page?: number;
-        pageSize?: number;
-    };
+  query?: string;
+  filters?: ProductFilters;
+  sort?: SortParams[];
+  pagination?: {
+    page?: number;
+    pageSize?: number;
+  };
 }
 
 /**
  * Product service for CRUD operations
  */
 export const productService = {
-    /**
-     * Get all products with optional filters and pagination
-     */
-    async getProducts(params?: ProductSearchParams): Promise<PaginatedResponse<Product>> {
-        const queryParams = new URLSearchParams();
+  /**
+   * Get all products with optional filters and pagination
+   */
+  async getProducts(params?: ProductSearchParams): Promise<PaginatedResponse<Product>> {
+    const queryParams = new URLSearchParams();
 
-        if (params?.pagination) {
-            if (params.pagination.page) queryParams.set('page', params.pagination.page.toString());
-            if (params.pagination.pageSize) queryParams.set('pageSize', params.pagination.pageSize.toString());
-        }
+    if (params?.pagination) {
+      if (params.pagination.page) queryParams.set('page', params.pagination.page.toString());
+      if (params.pagination.pageSize)
+        queryParams.set('pageSize', params.pagination.pageSize.toString());
+    }
 
-        if (params?.query) {
-            queryParams.set('search', params.query);
-        }
+    if (params?.query) {
+      queryParams.set('search', params.query);
+    }
 
-        if (params?.filters) {
-            if (params.filters.status && params.filters.status !== 'all') {
-                queryParams.set('ativo', params.filters.status === 'active' ? 'S' : 'N');
-            }
-            if (params.filters.category) {
-                queryParams.set('codgrupoprod', params.filters.category);
-            }
-            if (params.filters.priceMin !== undefined) {
-                queryParams.set('priceMin', params.filters.priceMin.toString());
-            }
-            if (params.filters.priceMax !== undefined) {
-                queryParams.set('priceMax', params.filters.priceMax.toString());
-            }
-        }
+    if (params?.filters) {
+      if (params.filters.status && params.filters.status !== 'all') {
+        queryParams.set('ativo', params.filters.status === 'active' ? 'S' : 'N');
+      }
+      if (params.filters.category) {
+        queryParams.set('codgrupoprod', params.filters.category);
+      }
+      if (params.filters.priceMin !== undefined) {
+        queryParams.set('priceMin', params.filters.priceMin.toString());
+      }
+      if (params.filters.priceMax !== undefined) {
+        queryParams.set('priceMax', params.filters.priceMax.toString());
+      }
+    }
 
-        if (params?.sort && params.sort.length > 0) {
-            queryParams.set('sortBy', params.sort[0].field);
-            queryParams.set('sortOrder', params.sort[0].order);
-        }
+    if (params?.sort && params.sort.length > 0) {
+      queryParams.set('sortBy', params.sort[0].field);
+      queryParams.set('sortOrder', params.sort[0].order);
+    }
 
-        const queryString = queryParams.toString();
-        const url = `/tgfpro${queryString ? `?${queryString}` : ''}`;
+    const queryString = queryParams.toString();
+    const url = `/tgfpro${queryString ? `?${queryString}` : ''}`;
 
-        return get<PaginatedResponse<Product>>(url);
-    },
+    return sankhyaClient.get<PaginatedResponse<Product>>(url).then((response) => response.data);
+  },
 
-    /**
-     * Get a single product by ID
-     */
-    async getProductById(id: number): Promise<ApiResponse<Product>> {
-        return get<ApiResponse<Product>>(`/tgfpro/${id}`);
-    },
+  /**
+   * Get a single product by ID
+   */
+  async getProductById(id: number): Promise<ApiResponse<Product>> {
+    return sankhyaClient
+      .get<ApiResponse<Product>>(`/tgfpro/${id}`)
+      .then((response) => response.data);
+  },
 
-    /**
-     * Create a new product
-     */
-    async createProduct(data: ProductPayload): Promise<ApiResponse<Product>> {
-        return post<ApiResponse<Product>>('/tgfpro', data);
-    },
+  /**
+   * Create a new product
+   */
+  async createProduct(data: ProductPayload): Promise<ApiResponse<Product>> {
+    return sankhyaClient
+      .post<ApiResponse<Product>>('/tgfpro', data)
+      .then((response) => response.data);
+  },
 
-    /**
-     * Update an existing product
-     */
-    async updateProduct(id: number, data: Partial<ProductPayload>): Promise<ApiResponse<Product>> {
-        return put<ApiResponse<Product>>(`/tgfpro/${id}`, data);
-    },
+  /**
+   * Update an existing product
+   */
+  async updateProduct(id: number, data: Partial<ProductPayload>): Promise<ApiResponse<Product>> {
+    return sankhyaClient
+      .put<ApiResponse<Product>>(`/tgfpro/${id}`, data)
+      .then((response) => response.data);
+  },
 
-    /**
-     * Delete a product
-     */
-    async deleteProduct(id: number): Promise<ApiResponse<void>> {
-        return del<ApiResponse<void>>(`/tgfpro/${id}`);
-    },
+  /**
+   * Delete a product
+   */
+  async deleteProduct(id: number): Promise<ApiResponse<void>> {
+    return sankhyaClient
+      .delete<ApiResponse<void>>(`/tgfpro/${id}`)
+      .then((response) => response.data);
+  },
 
-    /**
-     * Delete multiple products
-     */
-    async deleteProducts(ids: number[]): Promise<ApiResponse<void>> {
-        return post<ApiResponse<void>>('/tgfpro/bulk-delete', { ids });
-    },
+  /**
+   * Delete multiple products
+   */
+  async deleteProducts(ids: number[]): Promise<ApiResponse<void>> {
+    return sankhyaClient
+      .post<ApiResponse<void>>('/tgfpro/bulk-delete', { ids })
+      .then((response) => response.data);
+  },
 
-    /**
-     * Search products by term
-     */
-    async searchProducts(query: string): Promise<PaginatedResponse<Product>> {
-        return get<PaginatedResponse<Product>>(`/tgfpro/search?q=${encodeURIComponent(query)}`);
-    },
+  /**
+   * Search products by term
+   */
+  async searchProducts(query: string): Promise<PaginatedResponse<Product>> {
+    return sankhyaClient
+      .get<PaginatedResponse<Product>>(`/tgfpro/search?q=${encodeURIComponent(query)}`)
+      .then((response) => response.data);
+  },
 
-    /**
-     * Get products by category
-     */
-    async getProductsByCategory(categoryId: number): Promise<PaginatedResponse<Product>> {
-        return get<PaginatedResponse<Product>>(`/tgfpro?codgrupoprod=${categoryId}`);
-    },
+  /**
+   * Get products by category
+   */
+  async getProductsByCategory(categoryId: number): Promise<PaginatedResponse<Product>> {
+    return sankhyaClient
+      .get<PaginatedResponse<Product>>(`/tgfpro?codgrupoprod=${categoryId}`)
+      .then((response) => response.data);
+  },
 
-    /**
-     * Toggle product status (active/inactive)
-     */
-    async toggleProductStatus(id: number): Promise<ApiResponse<Product>> {
-        return post<ApiResponse<Product>>(`/tgfpro/${id}/toggle-status`);
-    },
+  /**
+   * Toggle product status (active/inactive)
+   */
+  async toggleProductStatus(id: number): Promise<ApiResponse<Product>> {
+    return sankhyaClient
+      .post<ApiResponse<Product>>(`/tgfpro/${id}/toggle-status`)
+      .then((response) => response.data);
+  },
 
-    /**
-     * Update stock for a product
-     */
-    async updateStock(id: number, quantity: number): Promise<ApiResponse<Product>> {
-        return post<ApiResponse<Product>>(`/tgfpro/${id}/update-stock`, { quantity });
-    },
+  /**
+   * Update stock for a product
+   */
+  async updateStock(id: number, quantity: number): Promise<ApiResponse<Product>> {
+    return sankhyaClient
+      .post<ApiResponse<Product>>(`/tgfpro/${id}/update-stock`, { quantity })
+      .then((response) => response.data);
+  },
 
-    /**
-     * Get product categories
-     */
-    async getCategories(): Promise<ApiResponse<{ id: number; name: string }[]>> {
-        return get<ApiResponse<{ id: number; name: string }[]>>('/tgfgru');
-    },
+  /**
+   * Get product categories
+   */
+  async getCategories(): Promise<ApiResponse<{ id: number; name: string }[]>> {
+    return sankhyaClient
+      .get<ApiResponse<{ id: number; name: string }[]>>('/tgfgru')
+      .then((response) => response.data);
+  },
 
-    /**
-     * Get product count by status
-     */
-    async getProductStats(): Promise<
+  /**
+   * Get product count by status
+   */
+  async getProductStats(): Promise<
+    ApiResponse<{
+      total: number;
+      active: number;
+      inactive: number;
+      lowStock: number;
+      totalValue: number;
+    }>
+  > {
+    return sankhyaClient
+      .get<
         ApiResponse<{
-            total: number;
-            active: number;
-            inactive: number;
-            lowStock: number;
-            totalValue: number;
+          total: number;
+          active: number;
+          inactive: number;
+          lowStock: number;
+          totalValue: number;
         }>
-    > {
-        return get<ApiResponse<{
-            total: number;
-            active: number;
-            inactive: number;
-            lowStock: number;
-            totalValue: number;
-        }>>('/tgfpro/stats');
-    },
+      >('/tgfpro/stats')
+      .then((response) => response.data);
+  },
 
-    /**
-     * Export products to CSV
-     */
-    async exportToCSV(filters?: ProductFilters): Promise<Blob> {
-        const queryParams = new URLSearchParams();
+  /**
+   * Export products to CSV
+   */
+  async exportToCSV(filters?: ProductFilters): Promise<Blob> {
+    const queryParams = new URLSearchParams();
 
-        if (filters) {
-            if (filters.status && filters.status !== 'all') {
-                queryParams.set('ativo', filters.status === 'active' ? 'S' : 'N');
-            }
-            if (filters.category) {
-                queryParams.set('codgrupoprod', filters.category);
-            }
-        }
+    if (filters) {
+      if (filters.status && filters.status !== 'all') {
+        queryParams.set('ativo', filters.status === 'active' ? 'S' : 'N');
+      }
+      if (filters.category) {
+        queryParams.set('codgrupoprod', filters.category);
+      }
+    }
 
-        const queryString = queryParams.toString();
-        const url = `/tgfpro/export/csv${queryString ? `?${queryString}` : ''}`;
+    const queryString = queryParams.toString();
+    const url = `${SANKHYA_API_URL}/tgfpro/export/csv${queryString ? `?${queryString}` : ''}`;
 
-        const response = await fetch(url);
-        return response.blob();
-    },
+    const response = await fetch(url);
+    return response.blob();
+  },
 };
 
 export default productService;

@@ -1,25 +1,25 @@
-"use client"
-import { AlertTriangle, RefreshCw } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { toast } from "sonner"
+'use client';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { toast } from 'sonner';
 
 interface ErrorStateProps {
-  error: string | null
-  onRetry?: () => void
-  isRetrying?: boolean
-  title?: string
-  description?: string
+  error: string | null;
+  onRetry?: () => void;
+  isRetrying?: boolean;
+  title?: string;
+  description?: string;
 }
 
 export function ErrorState({
   error,
   onRetry,
   isRetrying = false,
-  title = "Erro ao carregar dados",
+  title = 'Erro ao carregar dados',
   description,
 }: ErrorStateProps) {
-  if (!error) return null
+  if (!error) return null;
 
   return (
     <div className="flex flex-col items-center justify-center p-8 text-center">
@@ -28,16 +28,14 @@ export function ErrorState({
         <AlertTitle>{title}</AlertTitle>
         <AlertDescription>
           <div className="space-y-3">
-            <p>
-              {description || error}
-            </p>
+            <p>{description || error}</p>
             {onRetry && (
               <div className="flex justify-center pt-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    toast.loading("Tentando novamente...");
+                    toast.loading('Tentando novamente...');
                     onRetry();
                   }}
                   disabled={isRetrying}
@@ -52,5 +50,5 @@ export function ErrorState({
         </AlertDescription>
       </Alert>
     </div>
-  )
+  );
 }

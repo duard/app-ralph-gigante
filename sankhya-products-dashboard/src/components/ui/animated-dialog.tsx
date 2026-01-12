@@ -1,19 +1,19 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { XIcon } from "lucide-react"
+import * as React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { XIcon } from 'lucide-react';
 
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils';
 
 interface AnimatedDialogProps {
-  isOpen: boolean
-  onClose: () => void
-  children: React.ReactNode
-  className?: string
-  showCloseButton?: boolean
-  title?: string
-  description?: string
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+  className?: string;
+  showCloseButton?: boolean;
+  title?: string;
+  description?: string;
 }
 
 export function AnimatedDialog({
@@ -23,7 +23,7 @@ export function AnimatedDialog({
   className,
   showCloseButton = true,
   title,
-  description
+  description,
 }: AnimatedDialogProps) {
   return (
     <AnimatePresence>
@@ -33,49 +33,43 @@ export function AnimatedDialog({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
             className="fixed inset-0 z-50 bg-black/50"
             onClick={onClose}
           />
           <motion.div
-            initial={{ 
-              opacity: 0, 
+            initial={{
+              opacity: 0,
               scale: 0.95,
-              y: -20
+              y: -20,
             }}
-            animate={{ 
-              opacity: 1, 
+            animate={{
+              opacity: 1,
               scale: 1,
-              y: 0
+              y: 0,
             }}
-            exit={{ 
-              opacity: 0, 
+            exit={{
+              opacity: 0,
               scale: 0.95,
-              y: 20
+              y: 20,
             }}
-            transition={{ 
+            transition={{
               duration: 0.25,
-              ease: [0.16, 1, 0.3, 1]
+              ease: [0.16, 1, 0.3, 1],
             }}
             className={cn(
-              "fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg sm:max-w-lg",
+              'fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg sm:max-w-lg',
               className
             )}
           >
             {(title || description || showCloseButton) && (
               <div className="flex flex-col gap-2 text-center sm:text-left">
-                {title && (
-                  <h2 className="text-lg leading-none font-semibold">{title}</h2>
-                )}
-                {description && (
-                  <p className="text-muted-foreground text-sm">{description}</p>
-                )}
+                {title && <h2 className="text-lg leading-none font-semibold">{title}</h2>}
+                {description && <p className="text-muted-foreground text-sm">{description}</p>}
               </div>
             )}
-            
-            <div className="flex flex-col gap-4">
-              {children}
-            </div>
+
+            <div className="flex flex-col gap-4">{children}</div>
 
             {showCloseButton && (
               <motion.button
@@ -93,5 +87,5 @@ export function AnimatedDialog({
         </>
       )}
     </AnimatePresence>
-  )
+  );
 }

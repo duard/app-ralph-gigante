@@ -62,63 +62,77 @@ export function useProductPriceHistory() {
   /**
    * Fetch price history for a product within a date range
    */
-  const fetchPriceHistory = useCallback(async (
-    codprod: number,
-    dataInicio: string,
-    dataFim: string,
-    page: number = 1,
-    perPage: number = 50
-  ) => {
-    try {
-      setIsLoading(true);
-      setError(null);
+  const fetchPriceHistory = useCallback(
+    async (
+      codprod: number,
+      dataInicio: string,
+      dataFim: string,
+      page: number = 1,
+      perPage: number = 50
+    ) => {
+      try {
+        setIsLoading(true);
+        setError(null);
 
-      const queryParams = new URLSearchParams({
-        dataInicio,
-        dataFim,
-        page: page.toString(),
-        perPage: perPage.toString(),
-      });
+        const queryParams = new URLSearchParams({
+          dataInicio,
+          dataFim,
+          page: page.toString(),
+          perPage: perPage.toString(),
+        });
 
-      const response = await get<PriceHistoryResponse>(
-        `/tgfpro/consumo-periodo/${codprod}?${queryParams.toString()}`
-      );
+        const response = await get<PriceHistoryResponse>(
+          `/tgfpro/consumo-periodo/${codprod}?${queryParams.toString()}`
+        );
 
-      if (response) {
-        setPriceHistory(response);
-        return response;
+        if (response) {
+          setPriceHistory(response);
+          return response;
+        }
+
+        return null;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Erro ao carregar histórico de preços';
+        setError(errorMessage);
+        toast.error(errorMessage);
+        return null;
+      } finally {
+        setIsLoading(false);
       }
-
-      return null;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar histórico de preços';
-      setError(errorMessage);
-      toast.error(errorMessage);
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+    },
+    []
+  );
 
   /**
    * Fetch price history for the last 30 days
    */
-  const fetchLast30Days = useCallback(async (codprod: number) => {
-    const dataFim = new Date().toISOString().split('T')[0];
-    const dataInicio = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-    
-    return fetchPriceHistory(codprod, dataInicio, dataFim);
-  }, [fetchPriceHistory]);
+  const fetchLast30Days = useCallback(
+    async (codprod: number) => {
+      const dataFim = new Date().toISOString().split('T')[0];
+      const dataInicio = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0];
+
+      return fetchPriceHistory(codprod, dataInicio, dataFim);
+    },
+    [fetchPriceHistory]
+  );
 
   /**
    * Fetch price history for the last 90 days
    */
-  const fetchLast90Days = useCallback(async (codprod: number) => {
-    const dataFim = new Date().toISOString().split('T')[0];
-    const dataInicio = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-    
-    return fetchPriceHistory(codprod, dataInicio, dataFim);
-  }, [fetchPriceHistory]);
+  const fetchLast90Days = useCallback(
+    async (codprod: number) => {
+      const dataFim = new Date().toISOString().split('T')[0];
+      const dataInicio = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0];
+
+      return fetchPriceHistory(codprod, dataInicio, dataFim);
+    },
+    [fetchPriceHistory]
+  );
 
   /**
    * Clear price history
@@ -135,8 +149,8 @@ export function useProductPriceHistory() {
     if (!priceHistory?.movimentacoes) return [];
 
     return priceHistory.movimentacoes
-      .filter(mov => mov.valor_mov && mov.data_referencia)
-      .map(mov => ({
+      .filter((mov) => mov.valor_mov && mov.data_referencia)
+      .map((mov) => ({
         date: new Date(mov.data_referencia).toLocaleDateString('pt-BR'),
         price: Math.abs(mov.valor_mov || 0),
         quantity: Math.abs(mov.quantidade_mov || 0),
@@ -150,20 +164,28 @@ export function useProductPriceHistory() {
    */
   const getAveragePrice = useCallback(() => {
     if (!priceHistory?.movimentacoes) return 0;
-    
-    const validMovs = priceHistory.movimentacoes.filter(mov => mov.valor_mov && mov.quantidade_mov);
+
+    const validMovs = priceHistory.movimentacoes.filter(
+      (mov) => mov.valor_mov && mov.quantidade_mov
+    );
     if (validMovs.length === 0) return 0;
 
     const totalPrice = validMovs.reduce((sum, mov) => sum + Math.abs(mov.valor_mov || 0), 0);
-    const totalQuantity = validMovs.reduce((sum, mov) => sum + Math.abs(mov.quantidade_mov || 0), 0);
-    
+    const totalQuantity = validMovs.reduce(
+      (sum, mov) => sum + Math.abs(mov.quantidade_mov || 0),
+      0
+    );
+
     return totalQuantity > 0 ? totalPrice / totalQuantity : 0;
   }, [priceHistory]);
 
   /**
    * Get price trend (increase/decrease percentage)
    */
-  const getPriceTrend = useCallback((): { trend: 'increase' | 'decrease' | 'stable'; percentage: number } => {
+  const getPriceTrend = useCallback((): {
+    trend: 'increase' | 'decrease' | 'stable';
+    percentage: number;
+  } => {
     const chartData = getChartData();
     if (chartData.length < 2) return { trend: 'stable', percentage: 0 };
 
@@ -176,7 +198,7 @@ export function useProductPriceHistory() {
 
     return {
       trend: percentage > 5 ? 'increase' : percentage < -5 ? 'decrease' : 'stable',
-      percentage: Math.abs(percentage)
+      percentage: Math.abs(percentage),
     };
   }, [getChartData]);
 

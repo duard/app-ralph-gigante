@@ -1,6 +1,6 @@
-import { LoginForm } from "@/components/auth/login-form"
-import { Logo } from "@/components/logo"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { LoginForm } from '@/components/auth/login-form';
+import { Logo } from '@/components/logo';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Page() {
   return (
@@ -11,7 +11,9 @@ export default function Page() {
             <div className="bg-primary text-primary-foreground flex size-12 items-center justify-center rounded-xl shadow-lg">
               <Logo size={28} />
             </div>
-            <span className="text-2xl font-bold text-slate-800 dark:text-slate-100">Sankhya Center</span>
+            <span className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+              Sankhya Center
+            </span>
           </a>
         </div>
         <Card className="shadow-xl border-0 ring-1 ring-slate-200 dark:ring-slate-800">
@@ -30,5 +32,5 @@ export default function Page() {
         </p>
       </div>
     </div>
-  )
+  );
 }

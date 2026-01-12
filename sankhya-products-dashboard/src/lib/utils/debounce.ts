@@ -22,25 +22,32 @@ export function useDebounce<T extends (...args: any[]) => any>(
   const maxTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastCallTimeRef = useRef<number>(0);
   const lastInvokeTimeRef = useRef<number>(0);
+  const lastArgsRef = useRef<Parameters<T> | undefined>();
   const { leading = false, trailing = true, maxWait } = options;
 
-  const shouldInvoke = useCallback((time: number) => {
-    const timeSinceLastCall = time - lastCallTimeRef.current;
-    const timeSinceLastInvoke = time - lastInvokeTimeRef.current;
-    
-    return (
-      lastCallTimeRef.current === 0 ||
-      timeSinceLastCall >= delay ||
-      timeSinceLastCall < 0 ||
-      (maxWait && timeSinceLastInvoke >= maxWait)
-    );
-  }, [delay, maxWait]);
+  const shouldInvoke = useCallback(
+    (time: number) => {
+      const timeSinceLastCall = time - lastCallTimeRef.current;
+      const timeSinceLastInvoke = time - lastInvokeTimeRef.current;
 
-  const invokeFunc = useCallback((time: number, args?: Parameters<T>) => {
-    lastInvokeTimeRef.current = time;
-    debounceMonitor.recordExecution('useDebounce');
-    return callback(...(args || []));
-  }, [callback]);
+      return (
+        lastCallTimeRef.current === 0 ||
+        timeSinceLastCall >= delay ||
+        timeSinceLastCall < 0 ||
+        (maxWait && timeSinceLastInvoke >= maxWait)
+      );
+    },
+    [delay, maxWait]
+  );
+
+  const invokeFunc = useCallback(
+    (time: number, args?: Parameters<T>) => {
+      lastInvokeTimeRef.current = time;
+      debounceMonitor.recordExecution('useDebounce');
+      return callback(...(args || []));
+    },
+    [callback]
+  );
 
   const timerExpired = useCallback(() => {
     const time = Date.now();
@@ -48,7 +55,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
       return invokeFunc(time);
     }
     if (!timeoutRef.current) return;
-    
+
     const remainingWait = delay - (time - lastCallTimeRef.current);
     timeoutRef.current = setTimeout(timerExpired, remainingWait);
   }, [shouldInvoke, invokeFunc, delay]);
@@ -58,7 +65,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
-    invokeFunc(Date.now());
+    invokeFunc(Date.now(), lastArgsRef.current);
   }, [invokeFunc]);
 
   const debouncedCallback = useCallback(
@@ -70,6 +77,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
       debounceMonitor.recordCall('useDebounce');
 
       lastCallTimeRef.current = time;
+      lastArgsRef.current = args;
 
       if (isInvoking) {
         if (timeoutRef.current) {
@@ -104,7 +112,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
     if (timeoutRef.current || maxTimeoutRef.current) {
       debounceMonitor.recordCancellation('useDebounce');
     }
-    
+
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
@@ -167,12 +175,13 @@ export function debounce<T extends (...args: any[]) => any>(
   let maxTimeout: NodeJS.Timeout | null = null;
   let lastCallTime = 0;
   let lastInvokeTime = 0;
+  let lastArgs: Parameters<T> | undefined;
   const { leading = false, trailing = true, maxWait } = options;
 
   const shouldInvoke = (time: number) => {
     const timeSinceLastCall = time - lastCallTime;
     const timeSinceLastInvoke = time - lastInvokeTime;
-    
+
     return (
       lastCallTime === 0 ||
       timeSinceLastCall >= wait ||
@@ -187,7 +196,7 @@ export function debounce<T extends (...args: any[]) => any>(
       return invokeFunc(time);
     }
     if (!timeout) return;
-    
+
     const remainingWait = wait - (time - lastCallTime);
     timeout = setTimeout(timerExpired, remainingWait);
   };
@@ -197,7 +206,7 @@ export function debounce<T extends (...args: any[]) => any>(
       clearTimeout(timeout);
       timeout = null;
     }
-    invokeFunc(Date.now());
+    invokeFunc(Date.now(), lastArgs);
   };
 
   const invokeFunc = (time: number, args?: Parameters<T>) => {
@@ -210,6 +219,7 @@ export function debounce<T extends (...args: any[]) => any>(
     const isInvoking = shouldInvoke(time);
 
     lastCallTime = time;
+    lastArgs = args;
 
     if (isInvoking) {
       if (timeout) {
@@ -269,12 +279,9 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Legacy compatibility function for simple debounce usage
  */
-export function simpleDebounce<T extends (...args: any[]) => any>(
-  func: T,
-  wait: number
-): T {
+export function simpleDebounce<T extends (...args: any[]) => any>(func: T, wait: number): T {
   let timeout: NodeJS.Timeout;
-  
+
   return ((...args: Parameters<T>) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);

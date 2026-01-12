@@ -1,56 +1,123 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Users, MapPin, TrendingUp, Target, ArrowUpIcon, UserIcon } from "lucide-react"
+import { useState } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Users, MapPin, TrendingUp, Target, ArrowUpIcon, UserIcon } from 'lucide-react';
 
 const customerGrowthData = [
-  { month: "Jan", new: 245, returning: 890, churn: 45 },
-  { month: "Feb", new: 312, returning: 934, churn: 52 },
-  { month: "Mar", new: 289, returning: 1023, churn: 38 },
-  { month: "Apr", new: 456, returning: 1156, churn: 61 },
-  { month: "May", new: 523, returning: 1298, churn: 47 },
-  { month: "Jun", new: 634, returning: 1445, churn: 55 },
-]
+  { month: 'Jan', new: 245, returning: 890, churn: 45 },
+  { month: 'Feb', new: 312, returning: 934, churn: 52 },
+  { month: 'Mar', new: 289, returning: 1023, churn: 38 },
+  { month: 'Apr', new: 456, returning: 1156, churn: 61 },
+  { month: 'May', new: 523, returning: 1298, churn: 47 },
+  { month: 'Jun', new: 634, returning: 1445, churn: 55 },
+];
 
 const chartConfig = {
   new: {
-    label: "New Customers",
-    color: "var(--chart-1)",
+    label: 'New Customers',
+    color: 'var(--chart-1)',
   },
   returning: {
-    label: "Returning",
-    color: "var(--chart-2)",
+    label: 'Returning',
+    color: 'var(--chart-2)',
   },
   churn: {
-    label: "Churned",
-    color: "var(--chart-3)",
+    label: 'Churned',
+    color: 'var(--chart-3)',
   },
-}
+};
 
 const demographicsData = [
-  { ageGroup: "18-24", customers: 2847, percentage: "18.0%", growth: "+15.2%", growthColor: "text-green-600" },
-  { ageGroup: "25-34", customers: 4521, percentage: "28.5%", growth: "+8.7%", growthColor: "text-green-600" },
-  { ageGroup: "35-44", customers: 3982, percentage: "25.1%", growth: "+3.4%", growthColor: "text-blue-600" },
-  { ageGroup: "45-54", customers: 2734, percentage: "17.2%", growth: "+1.2%", growthColor: "text-orange-600" },
-  { ageGroup: "55+", customers: 1763, percentage: "11.2%", growth: "-2.1%", growthColor: "text-red-600" },
-]
+  {
+    ageGroup: '18-24',
+    customers: 2847,
+    percentage: '18.0%',
+    growth: '+15.2%',
+    growthColor: 'text-green-600',
+  },
+  {
+    ageGroup: '25-34',
+    customers: 4521,
+    percentage: '28.5%',
+    growth: '+8.7%',
+    growthColor: 'text-green-600',
+  },
+  {
+    ageGroup: '35-44',
+    customers: 3982,
+    percentage: '25.1%',
+    growth: '+3.4%',
+    growthColor: 'text-blue-600',
+  },
+  {
+    ageGroup: '45-54',
+    customers: 2734,
+    percentage: '17.2%',
+    growth: '+1.2%',
+    growthColor: 'text-orange-600',
+  },
+  {
+    ageGroup: '55+',
+    customers: 1763,
+    percentage: '11.2%',
+    growth: '-2.1%',
+    growthColor: 'text-red-600',
+  },
+];
 
 const regionsData = [
-  { region: "North America", customers: 6847, revenue: "$847,523", growth: "+12.3%", growthColor: "text-green-600" },
-  { region: "Europe", customers: 4521, revenue: "$563,891", growth: "+9.7%", growthColor: "text-green-600" },
-  { region: "Asia Pacific", customers: 2892, revenue: "$321,456", growth: "+18.4%", growthColor: "text-blue-600" },
-  { region: "Latin America", customers: 1123, revenue: "$187,234", growth: "+15.8%", growthColor: "text-green-600" },
-  { region: "Others", customers: 464, revenue: "$67,891", growth: "+5.2%", growthColor: "text-orange-600" },
-]
+  {
+    region: 'North America',
+    customers: 6847,
+    revenue: '$847,523',
+    growth: '+12.3%',
+    growthColor: 'text-green-600',
+  },
+  {
+    region: 'Europe',
+    customers: 4521,
+    revenue: '$563,891',
+    growth: '+9.7%',
+    growthColor: 'text-green-600',
+  },
+  {
+    region: 'Asia Pacific',
+    customers: 2892,
+    revenue: '$321,456',
+    growth: '+18.4%',
+    growthColor: 'text-blue-600',
+  },
+  {
+    region: 'Latin America',
+    customers: 1123,
+    revenue: '$187,234',
+    growth: '+15.8%',
+    growthColor: 'text-green-600',
+  },
+  {
+    region: 'Others',
+    customers: 464,
+    revenue: '$67,891',
+    growth: '+5.2%',
+    growthColor: 'text-orange-600',
+  },
+];
 
 export function CustomerInsights() {
-  const [activeTab, setActiveTab] = useState("growth")
+  const [activeTab, setActiveTab] = useState('growth');
 
   return (
     <Card className="h-fit">
@@ -90,9 +157,14 @@ export function CustomerInsights() {
               <div className="grid grid-cols-10 gap-6">
                 {/* Chart Area - 70% */}
                 <div className="col-span-10 xl:col-span-7">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-6">Customer Growth Trends</h3>
+                  <h3 className="text-sm font-medium text-muted-foreground mb-6">
+                    Customer Growth Trends
+                  </h3>
                   <ChartContainer config={chartConfig} className="h-[375px] w-full">
-                    <BarChart data={customerGrowthData} margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
+                    <BarChart
+                      data={customerGrowthData}
+                      margin={{ top: 20, right: 20, bottom: 20, left: 0 }}
+                    >
                       <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                       <XAxis
                         dataKey="month"
@@ -110,7 +182,11 @@ export function CustomerInsights() {
                       />
                       <ChartTooltip content={<ChartTooltipContent />} />
                       <Bar dataKey="new" fill="var(--color-new)" radius={[2, 2, 0, 0]} />
-                      <Bar dataKey="returning" fill="var(--color-returning)" radius={[2, 2, 0, 0]} />
+                      <Bar
+                        dataKey="returning"
+                        fill="var(--color-returning)"
+                        radius={[2, 2, 0, 0]}
+                      />
                       <Bar dataKey="churn" fill="var(--color-churn)" radius={[2, 2, 0, 0]} />
                     </BarChart>
                   </ChartContainer>
@@ -176,7 +252,9 @@ export function CustomerInsights() {
                   {demographicsData.map((row, index) => (
                     <TableRow key={index} className="hover:bg-muted/30 transition-colors">
                       <TableCell className="font-medium py-5 px-6">{row.ageGroup}</TableCell>
-                      <TableCell className="text-right py-5 px-6">{row.customers.toLocaleString()}</TableCell>
+                      <TableCell className="text-right py-5 px-6">
+                        {row.customers.toLocaleString()}
+                      </TableCell>
                       <TableCell className="text-right py-5 px-6">{row.percentage}</TableCell>
                       <TableCell className="text-right py-5 px-6">
                         <span className={`font-medium ${row.growthColor}`}>{row.growth}</span>
@@ -201,7 +279,6 @@ export function CustomerInsights() {
             </div>
           </TabsContent>
 
-
           <TabsContent value="regions" className="mt-8">
             <div className="rounded-lg border bg-card">
               <Table>
@@ -217,7 +294,9 @@ export function CustomerInsights() {
                   {regionsData.map((row, index) => (
                     <TableRow key={index} className="hover:bg-muted/30 transition-colors">
                       <TableCell className="font-medium py-5 px-6">{row.region}</TableCell>
-                      <TableCell className="text-right py-5 px-6">{row.customers.toLocaleString()}</TableCell>
+                      <TableCell className="text-right py-5 px-6">
+                        {row.customers.toLocaleString()}
+                      </TableCell>
                       <TableCell className="text-right py-5 px-6">{row.revenue}</TableCell>
                       <TableCell className="text-right py-5 px-6">
                         <span className={`font-medium ${row.growthColor}`}>{row.growth}</span>
@@ -244,5 +323,5 @@ export function CustomerInsights() {
         </Tabs>
       </CardContent>
     </Card>
-  )
+  );
 }

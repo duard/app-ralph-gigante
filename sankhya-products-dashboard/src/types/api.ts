@@ -32,10 +32,15 @@ export interface PaginationMeta {
 }
 
 /**
- * Paginated response wrapper
+ * Paginated response wrapper (matches backend PaginatedResult format)
  */
-export interface PaginatedResponse<T = any> extends ApiResponse<T[]> {
-  meta?: PaginationMeta;
+export interface PaginatedResponse<T = any> {
+  data: T[];
+  total: number;
+  page: number;
+  perPage: number;
+  lastPage: number;
+  hasMore: boolean;
 }
 
 /**
@@ -46,7 +51,7 @@ export const SortOrder = {
   DESC: 'desc',
 } as const;
 
-export type SortOrder = typeof SortOrder[keyof typeof SortOrder];
+export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder];
 
 /**
  * Sort parameters
@@ -61,7 +66,17 @@ export interface SortParams {
  */
 export interface FilterParams {
   field: string;
-  operator: 'eq' | 'ne' | 'gt' | 'gte' | 'lt' | 'lte' | 'contains' | 'startsWith' | 'endsWith' | 'in';
+  operator:
+    | 'eq'
+    | 'ne'
+    | 'gt'
+    | 'gte'
+    | 'lt'
+    | 'lte'
+    | 'contains'
+    | 'startsWith'
+    | 'endsWith'
+    | 'in';
   value: any;
 }
 

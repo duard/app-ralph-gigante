@@ -1,60 +1,69 @@
-"use client"
+'use client';
 
-import { useEffect } from "react"
-import { X, Download } from "lucide-react"
-import type { Table } from "@tanstack/react-table"
-import { toast } from "sonner"
+import { useEffect } from 'react';
+import { X, Download } from 'lucide-react';
+import type { Table } from '@tanstack/react-table';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ProductTableViewOptions } from "./product-table-view-options"
-import { Plus, Search } from "lucide-react"
-import { useDebounce } from "@/lib/utils/debounce"
-import { downloadCSV, downloadExcel, downloadPDF, type CSVProductRow } from "@/lib/utils/product-utils"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ProductTableViewOptions } from './product-table-view-options';
+import { Plus, Search } from 'lucide-react';
+import { useDebounce } from '@/lib/utils/debounce';
+import {
+  downloadCSV,
+  downloadExcel,
+  downloadPDF,
+  type CSVProductRow,
+} from '@/lib/utils/product-utils';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ProductTableToolbarProps<TData> {
-  table: Table<TData>
-  onSearch?: (search: string) => void
-  onAddProduct?: () => void
-  searchValue?: string
+  table: Table<TData>;
+  onSearch?: (search: string) => void;
+  onAddProduct?: () => void;
+  searchValue?: string;
 }
 
 export function ProductTableToolbar<TData>({
   table,
   onSearch,
   onAddProduct,
-  searchValue = "",
+  searchValue = '',
 }: ProductTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0
+  const isFiltered = table.getState().columnFilters.length > 0;
 
   // Enhanced debounced search with cancellation and performance optimizations
-  const { debounced: debouncedOnSearch, cancel } = useDebounce((value: unknown) => {
-    onSearch?.(value as string)
-  }, 300, {
-    leading: false,
-    trailing: true,
-    maxWait: 900 // Maximum wait to prevent hanging
-  })
+  const { debounced: debouncedOnSearch, cancel } = useDebounce(
+    (value: unknown) => {
+      onSearch?.(value as string);
+    },
+    300,
+    {
+      leading: false,
+      trailing: true,
+      maxWait: 900, // Maximum wait to prevent hanging
+    }
+  );
 
   // Immediate local filter for UI responsiveness
   const handleSearchChange = (value: string) => {
     // Update local state immediately for responsive UI
     if (onSearch) {
-      onSearch(value)
+      onSearch(value);
     }
-    
+
     // Update table filter immediately for local filtering
-    table.getColumn("descrprod")?.setFilterValue(value || undefined)
-    
+    table.getColumn('descrprod')?.setFilterValue(value || undefined);
+
     // Trigger debounced search for API calls
-    debouncedOnSearch(value)
-  }
+    debouncedOnSearch(value);
+  };
 
   // Cleanup debounced search on unmount
   useEffect(() => {
-    return cancel
-  }, [cancel])
+    return cancel;
+  }, [cancel]);
 
   return (
     <div className="flex items-center justify-between">
@@ -74,7 +83,7 @@ export function ProductTableToolbar<TData>({
                   variant="ghost"
                   size="sm"
                   className="absolute right-0 top-0 h-full px-3"
-                  onClick={() => handleSearchChange("")}
+                  onClick={() => handleSearchChange('')}
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -92,7 +101,7 @@ export function ProductTableToolbar<TData>({
                 variant="ghost"
                 onClick={() => {
                   table.resetColumnFilters();
-                  toast.success("Filtros limpos com sucesso");
+                  toast.success('Filtros limpos com sucesso');
                 }}
                 className="h-8 px-2 lg:px-3"
               >
@@ -116,14 +125,16 @@ export function ProductTableToolbar<TData>({
               onClick={async () => {
                 try {
                   const rows = table.getRowModel().rows;
-                  const products: CSVProductRow[] = rows.map(row => row.original as CSVProductRow);
+                  const products: CSVProductRow[] = rows.map(
+                    (row) => row.original as CSVProductRow
+                  );
                   const date = new Date().toISOString().split('T')[0];
-                  toast.loading("Exportando Excel...");
+                  toast.loading('Exportando Excel...');
                   await downloadExcel(products, `produtos-${date}.xlsx`);
-                  toast.success("Excel exportado com sucesso!");
+                  toast.success('Excel exportado com sucesso!');
                 } catch (error) {
                   console.error('Erro ao exportar Excel:', error);
-                  toast.error("Erro ao exportar Excel. Tente novamente.");
+                  toast.error('Erro ao exportar Excel. Tente novamente.');
                 }
               }}
               className="h-8"
@@ -144,14 +155,16 @@ export function ProductTableToolbar<TData>({
               onClick={async () => {
                 try {
                   const rows = table.getRowModel().rows;
-                  const products: CSVProductRow[] = rows.map(row => row.original as CSVProductRow);
+                  const products: CSVProductRow[] = rows.map(
+                    (row) => row.original as CSVProductRow
+                  );
                   const date = new Date().toISOString().split('T')[0];
-                  toast.loading("Exportando PDF...");
+                  toast.loading('Exportando PDF...');
                   await downloadPDF(products, `produtos-${date}.pdf`);
-                  toast.success("PDF exportado com sucesso!");
+                  toast.success('PDF exportado com sucesso!');
                 } catch (error) {
                   console.error('Erro ao exportar PDF:', error);
-                  toast.error("Erro ao exportar PDF. Tente novamente.");
+                  toast.error('Erro ao exportar PDF. Tente novamente.');
                 }
               }}
               className="h-8"
@@ -172,14 +185,16 @@ export function ProductTableToolbar<TData>({
               onClick={() => {
                 try {
                   const rows = table.getRowModel().rows;
-                  const products: CSVProductRow[] = rows.map(row => row.original as CSVProductRow);
+                  const products: CSVProductRow[] = rows.map(
+                    (row) => row.original as CSVProductRow
+                  );
                   const date = new Date().toISOString().split('T')[0];
-                  toast.loading("Exportando CSV...");
+                  toast.loading('Exportando CSV...');
                   downloadCSV(products, `produtos-${date}.csv`);
-                  toast.success("CSV exportado com sucesso!");
+                  toast.success('CSV exportado com sucesso!');
                 } catch (error) {
                   console.error('Erro ao exportar CSV:', error);
-                  toast.error("Erro ao exportar CSV. Tente novamente.");
+                  toast.error('Erro ao exportar CSV. Tente novamente.');
                 }
               }}
               className="h-8"
@@ -195,10 +210,13 @@ export function ProductTableToolbar<TData>({
         {onAddProduct && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button onClick={() => {
-                onAddProduct();
-                toast.success("Modo de criação ativado");
-              }} className="h-8">
+              <Button
+                onClick={() => {
+                  onAddProduct();
+                  toast.success('Modo de criação ativado');
+                }}
+                className="h-8"
+              >
                 <Plus className="mr-2 h-4 w-4" />
                 Novo Produto
               </Button>
@@ -210,5 +228,5 @@ export function ProductTableToolbar<TData>({
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -1,64 +1,70 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
-import { z } from "zod"
-import { ArrowUp, BarChart3, CheckCircle2, Clock, ListTodo } from "lucide-react"
+import { useEffect, useState } from 'react';
+import { z } from 'zod';
+import { ArrowUp, BarChart3, CheckCircle2, Clock, ListTodo } from 'lucide-react';
 
-import { BaseLayout } from "@/components/layouts/base-layout"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { columns } from "./components/columns"
-import { DataTable } from "./components/data-table"
-import { taskSchema, type Task } from "./data/schema"
-import tasksData from "./data/tasks.json"
+import { BaseLayout } from '@/components/layouts/base-layout';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { columns } from './components/columns';
+import { DataTable } from './components/data-table';
+import { taskSchema, type Task } from './data/schema';
+import tasksData from './data/tasks.json';
 
 // Use static import for tasks data (works in both Vite and Next.js)
 async function getTasks() {
-  return z.array(taskSchema).parse(tasksData)
+  return z.array(taskSchema).parse(tasksData);
 }
 
 export default function TaskPage() {
-  const [tasks, setTasks] = useState<z.infer<typeof taskSchema>[]>([])
-  const [loading, setLoading] = useState(true)
+  const [tasks, setTasks] = useState<z.infer<typeof taskSchema>[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadTasks = async () => {
       try {
-        const taskList = await getTasks()
-        setTasks(taskList)
+        const taskList = await getTasks();
+        setTasks(taskList);
       } catch (error) {
-        console.error("Failed to load tasks:", error)
+        console.error('Failed to load tasks:', error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    loadTasks()
-  }, [])
+    loadTasks();
+  }, []);
 
   const handleAddTask = (newTask: Task) => {
-    setTasks(prev => [newTask, ...prev])
-  }
+    setTasks((prev) => [newTask, ...prev]);
+  };
 
   // Calculate statistics
   const stats = {
     total: tasks.length,
-    completed: tasks.filter(t => t.status === "completed").length,
-    inProgress: tasks.filter(t => t.status === "in progress").length,
-    pending: tasks.filter(t => t.status === "pending").length,
-  }
+    completed: tasks.filter((t) => t.status === 'completed').length,
+    inProgress: tasks.filter((t) => t.status === 'in progress').length,
+    pending: tasks.filter((t) => t.status === 'pending').length,
+  };
 
   if (loading) {
     return (
-      <BaseLayout title="Tasks" description="A powerful task and issue tracker built with Tanstack Table.">
+      <BaseLayout
+        title="Tasks"
+        description="A powerful task and issue tracker built with Tanstack Table."
+      >
         <div className="flex items-center justify-center h-96">
           <div className="text-muted-foreground">Loading tasks...</div>
         </div>
       </BaseLayout>
-    )
+    );
   }
 
   return (
-    <BaseLayout title="Tasks" description="A powerful task and issue tracker built with Tanstack Table.">
+    <BaseLayout
+      title="Tasks"
+      description="A powerful task and issue tracker built with Tanstack Table."
+    >
       {/* Mobile view placeholder - shows message instead of images */}
       <div className="md:hidden">
         <div className="flex items-center justify-center h-96 border rounded-lg bg-muted/20">
@@ -170,5 +176,5 @@ export default function TaskPage() {
         </Card>
       </div>
     </BaseLayout>
-  )
+  );
 }

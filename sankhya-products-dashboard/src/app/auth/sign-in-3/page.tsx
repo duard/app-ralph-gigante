@@ -1,4 +1,4 @@
-import { LoginForm3 } from "./components/login-form-3"
+import { LoginForm3 } from './components/login-form-3';
 
 export default function LoginPage() {
   return (
@@ -7,5 +7,5 @@ export default function LoginPage() {
         <LoginForm3 />
       </div>
     </div>
-  )
+  );
 }

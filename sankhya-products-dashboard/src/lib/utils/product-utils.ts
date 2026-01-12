@@ -1,8 +1,8 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export function formatProductCode(code: string | number): string {
@@ -44,7 +44,7 @@ export function formatProductUnit(unit: string): string {
 export function getInitials(name: string): string {
   return name
     .split(' ')
-    .map(word => word.charAt(0))
+    .map((word) => word.charAt(0))
     .join('')
     .toUpperCase()
     .slice(0, 2);
@@ -92,10 +92,10 @@ export function productsToCSV(products: CSVProductRow[]): string[][] {
     'Categoria',
     'NCM',
     'Peso Líquido',
-    'Peso Bruto'
+    'Peso Bruto',
   ];
 
-  const rows = products.map(product => [
+  const rows = products.map((product) => [
     String(product.codprod),
     product.descrprod,
     product.reffab || '',
@@ -108,7 +108,7 @@ export function productsToCSV(products: CSVProductRow[]): string[][] {
     product.descrgrupoprod || '',
     product.ncm || '',
     product.pesoliq ? String(product.pesoliq).replace('.', ',') : '',
-    product.pesobruto ? String(product.pesobruto).replace('.', ',') : ''
+    product.pesobruto ? String(product.pesobruto).replace('.', ',') : '',
   ]);
 
   return [headers, ...rows];
@@ -117,9 +117,7 @@ export function productsToCSV(products: CSVProductRow[]): string[][] {
 export function downloadCSV(products: CSVProductRow[], filename: string = 'produtos.csv'): void {
   const data = productsToCSV(products);
 
-  const csvContent = data
-    .map(row => row.map(cell => `"${cell}"`).join(','))
-    .join('\n');
+  const csvContent = data.map((row) => row.map((cell) => `"${cell}"`).join(',')).join('\n');
 
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
@@ -148,10 +146,10 @@ export function productsToExcelData(products: CSVProductRow[]): (string | number
     'Categoria',
     'NCM',
     'Peso Líquido',
-    'Peso Bruto'
+    'Peso Bruto',
   ];
 
-  const rows = products.map(product => [
+  const rows = products.map((product) => [
     product.codprod,
     product.descrprod,
     product.reffab || '',
@@ -164,22 +162,25 @@ export function productsToExcelData(products: CSVProductRow[]): (string | number
     product.descrgrupoprod || '',
     product.ncm || '',
     product.pesoliq || 0,
-    product.pesobruto || 0
+    product.pesobruto || 0,
   ]);
 
   return [headers, ...rows];
 }
 
-export async function downloadExcel(products: CSVProductRow[], filename: string = 'produtos.xlsx'): Promise<void> {
+export async function downloadExcel(
+  products: CSVProductRow[],
+  filename: string = 'produtos.xlsx'
+): Promise<void> {
   try {
     // Dynamically import xlsx to avoid SSR issues
     const XLSX = await import('xlsx');
-    
+
     const data = productsToExcelData(products);
-    
+
     // Create workbook and worksheet
     const ws = XLSX.utils.aoa_to_sheet(data);
-    
+
     // Set column widths
     const colWidths = [
       { wch: 10 }, // Código
@@ -197,29 +198,29 @@ export async function downloadExcel(products: CSVProductRow[], filename: string 
       { wch: 12 }, // Peso Bruto
     ];
     ws['!cols'] = colWidths;
-    
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Produtos');
-    
+
     // Generate Excel file
     const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-    
+
     // Create and download blob
-    const blob = new Blob([excelBuffer], { 
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+    const blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
-    
+
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
-    
+
     link.setAttribute('href', url);
     link.setAttribute('download', filename);
     link.style.visibility = 'hidden';
-    
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
+
     // Clean up URL
     URL.revokeObjectURL(url);
   } catch (error) {
@@ -228,24 +229,27 @@ export async function downloadExcel(products: CSVProductRow[], filename: string 
   }
 }
 
-export async function downloadPDF(products: CSVProductRow[], filename: string = 'produtos.pdf'): Promise<void> {
+export async function downloadPDF(
+  products: CSVProductRow[],
+  filename: string = 'produtos.pdf'
+): Promise<void> {
   try {
     // Dynamically import jsPDF and autotable to avoid SSR issues
     const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
       import('jspdf'),
-      import('jspdf-autotable')
+      import('jspdf-autotable'),
     ]);
 
     // Create new PDF document
     const doc = new jsPDF({
       orientation: 'landscape',
       unit: 'mm',
-      format: 'a4'
+      format: 'a4',
     });
 
     // Add custom font for better UTF-8 support (optional)
     // For Brazilian Portuguese characters, you might need to add a font that supports them
-    
+
     // Prepare data for the table
     const headers = [
       'Código',
@@ -258,10 +262,10 @@ export async function downloadPDF(products: CSVProductRow[], filename: string = 
       'Est. Mín',
       'Status',
       'Categoria',
-      'NCM'
+      'NCM',
     ];
 
-    const rows = products.map(product => [
+    const rows = products.map((product) => [
       String(product.codprod),
       product.descrprod || '',
       product.reffab || '',
@@ -272,7 +276,7 @@ export async function downloadPDF(products: CSVProductRow[], filename: string = 
       String(product.estmin || 0),
       product.ativo === 'S' ? 'Ativo' : 'Inativo',
       product.descrgrupoprod || '',
-      product.ncm || ''
+      product.ncm || '',
     ]);
 
     // Add title
@@ -295,15 +299,15 @@ export async function downloadPDF(products: CSVProductRow[], filename: string = 
       styles: {
         fontSize: 8,
         cellPadding: 2,
-        font: 'helvetica'
+        font: 'helvetica',
       },
       headStyles: {
         fillColor: [59, 130, 246], // blue-500
         textColor: 255,
-        fontStyle: 'bold'
+        fontStyle: 'bold',
       },
       alternateRowStyles: {
-        fillColor: [249, 250, 251] // gray-50
+        fillColor: [249, 250, 251], // gray-50
       },
       columnStyles: {
         0: { cellWidth: 15 }, // Código
@@ -316,9 +320,9 @@ export async function downloadPDF(products: CSVProductRow[], filename: string = 
         7: { cellWidth: 15 }, // Est. Mín
         8: { cellWidth: 15 }, // Status
         9: { cellWidth: 30 }, // Categoria
-        10: { cellWidth: 20 } // NCM
+        10: { cellWidth: 20 }, // NCM
       },
-      margin: { top: 35, right: 10, bottom: 20, left: 10 }
+      margin: { top: 35, right: 10, bottom: 20, left: 10 },
     });
 
     // Add footer
@@ -326,18 +330,12 @@ export async function downloadPDF(products: CSVProductRow[], filename: string = 
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(8);
-      doc.text(
-        `Página ${i} de ${pageCount}`,
-        148,
-        doc.internal.pageSize.height - 10,
-        { align: 'center' }
-      );
-      doc.text(
-        'Gerado por Sankhya Products Dashboard',
-        148,
-        doc.internal.pageSize.height - 5,
-        { align: 'center' }
-      );
+      doc.text(`Página ${i} de ${pageCount}`, 148, doc.internal.pageSize.height - 10, {
+        align: 'center',
+      });
+      doc.text('Gerado por Sankhya Products Dashboard', 148, doc.internal.pageSize.height - 5, {
+        align: 'center',
+      });
     }
 
     // Save the PDF

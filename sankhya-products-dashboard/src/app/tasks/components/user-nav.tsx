@@ -1,11 +1,7 @@
-"use client"
+'use client';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,8 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { assetUrl } from "@/lib/utils"
+} from '@/components/ui/dropdown-menu';
+import { assetUrl } from '@/lib/utils';
 
 export function UserNav() {
   return (
@@ -24,7 +20,10 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full cursor-pointer">
           <Avatar className="h-9 w-9 cursor-pointer">
-            <AvatarImage src={assetUrl("https://notion-avatars.netlify.app/api/avatar/?preset=female-2")} alt="@shadcn" />
+            <AvatarImage
+              src={assetUrl('https://notion-avatars.netlify.app/api/avatar/?preset=female-2')}
+              alt="@shadcn"
+            />
             <AvatarFallback>SC</AvatarFallback>
           </Avatar>
         </Button>
@@ -33,9 +32,7 @@ export function UserNav() {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">shadcn</p>
-            <p className="text-xs leading-none text-muted-foreground">
-              m@example.com
-            </p>
+            <p className="text-xs leading-none text-muted-foreground">m@example.com</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -61,5 +58,5 @@ export function UserNav() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

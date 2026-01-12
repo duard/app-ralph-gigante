@@ -1,39 +1,39 @@
-"use client"
+'use client';
 
-import { motion, AnimatePresence } from 'framer-motion'
-import { useLocation } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 
 interface PageTransitionProps {
-  children: React.ReactNode
-  className?: string
+  children: React.ReactNode;
+  className?: string;
 }
 
 const pageVariants = {
   initial: {
     opacity: 0,
     y: 20,
-    scale: 0.98
+    scale: 0.98,
   },
   in: {
     opacity: 1,
     y: 0,
-    scale: 1
+    scale: 1,
   },
   out: {
     opacity: 0,
     y: -20,
-    scale: 1.02
-  }
-}
+    scale: 1.02,
+  },
+};
 
 const pageTransition = {
-  type: "tween" as const,
-  ease: "anticipate" as const,
-  duration: 0.3
-}
+  type: 'tween' as const,
+  ease: 'anticipate' as const,
+  duration: 0.3,
+};
 
-export function PageTransition({ children, className = "" }: PageTransitionProps) {
-  const location = useLocation()
+export function PageTransition({ children, className = '' }: PageTransitionProps) {
+  const location = useLocation();
 
   return (
     <AnimatePresence mode="wait" initial={false}>
@@ -49,5 +49,5 @@ export function PageTransition({ children, className = "" }: PageTransitionProps
         {children}
       </motion.div>
     </AnimatePresence>
-  )
+  );
 }

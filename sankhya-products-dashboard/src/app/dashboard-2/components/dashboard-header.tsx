@@ -1,16 +1,22 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Calendar, Clock, RefreshCw, Filter } from "lucide-react"
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
+import { useState } from 'react';
+import { Calendar, Clock, RefreshCw, Filter } from 'lucide-react';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
 
 export function DashboardHeader() {
-  const [dateRange, setDateRange] = useState("30d")
-  const lastUpdated = new Date().toLocaleString()
+  const [dateRange, setDateRange] = useState('30d');
+  const lastUpdated = new Date().toLocaleString();
 
   return (
     <Card>
@@ -33,9 +39,9 @@ export function DashboardHeader() {
             </Button>
           </div>
         </div>
-        
+
         <Separator className="my-4" />
-        
+
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
@@ -46,10 +52,18 @@ export function DashboardHeader() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="7d" className="cursor-pointer">Last 7 days</SelectItem>
-                  <SelectItem value="30d" className="cursor-pointer">Last 30 days</SelectItem>
-                  <SelectItem value="90d" className="cursor-pointer">Last 90 days</SelectItem>
-                  <SelectItem value="1y" className="cursor-pointer">Last year</SelectItem>
+                  <SelectItem value="7d" className="cursor-pointer">
+                    Last 7 days
+                  </SelectItem>
+                  <SelectItem value="30d" className="cursor-pointer">
+                    Last 30 days
+                  </SelectItem>
+                  <SelectItem value="90d" className="cursor-pointer">
+                    Last 90 days
+                  </SelectItem>
+                  <SelectItem value="1y" className="cursor-pointer">
+                    Last year
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -58,12 +72,10 @@ export function DashboardHeader() {
               Filters
             </Button>
           </div>
-          
-          <div className="text-sm text-muted-foreground">
-            Last updated: {lastUpdated}
-          </div>
+
+          <div className="text-sm text-muted-foreground">Last updated: {lastUpdated}</div>
         </div>
       </CardHeader>
     </Card>
-  )
+  );
 }

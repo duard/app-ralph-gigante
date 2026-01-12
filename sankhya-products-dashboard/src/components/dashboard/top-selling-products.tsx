@@ -1,60 +1,80 @@
-import * as React from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import * as React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Trophy, TrendingUp, Package, DollarSign, BarChart3 } from "lucide-react"
-import { useProducts } from "@/hooks/use-products"
-import { cn } from "@/lib/utils"
-import { formatCurrency } from "@/lib/utils/product-utils"
-import { CardLoading } from "@/components/ui/loading"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Trophy, TrendingUp, Package, DollarSign, BarChart3 } from 'lucide-react';
+import { useProducts } from '@/hooks/use-products';
+import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils/product-utils';
+import { CardLoading } from '@/components/ui/loading';
 
 interface TopSellingProductsProps {
-  className?: string
-  limit?: number
+  className?: string;
+  limit?: number;
 }
 
 interface ProductSalesData {
-  codprod: number
-  descricao: string
-  codvol?: string
-  preco?: number
-  totalMovimentacoes: number
-  totalQuantidade: number
-  totalValor: number
-  ultimaMovimentacao: string
-  ranking: number
+  codprod: number;
+  descricao: string;
+  codvol?: string;
+  preco?: number;
+  totalMovimentacoes: number;
+  totalQuantidade: number;
+  totalValor: number;
+  ultimaMovimentacao: string;
+  ranking: number;
 }
 
 export function TopSellingProducts({ className, limit = 10 }: TopSellingProductsProps) {
-  const { products, isLoading } = useProducts()
-  const [sortBy, setSortBy] = React.useState<'movimentacoes' | 'quantidade' | 'valor'>('valor')
-  const [period, setPeriod] = React.useState<'30' | '90' | 'all'>('all')
-  const [topProducts, setTopProducts] = React.useState<ProductSalesData[]>([])
+  const { products, isLoading } = useProducts();
+  const [sortBy, setSortBy] = React.useState<'movimentacoes' | 'quantidade' | 'valor'>('valor');
+  const [period, setPeriod] = React.useState<'30' | '90' | 'all'>('all');
+  const [topProducts, setTopProducts] = React.useState<ProductSalesData[]>([]);
 
   // Simulate sales data - in a real app, this would come from API
   React.useEffect(() => {
-    if (!products.length) return
+    if (!products.length) return;
 
     // Mock sales data based on product prices and some randomization
     const mockSalesData: ProductSalesData[] = products
       .slice(0, Math.min(products.length, limit * 2)) // Get more products to filter
       .map((product) => {
         // Simulate different sales volumes based on product index and price
-        const baseMovements = Math.floor(Math.random() * 50) + 10
-        const priceMultiplier = (product.vlrvenda || 1) / 100
-        const quantityMultiplier = Math.random() * 2 + 0.5
+        const baseMovements = Math.floor(Math.random() * 50) + 10;
+        const priceMultiplier = (product.vlrvenda || 1) / 100;
+        const quantityMultiplier = Math.random() * 2 + 0.5;
 
-        const totalMovimentacoes = Math.floor(baseMovements * priceMultiplier)
-        const totalQuantidade = Math.floor(totalMovimentacoes * quantityMultiplier * (Math.random() * 5 + 1))
-        const totalValor = totalQuantidade * (product.vlrvenda || 0)
+        const totalMovimentacoes = Math.floor(baseMovements * priceMultiplier);
+        const totalQuantidade = Math.floor(
+          totalMovimentacoes * quantityMultiplier * (Math.random() * 5 + 1)
+        );
+        const totalValor = totalQuantidade * (product.vlrvenda || 0);
 
         // Simulate last movement date within the selected period
-        const daysAgo = period === '30' ? Math.floor(Math.random() * 30) :
-                       period === '90' ? Math.floor(Math.random() * 90) :
-                       Math.floor(Math.random() * 365)
-        const ultimaMovimentacao = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        const daysAgo =
+          period === '30'
+            ? Math.floor(Math.random() * 30)
+            : period === '90'
+              ? Math.floor(Math.random() * 90)
+              : Math.floor(Math.random() * 365);
+        const ultimaMovimentacao = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split('T')[0];
 
         return {
           codprod: product.codprod,
@@ -65,55 +85,51 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
           totalQuantidade,
           totalValor,
           ultimaMovimentacao,
-          ranking: 0 // Will be set after sorting
-        }
-      })
+          ranking: 0, // Will be set after sorting
+        };
+      });
 
     // Sort by selected criteria
-    const sortedData = mockSalesData.sort((a, b) => {
-      switch (sortBy) {
-        case 'movimentacoes':
-          return b.totalMovimentacoes - a.totalMovimentacoes
-        case 'quantidade':
-          return b.totalQuantidade - a.totalQuantidade
-        case 'valor':
-        default:
-          return b.totalValor - a.totalValor
-      }
-    }).slice(0, limit)
+    const sortedData = mockSalesData
+      .sort((a, b) => {
+        switch (sortBy) {
+          case 'movimentacoes':
+            return b.totalMovimentacoes - a.totalMovimentacoes;
+          case 'quantidade':
+            return b.totalQuantidade - a.totalQuantidade;
+          case 'valor':
+          default:
+            return b.totalValor - a.totalValor;
+        }
+      })
+      .slice(0, limit);
 
     // Add ranking
     sortedData.forEach((product, index) => {
-      product.ranking = index + 1
-    })
+      product.ranking = index + 1;
+    });
 
-    setTopProducts(sortedData)
-  }, [products, sortBy, period, limit])
+    setTopProducts(sortedData);
+  }, [products, sortBy, period, limit]);
 
   const getRankingIcon = (ranking: number) => {
-    if (ranking === 1) return <Trophy className="h-4 w-4 text-yellow-500" />
-    if (ranking === 2) return <Trophy className="h-4 w-4 text-gray-400" />
-    if (ranking === 3) return <Trophy className="h-4 w-4 text-amber-600" />
-    return <span className="text-sm font-bold text-gray-500">#{ranking}</span>
-  }
+    if (ranking === 1) return <Trophy className="h-4 w-4 text-yellow-500" />;
+    if (ranking === 2) return <Trophy className="h-4 w-4 text-gray-400" />;
+    if (ranking === 3) return <Trophy className="h-4 w-4 text-amber-600" />;
+    return <span className="text-sm font-bold text-gray-500">#{ranking}</span>;
+  };
 
   const getRankingColor = (ranking: number) => {
-    if (ranking <= 3) return "bg-gradient-to-r from-yellow-50 to-yellow-100 border-yellow-200"
-    return ""
-  }
+    if (ranking <= 3) return 'bg-gradient-to-r from-yellow-50 to-yellow-100 border-yellow-200';
+    return '';
+  };
 
   if (isLoading) {
-    return (
-      <CardLoading 
-        isLoading={isLoading} 
-        lines={5}
-        className={className}
-      />
-    )
+    return <CardLoading isLoading={isLoading} lines={5} className={className} />;
   }
 
   return (
-    <Card className={cn("", className)}>
+    <Card className={cn('', className)}>
       <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0 pb-4">
         <div className="space-y-1">
           <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
@@ -135,7 +151,10 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
               <SelectItem value="all">Todo período</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={sortBy} onValueChange={(value: 'movimentacoes' | 'quantidade' | 'valor') => setSortBy(value)}>
+          <Select
+            value={sortBy}
+            onValueChange={(value: 'movimentacoes' | 'quantidade' | 'valor') => setSortBy(value)}
+          >
             <SelectTrigger className="w-full sm:w-32">
               <SelectValue />
             </SelectTrigger>
@@ -172,7 +191,7 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
                   {topProducts.map((product) => (
                     <TableRow
                       key={product.codprod}
-                      className={cn("hover:bg-muted/50", getRankingColor(product.ranking))}
+                      className={cn('hover:bg-muted/50', getRankingColor(product.ranking))}
                     >
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-2">
@@ -203,7 +222,9 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
                           <Package className="h-3 w-3 text-green-500" />
-                          <span className="font-medium">{product.totalQuantidade.toLocaleString()}</span>
+                          <span className="font-medium">
+                            {product.totalQuantidade.toLocaleString()}
+                          </span>
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
@@ -229,7 +250,7 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
                 <div
                   key={product.codprod}
                   className={cn(
-                    "p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors",
+                    'p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors',
                     getRankingColor(product.ranking)
                   )}
                 >
@@ -253,7 +274,7 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div className="space-y-1">
                       <div className="flex items-center gap-1 text-muted-foreground">
@@ -262,7 +283,7 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
                       </div>
                       <p className="font-medium">{product.totalMovimentacoes}</p>
                     </div>
-                    
+
                     <div className="space-y-1">
                       <div className="flex items-center gap-1 text-muted-foreground">
                         <Package className="h-3 w-3" />
@@ -270,7 +291,7 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
                       </div>
                       <p className="font-medium">{product.totalQuantidade.toLocaleString()}</p>
                     </div>
-                    
+
                     <div className="space-y-1 col-span-2">
                       <div className="flex items-center gap-1 text-muted-foreground">
                         <DollarSign className="h-3 w-3" />
@@ -280,7 +301,7 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
                         {formatCurrency(product.totalValor)}
                       </p>
                     </div>
-                    
+
                     <div className="space-y-1 col-span-2">
                       <span className="text-xs text-muted-foreground">Última Movimentação</span>
                       <p className="text-sm font-medium">
@@ -297,20 +318,26 @@ export function TopSellingProducts({ className, limit = 10 }: TopSellingProducts
         {topProducts.length > 0 && (
           <div className="pt-4 border-t">
             <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-4 text-sm text-muted-foreground">
-              <span>Ordenado por: {
-                sortBy === 'valor' ? 'Valor Total' :
-                sortBy === 'quantidade' ? 'Quantidade Vendida' :
-                'Número de Movimentações'
-              }</span>
-              <span>Período: {
-                period === '30' ? 'Últimos 30 dias' :
-                period === '90' ? 'Últimos 90 dias' :
-                'Todo o período disponível'
-              }</span>
+              <span>
+                Ordenado por:{' '}
+                {sortBy === 'valor'
+                  ? 'Valor Total'
+                  : sortBy === 'quantidade'
+                    ? 'Quantidade Vendida'
+                    : 'Número de Movimentações'}
+              </span>
+              <span>
+                Período:{' '}
+                {period === '30'
+                  ? 'Últimos 30 dias'
+                  : period === '90'
+                    ? 'Últimos 90 dias'
+                    : 'Todo o período disponível'}
+              </span>
             </div>
           </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

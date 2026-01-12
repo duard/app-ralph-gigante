@@ -15,25 +15,20 @@ A beautiful radial gradient dot pattern background component that adds elegant v
 ### Basic Usage
 
 ```tsx
-import { DotPattern } from "@/components/dot-pattern"
+import { DotPattern } from '@/components/dot-pattern';
 
 // Default theme-aware pattern
 <div className="relative">
   <DotPattern />
   <div>Your content here</div>
-</div>
+</div>;
 ```
 
 ### With Custom Props
 
 ```tsx
 <div className="relative">
-  <DotPattern 
-    size="lg" 
-    opacity="high" 
-    fadeStyle="circle"
-    className="z-0"
-  />
+  <DotPattern size="lg" opacity="high" fadeStyle="circle" className="z-0" />
   <div className="relative z-10">Your content here</div>
 </div>
 ```
@@ -46,23 +41,23 @@ import { DotPatternLight, DotPatternDark } from "@/components/dot-pattern"
 // Light theme only
 <DotPatternLight size="md" opacity="medium" />
 
-// Dark theme only  
+// Dark theme only
 <DotPatternDark size="sm" opacity="low" />
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `className` | `string` | - | Additional CSS classes |
-| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Dot pattern size (12px, 16px, 20px) |
-| `opacity` | `"low" \| "medium" \| "high"` | `"medium"` | Pattern opacity level |
-| `fadeStyle` | `"ellipse" \| "circle" \| "none"` | `"ellipse"` | Masking fade effect |
+| Prop        | Type                              | Default     | Description                         |
+| ----------- | --------------------------------- | ----------- | ----------------------------------- |
+| `className` | `string`                          | -           | Additional CSS classes              |
+| `size`      | `"sm" \| "md" \| "lg"`            | `"md"`      | Dot pattern size (12px, 16px, 20px) |
+| `opacity`   | `"low" \| "medium" \| "high"`     | `"medium"`  | Pattern opacity level               |
+| `fadeStyle` | `"ellipse" \| "circle" \| "none"` | `"ellipse"` | Masking fade effect                 |
 
 ## Size Options
 
 - **Small (`sm`)**: 12px × 12px grid - Subtle, fine texture
-- **Medium (`md`)**: 16px × 16px grid - Balanced visibility  
+- **Medium (`md`)**: 16px × 16px grid - Balanced visibility
 - **Large (`lg`)**: 20px × 20px grid - Bold, prominent pattern
 
 ## Opacity Levels
@@ -94,12 +89,7 @@ import { DotPatternLight, DotPatternDark } from "@/components/dot-pattern"
 
 ```tsx
 <div className="relative rounded-lg border bg-card p-6">
-  <DotPattern 
-    size="sm" 
-    opacity="low" 
-    fadeStyle="circle"
-    className="rounded-lg"
-  />
+  <DotPattern size="sm" opacity="low" fadeStyle="circle" className="rounded-lg" />
   <div className="relative z-10">
     <h3>Card Title</h3>
     <p>Card content...</p>
@@ -113,10 +103,10 @@ import { DotPatternLight, DotPatternDark } from "@/components/dot-pattern"
 <section className="relative min-h-screen">
   {/* Grid pattern base */}
   <div className="absolute inset-0 bg-grid-pattern" />
-  
+
   {/* Dot pattern overlay */}
   <DotPattern opacity="medium" size="md" />
-  
+
   {/* Content */}
   <div className="relative z-10">
     <h1>Hero Content</h1>
@@ -132,13 +122,13 @@ import { DotPatternLight, DotPatternDark } from "@/components/dot-pattern"
 <div className="relative">
   {/* Base layer */}
   <div className="absolute inset-0 bg-grid-subtle" />
-  
+
   {/* Dot pattern overlay */}
   <DotPattern size="md" opacity="medium" fadeStyle="ellipse" />
-  
+
   {/* Glowing effect */}
   <div className="absolute inset-0 bg-gradient-radial opacity-20" />
-  
+
   <div className="relative z-10">Content</div>
 </div>
 ```
@@ -146,11 +136,7 @@ import { DotPatternLight, DotPatternDark } from "@/components/dot-pattern"
 ### Responsive Patterns
 
 ```tsx
-<DotPattern 
-  size="sm" 
-  opacity="low"
-  className="md:opacity-medium lg:size-lg"
-/>
+<DotPattern size="sm" opacity="low" className="md:opacity-medium lg:size-lg" />
 ```
 
 ## Color Customization
@@ -158,9 +144,7 @@ import { DotPatternLight, DotPatternDark } from "@/components/dot-pattern"
 ### Custom Colors
 
 ```tsx
-<div 
-  className="absolute inset-0 bg-[radial-gradient(#your-color_1px,transparent_1px)] [background-size:16px_16px]"
-/>
+<div className="absolute inset-0 bg-[radial-gradient(#your-color_1px,transparent_1px)] [background-size:16px_16px]" />
 ```
 
 ### CSS Variables
@@ -172,7 +156,7 @@ import { DotPatternLight, DotPatternDark } from "@/components/dot-pattern"
   --pattern-size: 16px;
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --dot-color: #374151;
 }
 ```
@@ -209,7 +193,7 @@ import { DotPatternLight, DotPatternDark } from "@/components/dot-pattern"
 ```tsx
 <div className="relative grid gap-6 md:grid-cols-3">
   <DotPattern size="sm" opacity="low" />
-  {features.map(feature => (
+  {features.map((feature) => (
     <div key={feature.id} className="relative bg-card p-6 rounded-lg">
       <h3>{feature.title}</h3>
       <p>{feature.description}</p>

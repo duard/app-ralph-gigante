@@ -1,5 +1,5 @@
-import { ForgotPasswordForm2 } from "./components/forgot-password-form-2"
-import { Logo } from "@/components/logo"
+import { ForgotPasswordForm2 } from './components/forgot-password-form-2';
+import { Logo } from '@/components/logo';
 
 export default function ForgotPassword2Page() {
   return (
@@ -27,5 +27,5 @@ export default function ForgotPassword2Page() {
         />
       </div>
     </div>
-  )
+  );
 }

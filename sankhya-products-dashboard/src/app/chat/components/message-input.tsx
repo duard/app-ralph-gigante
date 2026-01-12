@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import { useState, useRef } from "react"
+import { useState, useRef } from 'react';
 import {
   Send,
   Paperclip,
@@ -8,83 +8,78 @@ import {
   Image as ImageIcon,
   FileText,
   Mic,
-  MoreHorizontal
-} from "lucide-react"
+  MoreHorizontal,
+} from 'lucide-react';
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface MessageInputProps {
-  onSendMessage: (content: string) => void
-  disabled?: boolean
-  placeholder?: string
+  onSendMessage: (content: string) => void;
+  disabled?: boolean;
+  placeholder?: string;
 }
 
 export function MessageInput({
   onSendMessage,
   disabled = false,
-  placeholder = "Type a message..."
+  placeholder = 'Type a message...',
 }: MessageInputProps) {
-  const [message, setMessage] = useState("")
-  const [isTyping, setIsTyping] = useState(false)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [message, setMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSendMessage = () => {
-    const trimmedMessage = message.trim()
+    const trimmedMessage = message.trim();
     if (trimmedMessage && !disabled) {
-      onSendMessage(trimmedMessage)
-      setMessage("")
-      setIsTyping(false)
+      onSendMessage(trimmedMessage);
+      setMessage('');
+      setIsTyping(false);
 
       // Reset textarea height
       if (textareaRef.current) {
-        textareaRef.current.style.height = "auto"
+        textareaRef.current.style.height = 'auto';
       }
     }
-  }
+  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage()
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
-  }
+  };
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value
-    setMessage(value)
+    const value = e.target.value;
+    setMessage(value);
 
     // Auto-resize textarea
     if (textareaRef.current) {
-      textareaRef.current.style.height = "auto"
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
     }
 
     // Handle typing indicator
     if (value.trim() && !isTyping) {
-      setIsTyping(true)
+      setIsTyping(true);
     } else if (!value.trim() && isTyping) {
-      setIsTyping(false)
+      setIsTyping(false);
     }
-  }
+  };
 
-  const handleFileUpload = (type: "image" | "file") => {
+  const handleFileUpload = (type: 'image' | 'file') => {
     // In a real app, this would open a file picker
-    console.log(`Upload ${type}`)
-  }
+    console.log(`Upload ${type}`);
+  };
 
   return (
     <div className="border-t p-4">
@@ -111,16 +106,13 @@ export function MessageInput({
             </Tooltip>
             <DropdownMenuContent side="top" align="start">
               <DropdownMenuItem
-                onClick={() => handleFileUpload("image")}
+                onClick={() => handleFileUpload('image')}
                 className="cursor-pointer"
               >
                 <ImageIcon className="h-4 w-4 mr-2" />
                 Photo or video
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleFileUpload("file")}
-                className="cursor-pointer"
-              >
+              <DropdownMenuItem onClick={() => handleFileUpload('file')} className="cursor-pointer">
                 <FileText className="h-4 w-4 mr-2" />
                 Document
               </DropdownMenuItem>
@@ -138,8 +130,8 @@ export function MessageInput({
             onKeyDown={handleKeyPress}
             disabled={disabled}
             className={cn(
-              "min-h-[40px] max-h-[120px] resize-none cursor-text disabled:cursor-not-allowed",
-              "pr-20" // Space for emoji and more buttons
+              'min-h-[40px] max-h-[120px] resize-none cursor-text disabled:cursor-not-allowed',
+              'pr-20' // Space for emoji and more buttons
             )}
             rows={1}
           />
@@ -208,18 +200,14 @@ export function MessageInput({
               )}
             </TooltipTrigger>
             <TooltipContent>
-              <p>{message.trim() ? "Send message" : "Voice message"}</p>
+              <p>{message.trim() ? 'Send message' : 'Voice message'}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>
 
       {/* Typing indicator */}
-      {isTyping && (
-        <div className="text-xs text-muted-foreground mt-2">
-          You are typing...
-        </div>
-      )}
+      {isTyping && <div className="text-xs text-muted-foreground mt-2">You are typing...</div>}
     </div>
-  )
+  );
 }

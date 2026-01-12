@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -14,83 +14,118 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { useVirtualizer } from "@tanstack/react-virtual"
-import { Badge } from "@/components/ui/badge"
+} from '@tanstack/react-table';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { Badge } from '@/components/ui/badge';
 
-import { Skeletons } from "@/components/ui/skeletons"
+import { Skeletons } from '@/components/ui/skeletons';
 
-import { useProductsWithCache } from "@/hooks/use-products-with-cache"
-import type { Product } from "@/stores/products-store"
-import { formatProductCode, formatProductPrice, formatProductStatus } from "@/lib/utils/product-utils"
-import { DataTablePagination } from "@/components/ui/data-table-pagination"
-import { ErrorState } from "@/components/ui/error-state"
-import { Package } from "lucide-react"
-import { 
+import { useProductsWithCache } from '@/hooks/use-products-with-cache';
+import type { Product } from '@/stores/products-store';
+import {
+  formatProductCode,
+  formatProductPrice,
+  formatProductStatus,
+} from '@/lib/utils/product-utils';
+import { DataTablePagination } from '@/components/ui/data-table-pagination';
+import { ErrorState } from '@/components/ui/error-state';
+import { Package } from 'lucide-react';
+import { PRODUCT_TABLE_COLUMNS } from '@/lib/constants/product-constants';
+import {
   LazyProductDetailsModal,
   LazyProductFiltersSidebar,
   LazyProductTableToolbar,
-  LazyProductLoadingFallback
-} from "@/components/lazy-products"
-import { useDebounce } from "@/lib/utils/debounce"
-import { Suspense } from "react"
+  LazyProductLoadingFallback,
+} from '@/components/lazy-products';
+import { useDebounce } from '@/lib/utils/debounce';
+import { Suspense } from 'react';
 
-
+// Initialize column visibility based on PRODUCT_TABLE_COLUMNS defaults
+const initialColumnVisibility = PRODUCT_TABLE_COLUMNS.reduce(
+  (acc, column) => {
+    acc[column.id] = column.visible;
+    return acc;
+  },
+  {} as Record<string, boolean>
+);
 
 const columns: ColumnDef<Product>[] = [
   {
-    accessorKey: "codprod",
-    header: "Código",
-    cell: ({ row }) => formatProductCode(row.getValue("codprod")),
+    accessorKey: 'codprod',
+    header: 'Código',
+    cell: ({ row }) => formatProductCode(row.getValue('codprod')),
     enableSorting: true,
   },
   {
-    accessorKey: "descrprod",
-    header: "Nome/Descrição",
+    accessorKey: 'descrprod',
+    header: 'Nome/Descrição',
     cell: ({ row }) => (
-      <div className="max-w-[200px] truncate" title={row.getValue("descrprod")}>
-        {row.getValue("descrprod")}
+      <div className="max-w-[200px] truncate" title={row.getValue('descrprod')}>
+        {row.getValue('descrprod')}
       </div>
     ),
     enableSorting: true,
   },
   {
-    accessorKey: "vlrvenda",
-    header: "Preço",
-    cell: ({ row }) => formatProductPrice(row.getValue("vlrvenda")),
+    accessorKey: 'vlrvenda',
+    header: 'Preço',
+    cell: ({ row }) => formatProductPrice(row.getValue('vlrvenda') || 0),
     enableSorting: true,
   },
   {
-    accessorKey: "estoque",
-    header: "Estoque",
-    cell: ({ row }) => row.getValue("estoque") || 0,
+    accessorKey: 'estoque',
+    header: 'Estoque',
+    cell: ({ row }) => row.getValue('estoque') || 0,
     enableSorting: true,
   },
   {
-    accessorKey: "ativo",
-    header: "Status",
+    accessorKey: 'ativo',
+    header: 'Status',
     cell: ({ row }) => (
-      <Badge variant={row.getValue("ativo") === "S" ? "default" : "secondary"}>
-        {formatProductStatus(row.getValue("ativo"))}
+      <Badge variant={row.getValue('ativo') === 'S' ? 'default' : 'secondary'}>
+        {formatProductStatus(row.getValue('ativo'))}
       </Badge>
     ),
     enableSorting: true,
   },
   {
-    accessorKey: "descrgrupoprod",
-    header: "Categoria",
-    cell: ({ row }) => row.getValue("descrgrupoprod") || "-",
+    accessorKey: 'descrgrupoprod',
+    header: 'Categoria',
+    cell: ({ row }) => row.getValue('descrgrupoprod') || '-',
     enableSorting: true,
   },
   {
-    accessorKey: "codvol",
-    header: "Unidade",
-    cell: ({ row }) => row.getValue("codvol") || "-",
+    accessorKey: 'codvol',
+    header: 'Unidade',
+    cell: ({ row }) => row.getValue('codvol') || '-',
     enableSorting: true,
   },
-]
-
-
+  {
+    accessorKey: 'codgrupoprod',
+    header: 'Cód. Grupo',
+    cell: ({ row }) => row.getValue('codgrupoprod') || '-',
+    enableSorting: true,
+  },
+  {
+    accessorKey: 'reffab',
+    header: 'Ref. Fabricante',
+    cell: ({ row }) => row.getValue('reffab') || '-',
+    enableSorting: true,
+  },
+  {
+    accessorKey: 'vlrcusto',
+    header: 'Preço Custo',
+    cell: ({ row }) =>
+      row.getValue('vlrcusto') ? formatProductPrice(row.getValue('vlrcusto')) : '-',
+    enableSorting: true,
+  },
+  {
+    accessorKey: 'ncm',
+    header: 'NCM',
+    cell: ({ row }) => row.getValue('ncm') || '-',
+    enableSorting: true,
+  },
+];
 
 function EmptyState() {
   return (
@@ -101,18 +136,15 @@ function EmptyState() {
         Não há produtos disponíveis no momento. Tente ajustar os filtros ou recarregar a página.
       </p>
     </div>
-  )
+  );
 }
 
 interface ProductListProps {
-  onAddProduct?: () => void
-  onEditProduct?: (product: Product) => void
+  onAddProduct?: () => void;
+  onEditProduct?: (product: Product) => void;
 }
 
-export function ProductList({
-  onAddProduct,
-  onEditProduct,
-}: ProductListProps) {
+export function ProductList({ onAddProduct, onEditProduct }: ProductListProps) {
   const {
     filteredProducts,
     pagination,
@@ -122,36 +154,41 @@ export function ProductList({
     error,
     isRefetching,
     retry,
-    searchProducts
-  } = useProductsWithCache()
+    searchProducts,
+  } = useProductsWithCache();
 
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
-  const [searchValue, setSearchValue] = React.useState("")
-  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null)
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = React.useState(false)
-  
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>(initialColumnVisibility);
+  const [rowSelection, setRowSelection] = React.useState({});
+  const [searchValue, setSearchValue] = React.useState('');
+  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = React.useState(false);
+
   // Virtualization setup
-  const tableContainerRef = React.useRef<HTMLDivElement>(null)
-  
+  const tableContainerRef = React.useRef<HTMLDivElement>(null);
+
   // Enhanced debounced search with performance optimizations
-  const { debounced: debouncedSearchProducts, cancel } = useDebounce((query: unknown) => {
-    const searchQuery = query as string
-    if (searchQuery.trim()) {
-      searchProducts(searchQuery)
+  const { debounced: debouncedSearchProducts, cancel } = useDebounce(
+    (query: unknown) => {
+      const searchQuery = query as string;
+      if (searchQuery.trim()) {
+        searchProducts(searchQuery);
+      }
+    },
+    300,
+    {
+      leading: false,
+      trailing: true,
+      maxWait: 900, // Maximum wait to prevent hanging
     }
-  }, 300, {
-    leading: false,
-    trailing: true,
-    maxWait: 900 // Maximum wait to prevent hanging
-  })
+  );
 
   // Cleanup debounced search on unmount
   React.useEffect(() => {
-    return cancel
-  }, [cancel])
+    return cancel;
+  }, [cancel]);
 
   const table = useReactTable({
     data: filteredProducts,
@@ -175,13 +212,13 @@ export function ProductList({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
     pageCount: pagination.totalPages,
-  })
+  });
 
   // Update table pagination when external pagination changes
   React.useEffect(() => {
-    table.setPageIndex(pagination.page - 1)
-    table.setPageSize(pagination.pageSize)
-  }, [pagination.page, pagination.pageSize, table])
+    table.setPageIndex(pagination.page - 1);
+    table.setPageSize(pagination.pageSize);
+  }, [pagination.page, pagination.pageSize, table]);
 
   // Virtualization setup - create after table is initialized
   const virtualizer = useVirtualizer({
@@ -189,31 +226,26 @@ export function ProductList({
     getScrollElement: () => tableContainerRef.current,
     estimateSize: () => 57, // Approximate row height
     overscan: 5,
-  })
+  });
 
   const handleEditProduct = (product: Product) => {
     if (onEditProduct) {
-      onEditProduct(product)
+      onEditProduct(product);
     }
-  }
+  };
 
   const handleModalEdit = (product: Product) => {
-    setIsDetailsModalOpen(false)
-    handleEditProduct(product)
-  }
+    setIsDetailsModalOpen(false);
+    handleEditProduct(product);
+  };
 
   const handleCloseModal = () => {
-    setIsDetailsModalOpen(false)
-    setSelectedProduct(null)
-  }
+    setIsDetailsModalOpen(false);
+    setSelectedProduct(null);
+  };
 
   if (isLoading) {
-    return (
-      <Skeletons.Table 
-        rows={10}
-        columns={7}
-      />
-    )
+    return <Skeletons.Table rows={10} columns={7} />;
   }
 
   if (error) {
@@ -225,7 +257,7 @@ export function ProductList({
         title="Erro ao carregar produtos"
         description={`Não foi possível carregar a lista de produtos. ${typeof error === 'string' ? error : error?.message || ''}`}
       />
-    )
+    );
   }
 
   return (
@@ -234,29 +266,26 @@ export function ProductList({
       <Suspense fallback={<LazyProductLoadingFallback />}>
         <LazyProductFiltersSidebar className="w-full lg:w-80 lg:block" />
       </Suspense>
-      
-       {/* Main Content */}
-       <div className="flex-1 space-y-4">
-         <Suspense fallback={<LazyProductLoadingFallback />}>
-           <LazyProductTableToolbar
-             table={table}
-             onSearch={(value: string) => {
-               setSearchValue(value)
-               // Trigger debounced API search
-               debouncedSearchProducts(value)
-             }}
-             onAddProduct={onAddProduct}
-             searchValue={searchValue}
-           />
-         </Suspense>
-        
+
+      {/* Main Content */}
+      <div className="flex-1 space-y-4">
+        <Suspense fallback={<LazyProductLoadingFallback />}>
+          <LazyProductTableToolbar
+            table={table}
+            onSearch={(value: string) => {
+              setSearchValue(value);
+              // Trigger debounced API search
+              debouncedSearchProducts(value);
+            }}
+            onAddProduct={onAddProduct}
+            searchValue={searchValue}
+          />
+        </Suspense>
+
         <div className="rounded-md border">
           {/* Desktop Table View */}
           <div className="hidden md:block">
-            <div 
-              ref={tableContainerRef}
-              className="h-[600px] overflow-auto"
-            >
+            <div ref={tableContainerRef} className="h-[600px] overflow-auto">
               <div className="min-w-full">
                 {/* Fixed header */}
                 <div className="sticky top-0 z-10 bg-background border-b">
@@ -266,19 +295,16 @@ export function ProductList({
                         <tr key={headerGroup.id} className="border-b">
                           {headerGroup.headers.map((header) => {
                             return (
-                              <th 
-                                key={header.id} 
+                              <th
+                                key={header.id}
                                 colSpan={header.colSpan}
                                 className="px-4 py-3 text-left font-medium text-sm text-muted-foreground bg-background"
                               >
                                 {header.isPlaceholder
                                   ? null
-                                  : flexRender(
-                                      header.column.columnDef.header,
-                                      header.getContext()
-                                    )}
+                                  : flexRender(header.column.columnDef.header, header.getContext())}
                               </th>
-                            )
+                            );
                           })}
                         </tr>
                       ))}
@@ -296,7 +322,7 @@ export function ProductList({
                 >
                   {table.getRowModel().rows?.length ? (
                     virtualizer.getVirtualItems().map((virtualItem) => {
-                      const row = table.getRowModel().rows[virtualItem.index]
+                      const row = table.getRowModel().rows[virtualItem.index];
                       return (
                         <div
                           key={row.id}
@@ -311,30 +337,24 @@ export function ProductList({
                         >
                           <table className="w-full">
                             <tbody>
-                              <tr 
+                              <tr
                                 className="border-b hover:bg-muted/50 data-[state=selected]:bg-muted cursor-pointer"
-                                data-state={row.getIsSelected() && "selected"}
+                                data-state={row.getIsSelected() && 'selected'}
                                 onClick={() => {
-                                  setSelectedProduct(row.original)
-                                  setIsDetailsModalOpen(true)
+                                  setSelectedProduct(row.original);
+                                  setIsDetailsModalOpen(true);
                                 }}
                               >
                                 {row.getVisibleCells().map((cell) => (
-                                  <td 
-                                    key={cell.id}
-                                    className="px-4 py-3 align-middle"
-                                  >
-                                    {flexRender(
-                                      cell.column.columnDef.cell,
-                                      cell.getContext()
-                                    )}
+                                  <td key={cell.id} className="px-4 py-3 align-middle">
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                   </td>
                                 ))}
                               </tr>
                             </tbody>
                           </table>
                         </div>
-                      )
+                      );
                     })
                   ) : (
                     <div className="flex items-center justify-center h-24">
@@ -353,51 +373,54 @@ export function ProductList({
                 <div
                   key={row.id}
                   className="p-4 border rounded-lg bg-card hover:bg-muted/50 transition-colors cursor-pointer"
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                   onClick={() => {
-                    setSelectedProduct(row.original)
-                    setIsDetailsModalOpen(true)
+                    setSelectedProduct(row.original);
+                    setIsDetailsModalOpen(true);
                   }}
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1 min-w-0">
                       <h3 className="font-medium text-base leading-tight mb-1 truncate">
-                        {row.getValue("descrprod")}
+                        {row.getValue('descrprod')}
                       </h3>
                       <div className="flex items-center gap-2 mb-2">
                         <Badge variant="outline" className="text-xs">
-                          #{formatProductCode(row.getValue("codprod"))}
+                          #{formatProductCode(row.getValue('codprod'))}
                         </Badge>
-                        <Badge variant={row.original.ativo === "S" ? "default" : "secondary"} className="text-xs">
-                          {row.original.ativo === "S" ? "Ativo" : "Inativo"}
+                        <Badge
+                          variant={row.original.ativo === 'S' ? 'default' : 'secondary'}
+                          className="text-xs"
+                        >
+                          {row.original.ativo === 'S' ? 'Ativo' : 'Inativo'}
                         </Badge>
                       </div>
                     </div>
                     <div className="text-right ml-4">
                       <p className="font-bold text-lg text-green-600">
-                        {formatProductPrice(row.getValue("vlrvenda"))}
+                        {formatProductPrice(row.getValue('vlrvenda'))}
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-3 text-sm">
-                      <div className="space-y-1">
-                        <span className="text-xs text-muted-foreground">Status</span>
-                        <div>
-                          <Badge variant={row.original.ativo === "S" ? "default" : "secondary"}>
-                            {row.original.ativo === "S" ? "Ativo" : "Inativo"}
-                          </Badge>
-                        </div>
+                    <div className="space-y-1">
+                      <span className="text-xs text-muted-foreground">Status</span>
+                      <div>
+                        <Badge variant={row.original.ativo === 'S' ? 'default' : 'secondary'}>
+                          {row.original.ativo === 'S' ? 'Ativo' : 'Inativo'}
+                        </Badge>
                       </div>
-                    
+                    </div>
+
                     <div className="space-y-1">
                       <span className="text-xs text-muted-foreground">Unidade</span>
-                      <p className="font-medium">{row.getValue("codvol") || "-"}</p>
+                      <p className="font-medium">{row.getValue('codvol') || '-'}</p>
                     </div>
-                    
+
                     <div className="space-y-1 col-span-2">
                       <span className="text-xs text-muted-foreground">Categoria</span>
-                      <p className="font-medium">{row.getValue("descrgrupoprod") || "-"}</p>
+                      <p className="font-medium">{row.getValue('descrgrupoprod') || '-'}</p>
                     </div>
                   </div>
                 </div>
@@ -407,23 +430,23 @@ export function ProductList({
             )}
           </div>
         </div>
-        
-        <DataTablePagination 
+
+        <DataTablePagination
           table={table}
           pagination={pagination}
           goToPage={goToPage}
           changePageSize={changePageSize}
         />
-        
-         <Suspense fallback={<LazyProductLoadingFallback />}>
-           <LazyProductDetailsModal
-             product={selectedProduct}
-             isOpen={isDetailsModalOpen}
-             onClose={handleCloseModal}
-             onEdit={handleModalEdit}
-           />
-         </Suspense>
+
+        <Suspense fallback={<LazyProductLoadingFallback />}>
+          <LazyProductDetailsModal
+            product={selectedProduct}
+            isOpen={isDetailsModalOpen}
+            onClose={handleCloseModal}
+            onEdit={handleModalEdit}
+          />
+        </Suspense>
       </div>
     </div>
-  )
+  );
 }

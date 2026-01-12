@@ -1,28 +1,29 @@
-import { render } from '@testing-library/react'
-import type { RenderOptions } from '@testing-library/react'
-import type { ReactElement } from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { Toaster } from '@/components/ui/sonner'
+import { render } from '@testing-library/react';
+import type { RenderOptions } from '@testing-library/react';
+import type { ReactElement } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from '@/components/ui/sonner';
 
 // Mock query client for testing
-const createTestQueryClient = () => new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      gcTime: 0,
+const createTestQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        gcTime: 0,
+      },
     },
-  },
-})
+  });
 
 interface AllTheProvidersProps {
-  children: React.ReactNode
-  queryClient?: QueryClient
+  children: React.ReactNode;
+  queryClient?: QueryClient;
 }
 
 const AllTheProviders = ({ children, queryClient }: AllTheProvidersProps) => {
-  const testQueryClient = queryClient || createTestQueryClient()
-  
+  const testQueryClient = queryClient || createTestQueryClient();
+
   return (
     <QueryClientProvider client={testQueryClient}>
       <BrowserRouter>
@@ -30,11 +31,11 @@ const AllTheProviders = ({ children, queryClient }: AllTheProvidersProps) => {
         <Toaster />
       </BrowserRouter>
     </QueryClientProvider>
-  )
-}
+  );
+};
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
-  queryClient?: QueryClient
+  queryClient?: QueryClient;
 }
 
 const customRender = (
@@ -43,12 +44,12 @@ const customRender = (
 ) => {
   const wrapper = ({ children }: { children: React.ReactNode }) => (
     <AllTheProviders queryClient={queryClient}>{children}</AllTheProviders>
-  )
+  );
 
-  return render(ui, { wrapper, ...renderOptions })
-}
+  return render(ui, { wrapper, ...renderOptions });
+};
 
 // Re-export everything from testing-library
-export * from '@testing-library/react'
-export { customRender as render }
-export { createTestQueryClient }
+export * from '@testing-library/react';
+export { customRender as render };
+export { createTestQueryClient };

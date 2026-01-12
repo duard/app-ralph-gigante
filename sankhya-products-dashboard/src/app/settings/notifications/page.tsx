@@ -1,11 +1,11 @@
-"use client"
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { BaseLayout } from "@/components/layouts/base-layout"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { BaseLayout } from '@/components/layouts/base-layout';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -13,12 +13,25 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Bell, Mail, MessageSquare } from "lucide-react"
+} from '@/components/ui/form';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Bell, Mail, MessageSquare } from 'lucide-react';
 
 const notificationsFormSchema = z.object({
   emailSecurity: z.boolean(),
@@ -47,9 +60,9 @@ const notificationsFormSchema = z.object({
   systemMaintenanceBrowser: z.boolean(),
   systemMaintenanceApp: z.boolean(),
   notificationTiming: z.string(),
-})
+});
 
-type NotificationsFormValues = z.infer<typeof notificationsFormSchema>
+type NotificationsFormValues = z.infer<typeof notificationsFormSchema>;
 
 export default function NotificationSettings() {
   const form = useForm<NotificationsFormValues>({
@@ -61,9 +74,9 @@ export default function NotificationSettings() {
       pushMessages: true,
       pushMentions: true,
       pushTasks: false,
-      emailFrequency: "instant",
-      quietHoursStart: "22:00",
-      quietHoursEnd: "06:00",
+      emailFrequency: 'instant',
+      quietHoursStart: '22:00',
+      quietHoursEnd: '06:00',
       channelEmail: true,
       channelPush: true,
       channelSms: false,
@@ -80,12 +93,12 @@ export default function NotificationSettings() {
       systemMaintenanceEmail: true,
       systemMaintenanceBrowser: true,
       systemMaintenanceApp: false,
-      notificationTiming: "online",
+      notificationTiming: 'online',
     },
-  })
+  });
 
   function onSubmit(data: NotificationsFormValues) {
-    console.log("Notifications settings submitted:", data)
+    console.log('Notifications settings submitted:', data);
     // Here you would typically save the settings
   }
 
@@ -94,9 +107,7 @@ export default function NotificationSettings() {
       <div className="space-y-6 px-4 lg:px-6">
         <div>
           <h1 className="text-3xl font-bold">Notifications</h1>
-          <p className="text-muted-foreground">
-            Configure how you receive notifications.
-          </p>
+          <p className="text-muted-foreground">Configure how you receive notifications.</p>
         </div>
 
         <Form {...form}>
@@ -117,10 +128,7 @@ export default function NotificationSettings() {
                       render={({ field }) => (
                         <FormItem className="flex items-center space-x-3">
                           <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
+                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                           </FormControl>
                           <div className="space-y-1">
                             <FormLabel>Security alerts</FormLabel>
@@ -137,10 +145,7 @@ export default function NotificationSettings() {
                       render={({ field }) => (
                         <FormItem className="flex items-center space-x-3">
                           <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
+                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                           </FormControl>
                           <div className="space-y-1">
                             <FormLabel>Product updates</FormLabel>
@@ -157,10 +162,7 @@ export default function NotificationSettings() {
                       render={({ field }) => (
                         <FormItem className="flex items-center space-x-3">
                           <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
+                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                           </FormControl>
                           <div className="space-y-1">
                             <FormLabel>Marketing emails</FormLabel>
@@ -190,10 +192,7 @@ export default function NotificationSettings() {
                       render={({ field }) => (
                         <FormItem className="flex items-center space-x-3">
                           <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
+                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                           </FormControl>
                           <div className="space-y-1">
                             <FormLabel>New messages</FormLabel>
@@ -210,10 +209,7 @@ export default function NotificationSettings() {
                       render={({ field }) => (
                         <FormItem className="flex items-center space-x-3">
                           <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
+                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                           </FormControl>
                           <div className="space-y-1">
                             <FormLabel>Mentions</FormLabel>
@@ -230,10 +226,7 @@ export default function NotificationSettings() {
                       render={({ field }) => (
                         <FormItem className="flex items-center space-x-3">
                           <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
+                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                           </FormControl>
                           <div className="space-y-1">
                             <FormLabel>Task updates</FormLabel>
@@ -251,9 +244,7 @@ export default function NotificationSettings() {
             <Card>
               <CardHeader>
                 <CardTitle>Notification Frequency</CardTitle>
-                <CardDescription>
-                  Control how often you receive notifications.
-                </CardDescription>
+                <CardDescription>Control how often you receive notifications.</CardDescription>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
@@ -329,7 +320,7 @@ export default function NotificationSettings() {
               <CardHeader>
                 <CardTitle>Notification Preferences</CardTitle>
                 <CardDescription>
-                  We need permission from your browser to show notifications.{" "}
+                  We need permission from your browser to show notifications.{' '}
                   <Button variant="link" className="p-0 h-auto text-primary">
                     Request Permission
                   </Button>
@@ -577,8 +568,6 @@ export default function NotificationSettings() {
                         </FormItem>
                       )}
                     />
-
-
                   </div>
                 </div>
               </CardContent>
@@ -602,14 +591,13 @@ export default function NotificationSettings() {
                           <Mail className="h-5 w-5 text-muted-foreground" />
                           <div>
                             <FormLabel className="font-medium mb-1">Email</FormLabel>
-                            <div className="text-sm text-muted-foreground">Receive notifications via email</div>
+                            <div className="text-sm text-muted-foreground">
+                              Receive notifications via email
+                            </div>
                           </div>
                         </div>
                         <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
+                          <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -624,14 +612,13 @@ export default function NotificationSettings() {
                           <Bell className="h-5 w-5 text-muted-foreground" />
                           <div>
                             <FormLabel className="font-medium mb-1">Push Notifications</FormLabel>
-                            <div className="text-sm text-muted-foreground">Receive browser push notifications</div>
+                            <div className="text-sm text-muted-foreground">
+                              Receive browser push notifications
+                            </div>
                           </div>
                         </div>
                         <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
+                          <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -646,14 +633,13 @@ export default function NotificationSettings() {
                           <MessageSquare className="h-5 w-5 text-muted-foreground" />
                           <div>
                             <FormLabel className="font-medium mb-1">SMS</FormLabel>
-                            <div className="text-sm text-muted-foreground">Receive notifications via SMS</div>
+                            <div className="text-sm text-muted-foreground">
+                              Receive notifications via SMS
+                            </div>
                           </div>
                         </div>
                         <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
+                          <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -663,12 +649,16 @@ export default function NotificationSettings() {
             </Card>
 
             <div className="flex space-x-2">
-              <Button type="submit" className="cursor-pointer">Save Preferences</Button>
-              <Button variant="outline" type="reset" className="cursor-pointer">Cancel</Button>
+              <Button type="submit" className="cursor-pointer">
+                Save Preferences
+              </Button>
+              <Button variant="outline" type="reset" className="cursor-pointer">
+                Cancel
+              </Button>
             </div>
           </form>
         </Form>
       </div>
     </BaseLayout>
-  )
+  );
 }

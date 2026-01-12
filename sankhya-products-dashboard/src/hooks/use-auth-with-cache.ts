@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuthStore } from '@/stores/auth-store';
 import {
   useAuthCheckQuery,
@@ -18,6 +18,12 @@ import { authService } from '@/lib/api/auth-service';
  * Enhanced auth hook with React Query caching and state management
  */
 export function useAuthWithCache() {
+  // Auth initialization state
+  const hasCheckedAuthRef = useRef(false);
+  const [authInitialized, setAuthInitialized] = useState(false);
+  const previousUserIdRef = useRef<string | null>(null);
+  const hasTokenRef = useRef(false);
+
   const {
     user,
     token,
@@ -31,9 +37,18 @@ export function useAuthWithCache() {
     logout: storeLogout,
   } = useAuthStore();
 
-  // React Query hooks
-  const authCheckQuery = useAuthCheckQuery();
-  const currentUserQuery = useCurrentUserQuery(isAuthenticated);
+  // Track token state with ref to avoid triggering re-renders
+  if (token && !hasTokenRef.current) {
+    hasTokenRef.current = true;
+  } else if (!token && hasTokenRef.current) {
+    hasTokenRef.current = false;
+  }
+
+  // React Query hooks - only check auth when initialized and we have a token
+  // Use ref instead of state to prevent query re-enabling loops
+  const shouldEnableQueries = authInitialized && !!token;
+  const authCheckQuery = useAuthCheckQuery(shouldEnableQueries);
+  const currentUserQuery = useCurrentUserQuery(shouldEnableQueries);
   const loginMutation = useLoginMutation();
   const logoutMutation = useLogoutMutation();
   const refreshTokenMutation = useRefreshTokenMutation();
@@ -42,78 +57,52 @@ export function useAuthWithCache() {
   const resetPasswordMutation = useResetPasswordMutation();
   const invalidateAuth = useInvalidateAuth();
 
-  // Check authentication status on mount
+  // Check authentication status on mount - only run once
   useEffect(() => {
+    if (hasCheckedAuthRef.current) return;
+    hasCheckedAuthRef.current = true;
+
     const checkAuth = async () => {
       setLoading(true);
-      
+
       // Check if we have stored tokens
       const { token: storedToken } = authService.getStoredTokens();
-      
+
       if (storedToken) {
         try {
+          // Set auth header first
+          authService.setAuthHeader(storedToken);
+
           // Verify token validity by checking current user
           const isValid = await authService.checkAuth();
           if (isValid) {
             setTokens(storedToken, '');
-            // The currentUserQuery will automatically fetch user data
+            // The currentUserQuery will automatically fetch user data when enabled
           } else {
             // Token invalid, clear it
             authService.clearTokens();
+            authService.clearAuthHeader();
             setTokens('', '');
             setUser(null);
           }
         } catch (error) {
           console.error('Auth check failed:', error);
           authService.clearTokens();
+          authService.clearAuthHeader();
           setTokens('', '');
           setUser(null);
         }
       }
-      
+
       setLoading(false);
+      setAuthInitialized(true);
     };
 
     checkAuth();
-  }, [setLoading, setTokens, setUser]);
+  }, []); // Empty dependency array - only run once
 
-  // Update user from React Query
-  useEffect(() => {
-    if (currentUserQuery.data) {
-      setUser(currentUserQuery.data);
-    }
-  }, [currentUserQuery.data, setUser]);
-
-  // Update loading state
-  useEffect(() => {
-    setLoading(
-      authCheckQuery.isLoading || 
-      currentUserQuery.isLoading || 
-      currentUserQuery.isFetching
-    );
-  }, [
-    authCheckQuery.isLoading,
-    currentUserQuery.isLoading,
-    currentUserQuery.isFetching,
-    setLoading,
-  ]);
-
-  // Update error state
-  useEffect(() => {
-    if (authCheckQuery.error) {
-      const errorMessage = authCheckQuery.error instanceof Error 
-        ? authCheckQuery.error.message 
-        : 'Erro ao verificar autenticação';
-      setAuthError(errorMessage);
-    } else if (currentUserQuery.error) {
-      const errorMessage = currentUserQuery.error instanceof Error 
-        ? currentUserQuery.error.message 
-        : 'Erro ao carregar usuário';
-      setAuthError(errorMessage);
-    } else {
-      setAuthError(null);
-    }
-  }, [authCheckQuery.error, currentUserQuery.error, setAuthError]);
+  // Get user from query result directly (don't sync to store automatically)
+  const queryUser = currentUserQuery.data || user;
 
   /**
    * Login with credentials
@@ -124,28 +113,32 @@ export function useAuthWithCache() {
         setLoading(true);
         setAuthError(null);
 
+        console.log('[useAuthWithCache] Calling loginMutation...');
         const response = await loginMutation.mutateAsync({
           credentials,
-          rememberMe
+          rememberMe,
         });
 
+        console.log('[useAuthWithCache] Login mutation response:', response);
+
         if (response) {
-          // The mutation handles token storage and user update
+          // Set tokens in store so queries can run
+          setTokens(response.access_token, '');
+          
           return response;
         }
 
         return null;
       } catch (error) {
-        const errorMessage = error instanceof Error 
-          ? error.message 
-          : 'Erro ao fazer login';
+        console.error('[useAuthWithCache] Login mutation error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Erro ao fazer login';
         setAuthError(errorMessage);
         return null;
       } finally {
         setLoading(false);
       }
     },
-    [loginMutation, setLoading, setAuthError]
+    [loginMutation, setLoading, setAuthError, setTokens]
   );
 
   /**
@@ -154,14 +147,14 @@ export function useAuthWithCache() {
   const logout = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       await logoutMutation.mutateAsync();
-      
+
       // Clear local state
       storeLogout();
       authService.clearTokens();
       authService.clearAuthHeader();
-      
+
       // Invalidate all auth queries
       invalidateAuth();
     } catch (error) {
@@ -170,10 +163,8 @@ export function useAuthWithCache() {
       authService.clearTokens();
       authService.clearAuthHeader();
       invalidateAuth();
-      
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : 'Erro ao fazer logout';
+
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao fazer logout';
       setAuthError(errorMessage);
     } finally {
       setLoading(false);
@@ -203,17 +194,15 @@ export function useAuthWithCache() {
     async (currentPassword: string, newPassword: string) => {
       try {
         setLoading(true);
-        
+
         const response = await changePasswordMutation.mutateAsync({
           currentPassword,
-          newPassword
+          newPassword,
         });
-        
+
         return response;
       } catch (error) {
-        const errorMessage = error instanceof Error 
-          ? error.message 
-          : 'Erro ao alterar senha';
+        const errorMessage = error instanceof Error ? error.message : 'Erro ao alterar senha';
         setAuthError(errorMessage);
         return null;
       } finally {
@@ -230,14 +219,13 @@ export function useAuthWithCache() {
     async (email: string) => {
       try {
         setLoading(true);
-        
+
         const response = await requestPasswordResetMutation.mutateAsync(email);
-        
+
         return response;
       } catch (error) {
-        const errorMessage = error instanceof Error 
-          ? error.message 
-          : 'Erro ao solicitar recuperação de senha';
+        const errorMessage =
+          error instanceof Error ? error.message : 'Erro ao solicitar recuperação de senha';
         setAuthError(errorMessage);
         return null;
       } finally {
@@ -254,17 +242,15 @@ export function useAuthWithCache() {
     async (token: string, newPassword: string) => {
       try {
         setLoading(true);
-        
+
         const response = await resetPasswordMutation.mutateAsync({
           token,
-          newPassword
+          newPassword,
         });
-        
+
         return response;
       } catch (error) {
-        const errorMessage = error instanceof Error 
-          ? error.message 
-          : 'Erro ao redefinir senha';
+        const errorMessage = error instanceof Error ? error.message : 'Erro ao redefinir senha';
         setAuthError(errorMessage);
         return null;
       } finally {
@@ -286,7 +272,7 @@ export function useAuthWithCache() {
   /**
    * Check if user has specific role/permission
    */
-    const hasPermission = useCallback(
+  const hasPermission = useCallback(
     (permission: string) => {
       if (!user || !user.permissions) return false;
       return user.permissions.includes(permission) || user.role === 'admin';
@@ -300,19 +286,36 @@ export function useAuthWithCache() {
   const hasRole = useCallback(
     (role: string) => {
       if (!user) return false;
-      return user.role === role || role === 'admin' && user.role === 'admin';
+      return user.role === role || (role === 'admin' && user.role === 'admin');
     },
     [user]
   );
 
+  // Calculate derived state
+  const combinedIsLoading = isLoading || authCheckQuery.isLoading || currentUserQuery.isLoading;
+  let combinedError: string | null = null;
+  if (authCheckQuery.error) {
+    combinedError =
+      authCheckQuery.error instanceof Error
+        ? authCheckQuery.error.message
+        : 'Erro ao verificar autenticação';
+  } else if (currentUserQuery.error) {
+    combinedError =
+      currentUserQuery.error instanceof Error
+        ? currentUserQuery.error.message
+        : 'Erro ao carregar usuário';
+  } else {
+    combinedError = error;
+  }
+
   return {
-    // State
-    user,
+    // State - use query user data when available
+    user: queryUser,
     token,
     isAuthenticated,
-    isLoading: isLoading || authCheckQuery.isLoading || currentUserQuery.isLoading,
+    isLoading: combinedIsLoading,
     isRefetching: currentUserQuery.isFetching,
-    error: error || authCheckQuery.error || currentUserQuery.error,
+    error: combinedError,
     isLoggingIn: loginMutation.isPending,
     isLoggingOut: logoutMutation.isPending,
     isChangingPassword: changePasswordMutation.isPending,

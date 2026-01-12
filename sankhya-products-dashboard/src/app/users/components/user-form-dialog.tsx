@@ -1,7 +1,7 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -18,66 +18,66 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Plus } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
+} from '@/components/ui/select';
+import { Plus } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const userFormSchema = z.object({
   name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
+    message: 'Name must be at least 2 characters.',
   }),
   email: z.string().email({
-    message: "Please enter a valid email address.",
+    message: 'Please enter a valid email address.',
   }),
   role: z.string().min(1, {
-    message: "Please select a role.",
+    message: 'Please select a role.',
   }),
   plan: z.string().min(1, {
-    message: "Please select a plan.",
+    message: 'Please select a plan.',
   }),
   billing: z.string().min(1, {
-    message: "Please select a billing method.",
+    message: 'Please select a billing method.',
   }),
   status: z.string().min(1, {
-    message: "Please select a status.",
+    message: 'Please select a status.',
   }),
-})
+});
 
-type UserFormValues = z.infer<typeof userFormSchema>
+type UserFormValues = z.infer<typeof userFormSchema>;
 
 interface UserFormDialogProps {
-  onAddUser: (user: UserFormValues) => void
+  onAddUser: (user: UserFormValues) => void;
 }
 
 export function UserFormDialog({ onAddUser }: UserFormDialogProps) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userFormSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      role: "",
-      plan: "",
-      billing: "",
-      status: "",
+      name: '',
+      email: '',
+      role: '',
+      plan: '',
+      billing: '',
+      status: '',
     },
-  })
+  });
 
   function onSubmit(data: UserFormValues) {
-    onAddUser(data)
-    form.reset()
-    setOpen(false)
+    onAddUser(data);
+    form.reset();
+    setOpen(false);
   }
 
   return (
@@ -227,5 +227,5 @@ export function UserFormDialog({ onAddUser }: UserFormDialogProps) {
         </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

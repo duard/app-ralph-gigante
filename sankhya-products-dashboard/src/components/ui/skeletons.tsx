@@ -1,11 +1,10 @@
-
-import { Skeleton } from "@/components/ui/skeleton"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 interface TableSkeletonProps {
-  rows?: number
-  columns?: number
-  className?: string
+  rows?: number;
+  columns?: number;
+  className?: string;
 }
 
 export function TableSkeleton({ rows = 5, columns = 6, className }: TableSkeletonProps) {
@@ -18,7 +17,7 @@ export function TableSkeleton({ rows = 5, columns = 6, className }: TableSkeleto
             <Skeleton key={`header-${i}`} className="h-4 flex-1" />
           ))}
         </div>
-        
+
         {/* Rows */}
         {Array.from({ length: rows }).map((_, rowIndex) => (
           <div key={`row-${rowIndex}`} className="flex gap-4 p-4 border-b">
@@ -29,13 +28,13 @@ export function TableSkeleton({ rows = 5, columns = 6, className }: TableSkeleto
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 interface CardSkeletonProps {
-  lines?: number
-  showHeader?: boolean
-  className?: string
+  lines?: number;
+  showHeader?: boolean;
+  className?: string;
 }
 
 export function CardSkeleton({ lines = 3, showHeader = true, className }: CardSkeletonProps) {
@@ -50,22 +49,26 @@ export function CardSkeleton({ lines = 3, showHeader = true, className }: CardSk
       <CardContent className="space-y-3">
         {Array.from({ length: lines }).map((_, i) => (
           <div key={i} className="space-y-2">
-            <Skeleton className={`h-4 ${i === 0 ? "w-full" : "w-3/4"}`} />
+            <Skeleton className={`h-4 ${i === 0 ? 'w-full' : 'w-3/4'}`} />
             {i < lines - 1 && <Skeleton className="h-3 w-1/2" />}
           </div>
         ))}
       </CardContent>
     </Card>
-  )
+  );
 }
 
 interface ListItemSkeletonProps {
-  items?: number
-  showAvatar?: boolean
-  className?: string
+  items?: number;
+  showAvatar?: boolean;
+  className?: string;
 }
 
-export function ListItemSkeleton({ items = 5, showAvatar = false, className }: ListItemSkeletonProps) {
+export function ListItemSkeleton({
+  items = 5,
+  showAvatar = false,
+  className,
+}: ListItemSkeletonProps) {
   return (
     <div className={`space-y-4 ${className}`}>
       {Array.from({ length: items }).map((_, i) => (
@@ -79,11 +82,11 @@ export function ListItemSkeleton({ items = 5, showAvatar = false, className }: L
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 interface DashboardCardSkeletonProps {
-  className?: string
+  className?: string;
 }
 
 export function DashboardCardSkeleton({ className }: DashboardCardSkeletonProps) {
@@ -100,12 +103,12 @@ export function DashboardCardSkeleton({ className }: DashboardCardSkeletonProps)
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 interface ChartSkeletonProps {
-  className?: string
-  showLegend?: boolean
+  className?: string;
+  showLegend?: boolean;
 }
 
 export function ChartSkeleton({ className, showLegend = true }: ChartSkeletonProps) {
@@ -128,7 +131,7 @@ export function ChartSkeleton({ className, showLegend = true }: ChartSkeletonPro
               </div>
             ))}
           </div>
-          
+
           {/* X-axis labels */}
           <div className="flex justify-between">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -138,12 +141,12 @@ export function ChartSkeleton({ className, showLegend = true }: ChartSkeletonPro
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 interface FormSkeletonProps {
-  fields?: number
-  className?: string
+  fields?: number;
+  className?: string;
 }
 
 export function FormSkeleton({ fields = 6, className }: FormSkeletonProps) {
@@ -160,19 +163,25 @@ export function FormSkeleton({ fields = 6, className }: FormSkeletonProps) {
         <Skeleton className="h-10 w-24" />
       </div>
     </div>
-  )
+  );
 }
 
 interface ProductListSkeletonProps {
-  view?: "table" | "grid"
-  items?: number
-  className?: string
+  view?: 'table' | 'grid';
+  items?: number;
+  className?: string;
 }
 
-export function ProductListSkeleton({ view = "table", items = 8, className }: ProductListSkeletonProps) {
-  if (view === "grid") {
+export function ProductListSkeleton({
+  view = 'table',
+  items = 8,
+  className,
+}: ProductListSkeletonProps) {
+  if (view === 'grid') {
     return (
-      <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ${className}`}>
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ${className}`}
+      >
         {Array.from({ length: items }).map((_, i) => (
           <Card key={i} className="overflow-hidden">
             <div className="aspect-video bg-gray-100">
@@ -189,10 +198,10 @@ export function ProductListSkeleton({ view = "table", items = 8, className }: Pr
           </Card>
         ))}
       </div>
-    )
+    );
   }
 
-  return <TableSkeleton rows={items} columns={7} className={className} />
+  return <TableSkeleton rows={items} columns={7} className={className} />;
 }
 
 // Export all skeletons as a namespace for convenience
@@ -204,4 +213,4 @@ export const Skeletons = {
   Chart: ChartSkeleton,
   Form: FormSkeleton,
   ProductList: ProductListSkeleton,
-}
+};

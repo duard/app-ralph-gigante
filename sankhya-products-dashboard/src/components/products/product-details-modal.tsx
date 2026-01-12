@@ -1,16 +1,22 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { AnimatedDrawer } from "@/components/ui/animated-drawer"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Card, CardContent } from "@/components/ui/card"
-import { formatProductCode, formatProductPrice, formatProductStatus, formatDate, formatCurrency } from "@/lib/utils/product-utils"
-import type { Product } from "@/stores/products-store"
-import { useProductPriceHistory } from "@/hooks/use-product-price-history"
-import { PriceHistoryChart } from "./price-history-chart"
+import * as React from 'react';
+import { AnimatedDrawer } from '@/components/ui/animated-drawer';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  formatProductCode,
+  formatProductPrice,
+  formatProductStatus,
+  formatDate,
+  formatCurrency,
+} from '@/lib/utils/product-utils';
+import type { Product } from '@/stores/products-store';
+import { useProductPriceHistory } from '@/hooks/use-product-price-history';
+import { PriceHistoryChart } from './price-history-chart';
 import {
   Package,
   DollarSign,
@@ -21,21 +27,21 @@ import {
   ArrowRight,
   Edit,
   TrendingUp,
-  Clock
-} from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { toast } from "sonner"
-import { motion, AnimatePresence } from "framer-motion"
+  Clock,
+} from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { toast } from 'sonner';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ProductDetailsModalProps {
-  product: Product | null
-  isOpen: boolean
-  onClose: () => void
-  onPrevious?: () => void
-  onNext?: () => void
-  onEdit?: (product: Product) => void
-  hasPrevious?: boolean
-  hasNext?: boolean
+  product: Product | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onPrevious?: () => void;
+  onNext?: () => void;
+  onEdit?: (product: Product) => void;
+  hasPrevious?: boolean;
+  hasNext?: boolean;
 }
 
 export function ProductDetailsModal({
@@ -46,52 +52,47 @@ export function ProductDetailsModal({
   onNext,
   onEdit,
   hasPrevious = false,
-  hasNext = false
+  hasNext = false,
 }: ProductDetailsModalProps) {
-  const [activeTab, setActiveTab] = React.useState("details")
-  
+  const [activeTab, setActiveTab] = React.useState('details');
+
   const {
     priceHistory,
     isLoading: isLoadingPriceHistory,
     fetchLast30Days,
     fetchLast90Days,
     getAveragePrice,
-    getPriceTrend
-  } = useProductPriceHistory()
+    getPriceTrend,
+  } = useProductPriceHistory();
 
   // Load price history when tab changes to price-history
   React.useEffect(() => {
-    if (activeTab === "price-history" && product?.codprod && !priceHistory) {
-      fetchLast30Days(product.codprod)
+    if (activeTab === 'price-history' && product?.codprod && !priceHistory) {
+      fetchLast30Days(product.codprod);
     }
-  }, [activeTab, product?.codprod, fetchLast30Days, priceHistory])
+  }, [activeTab, product?.codprod, fetchLast30Days, priceHistory]);
 
-  if (!product) return null
+  if (!product) return null;
 
   const handleEdit = () => {
     if (onEdit && product) {
-      toast.success(`Modo de edição ativado para ${product.descrprod}`)
-      onEdit(product)
+      toast.success(`Modo de edição ativado para ${product.descrprod}`);
+      onEdit(product);
     }
-  }
+  };
 
   const handlePeriodChange = (period: '30' | '90') => {
     if (product?.codprod) {
       if (period === '30') {
-        fetchLast30Days(product.codprod)
+        fetchLast30Days(product.codprod);
       } else {
-        fetchLast90Days(product.codprod)
+        fetchLast90Days(product.codprod);
       }
     }
-  }
+  };
 
   return (
-    <AnimatedDrawer 
-      isOpen={isOpen} 
-      onClose={onClose}
-      size="xl"
-      className="max-w-2xl mx-auto"
-    >
+    <AnimatedDrawer isOpen={isOpen} onClose={onClose} size="xl" className="max-w-2xl mx-auto">
       <div className="flex flex-col h-full">
         <div className="border-b px-6 py-4">
           <div className="flex items-center justify-between">
@@ -104,7 +105,7 @@ export function ProductDetailsModal({
                 <Package className="h-6 w-6 text-muted-foreground" />
               </motion.div>
               <div>
-                <motion.h2 
+                <motion.h2
                   className="text-lg font-semibold"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -112,7 +113,7 @@ export function ProductDetailsModal({
                 >
                   {formatProductCode(product.codprod)}
                 </motion.h2>
-                <motion.p 
+                <motion.p
                   className="text-sm text-muted-foreground mt-1 line-clamp-2"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -135,7 +136,7 @@ export function ProductDetailsModal({
                   onClick={() => {
                     if (hasPrevious && onPrevious) {
                       onPrevious();
-                      toast.info("Navegando para produto anterior");
+                      toast.info('Navegando para produto anterior');
                     }
                   }}
                   disabled={!hasPrevious}
@@ -150,7 +151,7 @@ export function ProductDetailsModal({
                   onClick={() => {
                     if (hasNext && onNext) {
                       onNext();
-                      toast.info("Navegando para próximo produto");
+                      toast.info('Navegando para próximo produto');
                     }
                   }}
                   disabled={!hasNext}
@@ -159,11 +160,7 @@ export function ProductDetailsModal({
                 </Button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleEdit}
-                >
+                <Button variant="outline" size="sm" onClick={handleEdit}>
                   <Edit className="h-4 w-4 mr-2" />
                   Editar
                 </Button>
@@ -196,7 +193,7 @@ export function ProductDetailsModal({
 
               <AnimatePresence mode="wait">
                 <TabsContent key="details" value="details" className="mt-6">
-                  <motion.div 
+                  <motion.div
                     className="space-y-6"
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -205,7 +202,7 @@ export function ProductDetailsModal({
                   >
                     {/* Product Image */}
                     {product.imagem && (
-                      <motion.div 
+                      <motion.div
                         className="flex justify-center"
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -218,9 +215,10 @@ export function ProductDetailsModal({
                               alt={product.descrprod}
                               className="w-full h-full object-contain"
                               onError={(e) => {
-                                const target = e.target as HTMLImageElement
-                                target.style.display = 'none'
-                                target.parentElement!.innerHTML = '<div class="flex flex-col items-center justify-center h-full text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg><p class="text-xs mt-2">Imagem não disponível</p></div>'
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                                target.parentElement!.innerHTML =
+                                  '<div class="flex flex-col items-center justify-center h-full text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg><p class="text-xs mt-2">Imagem não disponível</p></div>';
                               }}
                             />
                           </CardContent>
@@ -229,36 +227,30 @@ export function ProductDetailsModal({
                     )}
 
                     {/* Status and Basic Info */}
-                    <motion.div 
+                    <motion.div
                       className="flex items-center justify-between"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.2, duration: 0.3 }}
                     >
                       <div className="flex items-center gap-4">
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Badge 
-                            variant={product.ativo === "S" ? "default" : "secondary"}
+                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                          <Badge
+                            variant={product.ativo === 'S' ? 'default' : 'secondary'}
                             className="text-sm"
                           >
                             {formatProductStatus(product.ativo)}
                           </Badge>
                         </motion.div>
                         {product.descrgrupoprod && (
-                          <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
+                          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                             <Badge variant="outline" className="text-sm">
                               {product.descrgrupoprod}
                             </Badge>
                           </motion.div>
                         )}
                       </div>
-                      <motion.div 
+                      <motion.div
                         className="text-right"
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -273,7 +265,7 @@ export function ProductDetailsModal({
                     <Separator />
 
                     {/* Product Information */}
-                    <motion.div 
+                    <motion.div
                       className="grid grid-cols-1 md:grid-cols-2 gap-6"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -285,7 +277,7 @@ export function ProductDetailsModal({
                           <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
                             Informações Básicas
                           </h4>
-                          
+
                           <div className="space-y-3">
                             <div className="flex items-center gap-3">
                               <Tag className="h-4 w-4 text-muted-foreground" />
@@ -307,7 +299,7 @@ export function ProductDetailsModal({
                               <Box className="h-4 w-4 text-muted-foreground" />
                               <div>
                                 <p className="text-sm font-medium">Unidade</p>
-                                <p className="text-sm">{product.codvol || "-"}</p>
+                                <p className="text-sm">{product.codvol || '-'}</p>
                               </div>
                             </div>
 
@@ -330,7 +322,7 @@ export function ProductDetailsModal({
                           <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
                             Estoque e Valores
                           </h4>
-                          
+
                           <div className="space-y-3">
                             <div className="flex items-center gap-3">
                               <Box className="h-4 w-4 text-muted-foreground" />
@@ -374,7 +366,7 @@ export function ProductDetailsModal({
                           <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
                             Informações Adicionais
                           </h4>
-                          
+
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {product.codvol && (
                               <div>
@@ -382,21 +374,21 @@ export function ProductDetailsModal({
                                 <p className="text-sm">{product.codvol}</p>
                               </div>
                             )}
-                            
+
                             {product.ncm && (
                               <div>
                                 <p className="text-sm font-medium">NCM</p>
                                 <p className="text-sm">{product.ncm}</p>
                               </div>
                             )}
-                            
+
                             {product.pesoliq && (
                               <div>
                                 <p className="text-sm font-medium">Peso Líquido</p>
                                 <p className="text-sm">{product.pesoliq} kg</p>
                               </div>
                             )}
-                            
+
                             {product.pesobruto && (
                               <div>
                                 <p className="text-sm font-medium">Peso Bruto</p>
@@ -416,7 +408,7 @@ export function ProductDetailsModal({
                           <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
                             Informações de Sistema
                           </h4>
-                          
+
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {product.dtcad && (
                               <div className="flex items-center gap-3">
@@ -427,7 +419,7 @@ export function ProductDetailsModal({
                                 </div>
                               </div>
                             )}
-                            
+
                             {product.dtalter && (
                               <div className="flex items-center gap-3">
                                 <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -445,7 +437,7 @@ export function ProductDetailsModal({
                 </TabsContent>
 
                 <TabsContent key="price-history" value="price-history" className="mt-6">
-                  <motion.div 
+                  <motion.div
                     className="space-y-6"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -465,10 +457,10 @@ export function ProductDetailsModal({
                         priceTrend={getPriceTrend()}
                       />
                     </motion.div>
-                    
+
                     {/* Price History Summary */}
                     {priceHistory && !isLoadingPriceHistory && (
-                      <motion.div 
+                      <motion.div
                         className="grid grid-cols-1 md:grid-cols-3 gap-4"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -481,14 +473,14 @@ export function ProductDetailsModal({
                               <div>
                                 <p className="text-sm font-medium">Período</p>
                                 <p className="text-xs text-muted-foreground">
-                                  {new Date(priceHistory.dataInicio).toLocaleDateString('pt-BR')} até {' '}
-                                  {new Date(priceHistory.dataFim).toLocaleDateString('pt-BR')}
+                                  {new Date(priceHistory.dataInicio).toLocaleDateString('pt-BR')}{' '}
+                                  até {new Date(priceHistory.dataFim).toLocaleDateString('pt-BR')}
                                 </p>
                               </div>
                             </div>
                           </Card>
                         </motion.div>
-                        
+
                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                           <Card className="p-4">
                             <div className="flex items-center gap-3">
@@ -502,7 +494,7 @@ export function ProductDetailsModal({
                             </div>
                           </Card>
                         </motion.div>
-                        
+
                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                           <Card className="p-4">
                             <div className="flex items-center gap-3">
@@ -525,7 +517,7 @@ export function ProductDetailsModal({
           </motion.div>
         </ScrollArea>
 
-        <motion.div 
+        <motion.div
           className="border-t px-6 py-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -547,5 +539,5 @@ export function ProductDetailsModal({
         </motion.div>
       </div>
     </AnimatedDrawer>
-  )
+  );
 }

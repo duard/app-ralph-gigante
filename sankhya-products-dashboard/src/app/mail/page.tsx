@@ -1,6 +1,6 @@
-import { Mail } from "@/app/mail/components/mail"
-import { accounts, mails } from "@/app/mail/data"
-import { BaseLayout } from "@/components/layouts/base-layout"
+import { Mail } from '@/app/mail/components/mail';
+import { accounts, mails } from '@/app/mail/data';
+import { BaseLayout } from '@/components/layouts/base-layout';
 
 export default function MailPage() {
   return (
@@ -17,5 +17,5 @@ export default function MailPage() {
         </div>
       </div>
     </BaseLayout>
-  )
+  );
 }

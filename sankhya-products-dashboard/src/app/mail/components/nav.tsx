@@ -1,11 +1,11 @@
-"use client"
+'use client';
 
-import { type LucideIcon } from "lucide-react"
+import { type LucideIcon } from 'lucide-react';
 
-import { cn } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
-import { buttonVariants } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface NavProps {
   isCollapsed: boolean;
@@ -13,7 +13,7 @@ interface NavProps {
     title: string;
     label?: string;
     icon: LucideIcon;
-    variant: "default" | "ghost";
+    variant: 'default' | 'ghost';
   }[];
 }
 
@@ -30,10 +30,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
               <TooltipTrigger asChild>
                 <button
                   className={cn(
-                    buttonVariants({ variant: link.variant, size: "icon" }),
-                    "size-9 cursor-pointer",
-                    link.variant === "default" &&
-                      "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
+                    buttonVariants({ variant: link.variant, size: 'icon' }),
+                    'size-9 cursor-pointer',
+                    link.variant === 'default' &&
+                      'dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white'
                   )}
                 >
                   <link.icon className="size-4" />
@@ -43,9 +43,9 @@ export function Nav({ links, isCollapsed }: NavProps) {
               <TooltipContent side="right" className="flex items-center gap-4">
                 {link.title}
                 {link.label && (
-                              <Badge className="ml-auto flex size-5 shrink-0 items-center justify-center rounded-full cursor-pointer">
-              {link.label}
-            </Badge>
+                  <Badge className="ml-auto flex size-5 shrink-0 items-center justify-center rounded-full cursor-pointer">
+                    {link.label}
+                  </Badge>
                 )}
               </TooltipContent>
             </Tooltip>
@@ -53,10 +53,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
             <button
               key={index}
               className={cn(
-                buttonVariants({ variant: link.variant, size: "sm" }),
-                link.variant === "default" &&
-                  "group dark:bg-muted dark:text-foreground dark:hover:bg-muted dark:hover:text-foreground",
-                "justify-start cursor-pointer"
+                buttonVariants({ variant: link.variant, size: 'sm' }),
+                link.variant === 'default' &&
+                  'group dark:bg-muted dark:text-foreground dark:hover:bg-muted dark:hover:text-foreground',
+                'justify-start cursor-pointer'
               )}
             >
               <link.icon className="mr-2 size-4" />
@@ -64,9 +64,8 @@ export function Nav({ links, isCollapsed }: NavProps) {
               {link.label && (
                 <span
                   className={cn(
-                    "ml-auto",
-                    link.variant === "default" &&
-                      "text-background dark:text-muted-foreground"
+                    'ml-auto',
+                    link.variant === 'default' && 'text-background dark:text-muted-foreground'
                   )}
                 >
                   {link.label}

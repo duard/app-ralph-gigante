@@ -1,7 +1,7 @@
-import { Package, PackageCheck, PackageX, TrendingUp, Calendar } from "lucide-react"
-import * as React from "react"
+import { Package, PackageCheck, PackageX, TrendingUp, Calendar } from 'lucide-react';
+import * as React from 'react';
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardAction,
@@ -9,30 +9,29 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { useDashboardMetrics, type PeriodFilter } from "@/hooks/use-dashboard-metrics"
-
+} from '@/components/ui/select';
+import { useDashboardMetrics, type PeriodFilter } from '@/hooks/use-dashboard-metrics';
 
 interface DashboardCardsProps {
-  period?: PeriodFilter
-  onPeriodChange?: (period: PeriodFilter) => void
-  showPeriodSelector?: boolean
+  period?: PeriodFilter;
+  onPeriodChange?: (period: PeriodFilter) => void;
+  showPeriodSelector?: boolean;
 }
 
 interface LegacyDashboardCardsProps {
-  totalProducts: number
-  activeProducts: number
-  inactiveProducts: number
-  outOfStockProducts: number
-  totalStockValue: number
-  averagePrice: number
+  totalProducts: number;
+  activeProducts: number;
+  inactiveProducts: number;
+  outOfStockProducts: number;
+  totalStockValue: number;
+  averagePrice: number;
 }
 
 // New component with period filtering
@@ -41,25 +40,28 @@ export function DashboardCards({
   onPeriodChange,
   showPeriodSelector = true,
 }: DashboardCardsProps) {
-  const metrics = useDashboardMetrics(period)
+  const metrics = useDashboardMetrics(period);
 
-  const handlePeriodChange = React.useCallback((newPeriod: PeriodFilter) => {
-    onPeriodChange?.(newPeriod)
-  }, [onPeriodChange])
+  const handlePeriodChange = React.useCallback(
+    (newPeriod: PeriodFilter) => {
+      onPeriodChange?.(newPeriod);
+    },
+    [onPeriodChange]
+  );
 
   const getPeriodText = (periodFilter: PeriodFilter) => {
     switch (periodFilter) {
       case 'today':
-        return 'Hoje'
+        return 'Hoje';
       case 'week':
-        return 'Últimos 7 dias'
+        return 'Últimos 7 dias';
       case 'month':
-        return 'Últimos 30 dias'
+        return 'Últimos 30 dias';
       case 'all':
       default:
-        return 'Todo período'
+        return 'Todo período';
     }
-  }
+  };
 
   return (
     <>
@@ -94,7 +96,7 @@ export function DashboardCards({
         averagePrice={metrics.averagePrice}
       />
     </>
-  )
+  );
 }
 
 // Content component for backward compatibility and internal use
@@ -126,9 +128,7 @@ function DashboardCardsContent({
             <TrendingUp className="size-4" />
             {activeProducts} ativos
           </div>
-          <div className="text-muted-foreground">
-            {inactiveProducts} inativos no momento
-          </div>
+          <div className="text-muted-foreground">{inactiveProducts} inativos no momento</div>
         </CardFooter>
       </Card>
 
@@ -147,13 +147,10 @@ function DashboardCardsContent({
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            {totalProducts > 0
-              ? ((activeProducts / totalProducts) * 100).toFixed(1)
-              : 0}% do catálogo
+            {totalProducts > 0 ? ((activeProducts / totalProducts) * 100).toFixed(1) : 0}% do
+            catálogo
           </div>
-          <div className="text-muted-foreground">
-            Prontos para venda
-          </div>
+          <div className="text-muted-foreground">Prontos para venda</div>
         </CardFooter>
       </Card>
 
@@ -174,9 +171,7 @@ function DashboardCardsContent({
           <div className="line-clamp-1 flex gap-2 font-medium text-destructive">
             Reposição necessária
           </div>
-          <div className="text-muted-foreground">
-            Produtos com estoque zerado
-          </div>
+          <div className="text-muted-foreground">Produtos com estoque zerado</div>
         </CardFooter>
       </Card>
 
@@ -198,18 +193,18 @@ function DashboardCardsContent({
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Média: {new Intl.NumberFormat('pt-BR', {
+            Média:{' '}
+            {new Intl.NumberFormat('pt-BR', {
               style: 'currency',
               currency: 'BRL',
-            }).format(averagePrice)} / produto
+            }).format(averagePrice)}{' '}
+            / produto
           </div>
-          <div className="text-muted-foreground">
-            Valor total do inventário
-          </div>
+          <div className="text-muted-foreground">Valor total do inventário</div>
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
 
 // Export the legacy function for backward compatibility
@@ -230,5 +225,5 @@ export function DashboardCardsLegacy({
       totalStockValue={totalStockValue}
       averagePrice={averagePrice}
     />
-  )
+  );
 }

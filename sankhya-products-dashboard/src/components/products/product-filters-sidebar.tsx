@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 import {
   Search,
   X,
@@ -11,67 +11,76 @@ import {
   Save,
   Bookmark,
   Trash2,
-  Plus
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import { Slider } from "@/components/ui/slider"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { useProductsStore } from "@/stores/products-store"
-import { useProducts } from "@/hooks/use-products"
-import { filterPresetsStore, type FilterPreset } from "@/lib/stores/filter-presets-store"
-import { cn } from "@/lib/utils"
-import { formatCurrency } from "@/lib/utils/product-utils"
-import { toast } from "sonner"
+  Plus,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Slider } from '@/components/ui/slider';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { useProductsStore } from '@/stores/products-store';
+import { useProducts } from '@/hooks/use-products';
+import { filterPresetsStore, type FilterPreset } from '@/lib/stores/filter-presets-store';
+import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils/product-utils';
+import { toast } from 'sonner';
 
 interface ProductFiltersSidebarProps {
-  className?: string
-  children?: React.ReactNode
+  className?: string;
+  children?: React.ReactNode;
 }
 
 export function ProductFiltersSidebar({ className, children }: ProductFiltersSidebarProps) {
-  const { filters, setFilters, resetFilters } = useProductsStore()
-  const { products } = useProducts()
+  const { filters, setFilters, resetFilters } = useProductsStore();
+  const { products } = useProducts();
 
-  
   // Collapsible sections state
-  const [basicFiltersOpen, setBasicFiltersOpen] = React.useState(true)
-  const [priceFiltersOpen, setPriceFiltersOpen] = React.useState(true)
-  const [categoryFiltersOpen, setCategoryFiltersOpen] = React.useState(true)
-  const [presetsOpen, setPresetsOpen] = React.useState(false)
+  const [basicFiltersOpen, setBasicFiltersOpen] = React.useState(true);
+  const [priceFiltersOpen, setPriceFiltersOpen] = React.useState(true);
+  const [categoryFiltersOpen, setCategoryFiltersOpen] = React.useState(true);
+  const [presetsOpen, setPresetsOpen] = React.useState(false);
 
   // Presets state
-  const [savedPresets, setSavedPresets] = React.useState<FilterPreset[]>([])
-  const [newPresetName, setNewPresetName] = React.useState("")
-  const [isCreatingPreset, setIsCreatingPreset] = React.useState(false)
+  const [savedPresets, setSavedPresets] = React.useState<FilterPreset[]>([]);
+  const [newPresetName, setNewPresetName] = React.useState('');
+  const [isCreatingPreset, setIsCreatingPreset] = React.useState(false);
 
   // Load presets on mount
   React.useEffect(() => {
-    setSavedPresets(filterPresetsStore.getPresets())
-  }, [])
+    setSavedPresets(filterPresetsStore.getPresets());
+  }, []);
 
   // Check if there are any active filters
   const hasActiveFilters = React.useMemo(() => {
-    return !!(filters?.search || filters?.status !== 'all' ||
-             filters?.category || filters?.unit ||
-             (filters?.priceMin && filters?.priceMin > 0) ||
-             (filters?.priceMax && filters?.priceMax < Infinity))
-  }, [filters])
+    return !!(
+      filters?.search ||
+      filters?.status !== 'all' ||
+      filters?.category ||
+      filters?.unit ||
+      (filters?.priceMin && filters?.priceMin > 0) ||
+      (filters?.priceMax && filters?.priceMax < Infinity)
+    );
+  }, [filters]);
 
   // Preset management functions
   const handleSavePreset = () => {
     if (!newPresetName.trim()) {
-      toast.error("Digite um nome para o preset")
-      return
+      toast.error('Digite um nome para o preset');
+      return;
     }
 
     if (!hasActiveFilters) {
-      toast.error("Não há filtros ativos para salvar")
-      return
+      toast.error('Não há filtros ativos para salvar');
+      return;
     }
 
     try {
@@ -79,106 +88,107 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
         name: newPresetName.trim(),
         description: `Filtros salvos em ${new Date().toLocaleDateString('pt-BR')}`,
         filters: { ...filters },
-      })
+      });
 
-      setSavedPresets(filterPresetsStore.getPresets())
-      setNewPresetName("")
-      setIsCreatingPreset(false)
-      toast.success("Preset salvo com sucesso!")
+      setSavedPresets(filterPresetsStore.getPresets());
+      setNewPresetName('');
+      setIsCreatingPreset(false);
+      toast.success('Preset salvo com sucesso!');
     } catch (_error) {
-      toast.error("Erro ao salvar preset")
+      toast.error('Erro ao salvar preset');
     }
-  }
+  };
 
   const handleLoadPreset = (preset: FilterPreset) => {
-    setFilters(preset.filters)
-    toast.success(`Preset "${preset.name}" carregado`)
-  }
+    setFilters(preset.filters);
+    toast.success(`Preset "${preset.name}" carregado`);
+  };
 
   const handleDeletePreset = (presetId: string, presetName: string) => {
     try {
-      filterPresetsStore.deletePreset(presetId)
-      setSavedPresets(filterPresetsStore.getPresets())
-      toast.success(`Preset "${presetName}" excluído`)
+      filterPresetsStore.deletePreset(presetId);
+      setSavedPresets(filterPresetsStore.getPresets());
+      toast.success(`Preset "${presetName}" excluído`);
     } catch (_error) {
-      toast.error("Erro ao excluir preset")
+      toast.error('Erro ao excluir preset');
     }
-  }
-  
-  const searchValue = filters?.search ?? ""
-  const statusValue = filters?.status ?? 'all'
+  };
+
+  const searchValue = filters?.search ?? '';
+  const statusValue = filters?.status ?? 'all';
 
   // Get unique categories from products
   const categories = React.useMemo(() => {
     const uniqueCategories = Array.from(
-      new Set(products.map(p => p.descrgrupoprod).filter(Boolean))
-    ).sort()
-    return uniqueCategories
-  }, [products])
+      new Set(products.map((p) => p.descrgrupoprod).filter(Boolean))
+    ).sort();
+    return uniqueCategories;
+  }, [products]);
 
   // Get unique units from products
   const units = React.useMemo(() => {
-    const uniqueUnits = Array.from(
-      new Set(products.map(p => p.codvol).filter(Boolean))
-    ).sort()
-    return uniqueUnits
-  }, [products])
+    const uniqueUnits = Array.from(new Set(products.map((p) => p.codvol).filter(Boolean))).sort();
+    return uniqueUnits;
+  }, [products]);
 
   // Get price range from products
   const priceRange = React.useMemo(() => {
-    if (products.length === 0) return { min: 0, max: 1000 }
-    const prices = products.map(p => p.vlrvenda || 0).filter(p => p > 0)
-    if (prices.length === 0) return { min: 0, max: 1000 }
+    if (products.length === 0) return { min: 0, max: 1000 };
+    const prices = products.map((p) => p.vlrvenda || 0).filter((p) => p > 0);
+    if (prices.length === 0) return { min: 0, max: 1000 };
     return {
       min: Math.min(...prices),
-      max: Math.max(...prices)
-    }
-  }, [products])
+      max: Math.max(...prices),
+    };
+  }, [products]);
 
   // Current price range
   const currentPriceRange = [
     filters?.priceMin ?? priceRange.min,
-    filters?.priceMax ?? priceRange.max
-  ]
+    filters?.priceMax ?? priceRange.max,
+  ];
 
   const handleSearchChange = (value: string) => {
-    setFilters({ search: value })
-  }
+    setFilters({ search: value });
+  };
 
   const handleStatusChange = (value: 'all' | 'active' | 'inactive') => {
-    setFilters({ status: value })
-  }
+    setFilters({ status: value });
+  };
 
   const handleCategoryChange = (value: string) => {
-    setFilters({ category: value === 'all' ? '' : value })
-  }
+    setFilters({ category: value === 'all' ? '' : value });
+  };
 
   const handleUnitChange = (value: string) => {
-    setFilters({ unit: value === 'all' ? '' : value })
-  }
+    setFilters({ unit: value === 'all' ? '' : value });
+  };
 
   const handlePriceRangeChange = (value: number[]) => {
     setFilters({
       priceMin: value[0] === priceRange.min ? undefined : value[0],
-      priceMax: value[1] === priceRange.max ? undefined : value[1]
-    })
-  }
+      priceMax: value[1] === priceRange.max ? undefined : value[1],
+    });
+  };
 
   const handleClearFilters = () => {
-    resetFilters()
-    toast.success("Filtros limpos com sucesso")
-  }
+    resetFilters();
+    toast.success('Filtros limpos com sucesso');
+  };
 
   const activeFiltersCount = React.useMemo(() => {
-    let count = 0
-    if (filters?.search) count++
-    if (filters?.status !== 'all') count++
-    if (filters?.category) count++
-    if (filters?.unit) count++
-    if ((filters?.priceMin !== undefined && filters.priceMin > priceRange.min) ||
-        (filters?.priceMax !== undefined && filters.priceMax < priceRange.max)) count++
-    return count
-  }, [filters, priceRange])
+    let count = 0;
+    if (filters?.search) count++;
+    if (filters?.status !== 'all') count++;
+    if (filters?.category) count++;
+    if (filters?.unit) count++;
+    if (
+      (filters?.priceMin !== undefined && filters.priceMin > priceRange.min) ||
+      (filters?.priceMax !== undefined && filters.priceMax < priceRange.max)
+    )
+      count++;
+    return count;
+  }, [filters, priceRange]);
 
   const content = (
     <div className="flex flex-col h-full">
@@ -194,12 +204,7 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
           )}
         </div>
         {hasActiveFilters && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleClearFilters}
-            className="h-8 px-2"
-          >
+          <Button variant="ghost" size="sm" onClick={handleClearFilters} className="h-8 px-2">
             <RotateCcw className="h-4 w-4" />
           </Button>
         )}
@@ -212,7 +217,11 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
           <CollapsibleTrigger asChild>
             <Button variant="ghost" className="w-full justify-between p-0 h-8">
               <span className="font-medium">Filtros Básicos</span>
-              {basicFiltersOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              {basicFiltersOpen ? (
+                <ChevronLeft className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-4 mt-2">
@@ -265,7 +274,11 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
           <CollapsibleTrigger asChild>
             <Button variant="ghost" className="w-full justify-between p-0 h-8">
               <span className="font-medium">Categoria & Unidade</span>
-              {categoryFiltersOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              {categoryFiltersOpen ? (
+                <ChevronLeft className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-4 mt-2">
@@ -273,8 +286,8 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
             {categories.length > 0 && (
               <div className="space-y-2">
                 <Label htmlFor="sidebar-category">Categoria</Label>
-                <Select 
-                  value={filters?.category || 'all'} 
+                <Select
+                  value={filters?.category || 'all'}
                   onValueChange={(value) => handleCategoryChange(value || '')}
                 >
                   <SelectTrigger id="sidebar-category">
@@ -296,8 +309,8 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
             {units.length > 0 && (
               <div className="space-y-2">
                 <Label htmlFor="sidebar-unit">Unidade</Label>
-                <Select 
-                  value={filters?.unit || 'all'} 
+                <Select
+                  value={filters?.unit || 'all'}
                   onValueChange={(value) => handleUnitChange(value || '')}
                 >
                   <SelectTrigger id="sidebar-unit">
@@ -324,7 +337,11 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
           <CollapsibleTrigger asChild>
             <Button variant="ghost" className="w-full justify-between p-0 h-8">
               <span className="font-medium">Faixa de Preço</span>
-              {priceFiltersOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              {priceFiltersOpen ? (
+                <ChevronLeft className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-3 mt-2">
@@ -358,17 +375,14 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
                 {filters?.search && (
                   <Badge variant="secondary" className="gap-1">
                     Busca: "{filters.search}"
-                    <X 
-                      className="h-3 w-3 cursor-pointer" 
-                      onClick={() => handleSearchChange('')}
-                    />
+                    <X className="h-3 w-3 cursor-pointer" onClick={() => handleSearchChange('')} />
                   </Badge>
                 )}
                 {filters?.status !== 'all' && (
                   <Badge variant="secondary" className="gap-1">
                     Status: {filters.status === 'active' ? 'Ativos' : 'Inativos'}
-                    <X 
-                      className="h-3 w-3 cursor-pointer" 
+                    <X
+                      className="h-3 w-3 cursor-pointer"
                       onClick={() => handleStatusChange('all')}
                     />
                   </Badge>
@@ -376,8 +390,8 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
                 {filters?.category && (
                   <Badge variant="secondary" className="gap-1">
                     Cat: {filters.category}
-                    <X 
-                      className="h-3 w-3 cursor-pointer" 
+                    <X
+                      className="h-3 w-3 cursor-pointer"
                       onClick={() => handleCategoryChange('all')}
                     />
                   </Badge>
@@ -385,18 +399,15 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
                 {filters?.unit && (
                   <Badge variant="secondary" className="gap-1">
                     Un: {filters.unit}
-                    <X 
-                      className="h-3 w-3 cursor-pointer" 
-                      onClick={() => handleUnitChange('all')}
-                    />
+                    <X className="h-3 w-3 cursor-pointer" onClick={() => handleUnitChange('all')} />
                   </Badge>
                 )}
                 {(filters?.priceMin !== undefined && filters.priceMin > priceRange.min) ||
-                 (filters?.priceMax !== undefined && filters.priceMax < priceRange.max) ? (
+                (filters?.priceMax !== undefined && filters.priceMax < priceRange.max) ? (
                   <Badge variant="secondary" className="gap-1">
                     R$ {currentPriceRange[0].toFixed(2)} - R$ {currentPriceRange[1].toFixed(2)}
-                    <X 
-                      className="h-3 w-3 cursor-pointer" 
+                    <X
+                      className="h-3 w-3 cursor-pointer"
                       onClick={() => handlePriceRangeChange([priceRange.min, priceRange.max])}
                     />
                   </Badge>
@@ -442,10 +453,10 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
                 autoFocus
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    handleSavePreset()
+                    handleSavePreset();
                   } else if (e.key === 'Escape') {
-                    setIsCreatingPreset(false)
-                    setNewPresetName("")
+                    setIsCreatingPreset(false);
+                    setNewPresetName('');
                   }
                 }}
               />
@@ -463,8 +474,8 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
                   size="sm"
                   variant="outline"
                   onClick={() => {
-                    setIsCreatingPreset(false)
-                    setNewPresetName("")
+                    setIsCreatingPreset(false);
+                    setNewPresetName('');
                   }}
                   className="h-7"
                 >
@@ -501,9 +512,7 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
                     className="flex items-center justify-between p-2 rounded border bg-card hover:bg-muted/50 transition-colors"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">
-                        {preset.name}
-                      </p>
+                      <p className="text-sm font-medium truncate">{preset.name}</p>
                       <p className="text-xs text-muted-foreground">
                         {preset.createdAt.toLocaleDateString('pt-BR')}
                       </p>
@@ -555,16 +564,16 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
         </div>
       </div>
     </div>
-  )
+  );
 
   // If children provided, render as children (simplified)
   if (children) {
-    return <>{children}</>
+    return <>{children}</>;
   }
 
   // Otherwise, render as standalone sidebar with mobile responsiveness
   return (
-    <div className={cn("w-full border bg-background", className)}>
+    <div className={cn('w-full border bg-background', className)}>
       <div className="sm:hidden">
         {/* Mobile Header */}
         <div className="flex items-center justify-between p-4 border-b bg-muted/20">
@@ -578,23 +587,18 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
             )}
           </div>
           {hasActiveFilters && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClearFilters}
-              className="h-8 px-2"
-            >
+            <Button variant="ghost" size="sm" onClick={handleClearFilters} className="h-8 px-2">
               <RotateCcw className="h-4 w-4" />
             </Button>
           )}
         </div>
-        
+
         {/* Mobile Content - always expanded */}
         <div className="p-4 space-y-4">
           {/* Basic Filters - Always open on mobile */}
           <div className="space-y-4">
             <h4 className="font-medium text-sm">Filtros Básicos</h4>
-            
+
             {/* Search */}
             <div className="space-y-2">
               <Label htmlFor="mobile-search">Buscar</Label>
@@ -641,13 +645,13 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
           {/* Category & Unit - Always open on mobile */}
           <div className="space-y-4">
             <h4 className="font-medium text-sm">Categoria & Unidade</h4>
-            
+
             {/* Category filter */}
             {categories.length > 0 && (
               <div className="space-y-2">
                 <Label htmlFor="mobile-category">Categoria</Label>
-                <Select 
-                  value={filters?.category || 'all'} 
+                <Select
+                  value={filters?.category || 'all'}
                   onValueChange={(value) => handleCategoryChange(value || '')}
                 >
                   <SelectTrigger id="mobile-category">
@@ -669,8 +673,8 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
             {units.length > 0 && (
               <div className="space-y-2">
                 <Label htmlFor="mobile-unit">Unidade</Label>
-                <Select 
-                  value={filters?.unit || 'all'} 
+                <Select
+                  value={filters?.unit || 'all'}
                   onValueChange={(value) => handleUnitChange(value || '')}
                 >
                   <SelectTrigger id="mobile-unit">
@@ -694,11 +698,15 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
           {/* Price Range - Always open on mobile */}
           <div className="space-y-4">
             <h4 className="font-medium text-sm">Faixa de Preço</h4>
-            
+
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
-                      <span>De: {formatCurrency(isNaN(currentPriceRange[0]) ? 0 : currentPriceRange[0])}</span>
-                      <span>Até: {formatCurrency(isNaN(currentPriceRange[1]) ? 0 : currentPriceRange[1])}</span>
+                <span>
+                  De: {formatCurrency(isNaN(currentPriceRange[0]) ? 0 : currentPriceRange[0])}
+                </span>
+                <span>
+                  Até: {formatCurrency(isNaN(currentPriceRange[1]) ? 0 : currentPriceRange[1])}
+                </span>
               </div>
               <Slider
                 value={currentPriceRange}
@@ -716,7 +724,7 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
           {/* Mobile Presets - simplified */}
           <div className="space-y-4">
             <h4 className="font-medium text-sm">Filtros Salvos</h4>
-            
+
             {!isCreatingPreset ? (
               <Button
                 variant="outline"
@@ -750,8 +758,8 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
                     size="sm"
                     variant="outline"
                     onClick={() => {
-                      setIsCreatingPreset(false)
-                      setNewPresetName("")
+                      setIsCreatingPreset(false);
+                      setNewPresetName('');
                     }}
                     className="h-7"
                   >
@@ -795,13 +803,11 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
           </div>
         </div>
       </div>
-      
+
       {/* Desktop Sidebar */}
-      <div className="hidden sm:block">
-        {content}
-      </div>
+      <div className="hidden sm:block">{content}</div>
     </div>
-  )
+  );
 }
 
-export default ProductFiltersSidebar
+export default ProductFiltersSidebar;

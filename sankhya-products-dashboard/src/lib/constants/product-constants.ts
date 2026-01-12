@@ -13,11 +13,11 @@ export const PRODUCT_TABLE_COLUMNS = [
   { id: 'actions', label: 'Ações', visible: true },
 ] as const;
 
-export type ProductTableColumn = typeof PRODUCT_TABLE_COLUMNS[number]['id'];
+export type ProductTableColumn = (typeof PRODUCT_TABLE_COLUMNS)[number]['id'];
 
-export const DEFAULT_VISIBLE_COLUMNS = PRODUCT_TABLE_COLUMNS
-  .filter((col) => col.visible)
-  .map((col) => col.id);
+export const DEFAULT_VISIBLE_COLUMNS = PRODUCT_TABLE_COLUMNS.filter((col) => col.visible).map(
+  (col) => col.id
+);
 
 export const PRODUCT_SORT_OPTIONS = [
   { label: 'Nome', value: 'name' },

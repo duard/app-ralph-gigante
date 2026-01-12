@@ -1,35 +1,35 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import * as React from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface ColorPickerProps {
-  label: string
-  cssVar: string
-  value: string
-  onChange: (cssVar: string, value: string) => void
+  label: string;
+  cssVar: string;
+  value: string;
+  onChange: (cssVar: string, value: string) => void;
 }
 
 export function ColorPicker({ label, cssVar, value, onChange }: ColorPickerProps) {
-  const [localValue, setLocalValue] = React.useState(value)
+  const [localValue, setLocalValue] = React.useState(value);
 
   React.useEffect(() => {
-    setLocalValue(value)
-  }, [value])
+    setLocalValue(value);
+  }, [value]);
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newColor = e.target.value
-    setLocalValue(newColor)
-    onChange(cssVar, newColor)
-  }
+    const newColor = e.target.value;
+    setLocalValue(newColor);
+    onChange(cssVar, newColor);
+  };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value
-    setLocalValue(newValue)
-    onChange(cssVar, newValue)
-  }
+    const newValue = e.target.value;
+    setLocalValue(newValue);
+    onChange(cssVar, newValue);
+  };
 
   // Get current computed color for display
   const displayColor = React.useMemo(() => {
@@ -38,32 +38,34 @@ export function ColorPicker({ label, cssVar, value, onChange }: ColorPickerProps
       if (localValue.includes('oklch')) {
         try {
           // Simple fallback for oklch colors - try to get computed style
-          const computed = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim()
+          const computed = getComputedStyle(document.documentElement)
+            .getPropertyValue(cssVar)
+            .trim();
           if (computed && computed.startsWith('#')) {
-            return computed
+            return computed;
           }
         } catch (_e) {
           // If conversion fails, use a default
         }
-        return '#3b82f6' // Default blue for oklch colors
+        return '#3b82f6'; // Default blue for oklch colors
       }
       if (localValue.startsWith('#')) {
-        return localValue
+        return localValue;
       }
     }
 
     // Try to get computed value from CSS
     try {
-      const computed = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim()
+      const computed = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
       if (computed && computed.startsWith('#')) {
-        return computed
+        return computed;
       }
     } catch (_e) {
       // Ignore errors
     }
 
-    return '#3b82f6' // Default primary color
-  }, [localValue, cssVar])
+    return '#3b82f6'; // Default primary color
+  }, [localValue, cssVar]);
 
   return (
     <div className="space-y-2">
@@ -96,5 +98,5 @@ export function ColorPicker({ label, cssVar, value, onChange }: ColorPickerProps
         />
       </div>
     </div>
-  )
+  );
 }

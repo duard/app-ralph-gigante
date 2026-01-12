@@ -58,17 +58,15 @@ export function useProductsWithCache(params?: ProductSearchParams) {
 
   // Sync React Query data with Zustand store
   useEffect(() => {
-    if (productsQuery.data && productsQuery.data.success && productsQuery.data.data) {
+    if (productsQuery.data && productsQuery.data.data) {
       setProducts(productsQuery.data.data);
-      
-      if (productsQuery.data.meta) {
-        setPagination({
-          page: productsQuery.data.meta.page,
-          pageSize: productsQuery.data.meta.pageSize,
-          total: productsQuery.data.meta.total,
-          totalPages: productsQuery.data.meta.totalPages,
-        });
-      }
+
+      setPagination({
+        page: productsQuery.data.page,
+        pageSize: productsQuery.data.perPage,
+        total: productsQuery.data.total,
+        totalPages: productsQuery.data.lastPage,
+      });
     }
   }, [productsQuery.data, setProducts, setPagination]);
 
@@ -80,7 +78,10 @@ export function useProductsWithCache(params?: ProductSearchParams) {
   // Update error state
   useEffect(() => {
     if (productsQuery.error) {
-      const errorMessage = productsQuery.error instanceof Error ? productsQuery.error.message : 'Erro ao carregar produtos';
+      const errorMessage =
+        productsQuery.error instanceof Error
+          ? productsQuery.error.message
+          : 'Erro ao carregar produtos';
       setError(errorMessage);
     } else {
       setError(null);
@@ -185,7 +186,7 @@ export function useProductsWithCache(params?: ProductSearchParams) {
   const updateProduct = useCallback(
     async (id: number, data: Partial<ProductPayload>) => {
       // Get current product for rollback
-      const currentProduct = products.find(p => p.codprod === id);
+      const currentProduct = products.find((p) => p.codprod === id);
       if (!currentProduct) return null;
 
       // Apply optimistic update
@@ -226,7 +227,7 @@ export function useProductsWithCache(params?: ProductSearchParams) {
   const deleteProduct = useCallback(
     async (id: number) => {
       // Get product for rollback
-      const productToDelete = products.find(p => p.codprod === id);
+      const productToDelete = products.find((p) => p.codprod === id);
       if (!productToDelete) return false;
 
       // Apply optimistic delete
@@ -258,7 +259,7 @@ export function useProductsWithCache(params?: ProductSearchParams) {
   const deleteProducts = useCallback(
     async (ids: number[]) => {
       // Get products for rollback
-      const productsToDelete = products.filter(p => ids.includes(p.codprod));
+      const productsToDelete = products.filter((p) => ids.includes(p.codprod));
 
       // Apply optimistic delete
       ids.forEach((id) => removeProduct(id));
@@ -271,7 +272,7 @@ export function useProductsWithCache(params?: ProductSearchParams) {
         return success;
       } catch (err) {
         // Revert optimistic delete
-        productsToDelete.forEach(product => addProduct(product));
+        productsToDelete.forEach((product) => addProduct(product));
 
         const errorMessage = err instanceof Error ? err.message : 'Erro ao excluir produtos';
         setError(errorMessage);
@@ -281,7 +282,15 @@ export function useProductsWithCache(params?: ProductSearchParams) {
         setLoading(false);
       }
     },
-    [products, removeProduct, addProduct, clearSelection, setLoading, setError, deleteProductsMutation]
+    [
+      products,
+      removeProduct,
+      addProduct,
+      clearSelection,
+      setLoading,
+      setError,
+      deleteProductsMutation,
+    ]
   );
 
   /**
@@ -292,12 +301,12 @@ export function useProductsWithCache(params?: ProductSearchParams) {
       try {
         setLoading(true);
         const response = await toggleStatusMutation.mutateAsync(id);
-        
+
         if (response.success && response.data) {
           // Update product in store
           storeUpdateProduct(id, { ativo: response.data.ativo });
         }
-        
+
         return response;
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Erro ao atualizar status';
@@ -319,12 +328,12 @@ export function useProductsWithCache(params?: ProductSearchParams) {
       try {
         setLoading(true);
         const response = await updateStockMutation.mutateAsync({ id, quantity });
-        
+
         if (response.success && response.data) {
           // Update product in store
           storeUpdateProduct(id, { estoque: response.data.estoque });
         }
-        
+
         return response;
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Erro ao atualizar estoque';
@@ -341,28 +350,25 @@ export function useProductsWithCache(params?: ProductSearchParams) {
   /**
    * Search products (uses React Query caching)
    */
-  const searchProducts = useCallback(
-    async (query: string) => {
-      if (!query.trim()) {
-        return [];
+  const searchProducts = useCallback(async (query: string) => {
+    if (!query.trim()) {
+      return [];
+    }
+
+    try {
+      // This will use React Query caching automatically
+      const response = await productService.searchProducts(query);
+
+      if (response.success && response.data) {
+        return response.data;
       }
 
-      try {
-        // This will use React Query caching automatically
-        const response = await productService.searchProducts(query);
-
-        if (response.success && response.data) {
-          return response.data;
-        }
-
-        return [];
-      } catch (err) {
-        console.error('Search error:', err);
-        return [];
-      }
-    },
-    []
-  );
+      return [];
+    } catch (err) {
+      console.error('Search error:', err);
+      return [];
+    }
+  }, []);
 
   /**
    * Refresh products list

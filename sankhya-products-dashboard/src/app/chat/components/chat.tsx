@@ -1,27 +1,23 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
-import { Menu, X } from "lucide-react"
+import { useEffect, useState } from 'react';
+import { Menu, X } from 'lucide-react';
 
-import { TooltipProvider } from "@/components/ui/tooltip"
-import { Button } from "@/components/ui/button"
-import { ConversationList } from "./conversation-list"
-import { ChatHeader } from "./chat-header"
-import { MessageList } from "./message-list"
-import { MessageInput } from "./message-input"
-import { useChat, type Conversation, type Message, type User } from "@/app/chat/use-chat"
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/button';
+import { ConversationList } from './conversation-list';
+import { ChatHeader } from './chat-header';
+import { MessageList } from './message-list';
+import { MessageInput } from './message-input';
+import { useChat, type Conversation, type Message, type User } from '@/app/chat/use-chat';
 
 interface ChatProps {
-  conversations: Conversation[]
-  messages: Record<string, Message[]>
-  users: User[]
+  conversations: Conversation[];
+  messages: Record<string, Message[]>;
+  users: User[];
 }
 
-export function Chat({
-  conversations,
-  messages,
-  users,
-}: ChatProps) {
+export function Chat({ conversations, messages, users }: ChatProps) {
   const {
     selectedConversation,
     setSelectedConversation,
@@ -30,83 +26,95 @@ export function Chat({
     setUsers,
     addMessage,
     toggleMute,
-  } = useChat()
+  } = useChat();
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Close sidebar when clicking outside on mobile
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) { // lg breakpoint
-        setIsSidebarOpen(false)
+      if (window.innerWidth >= 1024) {
+        // lg breakpoint
+        setIsSidebarOpen(false);
       }
-    }
+    };
 
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Initialize data
   useEffect(() => {
-    setConversations(conversations)
-    setUsers(users)
-    
+    setConversations(conversations);
+    setUsers(users);
+
     // Set messages for all conversations
     Object.entries(messages).forEach(([conversationId, conversationMessages]) => {
-      setMessages(conversationId, conversationMessages)
-    })
+      setMessages(conversationId, conversationMessages);
+    });
 
     // Auto-select first conversation if none selected
     if (!selectedConversation && conversations.length > 0) {
-      setSelectedConversation(conversations[0].id)
+      setSelectedConversation(conversations[0].id);
     }
-  }, [conversations, messages, users, selectedConversation, setConversations, setMessages, setUsers, setSelectedConversation])
+  }, [
+    conversations,
+    messages,
+    users,
+    selectedConversation,
+    setConversations,
+    setMessages,
+    setUsers,
+    setSelectedConversation,
+  ]);
 
-  const currentConversation = conversations.find(conv => conv.id === selectedConversation)
-  const currentMessages = selectedConversation ? messages[selectedConversation] || [] : []
+  const currentConversation = conversations.find((conv) => conv.id === selectedConversation);
+  const currentMessages = selectedConversation ? messages[selectedConversation] || [] : [];
 
   const handleSendMessage = (content: string) => {
-    if (!selectedConversation) return
+    if (!selectedConversation) return;
 
     const newMessage = {
       id: `msg-${Date.now()}`,
       content,
       timestamp: new Date().toISOString(),
-      senderId: "current-user",
-      type: "text" as const,
+      senderId: 'current-user',
+      type: 'text' as const,
       isEdited: false,
       reactions: [],
       replyTo: null,
-    }
+    };
 
-    addMessage(selectedConversation, newMessage)
-  }
+    addMessage(selectedConversation, newMessage);
+  };
 
   const handleToggleMute = () => {
     if (selectedConversation) {
-      toggleMute(selectedConversation)
+      toggleMute(selectedConversation);
     }
-  }
+  };
 
   return (
     <TooltipProvider delayDuration={0}>
       <div className="h-full min-h-[600px] max-h-[calc(100vh-200px)] flex rounded-lg border overflow-hidden bg-background">
         {/* Mobile Sidebar Overlay */}
         {isSidebarOpen && (
-          <div 
+          <div
             className="fixed inset-0 bg-black/50 z-40 lg:hidden"
             onClick={() => setIsSidebarOpen(false)}
           />
         )}
 
         {/* Conversations Sidebar - Responsive */}
-        <div className={`
+        <div
+          className={`
           w-100 border-r bg-background flex-shrink-0
           ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           lg:relative lg:block
           fixed inset-y-0 left-0 z-50
           transition-transform duration-300 ease-in-out
-        `}>
+        `}
+        >
           {/* Sidebar Header with Close Button (Mobile Only) */}
           <div className="lg:hidden p-4 border-b flex items-center justify-between bg-background">
             <h2 className="text-lg font-semibold">Messages</h2>
@@ -124,8 +132,8 @@ export function Chat({
             conversations={conversations}
             selectedConversation={selectedConversation}
             onSelectConversation={(id) => {
-              setSelectedConversation(id)
-              setIsSidebarOpen(false) // Close sidebar on mobile after selection
+              setSelectedConversation(id);
+              setIsSidebarOpen(false); // Close sidebar on mobile after selection
             }}
           />
         </div>
@@ -157,24 +165,19 @@ export function Chat({
           <div className="flex-1 flex flex-col min-h-0">
             {selectedConversation ? (
               <>
-                <MessageList
-                  messages={currentMessages}
-                  users={users}
-                />
-                
+                <MessageList messages={currentMessages} users={users} />
+
                 {/* Message Input */}
                 <MessageInput
                   onSendMessage={handleSendMessage}
-                  placeholder={`Message ${currentConversation?.name || ""}...`}
+                  placeholder={`Message ${currentConversation?.name || ''}...`}
                 />
               </>
             ) : (
               <div className="flex-1 flex items-center justify-center">
                 <div className="text-center">
                   <h3 className="text-lg font-semibold mb-2">Welcome to Chat</h3>
-                  <p className="text-muted-foreground">
-                    Select a conversation to start messaging
-                  </p>
+                  <p className="text-muted-foreground">Select a conversation to start messaging</p>
                 </div>
               </div>
             )}
@@ -182,5 +185,5 @@ export function Chat({
         </div>
       </div>
     </TooltipProvider>
-  )
+  );
 }

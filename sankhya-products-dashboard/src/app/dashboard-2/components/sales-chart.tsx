@@ -1,40 +1,46 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Button } from "@/components/ui/button"
+import { useState } from 'react';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
 
 const salesData = [
-  { month: "Jan", sales: 12500, target: 15000 },
-  { month: "Feb", sales: 18200, target: 15000 },
-  { month: "Mar", sales: 16800, target: 15000 },
-  { month: "Apr", sales: 22400, target: 20000 },
-  { month: "May", sales: 24600, target: 20000 },
-  { month: "Jun", sales: 28200, target: 25000 },
-  { month: "Jul", sales: 31500, target: 25000 },
-  { month: "Aug", sales: 29800, target: 25000 },
-  { month: "Sep", sales: 33200, target: 30000 },
-  { month: "Oct", sales: 35100, target: 30000 },
-  { month: "Nov", sales: 38900, target: 35000 },
-  { month: "Dec", sales: 42300, target: 35000 },
-]
+  { month: 'Jan', sales: 12500, target: 15000 },
+  { month: 'Feb', sales: 18200, target: 15000 },
+  { month: 'Mar', sales: 16800, target: 15000 },
+  { month: 'Apr', sales: 22400, target: 20000 },
+  { month: 'May', sales: 24600, target: 20000 },
+  { month: 'Jun', sales: 28200, target: 25000 },
+  { month: 'Jul', sales: 31500, target: 25000 },
+  { month: 'Aug', sales: 29800, target: 25000 },
+  { month: 'Sep', sales: 33200, target: 30000 },
+  { month: 'Oct', sales: 35100, target: 30000 },
+  { month: 'Nov', sales: 38900, target: 35000 },
+  { month: 'Dec', sales: 42300, target: 35000 },
+];
 
 const chartConfig = {
   sales: {
-    label: "Sales",
-    color: "var(--primary)",
+    label: 'Sales',
+    color: 'var(--primary)',
   },
   target: {
-    label: "Target",
-    color: "var(--primary)",
+    label: 'Target',
+    color: 'var(--primary)',
   },
-}
+};
 
 export function SalesChart() {
-  const [timeRange, setTimeRange] = useState("12m")
+  const [timeRange, setTimeRange] = useState('12m');
 
   return (
     <Card className="cursor-pointer">
@@ -49,9 +55,15 @@ export function SalesChart() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="3m" className="cursor-pointer">Last 3 months</SelectItem>
-              <SelectItem value="6m" className="cursor-pointer">Last 6 months</SelectItem>
-              <SelectItem value="12m" className="cursor-pointer">Last 12 months</SelectItem>
+              <SelectItem value="3m" className="cursor-pointer">
+                Last 3 months
+              </SelectItem>
+              <SelectItem value="6m" className="cursor-pointer">
+                Last 6 months
+              </SelectItem>
+              <SelectItem value="12m" className="cursor-pointer">
+                Last 12 months
+              </SelectItem>
             </SelectContent>
           </Select>
           <Button variant="outline" className="cursor-pointer">
@@ -74,14 +86,14 @@ export function SalesChart() {
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted/30" />
-              <XAxis 
-                dataKey="month" 
+              <XAxis
+                dataKey="month"
                 axisLine={false}
                 tickLine={false}
                 className="text-xs"
                 tick={{ fontSize: 12 }}
               />
-              <YAxis 
+              <YAxis
                 axisLine={false}
                 tickLine={false}
                 className="text-xs"
@@ -111,5 +123,5 @@ export function SalesChart() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

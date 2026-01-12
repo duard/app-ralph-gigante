@@ -1,5 +1,5 @@
-import { SignupForm1 } from "./components/signup-form-1"
-import { Logo } from "@/components/logo"
+import { SignupForm1 } from './components/signup-form-1';
+import { Logo } from '@/components/logo';
 
 export default function SignUpPage() {
   return (
@@ -14,5 +14,5 @@ export default function SignUpPage() {
         <SignupForm1 />
       </div>
     </div>
-  )
+  );
 }

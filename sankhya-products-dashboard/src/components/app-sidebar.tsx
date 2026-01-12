@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 import {
   Package,
   LayoutDashboard,
@@ -16,12 +16,12 @@ import {
   Users,
   Building,
   Database,
-} from "lucide-react"
-import { Link } from "react-router-dom"
-import { SidebarNotification } from "@/components/sidebar-notification"
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { SidebarNotification } from '@/components/sidebar-notification';
 
-import { NavMain } from "@/components/nav-main"
-import { NavUser } from "@/components/nav-user"
+import { NavMain } from '@/components/nav-main';
+import { NavUser } from '@/components/nav-user';
 import {
   Sidebar,
   SidebarContent,
@@ -30,151 +30,161 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from '@/components/ui/sidebar';
 
 const data = {
   user: {
-    id: "1",
-    name: "Sankhya Center",
-    username: "usuario",
-    email: "usuario@sankhya.com",
-    avatar: "",
-    role: "admin",
+    id: '1',
+    name: 'Sankhya Center',
+    username: 'usuario',
+    email: 'usuario@sankhya.com',
+    avatar: '',
+    role: 'admin',
   },
   navGroups: [
     {
-      label: "Principal",
+      label: 'Principal',
       items: [
         {
-          title: "Bem-Vindo",
-          url: "/bem-vindo",
+          title: 'Bem-Vindo',
+          url: '/bem-vindo',
           icon: Home,
         },
         {
-          title: "Dashboard",
-          url: "/dashboard",
+          title: 'Dashboard',
+          url: '/dashboard',
           icon: LayoutDashboard,
         },
         {
-          title: "Dashboard 2",
-          url: "/dashboard-2",
+          title: 'Dashboard 2',
+          url: '/dashboard-2',
           icon: BarChart3,
         },
       ],
     },
     {
-      label: "Produtos",
+      label: 'Produtos',
       items: [
         {
-          title: "Lista de Produtos",
-          url: "/produtos",
+          title: 'Lista de Produtos',
+          url: '/produtos',
           icon: Package,
         },
         {
-          title: "Análise de Produtos",
-          url: "/dashboard",
+          title: 'Análise de Produtos',
+          url: '/dashboard',
           icon: TrendingUp,
         },
         {
-          title: "Filtros Avançados",
-          url: "#",
+          title: 'Filtros Avançados',
+          url: '#',
           icon: Filter,
           items: [
             {
-              title: "Por Categoria",
-              url: "/produtos?view=category",
+              title: 'Por Categoria',
+              url: '/produtos?view=category',
             },
             {
-              title: "Por Preço",
-              url: "/produtos?view=price",
+              title: 'Por Preço',
+              url: '/produtos?view=price',
             },
             {
-              title: "Por Status",
-              url: "/produtos?view=status",
+              title: 'Por Status',
+              url: '/produtos?view=status',
             },
           ],
         },
         {
-          title: "Exportação",
-          url: "#",
+          title: 'Exportação',
+          url: '#',
           icon: Download,
           items: [
             {
-              title: "Exportar CSV",
-              url: "#",
+              title: 'Exportar CSV',
+              url: '#',
             },
             {
-              title: "Exportar Excel",
-              url: "#",
+              title: 'Exportar Excel',
+              url: '#',
             },
             {
-              title: "Exportar PDF",
-              url: "#",
+              title: 'Exportar PDF',
+              url: '#',
             },
           ],
         },
       ],
     },
     {
-      label: "Sistema",
+      label: 'Sistema',
       items: [
         {
-          title: "Relatórios",
-          url: "/dashboard",
+          title: 'Relatórios',
+          url: '/dashboard',
           icon: FileText,
         },
         {
-          title: "Usuários",
-          url: "/users",
+          title: 'Usuários',
+          url: '/users',
           icon: Users,
         },
         {
-          title: "Configurações",
-          url: "#",
+          title: 'Configurações',
+          url: '#',
           icon: Settings,
           items: [
             {
-              title: "Perfil",
-              url: "/settings/user",
+              title: 'Perfil',
+              url: '/settings/user',
             },
             {
-              title: "Conta",
-              url: "/settings/account",
+              title: 'Conta',
+              url: '/settings/account',
             },
             {
-              title: "Aparência",
-              url: "/settings/appearance",
+              title: 'Aparência',
+              url: '/settings/appearance',
             },
             {
-              title: "Notificações",
-              url: "/settings/notifications",
+              title: 'Notificações',
+              url: '/settings/notifications',
             },
           ],
         },
       ],
     },
     {
-      label: "Ajuda",
+      label: 'Ferramentas',
       items: [
         {
-          title: "Documentação",
-          url: "/faqs",
+          title: 'Inspect Query',
+          url: '/inspect-query',
+          icon: Database,
+        },
+      ],
+    },
+    {
+      label: 'Ajuda',
+      items: [
+        {
+          title: 'Documentação',
+          url: '/faqs',
           icon: HelpCircle,
         },
         {
-          title: "Planos",
-          url: "/pricing",
+          title: 'Planos',
+          url: '/pricing',
           icon: CreditCard,
         },
         {
-          title: "API",
-          url: "#",
+          title: 'API',
+          url: '#',
           icon: Database,
         },
       ],
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -202,9 +212,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <SidebarNotification />
+        {/* <SidebarNotification /> */}
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

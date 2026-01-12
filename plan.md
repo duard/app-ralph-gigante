@@ -136,7 +136,7 @@
 ### DevOps
 
 - [x] Configuração de ambiente (.env)
-- [ ] Criar scripts de build e deploy para produção
+- [x] Criar scripts de build e deploy para produção
 - [ ] Configurar CI/CD pipeline com GitHub Actions
 - [x] Linting configurado (ESLint)
 - [x] Configurar Prettier para formatação consistente
@@ -423,6 +423,8 @@ Add entries below this line:
 
 - **2025-01-12**: ✅ Implementar Husky pre-commit hooks para lint e tests. Instalado Husky como dependência de desenvolvimento, inicializado com `husky init`, configurado hook pre-commit para executar `pnpm lint && pnpm test:run`, tornado executável. Lint e typecheck passando sem erros.
 
+- **2025-01-12**: ✅ Criar scripts de build e deploy para produção. Adicionado script "deploy" ao package.json da API que executa build e inicia/reinicia a aplicação com PM2. Instalado PM2 como dependência de desenvolvimento para gerenciamento de processos em produção.
+
 - **2025-01-11**: ✅ Implementar cache de requisições API usando React Query/SWR. Implementado sistema completo de cache com React Query v5 incluindo: QueryClient com configurações otimizadas (staleTime 5min, gcTime 10min, retry com exponential backoff), Query Provider com dev tools, hooks para produtos (useProductsQuery, useProductQuery, useProductSearchQuery, etc.) e autenticação (useLoginMutation, useLogoutMutation, etc.), hooks de cache aprimorados (useProductsWithCache, useAuthWithCache) que integram com Zustand para manter compatibilidade, sistema de invalidação automática de cache após mutações, suporte a prefetcing para melhor performance, tratamento de erros centralizado com toast, e integração transparente com arquitetura existente. Build bem-sucedido com chunks otimizados.
 
 - **2025-01-11**: ✅ Otimizar debounce em searches e inputs. Implementado sistema de debounce aprimorado com funções de cancelamento e execução imediata, opções configuráveis (leading, trailing, maxWait), sistema de monitoramento de performance, cleanup automático para evitar memory leaks, e TypeScript types melhorados. Aplicado em todos os componentes de busca: useSearchProducts hook, ProductTableToolbar, ProductList, e CommandSearch. Performance aprimorada com redução de requisições API desnecessárias, UI mais responsiva, memory leaks eliminados, e monitoramento embutido para análise. Build e lint funcionando sem erros críticos.
@@ -471,3 +473,5 @@ Add entries below this line:
   - **Sistema de atualização automática**: Hook useDashboardAutoRefresh com refresh a cada 5 minutos e controles manuais
   - **Lazy loading**: Componentes lazy-loaded para melhor performance inicial com Suspense boundaries
   - **Correções críticas**: Fix propriedades Product (vlrvenda/preco, descrprod/descricao), tipos TypeScript, imports verbatimModuleSyntax
+
+- **2025-01-12**: ✅ Criar documentação de componentes internos usando Storybook. Inicializado Storybook com `npx storybook@latest init`, configurado para Vite e TypeScript, adicionado suporte a shadcn/ui, criado stories básicos para componentes principais (Button, Card, ProductTable), configurado addons essenciais (Controls, Actions, Docs), e atualizado package.json com scripts storybook e build-storybook. Storybook funcionando corretamente.
