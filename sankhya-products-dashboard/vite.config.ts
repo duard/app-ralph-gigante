@@ -1,16 +1,16 @@
-import path from "path"
-import tailwindcss from "@tailwindcss/vite"
-import react from "@vitejs/plugin-react"
-import { defineConfig, loadEnv } from "vite"
+import path from 'path';
+import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '')
+  const env = loadEnv(mode, process.cwd(), '');
 
   return {
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "./src"),
+        '@': path.resolve(__dirname, './src'),
       },
     },
     define: {
@@ -20,6 +20,9 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       host: true,
       open: true,
+      fs: {
+        strict: false,
+      },
       proxy: {
         '/api': {
           target: env.VITE_SANKHYA_API_URL || 'http://localhost:3000',
@@ -36,11 +39,18 @@ export default defineConfig(({ mode }) => {
       },
       hmr: {
         overlay: true,
+        port: 5173,
+      },
+      watch: {
+        usePolling: false,
+        ignored: ['!**/node_modules/**', '**/.git/**', '**/dist/**', '**/coverage/**'],
       },
     },
-    build: {
+build: {
       sourcemap: mode === 'development',
       minify: mode === 'production' ? 'esbuild' : false,
+      target: 'esnext',
+      cssCodeSplit: true,
       rollupOptions: {
         output: {
           manualChunks: (id) => {
@@ -69,6 +79,16 @@ export default defineConfig(({ mode }) => {
               // State management and utilities
               if (id.includes('zustand') || id.includes('date-fns') || id.includes('axios')) {
                 return 'utils-vendor'
+              }
+              
+              // Animation libraries
+              if (id.includes('framer-motion')) {
+                return 'animation-vendor'
+              }
+              
+              // PDF/Excel export libraries
+              if (id.includes('jspdf') || id.includes('xlsx')) {
+                return 'export-vendor'
               }
               
               // Other vendor libraries
@@ -144,6 +164,44 @@ export default defineConfig(({ mode }) => {
             return 'assets/[ext]/[name]-[hash][extname]'
           },
         },
+        treeshake: {
+          moduleSideEffects: false,
+          propertyReadSideEffects: false,
+          tryCatchDeoptimization: false,
+        },
+      },
+      chunkSizeWarningLimit: 1000,
+      reportCompressedSize: false,
+    },
+          chunkFileNames: (chunkInfo) => {
+            // Route chunks get more descriptive names
+            if (
+              chunkInfo.name === 'dashboard' ||
+              chunkInfo.name === 'produtos' ||
+              chunkInfo.name === 'auth' ||
+              chunkInfo.name === 'settings' ||
+              chunkInfo.name === 'errors' ||
+              chunkInfo.name === 'communication' ||
+              chunkInfo.name === 'tasks' ||
+              chunkInfo.name === 'content' ||
+              chunkInfo.name === 'routes'
+            ) {
+              return 'assets/routes/[name]-[hash].js';
+            }
+            // Vendor chunks
+            return 'assets/js/[name]-[hash].js';
+          },
+          entryFileNames: 'assets/js/[name]-[hash].js',
+          assetFileNames: (assetInfo) => {
+            const name = assetInfo.name ?? '';
+            const ext = name.split('.').pop() ?? '';
+            if (ext === 'css') return 'assets/css/[name]-[hash][extname]';
+            if (['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'].includes(ext)) {
+              return 'assets/images/[name]-[hash][extname]';
+            }
+            return 'assets/[ext]/[name]-[hash][extname]';
+          },
+        },
       },
       chunkSizeWarningLimit: 1000,
     },
@@ -154,8 +212,22 @@ export default defineConfig(({ mode }) => {
         'react-router-dom',
         'zustand',
         'date-fns',
+        '@radix-ui/react-dialog',
+        '@radix-ui/react-dropdown-menu',
+        '@radix-ui/react-select',
+        '@radix-ui/react-tabs',
+        '@radix-ui/react-tooltip',
+        '@tanstack/react-table',
+        '@tanstack/react-virtual',
+        'framer-motion',
+        'recharts',
+        'lucide-react',
+        'axios',
+        'react-hook-form',
+        'zod',
       ],
+      exclude: ['@tanstack/react-query-devtools'],
     },
     assetsInclude: ['**/*.glb', '**/*.gltf', '**/*.hdr'],
-  }
-})
+  };
+});
