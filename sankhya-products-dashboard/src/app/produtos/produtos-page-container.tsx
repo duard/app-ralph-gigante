@@ -62,8 +62,9 @@ export function ProdutosPageContainer() {
     error: productsError,
   } = useQuery({
     queryKey: ['products', 'ultra-search', activeTab, filters, page, pageSize],
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       const response = await apiClient.get('/tgfpro/ultra-search', {
+        signal,
         params: {
           page,
           perPage: pageSize * 3, // Buscar mais para compensar filtro client-side
@@ -96,6 +97,7 @@ export function ProdutosPageContainer() {
       };
     },
     staleTime: 5 * 60 * 1000,
+    enabled: page >= 1 && pageSize > 0,
   });
 
   const { data: locations = [], isLoading: isLoadingLocations } = useLocations();

@@ -54,14 +54,14 @@ export function ProductFiltersToolbar({
     setSearchValue(filters.search || '');
   }, [filters.search]);
 
-  // Debounce search - AUMENTADO para 500ms (melhor performance)
+  // Debounce search - 300ms para resposta rápida
   React.useEffect(() => {
     const timer = setTimeout(() => {
       if (searchValue !== filters.search) {
         console.log('[Toolbar] Aplicando busca:', searchValue);
         onFilterChange({ search: searchValue });
       }
-    }, 500); // 500ms de debounce
+    }, 300); // 300ms de debounce
     return () => clearTimeout(timer);
   }, [searchValue, filters.search, onFilterChange]);
 
