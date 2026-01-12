@@ -9,6 +9,10 @@ export interface SimplifiedProduct {
   codvol?: string | null;
   ativo: string;
   codgrupoprod?: number;
+  descrgrupoprod?: string | null;
+  localizacao?: string | null;
+  tipcontest?: string | null;
+  liscontest?: string | null;
 }
 
 export interface SimplifiedProductsResponse {
@@ -25,13 +29,16 @@ export interface UseProductsSimplifiedParams {
   page?: number;
   perPage?: number;
   ativo?: string;
+  codgrupoprod?: number;
+  localizacao?: string;
+  tipcontest?: string;
 }
 
 export function useProductsSimplified(params: UseProductsSimplifiedParams = {}) {
-  const { search, page = 1, perPage = 20, ativo } = params;
+  const { search, page = 1, perPage = 20, ativo, codgrupoprod, localizacao, tipcontest } = params;
 
   return useQuery({
-    queryKey: ['products', 'simplified', { search, page, perPage, ativo }],
+    queryKey: ['products', 'simplified', { search, page, perPage, ativo, codgrupoprod, localizacao, tipcontest }],
     queryFn: async () => {
       const response = await apiClient.get<SimplifiedProductsResponse>('/tgfpro/simplified', {
         params: {
@@ -39,6 +46,9 @@ export function useProductsSimplified(params: UseProductsSimplifiedParams = {}) 
           perPage,
           ...(search && { search }),
           ...(ativo && { ativo }),
+          ...(codgrupoprod && { codgrupoprod }),
+          ...(localizacao && { localizacao }),
+          ...(tipcontest && { tipcontest }),
         },
       });
       return response.data;
