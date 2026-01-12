@@ -16,6 +16,7 @@ import {
   Users,
   Building,
   Database,
+  Zap,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { SidebarNotification } from '@/components/sidebar-notification';
@@ -69,6 +70,11 @@ const data = {
           title: 'Lista de Produtos',
           url: '/produtos',
           icon: Package,
+        },
+        {
+          title: 'Produtos (Rápido)',
+          url: '/produtos-simples',
+          icon: Zap,
         },
         {
           title: 'Análise de Produtos',
