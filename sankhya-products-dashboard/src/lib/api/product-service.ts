@@ -78,7 +78,7 @@ export const productService = {
         }
 
         const queryString = queryParams.toString();
-        const url = `/products${queryString ? `?${queryString}` : ''}`;
+        const url = `/tgfpro${queryString ? `?${queryString}` : ''}`;
 
         return get<PaginatedResponse<Product>>(url);
     },
@@ -87,70 +87,70 @@ export const productService = {
      * Get a single product by ID
      */
     async getProductById(id: number): Promise<ApiResponse<Product>> {
-        return get<ApiResponse<Product>>(`/products/${id}`);
+        return get<ApiResponse<Product>>(`/tgfpro/${id}`);
     },
 
     /**
      * Create a new product
      */
     async createProduct(data: ProductPayload): Promise<ApiResponse<Product>> {
-        return post<ApiResponse<Product>>('/products', data);
+        return post<ApiResponse<Product>>('/tgfpro', data);
     },
 
     /**
      * Update an existing product
      */
     async updateProduct(id: number, data: Partial<ProductPayload>): Promise<ApiResponse<Product>> {
-        return put<ApiResponse<Product>>(`/products/${id}`, data);
+        return put<ApiResponse<Product>>(`/tgfpro/${id}`, data);
     },
 
     /**
      * Delete a product
      */
     async deleteProduct(id: number): Promise<ApiResponse<void>> {
-        return del<ApiResponse<void>>(`/products/${id}`);
+        return del<ApiResponse<void>>(`/tgfpro/${id}`);
     },
 
     /**
      * Delete multiple products
      */
     async deleteProducts(ids: number[]): Promise<ApiResponse<void>> {
-        return post<ApiResponse<void>>('/products/bulk-delete', { ids });
+        return post<ApiResponse<void>>('/tgfpro/bulk-delete', { ids });
     },
 
     /**
      * Search products by term
      */
     async searchProducts(query: string): Promise<PaginatedResponse<Product>> {
-        return get<PaginatedResponse<Product>>(`/products/search?q=${encodeURIComponent(query)}`);
+        return get<PaginatedResponse<Product>>(`/tgfpro/search?q=${encodeURIComponent(query)}`);
     },
 
     /**
      * Get products by category
      */
     async getProductsByCategory(categoryId: number): Promise<PaginatedResponse<Product>> {
-        return get<PaginatedResponse<Product>>(`/products?codgrupoprod=${categoryId}`);
+        return get<PaginatedResponse<Product>>(`/tgfpro?codgrupoprod=${categoryId}`);
     },
 
     /**
      * Toggle product status (active/inactive)
      */
     async toggleProductStatus(id: number): Promise<ApiResponse<Product>> {
-        return post<ApiResponse<Product>>(`/products/${id}/toggle-status`);
+        return post<ApiResponse<Product>>(`/tgfpro/${id}/toggle-status`);
     },
 
     /**
      * Update stock for a product
      */
     async updateStock(id: number, quantity: number): Promise<ApiResponse<Product>> {
-        return post<ApiResponse<Product>>(`/products/${id}/update-stock`, { quantity });
+        return post<ApiResponse<Product>>(`/tgfpro/${id}/update-stock`, { quantity });
     },
 
     /**
      * Get product categories
      */
     async getCategories(): Promise<ApiResponse<{ id: number; name: string }[]>> {
-        return get<ApiResponse<{ id: number; name: string }[]>>('/products/categories');
+        return get<ApiResponse<{ id: number; name: string }[]>>('/tgfgru');
     },
 
     /**
@@ -171,7 +171,7 @@ export const productService = {
             inactive: number;
             lowStock: number;
             totalValue: number;
-        }>>('/products/stats');
+        }>>('/tgfpro/stats');
     },
 
     /**
@@ -190,7 +190,7 @@ export const productService = {
         }
 
         const queryString = queryParams.toString();
-        const url = `/products/export/csv${queryString ? `?${queryString}` : ''}`;
+        const url = `/tgfpro/export/csv${queryString ? `?${queryString}` : ''}`;
 
         const response = await fetch(url);
         return response.blob();

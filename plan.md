@@ -128,7 +128,7 @@
 ### Documentação
 
 - [x] Atualizar README com instruções completas de setup e desenvolvimento
-- [ ] Criar documentação de componentes internos usando Storybook
+- [x] Criar documentação de componentes internos usando Storybook
 - [ ] Documentar API Client com exemplos de uso
 - [ ] Criar guia de estilos e convenções do projeto
 - [ ] Documentar arquitetura do projeto (estrutura de pastas, stores, etc.)
@@ -140,7 +140,7 @@
 - [ ] Configurar CI/CD pipeline com GitHub Actions
 - [x] Linting configurado (ESLint)
 - [x] Configurar Prettier para formatação consistente
-- [ ] Implementar Husky pre-commit hooks para lint e tests
+- [x] Implementar Husky pre-commit hooks para lint e tests
 - [x] TypeScript strict mode ativado
 - [ ] Adicionar health check endpoint na API
 - [ ] Configurar error tracking com Sentry
@@ -418,6 +418,10 @@ src/
 ## Progress
 
 Add entries below this line:
+
+- **2025-01-12**: ✅ Criar documentação de componentes internos usando Storybook. Inicializado Storybook com `npx storybook@latest init`, configurado para Vite e TypeScript, adicionado suporte a shadcn/ui, criado stories básicos para componentes principais (Button, Card, ProductTable), configurado addons essenciais (Controls, Actions, Docs), e atualizado package.json com scripts storybook e build-storybook. Storybook funcionando corretamente.
+
+- **2025-01-12**: ✅ Implementar Husky pre-commit hooks para lint e tests. Instalado Husky como dependência de desenvolvimento, inicializado com `husky init`, configurado hook pre-commit para executar `pnpm lint && pnpm test:run`, tornado executável. Lint e typecheck passando sem erros.
 
 - **2025-01-11**: ✅ Implementar cache de requisições API usando React Query/SWR. Implementado sistema completo de cache com React Query v5 incluindo: QueryClient com configurações otimizadas (staleTime 5min, gcTime 10min, retry com exponential backoff), Query Provider com dev tools, hooks para produtos (useProductsQuery, useProductQuery, useProductSearchQuery, etc.) e autenticação (useLoginMutation, useLogoutMutation, etc.), hooks de cache aprimorados (useProductsWithCache, useAuthWithCache) que integram com Zustand para manter compatibilidade, sistema de invalidação automática de cache após mutações, suporte a prefetcing para melhor performance, tratamento de erros centralizado com toast, e integração transparente com arquitetura existente. Build bem-sucedido com chunks otimizados.
 
