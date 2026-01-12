@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, X } from 'lucide-react';
+import { Search, X, ArrowUpDown, ArrowUp, ArrowDown, MapPin, MapPinOff } from 'lucide-react';
 import { useProductsSimplified } from '@/hooks/use-products-simplified';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -23,21 +23,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+type SortColumn = 'codprod' | 'descrprod' | 'grupo' | 'localizacao' | 'tipcontest' | 'ativo';
+type SortDir = 'asc' | 'desc';
 
 export function ProdutosSimplesContainer() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchInput, setSearchInput] = React.useState(searchParams.get('search') || '');
-  const [locInput, setLocInput] = React.useState(searchParams.get('localizacao') || '');
-  const [tipInput, setTipInput] = React.useState(searchParams.get('tipcontest') || '');
 
   // URL state
   const page = Number(searchParams.get('page')) || 1;
-  const perPage = Number(searchParams.get('perPage')) || 20;
+  const perPage = Number(searchParams.get('perPage')) || 30;
   const search = searchParams.get('search') || '';
-  const codgrupoprod = searchParams.get('codgrupoprod') ? Number(searchParams.get('codgrupoprod')) : undefined;
-  const localizacao = searchParams.get('localizacao') || '';
-  const tipcontest = searchParams.get('tipcontest') || '';
+  const tab = (searchParams.get('tab') || 'com-local') as 'com-local' | 'sem-local' | 'todos';
+  const sortCol = (searchParams.get('sortCol') || 'codprod') as SortColumn;
+  const sortDir = (searchParams.get('sortDir') || 'desc') as SortDir;
 
   // Debounced search update
   React.useEffect(() => {
@@ -54,71 +57,49 @@ export function ProdutosSimplesContainer() {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  // Debounced localizacao update
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      const newParams = new URLSearchParams(searchParams);
-      if (locInput) {
-        newParams.set('localizacao', locInput);
-      } else {
-        newParams.delete('localizacao');
-      }
-      newParams.delete('page');
-      setSearchParams(newParams, { replace: true });
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [locInput]);
-
-  // Debounced tipcontest update
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      const newParams = new URLSearchParams(searchParams);
-      if (tipInput) {
-        newParams.set('tipcontest', tipInput);
-      } else {
-        newParams.delete('tipcontest');
-      }
-      newParams.delete('page');
-      setSearchParams(newParams, { replace: true });
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [tipInput]);
-
   const { data, isLoading, error } = useProductsSimplified({
     search,
     page,
     perPage,
-    codgrupoprod,
-    localizacao,
-    tipcontest,
+    sort: `${sortCol} ${sortDir}`,
+    comLocal: tab === 'com-local',
+    semLocal: tab === 'sem-local',
   });
 
-  const clearFilters = () => {
-    setSearchInput('');
-    setLocInput('');
-    setTipInput('');
-    setSearchParams(new URLSearchParams(), { replace: true });
-  };
-
-  const hasFilters = search || localizacao || tipcontest || codgrupoprod;
-
-  const updatePage = (newPage: number) => {
+  const updateParam = (key: string, value: string | null) => {
     const newParams = new URLSearchParams(searchParams);
-    if (newPage === 1) {
-      newParams.delete('page');
+    if (value) {
+      newParams.set(key, value);
     } else {
-      newParams.set('page', String(newPage));
+      newParams.delete(key);
     }
+    if (key !== 'page') newParams.delete('page');
     setSearchParams(newParams, { replace: true });
   };
 
-  const updatePerPage = (newPerPage: number) => {
+  const handleSort = (col: SortColumn) => {
     const newParams = new URLSearchParams(searchParams);
-    newParams.set('perPage', String(newPerPage));
+    if (sortCol === col) {
+      newParams.set('sortDir', sortDir === 'asc' ? 'desc' : 'asc');
+    } else {
+      newParams.set('sortCol', col);
+      newParams.set('sortDir', 'desc');
+    }
     newParams.delete('page');
     setSearchParams(newParams, { replace: true });
   };
 
+  const SortIcon = ({ col }: { col: SortColumn }) => {
+    if (sortCol !== col) return <ArrowUpDown className="h-3 w-3 ml-1 opacity-50" />;
+    return sortDir === 'asc' ? <ArrowUp className="h-3 w-3 ml-1" /> : <ArrowDown className="h-3 w-3 ml-1" />;
+  };
+
+  const clearFilters = () => {
+    setSearchInput('');
+    setSearchParams(new URLSearchParams({ tab }), { replace: true });
+  };
+
+  const hasFilters = search;
   const totalPages = data?.lastPage || 1;
   const total = data?.total || 0;
 
@@ -129,6 +110,134 @@ export function ProdutosSimplesContainer() {
       </div>
     );
   }
+
+  const renderTable = () => (
+    <div className="rounded-md border overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-20 cursor-pointer hover:bg-muted/50" onClick={() => handleSort('codprod')}>
+              <div className="flex items-center">Código<SortIcon col="codprod" /></div>
+            </TableHead>
+            <TableHead className="min-w-[200px] cursor-pointer hover:bg-muted/50" onClick={() => handleSort('descrprod')}>
+              <div className="flex items-center">Descrição<SortIcon col="descrprod" /></div>
+            </TableHead>
+            <TableHead className="w-28 cursor-pointer hover:bg-muted/50" onClick={() => handleSort('grupo')}>
+              <div className="flex items-center">Grupo<SortIcon col="grupo" /></div>
+            </TableHead>
+            <TableHead className="w-24 cursor-pointer hover:bg-muted/50" onClick={() => handleSort('localizacao')}>
+              <div className="flex items-center">Local<SortIcon col="localizacao" /></div>
+            </TableHead>
+            <TableHead className="w-24 cursor-pointer hover:bg-muted/50" onClick={() => handleSort('tipcontest')}>
+              <div className="flex items-center">Controle<SortIcon col="tipcontest" /></div>
+            </TableHead>
+            <TableHead className="w-20 text-center">Estoque</TableHead>
+            <TableHead className="w-16 text-center cursor-pointer hover:bg-muted/50" onClick={() => handleSort('ativo')}>
+              <div className="flex items-center justify-center">Ativo<SortIcon col="ativo" /></div>
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {isLoading ? (
+            Array.from({ length: 10 }).map((_, i) => (
+              <TableRow key={i}>
+                <TableCell><Skeleton className="h-4 w-14" /></TableCell>
+                <TableCell><Skeleton className="h-4 w-full" /></TableCell>
+                <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                <TableCell><Skeleton className="h-4 w-12" /></TableCell>
+                <TableCell className="text-center"><Skeleton className="h-5 w-8 mx-auto" /></TableCell>
+              </TableRow>
+            ))
+          ) : data?.data?.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                Nenhum produto encontrado
+              </TableCell>
+            </TableRow>
+          ) : (
+            data?.data?.map((product, idx) => {
+              const estoqueStatus = product.estoque != null && product.estmin != null
+                ? product.estoque <= product.estmin ? 'low' : product.estoque >= (product.estmax || Infinity) ? 'high' : 'ok'
+                : null;
+              return (
+                <TableRow key={`${product.codprod}-${idx}`}>
+                  <TableCell className="font-mono text-xs">{product.codprod}</TableCell>
+                  <TableCell className="max-w-[300px] truncate text-sm" title={product.descrprod}>{product.descrprod}</TableCell>
+                  <TableCell className="text-xs text-muted-foreground" title={product.descrgrupoprod || ''}>
+                    {product.descrgrupoprod || '-'}
+                  </TableCell>
+                  <TableCell className="text-xs font-mono">{product.localizacao || '-'}</TableCell>
+                  <TableCell className="text-xs">
+                    {product.tipcontest ? (
+                      <Badge variant="outline" className="text-xs">{product.tipcontest}</Badge>
+                    ) : '-'}
+                  </TableCell>
+                  <TableCell className="text-center text-xs">
+                    {product.estoque != null ? (
+                      <span className={cn(
+                        'font-mono',
+                        estoqueStatus === 'low' && 'text-destructive font-semibold',
+                        estoqueStatus === 'high' && 'text-green-600'
+                      )}>
+                        {product.estoque}
+                      </span>
+                    ) : '-'}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Badge variant={product.ativo === 'S' ? 'default' : 'secondary'} className="text-xs">
+                      {product.ativo === 'S' ? 'S' : 'N'}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              );
+            })
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
+
+  const renderPagination = () => (
+    <div className="flex items-center justify-between px-2">
+      <div className="text-sm text-muted-foreground">
+        {total > 0 && (
+          <>Mostrando {(page - 1) * perPage + 1} a {Math.min(page * perPage, total)} de {total}</>
+        )}
+      </div>
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm">Por página</span>
+          <Select value={String(perPage)} onValueChange={(v) => updateParam('perPage', v)}>
+            <SelectTrigger className="h-8 w-[70px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {[20, 30, 50, 100].map((size) => (
+                <SelectItem key={size} value={String(size)}>{size}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-center gap-1">
+          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateParam('page', '1')} disabled={page === 1}>
+            <ChevronsLeft className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateParam('page', String(page - 1))} disabled={page === 1}>
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="text-sm min-w-[80px] text-center">{page} / {totalPages}</span>
+          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateParam('page', String(page + 1))} disabled={page >= totalPages}>
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateParam('page', String(totalPages))} disabled={page >= totalPages}>
+            <ChevronsRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="space-y-4">
@@ -143,20 +252,6 @@ export function ProdutosSimplesContainer() {
             className="pl-9"
           />
         </div>
-        <div className="min-w-[150px]">
-          <Input
-            placeholder="Local (ex: A1)"
-            value={locInput}
-            onChange={(e) => setLocInput(e.target.value)}
-          />
-        </div>
-        <div className="min-w-[120px]">
-          <Input
-            placeholder="Controle"
-            value={tipInput}
-            onChange={(e) => setTipInput(e.target.value)}
-          />
-        </div>
         {hasFilters && (
           <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
             <X className="h-4 w-4" /> Limpar
@@ -164,130 +259,33 @@ export function ProdutosSimplesContainer() {
         )}
       </div>
 
-      <div className="rounded-md border overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-20">Código</TableHead>
-              <TableHead className="min-w-[200px]">Descrição</TableHead>
-              <TableHead className="w-28">Grupo</TableHead>
-              <TableHead className="w-24">Local</TableHead>
-              <TableHead className="w-24">Controle</TableHead>
-              <TableHead className="w-16 text-center">Ativo</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              Array.from({ length: 10 }).map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell><Skeleton className="h-4 w-14" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-full" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                  <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                  <TableCell className="text-center"><Skeleton className="h-5 w-10 mx-auto" /></TableCell>
-                </TableRow>
-              ))
-            ) : data?.data?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                  Nenhum produto encontrado
-                </TableCell>
-              </TableRow>
-            ) : (
-              data?.data?.map((product) => (
-                <TableRow key={product.codprod}>
-                  <TableCell className="font-mono text-xs">{product.codprod}</TableCell>
-                  <TableCell className="max-w-[300px] truncate" title={product.descrprod}>{product.descrprod}</TableCell>
-                  <TableCell className="text-xs text-muted-foreground" title={product.descrgrupoprod || ''}>
-                    {product.descrgrupoprod || '-'}
-                  </TableCell>
-                  <TableCell className="text-xs font-mono">{product.localizacao || '-'}</TableCell>
-                  <TableCell className="text-xs">
-                    {product.tipcontest ? (
-                      <Badge variant="outline" className="text-xs">{product.tipcontest}</Badge>
-                    ) : '-'}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Badge variant={product.ativo === 'S' ? 'default' : 'secondary'} className="text-xs">
-                      {product.ativo === 'S' ? 'S' : 'N'}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      {/* Tabs */}
+      <Tabs value={tab} onValueChange={(v) => updateParam('tab', v)} className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="com-local" className="gap-2">
+            <MapPin className="h-4 w-4" /> Com Local
+          </TabsTrigger>
+          <TabsTrigger value="sem-local" className="gap-2">
+            <MapPinOff className="h-4 w-4" /> Sem Local
+          </TabsTrigger>
+          <TabsTrigger value="todos">Todos</TabsTrigger>
+        </TabsList>
 
-      <div className="flex items-center justify-between px-2">
-        <div className="text-sm text-muted-foreground">
-          {total > 0 && (
-            <>
-              Mostrando {(page - 1) * perPage + 1} a {Math.min(page * perPage, total)} de {total}{' '}
-              produtos
-            </>
-          )}
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2">
-            <span className="text-sm">Itens por página</span>
-            <Select value={String(perPage)} onValueChange={(v) => updatePerPage(Number(v))}>
-              <SelectTrigger className="h-8 w-[70px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {[10, 20, 30, 50].map((size) => (
-                  <SelectItem key={size} value={String(size)}>
-                    {size}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => updatePage(1)}
-              disabled={page === 1}
-            >
-              <ChevronsLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => updatePage(page - 1)}
-              disabled={page === 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <span className="text-sm min-w-[100px] text-center">
-              Página {page} de {totalPages}
-            </span>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => updatePage(page + 1)}
-              disabled={page >= totalPages}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => updatePage(totalPages)}
-              disabled={page >= totalPages}
-            >
-              <ChevronsRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </div>
+        <TabsContent value="com-local" className="space-y-4">
+          {renderTable()}
+          {renderPagination()}
+        </TabsContent>
+
+        <TabsContent value="sem-local" className="space-y-4">
+          {renderTable()}
+          {renderPagination()}
+        </TabsContent>
+
+        <TabsContent value="todos" className="space-y-4">
+          {renderTable()}
+          {renderPagination()}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

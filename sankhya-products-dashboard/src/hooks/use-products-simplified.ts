@@ -13,6 +13,12 @@ export interface SimplifiedProduct {
   localizacao?: string | null;
   tipcontest?: string | null;
   liscontest?: string | null;
+  controleItem?: string | null;
+  controleIndex?: number;
+  totalControles?: number;
+  estoque?: number | null;
+  estmin?: number | null;
+  estmax?: number | null;
 }
 
 export interface SimplifiedProductsResponse {
@@ -32,13 +38,17 @@ export interface UseProductsSimplifiedParams {
   codgrupoprod?: number;
   localizacao?: string;
   tipcontest?: string;
+  sort?: string;
+  comLocal?: boolean;
+  semLocal?: boolean;
+  expandControle?: boolean;
 }
 
 export function useProductsSimplified(params: UseProductsSimplifiedParams = {}) {
-  const { search, page = 1, perPage = 20, ativo, codgrupoprod, localizacao, tipcontest } = params;
+  const { search, page = 1, perPage = 20, ativo, codgrupoprod, localizacao, tipcontest, sort, comLocal, semLocal, expandControle } = params;
 
   return useQuery({
-    queryKey: ['products', 'simplified', { search, page, perPage, ativo, codgrupoprod, localizacao, tipcontest }],
+    queryKey: ['products', 'simplified', { search, page, perPage, ativo, codgrupoprod, localizacao, tipcontest, sort, comLocal, semLocal, expandControle }],
     queryFn: async () => {
       const response = await apiClient.get<SimplifiedProductsResponse>('/tgfpro/simplified', {
         params: {
@@ -49,6 +59,10 @@ export function useProductsSimplified(params: UseProductsSimplifiedParams = {}) 
           ...(codgrupoprod && { codgrupoprod }),
           ...(localizacao && { localizacao }),
           ...(tipcontest && { tipcontest }),
+          ...(sort && { sort }),
+          ...(comLocal && { comLocal: 'true' }),
+          ...(semLocal && { semLocal: 'true' }),
+          ...(expandControle && { expandControle: 'true' }),
         },
       });
       return response.data;
