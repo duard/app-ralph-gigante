@@ -26,6 +26,9 @@ const ProdutoConsumoV2 = lazy(
 const ProdutoConsumoV3 = lazy(
   () => import(/* webpackChunkName: "produtos" */ '@/app/produtos/[codprod]/consumo-v3/page')
 );
+const ProdutosSimples = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-simples/page')
+);
 const Mail = lazy(() => import(/* webpackChunkName: "communication" */ '@/app/mail/page'));
 const Chat = lazy(() => import(/* webpackChunkName: "communication" */ '@/app/chat/page'));
 const Calendar = lazy(() => import(/* webpackChunkName: "communication" */ '@/app/calendar/page'));
@@ -211,6 +214,14 @@ export const routes: RouteConfig[] = [
     element: (
       <ProtectedRoute>
         <ProdutoConsumoV3 />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/produtos-simples',
+    element: (
+      <ProtectedRoute>
+        <ProdutosSimples />
       </ProtectedRoute>
     ),
   },
