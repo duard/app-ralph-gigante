@@ -10,7 +10,7 @@ import { columns } from './columns'
 
 function UsersTable() {
   const [data, setData] = useState([])
-  
+
   return (
     <DataTable
       columns={columns}
@@ -223,10 +223,10 @@ Export table data to CSV or other formats:
 
 ```typescript
 function exportToCSV(data: User[], filename: string) {
-  const csv = data.map(row => 
+  const csv = data.map(row =>
     Object.values(row).join(',')
   ).join('\n')
-  
+
   const blob = new Blob([csv], { type: 'text/csv' })
   const url = window.URL.createObjectURL(blob)
   const a = document.createElement('a')
@@ -290,7 +290,7 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 
 function VirtualizedTable({ data }: { data: User[] }) {
   const parentRef = useRef<HTMLDivElement>(null)
-  
+
   const virtualizer = useVirtualizer({
     count: data.length,
     getScrollElement: () => parentRef.current,
@@ -323,12 +323,16 @@ Optimize re-renders with React.memo:
 const MemoizedDataTable = React.memo(DataTable)
 
 // Memoize column definitions
-const columns = useMemo(() => [
-  // ... column definitions
-], [])
+const columns = useMemo(
+  () => [
+    // ... column definitions
+  ],
+  []
+)
 
 // Memoize filtered data
-const filteredData = useMemo(() => 
-  data.filter(item => item.name.includes(searchTerm))
-, [data, searchTerm])
+const filteredData = useMemo(
+  () => data.filter((item) => item.name.includes(searchTerm)),
+  [data, searchTerm]
+)
 ```

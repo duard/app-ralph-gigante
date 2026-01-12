@@ -22,7 +22,8 @@ export function ForgotPasswordForm1({
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Forgot your password?</CardTitle>
           <CardDescription>
-            Enter your email address and we&apos;ll send you a link to reset your password
+            Enter your email address and we&apos;ll send you a link to reset
+            your password
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -44,7 +45,10 @@ export function ForgotPasswordForm1({
               </div>
               <div className="text-center text-sm">
                 Remember your password?{" "}
-                <a href="/auth/sign-in" className="underline underline-offset-4">
+                <a
+                  href="/auth/sign-in"
+                  className="underline underline-offset-4"
+                >
                   Back to sign in
                 </a>
               </div>

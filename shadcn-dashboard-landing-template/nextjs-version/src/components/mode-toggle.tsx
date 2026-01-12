@@ -26,14 +26,20 @@ export function ModeToggle({ variant = "outline" }: ModeToggleProps) {
       } else if (theme === "light") {
         setIsDarkMode(false)
       } else {
-        setIsDarkMode(typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        setIsDarkMode(
+          typeof window !== "undefined" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+        )
       }
     }
 
     updateMode()
 
     // Listen for system theme changes
-    const mediaQuery = typeof window !== "undefined" ? window.matchMedia("(prefers-color-scheme: dark)") : null
+    const mediaQuery =
+      typeof window !== "undefined"
+        ? window.matchMedia("(prefers-color-scheme: dark)")
+        : null
     if (mediaQuery) {
       mediaQuery.addEventListener("change", updateMode)
     }

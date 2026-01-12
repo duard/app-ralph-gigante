@@ -15,23 +15,27 @@ The Vite version is optimized for:
 ## Key Features
 
 ### ⚡ Lightning-Fast Development
+
 - Near-instantaneous Hot Module Replacement (HMR)
 - Fast cold starts (~50ms)
 - Optimized development server
 
 ### 📦 Modern Build System
+
 - Vite 5 with Rollup-based production builds
 - Tree shaking and code splitting
 - TypeScript support out of the box
 - ESBuild for fast transpilation
 
 ### 🔀 Client-Side Routing
+
 - React Router DOM v6 integration
 - Nested routes and layouts
 - Protected routes and authentication guards
 - Dynamic route loading
 
 ### 🎨 UI Framework Integration
+
 - shadcn/ui v3 components
 - Tailwind CSS v4 with @tailwindcss/vite plugin
 - CSS-in-JS support
@@ -79,38 +83,35 @@ vite-version/
 The `vite.config.ts` file includes optimized settings:
 
 ```typescript
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from "vite"
+import react from "@vitejs/plugin-react"
+import path from "path"
+import tailwindcss from "@tailwindcss/vite"
 
 export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(),
-  ],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   optimizeDeps: {
     include: [
-      'react',
-      'react-dom',
-      'react-router-dom',
-      '@tanstack/react-table',
-      'recharts',
-      'zustand',
+      "react",
+      "react-dom",
+      "react-router-dom",
+      "@tanstack/react-table",
+      "recharts",
+      "zustand",
     ],
   },
   build: {
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+          vendor: ["react", "react-dom"],
+          router: ["react-router-dom"],
+          ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu"],
         },
       },
     },
@@ -123,33 +124,30 @@ export default defineConfig({
 Tailwind CSS v4 configuration with custom theme:
 
 ```typescript
-import type { Config } from 'tailwindcss'
+import type { Config } from "tailwindcss"
 
 const config: Config = {
-  content: [
-    './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         // ... more theme colors
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ["Inter", "system-ui", "sans-serif"],
       },
     },
   },
@@ -182,7 +180,7 @@ function App() {
         {/* Public routes */}
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
-        
+
         {/* Protected routes with layout */}
         <Route path="/" element={<BaseLayout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
@@ -190,7 +188,7 @@ function App() {
           <Route path="analytics" element={<Analytics />} />
           {/* More dashboard routes */}
         </Route>
-        
+
         {/* Catch-all route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -236,13 +234,13 @@ const Dashboard = lazy(() => import('@/app/(dashboard)/page'))
 const Analytics = lazy(() => import('@/app/(dashboard)/analytics/page'))
 
 // Route with loading state
-<Route 
-  path="dashboard" 
+<Route
+  path="dashboard"
   element={
     <Suspense fallback={<Skeleton className="h-screen" />}>
       <Dashboard />
     </Suspense>
-  } 
+  }
 />
 ```
 
@@ -261,17 +259,17 @@ In `index.html`:
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <!-- Google Fonts preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    
+
     <!-- Inter font with optimal character sets -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    
+
     <title>Shadcn Dashboard + Landing Page Template</title>
   </head>
   <body class="font-sans antialiased">
@@ -289,7 +287,7 @@ Font family is applied via CSS variables:
 /* src/index.css */
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  --font-inter: 'Inter', system-ui, sans-serif;
+  --font-inter: "Inter", system-ui, sans-serif;
 }
 
 body {
@@ -305,7 +303,7 @@ The template uses Zustand for state management:
 
 ```typescript
 // hooks/use-sidebar-config.ts
-import { create } from 'zustand'
+import { create } from "zustand"
 
 interface SidebarConfig {
   isCollapsed: boolean
@@ -328,25 +326,25 @@ Theme management with persistence:
 
 ```typescript
 // hooks/use-theme.ts
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 interface ThemeStore {
-  theme: 'light' | 'dark' | 'system'
-  setTheme: (theme: 'light' | 'dark' | 'system') => void
+  theme: "light" | "dark" | "system"
+  setTheme: (theme: "light" | "dark" | "system") => void
 }
 
 export const useTheme = create<ThemeStore>()(
   persist(
     (set) => ({
-      theme: 'system',
+      theme: "system",
       setTheme: (theme) => {
         set({ theme })
         applyTheme(theme)
       },
     }),
     {
-      name: 'theme-storage',
+      name: "theme-storage",
     }
   )
 )

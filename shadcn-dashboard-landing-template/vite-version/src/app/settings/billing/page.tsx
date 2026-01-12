@@ -1,7 +1,13 @@
 "use client"
 
 import { BaseLayout } from "@/components/layouts/base-layout"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { PricingPlans } from "@/components/pricing-plans"
 import { CurrentPlanCard } from "./components/current-plan-card"
 import { BillingHistoryCard } from "./components/billing-history-card"
@@ -12,7 +18,7 @@ import billingHistoryData from "./data/billing-history.json"
 
 export default function BillingSettings() {
   const handlePlanSelect = (planId: string) => {
-    console.log('Plan selected:', planId)
+    console.log("Plan selected:", planId)
     // Handle plan selection logic here
   }
 
@@ -30,7 +36,7 @@ export default function BillingSettings() {
           <CurrentPlanCard plan={currentPlanData} />
           <BillingHistoryCard history={billingHistoryData} />
         </div>
-        
+
         <div className="grid gap-6">
           <Card>
             <CardHeader>
@@ -40,8 +46,8 @@ export default function BillingSettings() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <PricingPlans 
-                mode="billing" 
+              <PricingPlans
+                mode="billing"
                 currentPlanId="professional"
                 onPlanSelect={handlePlanSelect}
               />

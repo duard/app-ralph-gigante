@@ -5,6 +5,7 @@ Get help with the Shadcn Dashboard template.
 ## Quick Help
 
 ### Documentation
+
 - **[Installation Guide](/guide/installation)** - Setup instructions
 - **[Components](/components/)** - Component library
 - **[Theme System](/guide/theme-system)** - Customization options
@@ -13,16 +14,19 @@ Get help with the Shadcn Dashboard template.
 ### Common Issues
 
 **Build Errors**
+
 - Check Node.js version (18+ required)
 - Clear `node_modules` and reinstall: `rm -rf node_modules pnpm-lock.yaml && pnpm install`
 - Verify TypeScript configuration
 
 **Theme Not Working**
+
 - Ensure CSS variables are properly imported
 - Check component `"use client"` directives
 - Verify theme provider wrapper
 
 **Component Issues**
+
 - Update to latest shadcn/ui version
 - Check import paths and aliases
 - Ensure proper TypeScript types
@@ -30,21 +34,26 @@ Get help with the Shadcn Dashboard template.
 ## Community Support
 
 ### GitHub
+
 - **[Issues](https://github.com/silicondeck/shadcn-dashboard-template/issues)** - Bug reports
 - **[Discussions](https://github.com/silicondeck/shadcn-dashboard-template/discussions)** - Questions
 - **[Wiki](https://github.com/silicondeck/shadcn-dashboard-template/wiki)** - Guides
 
 ### Discord
+
 Join our community for real-time help:
+
 - [Discord Server](https://discord.com/invite/XEQhPc9a6p) (if available)
 
 ### Social Media
+
 - **Twitter**: [@ShadcnStore](https://twitter.com/shadcnstore)
 - **LinkedIn**: [SiliconDeck](https://linkedin.com/company/silicondeck)
 
 ## Commercial Support
 
 For priority support and custom development:
+
 - **Email**: [support@shadcnstore.com](mailto:support@shadcnstore.com)
 - **Custom Development** - Tailored solutions
 - **Priority Bug Fixes** - Fast-track issue resolution
@@ -53,6 +62,7 @@ For priority support and custom development:
 ## Bug Reports
 
 When reporting bugs, include:
+
 1. **Description** of the issue
 2. **Steps to reproduce** the problem
 3. **Expected** vs **actual** behavior
@@ -62,6 +72,7 @@ When reporting bugs, include:
 ## Feature Requests
 
 Suggest new features via:
+
 - [GitHub Discussions](https://github.com/silicondeck/shadcn-dashboard-template/discussions)
 - Community voting on priorities
 - Detailed use case descriptions
@@ -70,6 +81,7 @@ Suggest new features via:
 
 We're here to help you succeed with the template!
 Suggest improvements and new features:
+
 - Check existing discussions first
 - Explain the use case and benefits
 - Consider implementation complexity
@@ -81,6 +93,7 @@ Suggest improvements and new features:
 
 **Q: Which version should I choose - Vite or Next.js?**
 A: Choose based on your project needs:
+
 - **Vite**: Fast SPA development, client-side routing, simpler deployment
 - **Next.js**: SEO optimization, server-side rendering, full-stack capabilities
 
@@ -93,7 +106,8 @@ A: Node.js 18+ is required. Node.js 20+ is recommended for best performance.
 ### Development
 
 **Q: How do I add a new page?**
-A: 
+A:
+
 1. Create a new directory in `src/app/`
 2. Add a `page.tsx` file with your component
 3. Update navigation in `app-sidebar.tsx`
@@ -101,6 +115,7 @@ A:
 
 **Q: How do I customize the theme?**
 A: Use the built-in theme customizer:
+
 1. Click the theme customizer button
 2. Adjust colors and layout options
 3. Export your theme configuration
@@ -113,6 +128,7 @@ A: Yes, see [Removing Customizer](/theme-customizer/removing-customizer) guide f
 
 **Q: How do I add new shadcn/ui components?**
 A: Use the shadcn/ui CLI:
+
 ```bash
 npx shadcn@latest add button
 npx shadcn@latest add card
@@ -123,22 +139,23 @@ A: Modify the component files in `src/components/ui/` or create custom variants 
 
 **Q: How do I handle responsive design?**
 A: Use Tailwind CSS responsive prefixes:
+
 ```tsx
-<div className="px-4 md:px-6 lg:px-8">
-  Content
-</div>
+<div className="px-4 md:px-6 lg:px-8">Content</div>
 ```
 
 ### Deployment
 
 **Q: How do I deploy the Vite version?**
-A: 
+A:
+
 1. Run `pnpm build`
 2. Deploy the `dist/` folder to any static hosting
 3. Recommended: Netlify, Vercel, or AWS S3
 
 **Q: How do I deploy the Next.js version?**
 A:
+
 1. Run `pnpm build`
 2. Deploy to Vercel (recommended) or any Node.js hosting
 3. Set environment variables as needed
@@ -149,7 +166,8 @@ A: Yes, for the Vite version. Configure the base path in `vite.config.ts` for Gi
 ### Troubleshooting
 
 **Q: I'm getting TypeScript errors**
-A: 
+A:
+
 1. Check Node.js version (18+)
 2. Run `pnpm install` to ensure dependencies
 3. Restart TypeScript server in your editor
@@ -157,6 +175,7 @@ A:
 
 **Q: Styles aren't loading correctly**
 A:
+
 1. Ensure Tailwind CSS is configured properly
 2. Check if `globals.css` is imported
 3. Verify CSS variables are defined
@@ -164,6 +183,7 @@ A:
 
 **Q: Theme customizer isn't working**
 A:
+
 1. Check if `ThemeCustomizer` component is included
 2. Verify tweakcn dependencies are installed
 3. Ensure CSS variables are properly configured
@@ -176,6 +196,7 @@ A:
 For enterprise customers and complex implementations:
 
 **Premium Support Includes:**
+
 - Priority email support
 - Video consultation sessions
 - Custom component development
@@ -183,12 +204,14 @@ For enterprise customers and complex implementations:
 - Performance optimization help
 
 **Contact Options:**
+
 - Email: [support@shadcnstore.com](mailto:support@shadcnstore.com)
 - Enterprise: [enterprise@shadcnstore.com](mailto:enterprise@shadcnstore.com)
 
 ### Consulting Services
 
 **Available Services:**
+
 - Custom dashboard development
 - Component library creation
 - Performance optimization
@@ -204,6 +227,7 @@ Contact us at [consulting@shadcnstore.com](mailto:consulting@shadcnstore.com) wi
 
 **YouTube Channel**
 Subscribe to our channel for video tutorials:
+
 - Setup and installation guides
 - Component customization tutorials
 - Advanced theming techniques
@@ -215,6 +239,7 @@ Subscribe to our channel for video tutorials:
 
 **Technical Blog**
 Read in-depth articles about:
+
 - Dashboard design patterns
 - React component best practices
 - Performance optimization techniques
@@ -226,6 +251,7 @@ Read in-depth articles about:
 
 **Demo Applications**
 Explore real-world implementations:
+
 - E-commerce dashboards
 - SaaS application interfaces
 - Content management systems
@@ -238,12 +264,14 @@ Explore real-world implementations:
 ### Help the Community
 
 **Share Knowledge**
+
 - Answer questions in Discord
 - Contribute to GitHub discussions
 - Write tutorials and guides
 - Share your implementations
 
 **Improve Documentation**
+
 - Fix typos and errors
 - Add missing information
 - Create new guides
@@ -252,6 +280,7 @@ Explore real-world implementations:
 ### Become a Community Moderator
 
 Help us maintain a helpful and welcoming community:
+
 - Moderate Discord channels
 - Review and answer questions
 - Help newcomers get started
@@ -278,6 +307,7 @@ Contact [community@shadcnstore.com](mailto:community@shadcnstore.com) if interes
 ### Social Media
 
 **Stay Connected**
+
 - Twitter: [@shadcnstore](https://twitter.com/shadcnstore)
 - LinkedIn: [ShadcnStore](https://linkedin.com/company/shadcnstore)
 - GitHub: [silicondeck](https://github.com/silicondeck)
@@ -285,11 +315,13 @@ Contact [community@shadcnstore.com](mailto:community@shadcnstore.com) if interes
 ### Response Times
 
 **Community Support**
+
 - Discord: Usually within hours
 - GitHub: 1-3 business days
 - Email: 2-5 business days
 
 **Premium Support**
+
 - Email: Within 24 hours
 - Video calls: Within 48 hours
 - Enterprise: Same business day
@@ -300,12 +332,14 @@ Contact [community@shadcnstore.com](mailto:community@shadcnstore.com) if interes
 
 **Documentation Feedback**
 Found something unclear or missing? Let us know:
+
 - Create GitHub issues for documentation problems
 - Suggest improvements in Discord
 - Email feedback to [docs@shadcnstore.com](mailto:docs@shadcnstore.com)
 
 **Product Feedback**
 Help us make the template better:
+
 - Rate the template on GitHub
 - Share success stories
 - Suggest new features
@@ -313,6 +347,7 @@ Help us make the template better:
 
 **Community Feedback**
 How can we improve the community experience?
+
 - Suggest new Discord channels
 - Propose community events
 - Share ideas for tutorials
@@ -324,6 +359,7 @@ How can we improve the community experience?
 
 **Built with Shadcn Dashboard**
 See what others have created:
+
 - SaaS applications
 - E-commerce platforms
 - Internal tools
@@ -333,10 +369,12 @@ Share your project in Discord or tag us on social media!
 
 ### Customer Testimonials
 
-*"The Shadcn Dashboard template saved us months of development time. The code quality is excellent and the documentation is comprehensive."*
+_"The Shadcn Dashboard template saved us months of development time. The code quality is excellent and the documentation is comprehensive."_
+
 - **Jane Smith**, Lead Developer at TechCorp
 
-*"Outstanding template with great community support. The theme customizer is a game-changer for our client projects."*
+_"Outstanding template with great community support. The theme customizer is a game-changer for our client projects."_
+
 - **Mike Johnson**, Freelance Developer
 
 ---

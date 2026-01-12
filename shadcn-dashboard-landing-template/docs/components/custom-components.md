@@ -21,6 +21,7 @@ import { AppSidebar } from '@/components/app-sidebar'
 ```
 
 **Features:**
+
 - Collapsible navigation groups
 - Active route detection
 - Search functionality
@@ -28,6 +29,7 @@ import { AppSidebar } from '@/components/app-sidebar'
 - Responsive behavior
 
 **Customization:**
+
 ```typescript
 // Customize navigation items
 const navigationItems = [
@@ -37,7 +39,7 @@ const navigationItems = [
     icon: Home,
   },
   {
-    title: "Analytics", 
+    title: "Analytics",
     url: "/analytics",
     icon: BarChart3,
   },
@@ -72,7 +74,7 @@ Application header with navigation and user menu:
 ```typescript
 import { SiteHeader } from '@/components/site-header'
 
-<SiteHeader 
+<SiteHeader
   showSearch={true}
   showNotifications={true}
   showUserMenu={true}
@@ -86,7 +88,7 @@ Application footer with links and information:
 ```typescript
 import { SiteFooter } from '@/components/site-footer'
 
-<SiteFooter 
+<SiteFooter
   showLinks={true}
   showSocial={true}
   compact={false}
@@ -106,7 +108,7 @@ import { Logo } from '@/components/logo'
 <Logo className="h-8 w-auto" />
 
 // With custom size and variant
-<Logo 
+<Logo
   size="lg"
   variant="light"
   className="h-12 w-auto"
@@ -124,7 +126,7 @@ import { ModeToggle } from '@/components/mode-toggle'
 <ModeToggle />
 
 // With custom styling
-<ModeToggle 
+<ModeToggle
   variant="outline"
   size="sm"
   className="border-muted"
@@ -142,13 +144,14 @@ import { ThemeCustomizer } from '@/components/theme-customizer'
 <ThemeCustomizer />
 
 // With custom position
-<ThemeCustomizer 
+<ThemeCustomizer
   position="bottom-left"
   defaultOpen={false}
 />
 ```
 
 **Features:**
+
 - Live color preview
 - Layout adjustments
 - Typography controls
@@ -183,7 +186,7 @@ Command palette for quick actions:
 import { CommandSearch } from '@/components/command-search'
 
 // Global command palette
-<CommandSearch 
+<CommandSearch
   placeholder="Search commands..."
   commands={[
     { id: 'dashboard', label: 'Go to Dashboard', action: () => navigate('/dashboard') },
@@ -266,7 +269,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "$29", 
+    price: "$29",
     period: "month",
     features: ["Everything in Starter", "Feature 3", "Feature 4"],
     featured: true,
@@ -299,7 +302,7 @@ Call-to-action button for upgrades:
 ```typescript
 import { UpgradeToProButton } from '@/components/upgrade-to-pro-button'
 
-<UpgradeToProButton 
+<UpgradeToProButton
   variant="default"
   size="sm"
   className="w-full"
@@ -440,18 +443,15 @@ Use CSS variables for theming:
 Include responsive variants:
 
 ```typescript
-const responsiveVariants = cva(
-  "base-styles",
-  {
-    variants: {
-      responsive: {
-        mobile: "text-sm p-2 md:text-base md:p-4",
-        tablet: "text-base p-4 lg:text-lg lg:p-6",
-        desktop: "text-lg p-6 xl:text-xl xl:p-8",
-      },
+const responsiveVariants = cva("base-styles", {
+  variants: {
+    responsive: {
+      mobile: "text-sm p-2 md:text-base md:p-4",
+      tablet: "text-base p-4 lg:text-lg lg:p-6",
+      desktop: "text-lg p-6 xl:text-xl xl:p-8",
     },
-  }
-)
+  },
+})
 ```
 
 ### Accessibility

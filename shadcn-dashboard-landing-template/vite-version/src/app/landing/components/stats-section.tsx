@@ -1,40 +1,34 @@
 "use client"
 
-import {
-  Package,
-  Download,
-  Users,
-  Star
-} from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
-import { DotPattern } from '@/components/dot-pattern'
-
+import { Package, Download, Users, Star } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { DotPattern } from "@/components/dot-pattern"
 
 const stats = [
   {
     icon: Package,
-    value: '500+',
-    label: 'Components',
-    description: 'Ready-to-use blocks'
+    value: "500+",
+    label: "Components",
+    description: "Ready-to-use blocks",
   },
   {
     icon: Download,
-    value: '25K+',
-    label: 'Downloads',
-    description: 'Trusted worldwide'
+    value: "25K+",
+    label: "Downloads",
+    description: "Trusted worldwide",
   },
   {
     icon: Users,
-    value: '10K+',
-    label: 'Developers',
-    description: 'Active community'
+    value: "10K+",
+    label: "Developers",
+    description: "Active community",
   },
   {
     icon: Star,
-    value: '4.9',
-    label: 'Rating',
-    description: 'User satisfaction'
-  }
+    value: "4.9",
+    label: "Rating",
+    description: "User satisfaction",
+  },
 ]
 
 export function StatsSection() {
@@ -63,7 +57,9 @@ export function StatsSection() {
                     {stat.value}
                   </h3>
                   <p className="font-semibold text-foreground">{stat.label}</p>
-                  <p className="text-sm text-muted-foreground">{stat.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {stat.description}
+                  </p>
                 </div>
               </CardContent>
             </Card>

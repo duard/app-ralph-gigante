@@ -133,7 +133,7 @@ const data = {
             {
               title: "Forgot Password 3",
               url: "/auth/forgot-password-3",
-            }
+            },
           ],
         },
         {

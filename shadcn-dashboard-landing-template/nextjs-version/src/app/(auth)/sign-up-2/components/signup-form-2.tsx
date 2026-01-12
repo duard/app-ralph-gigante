@@ -45,11 +45,17 @@ export function SignupForm2({
           <Checkbox id="terms" required />
           <Label htmlFor="terms" className="text-sm">
             I agree to the{" "}
-            <a href="#" className="underline underline-offset-4 hover:text-primary">
+            <a
+              href="#"
+              className="underline underline-offset-4 hover:text-primary"
+            >
               Terms of Service
             </a>{" "}
             and{" "}
-            <a href="#" className="underline underline-offset-4 hover:text-primary">
+            <a
+              href="#"
+              className="underline underline-offset-4 hover:text-primary"
+            >
               Privacy Policy
             </a>
           </Label>

@@ -11,7 +11,7 @@ export function useFullscreen() {
     }
 
     document.addEventListener("fullscreenchange", handleFullscreenChange)
-    
+
     // Initial check
     setIsFullscreen(!!document.fullscreenElement)
 

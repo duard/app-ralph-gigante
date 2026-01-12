@@ -3,6 +3,7 @@
 ## 📋 Visão Geral
 
 Criar uma solução completa e integrada de gestão de produtos do sistema Sankhya, com:
+
 - **API NestJS** robusta com todos os endpoints necessários
 - **Frontend React** moderno com todas as visões de produtos
 - **Integração perfeita** entre backend e frontend
@@ -11,11 +12,13 @@ Criar uma solução completa e integrada de gestão de produtos do sistema Sankh
 ## 🎯 Objetivos Principais
 
 ### 1. API de Produtos (Backend)
+
 - ✅ **Já implementado**: Estrutura base, autenticação, endpoints CRUD
 - 🔄 **Melhorar**: Adicionar mais endpoints de análise e relatórios
 - ➕ **Adicionar**: Endpoints para histórico, estatísticas, exportação
 
 ### 2. Frontend de Produtos (Dashboard)
+
 - ✅ **Já implementado**: Listagem, filtros, detalhes, dashboard básico
 - 🔄 **Melhorar**: Adicionar mais visões analíticas
 - ➕ **Adicionar**: Visões de análise avançada, comparação, relatórios
@@ -23,6 +26,7 @@ Criar uma solução completa e integrada de gestão de produtos do sistema Sankh
 ## 📐 Arquitetura Atual
 
 ### Backend (API)
+
 ```
 api-sankhya-center/src/sankhya/tgfpro/
 ├── tgfpro.controller.ts     ✅ Endpoints principais
@@ -37,6 +41,7 @@ api-sankhya-center/src/sankhya/tgfpro/
 ```
 
 **Endpoints Existentes:**
+
 - `GET /tgfpro` - Listar produtos com paginação
 - `GET /tgfpro/:codprod` - Detalhes do produto
 - `GET /tgfpro/with-stock/all` - Produtos com estoque
@@ -45,6 +50,7 @@ api-sankhya-center/src/sankhya/tgfpro/
 - `GET /tgfpro/consumo-periodo/:codprod` - Consumo por período
 
 ### Frontend (Dashboard)
+
 ```
 sankhya-products-dashboard/src/
 ├── app/
@@ -75,6 +81,7 @@ sankhya-products-dashboard/src/
 ```
 
 **Visões Existentes:**
+
 1. ✅ Dashboard principal com métricas
 2. ✅ Listagem de produtos com filtros
 3. ✅ Detalhes do produto (modal)
@@ -87,9 +94,11 @@ sankhya-products-dashboard/src/
 ### FASE 1: Completar API de Produtos (Backend)
 
 #### 1.1 Endpoints de Análise e Estatísticas
+
 **Objetivo:** Fornecer dados analíticos para o frontend
 
 **Novos Endpoints:**
+
 ```typescript
 // Estatísticas gerais de produtos
 GET /tgfpro/statistics
@@ -144,6 +153,7 @@ Response: {
 ```
 
 **Implementação:**
+
 1. Criar novo arquivo: `tgfpro.analytics.service.ts`
 2. Adicionar métodos ao controller existente
 3. Implementar queries SQL otimizadas
@@ -151,9 +161,11 @@ Response: {
 5. Documentar com Swagger
 
 #### 1.2 Endpoints de Exportação
+
 **Objetivo:** Permitir exportação de dados
 
 **Novos Endpoints:**
+
 ```typescript
 // Exportar produtos filtrados
 POST /tgfpro/export
@@ -174,15 +186,18 @@ Response: ReportData
 ```
 
 **Implementação:**
+
 1. Instalar bibliotecas: `exceljs`, `csv-writer`, `pdfkit`
 2. Criar `tgfpro.export.service.ts`
 3. Implementar geração de cada formato
 4. Adicionar streaming para arquivos grandes
 
 #### 1.3 Melhorias de Performance
+
 **Objetivo:** Otimizar queries e cache
 
 **Tarefas:**
+
 1. Adicionar índices no banco (se possível)
 2. Implementar cache Redis para queries frequentes
 3. Otimizar queries SQL com análise de execução
@@ -194,15 +209,18 @@ Response: ReportData
 #### 2.1 Novas Visões de Produtos
 
 ##### Visão 1: Análise Comparativa de Produtos
+
 **Arquivo:** `src/app/produtos/comparacao/page.tsx`
 
 **Funcionalidades:**
+
 - Selecionar múltiplos produtos (máx 5)
 - Comparar lado a lado: preço, estoque, movimentação, características
 - Gráficos comparativos
 - Exportar comparação
 
 **Componentes:**
+
 ```typescript
 // src/components/products/product-comparison.tsx
 - ProductComparisonSelector: Seleção de produtos
@@ -211,9 +229,11 @@ Response: ReportData
 ```
 
 ##### Visão 2: Histórico e Tendências
+
 **Arquivo:** `src/app/produtos/historico/page.tsx`
 
 **Funcionalidades:**
+
 - Histórico completo de um produto
 - Gráfico de evolução de preço
 - Histórico de movimentação
@@ -221,6 +241,7 @@ Response: ReportData
 - Previsão básica de demanda
 
 **Componentes:**
+
 ```typescript
 // src/components/products/product-history.tsx
 - ProductHistoryChart: Gráfico de histórico
@@ -229,9 +250,11 @@ Response: ReportData
 ```
 
 ##### Visão 3: Análise por Categoria
+
 **Arquivo:** `src/app/produtos/categorias/page.tsx`
 
 **Funcionalidades:**
+
 - Lista de todas as categorias
 - Métricas por categoria (total produtos, valor, média)
 - Drill-down em categoria específica
@@ -239,6 +262,7 @@ Response: ReportData
 - Gráficos de distribuição
 
 **Componentes:**
+
 ```typescript
 // src/components/products/category-analysis.tsx
 - CategoryList: Lista de categorias
@@ -248,9 +272,11 @@ Response: ReportData
 ```
 
 ##### Visão 4: Relatórios e Exportação
+
 **Arquivo:** `src/app/produtos/relatorios/page.tsx`
 
 **Funcionalidades:**
+
 - Seleção de tipo de relatório (estoque, preços, movimentação)
 - Filtros avançados (período, categorias, produtos)
 - Pré-visualização do relatório
@@ -258,6 +284,7 @@ Response: ReportData
 - Agendamento de relatórios (futuro)
 
 **Componentes:**
+
 ```typescript
 // src/components/products/reports.tsx
 - ReportBuilder: Construtor de relatórios
@@ -266,9 +293,11 @@ Response: ReportData
 ```
 
 ##### Visão 5: Dashboard de Produto Individual
+
 **Arquivo:** `src/app/produtos/[codprod]/dashboard/page.tsx`
 
 **Funcionalidades:**
+
 - Visão 360° do produto
 - Métricas principais (vendas, estoque, preço)
 - Histórico de movimentação
@@ -277,6 +306,7 @@ Response: ReportData
 - Ações rápidas (sem edição real)
 
 **Componentes:**
+
 ```typescript
 // src/components/products/product-dashboard.tsx
 - ProductOverview: Visão geral
@@ -287,9 +317,11 @@ Response: ReportData
 ```
 
 ##### Visão 6: Pesquisa Avançada
+
 **Arquivo:** `src/app/produtos/pesquisa/page.tsx`
 
 **Funcionalidades:**
+
 - Busca multi-critério (nome, código, categoria, preço, etc.)
 - Busca por faixa de valores
 - Busca por características técnicas
@@ -298,6 +330,7 @@ Response: ReportData
 - Ordenação avançada
 
 **Componentes:**
+
 ```typescript
 // src/components/products/advanced-search.tsx
 - SearchBuilder: Construtor de busca avançada
@@ -307,9 +340,11 @@ Response: ReportData
 ```
 
 #### 2.2 Melhorias no Dashboard Principal
+
 **Arquivo:** `src/app/dashboard/page.tsx`
 
 **Novas Features:**
+
 1. **Widget de Alertas:**
    - Produtos sem estoque
    - Produtos com preço desatualizado
@@ -329,9 +364,11 @@ Response: ReportData
    - Snapshot das métricas
 
 #### 2.3 Melhorias na Listagem de Produtos
+
 **Arquivo:** `src/app/produtos/page.tsx`
 
 **Novas Features:**
+
 1. **Ações em Lote:**
    - Exportar selecionados
    - Comparar selecionados
@@ -356,10 +393,13 @@ Response: ReportData
 ### FASE 3: Integração e Otimização
 
 #### 3.1 Integração Backend-Frontend
+
 **Objetivo:** Garantir integração perfeita
 
 **Tarefas:**
+
 1. Atualizar API client (`src/lib/api/products-api.ts`):
+
    ```typescript
    // Adicionar todos os novos endpoints
    export const productsApi = {
@@ -367,7 +407,7 @@ Response: ReportData
      getProducts,
      getProductById,
      searchProducts,
-     
+
      // Novos
      getStatistics,
      getTopProducts,
@@ -381,6 +421,7 @@ Response: ReportData
    ```
 
 2. Criar hooks customizados para novos endpoints:
+
    ```typescript
    // src/hooks/use-product-statistics.ts
    // src/hooks/use-product-comparison.ts
@@ -397,9 +438,11 @@ Response: ReportData
    ```
 
 #### 3.2 Testes
+
 **Objetivo:** Garantir qualidade com testes
 
 **Backend:**
+
 ```bash
 # Testes unitários
 - tgfpro.service.spec.ts
@@ -413,6 +456,7 @@ Response: ReportData
 ```
 
 **Frontend:**
+
 ```bash
 # Testes de componentes
 - product-comparison.test.tsx
@@ -431,9 +475,11 @@ Response: ReportData
 ```
 
 #### 3.3 Performance
+
 **Objetivo:** Otimizar performance
 
 **Backend:**
+
 1. Cache Redis para queries pesadas (5min TTL)
 2. Indexação de campos frequentes
 3. Query optimization com EXPLAIN PLAN
@@ -441,6 +487,7 @@ Response: ReportData
 5. Rate limiting: 100 req/min por usuário
 
 **Frontend:**
+
 1. Code splitting por rota (já implementado)
 2. Lazy loading de componentes pesados
 3. Virtualização de listas longas (já implementado)
@@ -451,55 +498,69 @@ Response: ReportData
 ### FASE 4: Documentação e DevOps
 
 #### 4.1 Documentação Backend
+
 **Arquivos:**
+
 ```markdown
 # api-sankhya-center/README.md
+
 - Atualizar com novos endpoints
 - Exemplos de uso
 - Guia de contribuição
 
 # api-sankhya-center/docs/API.md
+
 - Documentação completa de endpoints
 - Schemas de request/response
 - Exemplos curl
 
 # api-sankhya-center/docs/ARCHITECTURE.md
+
 - Arquitetura do módulo tgfpro
 - Diagramas de fluxo
 - Decisões técnicas
 ```
 
 **Swagger:**
+
 - Atualizar todas as definições OpenAPI
 - Adicionar exemplos em todos os endpoints
 - Documentar erros possíveis
 
 #### 4.2 Documentação Frontend
+
 **Arquivos:**
+
 ```markdown
 # sankhya-products-dashboard/README.md
+
 - Atualizar com novas páginas
 - Screenshots das visões
 - Guia de desenvolvimento
 
 # sankhya-products-dashboard/docs/COMPONENTS.md
+
 - Documentação de todos os componentes
 - Props e exemplos de uso
 - Storybook stories (já iniciado)
 
 # sankhya-products-dashboard/docs/ARCHITECTURE.md
+
 - Estrutura de pastas
 - Fluxo de dados
 - Padrões de código
 ```
 
 **Storybook:**
+
 - Stories para todos os novos componentes
 - Controles interativos
 - Documentação inline
 
 #### 4.3 DevOps
+
 **CI/CD Pipeline:**
+
 ```yaml
 # .github/workflows/api.yml
 - Lint
@@ -522,6 +583,7 @@ Response: ReportData
 ```
 
 **Monitoramento:**
+
 - Sentry para error tracking (backend e frontend)
 - Google Analytics para métricas de uso
 - Health checks: `/health`, `/metrics`
@@ -530,32 +592,35 @@ Response: ReportData
 ## 📊 Resumo de Entregas
 
 ### Backend (API)
-| Item | Status | Prioridade |
-|------|--------|-----------|
-| Endpoints base CRUD | ✅ Completo | Alta |
-| Endpoints de análise | 🔄 A fazer | Alta |
-| Endpoints de exportação | 🔄 A fazer | Média |
-| Cache e performance | 🔄 A fazer | Alta |
-| Testes (70%+ coverage) | ⚠️ Parcial | Alta |
-| Documentação completa | 🔄 A fazer | Média |
+
+| Item                    | Status      | Prioridade |
+| ----------------------- | ----------- | ---------- |
+| Endpoints base CRUD     | ✅ Completo | Alta       |
+| Endpoints de análise    | 🔄 A fazer  | Alta       |
+| Endpoints de exportação | 🔄 A fazer  | Média      |
+| Cache e performance     | 🔄 A fazer  | Alta       |
+| Testes (70%+ coverage)  | ⚠️ Parcial  | Alta       |
+| Documentação completa   | 🔄 A fazer  | Média      |
 
 ### Frontend (Dashboard)
-| Item | Status | Prioridade |
-|------|--------|-----------|
-| Listagem de produtos | ✅ Completo | Alta |
-| Dashboard principal | ✅ Completo | Alta |
-| Visão: Comparação | ❌ A fazer | Alta |
-| Visão: Histórico | ⚠️ Parcial | Alta |
-| Visão: Categorias | ⚠️ Parcial | Média |
-| Visão: Relatórios | ❌ A fazer | Alta |
-| Visão: Dashboard Individual | ❌ A fazer | Média |
-| Visão: Pesquisa Avançada | ⚠️ Parcial | Média |
-| Testes (70%+ coverage) | ⚠️ Parcial | Alta |
-| Documentação Storybook | ⚠️ Parcial | Média |
+
+| Item                        | Status      | Prioridade |
+| --------------------------- | ----------- | ---------- |
+| Listagem de produtos        | ✅ Completo | Alta       |
+| Dashboard principal         | ✅ Completo | Alta       |
+| Visão: Comparação           | ❌ A fazer  | Alta       |
+| Visão: Histórico            | ⚠️ Parcial  | Alta       |
+| Visão: Categorias           | ⚠️ Parcial  | Média      |
+| Visão: Relatórios           | ❌ A fazer  | Alta       |
+| Visão: Dashboard Individual | ❌ A fazer  | Média      |
+| Visão: Pesquisa Avançada    | ⚠️ Parcial  | Média      |
+| Testes (70%+ coverage)      | ⚠️ Parcial  | Alta       |
+| Documentação Storybook      | ⚠️ Parcial  | Média      |
 
 ## 🎯 Critérios de Aceitação
 
 ### Backend
+
 - [ ] Todos os endpoints documentados no Swagger
 - [ ] Testes com coverage ≥ 70%
 - [ ] Response time < 500ms para queries simples
@@ -566,6 +631,7 @@ Response: ReportData
 - [ ] Health check endpoint funcionando
 
 ### Frontend
+
 - [ ] Todas as 6 visões implementadas e funcionais
 - [ ] Testes com coverage ≥ 70%
 - [ ] Lighthouse score ≥ 90 (Performance)
@@ -580,16 +646,19 @@ Response: ReportData
 ## 📝 Preceitos Ralph Seguidos
 
 ### 1. ✅ Especificidade e Detalhe
+
 - Plano detalhado com arquivos, funções e implementações específicas
 - Endpoints com request/response examples
 - Estrutura de componentes com props definidos
 
 ### 2. ✅ Funcionalidade Completa
+
 - API completa com todos os endpoints necessários
 - Frontend com todas as visões de produtos
 - Integração end-to-end testada
 
 ### 3. ✅ Melhores Práticas
+
 - Seguindo padrões NestJS (services, controllers, modules)
 - Seguindo padrões React (hooks, components, stores)
 - TypeScript strict mode
@@ -597,12 +666,14 @@ Response: ReportData
 - Documentação inline
 
 ### 4. ✅ Arquitetura e Padrões
+
 - Reutilizando estrutura existente
 - Mantendo convenções do projeto
 - Separação de responsabilidades clara
 - DRY (Don't Repeat Yourself)
 
 ### 5. ✅ Qualidade Enterprise
+
 - Testes com coverage mínimo 70%
 - Performance otimizada (cache, lazy loading)
 - Error handling robusto
@@ -610,6 +681,7 @@ Response: ReportData
 - Monitoramento e observabilidade
 
 ### 6. ✅ Documentação
+
 - README atualizado
 - Swagger/OpenAPI completo
 - Storybook para componentes
@@ -617,6 +689,7 @@ Response: ReportData
 - Guias de desenvolvimento
 
 ### 7. ✅ DevOps e Deploy
+
 - CI/CD pipeline completo
 - Health checks
 - Staging e production environments
@@ -626,6 +699,7 @@ Response: ReportData
 ## 🔄 Ordem de Implementação Recomendada
 
 ### Sprint 1 (2 semanas): Backend - Análise e Estatísticas
+
 1. Implementar endpoints de estatísticas
 2. Implementar endpoints de análise
 3. Adicionar cache Redis
@@ -633,6 +707,7 @@ Response: ReportData
 5. Atualizar documentação Swagger
 
 ### Sprint 2 (2 semanas): Backend - Exportação e Performance
+
 1. Implementar endpoints de exportação
 2. Otimizar queries existentes
 3. Adicionar rate limiting
@@ -640,6 +715,7 @@ Response: ReportData
 5. Documentação completa
 
 ### Sprint 3 (2 semanas): Frontend - Visões Principais
+
 1. Implementar visão de Comparação
 2. Melhorar visão de Histórico
 3. Implementar visão de Relatórios
@@ -647,6 +723,7 @@ Response: ReportData
 5. Criar hooks customizados
 
 ### Sprint 4 (2 semanas): Frontend - Visões Secundárias
+
 1. Implementar visão de Categorias
 2. Implementar Dashboard Individual
 3. Melhorar Pesquisa Avançada
@@ -654,6 +731,7 @@ Response: ReportData
 5. Documentação Storybook
 
 ### Sprint 5 (1 semana): Integração e Refinamento
+
 1. Integração end-to-end
 2. Testes de integração
 3. Performance tuning
@@ -661,6 +739,7 @@ Response: ReportData
 5. Documentação final
 
 ### Sprint 6 (1 semana): Deploy e Lançamento
+
 1. CI/CD setup
 2. Deploy staging
 3. QA completo
@@ -670,6 +749,7 @@ Response: ReportData
 ## 📈 Métricas de Sucesso
 
 ### Técnicas
+
 - Response time médio < 500ms
 - Lighthouse score ≥ 90
 - Test coverage ≥ 70%
@@ -677,6 +757,7 @@ Response: ReportData
 - 0 erros críticos no Sentry
 
 ### Funcionais
+
 - Todas as 6 visões funcionando
 - Exportação em 3 formatos (CSV, Excel, PDF)
 - Comparação de até 5 produtos simultâneos
@@ -684,6 +765,7 @@ Response: ReportData
 - Dashboard atualizando a cada 5 min
 
 ### UX
+
 - Tempo de carregamento < 3s
 - Mobile responsive em todas as telas
 - Dark mode funcionando
@@ -695,6 +777,7 @@ Response: ReportData
 ## 🚦 Status Geral
 
 **Backend:** 70% completo
+
 - ✅ Estrutura base
 - ✅ CRUD básico
 - 🔄 Análise e estatísticas (0%)
@@ -703,6 +786,7 @@ Response: ReportData
 - ⚠️ Testes (40%)
 
 **Frontend:** 60% completo
+
 - ✅ Listagem (100%)
 - ✅ Dashboard (100%)
 - ⚠️ Detalhes (80%)
@@ -715,12 +799,14 @@ Response: ReportData
 - ⚠️ Testes (40%)
 
 **Integração:** 50% completo
+
 - ✅ API client base
 - ⚠️ Hooks customizados (60%)
 - ⚠️ Types completos (70%)
 - 🔄 Testes integração (0%)
 
 **Documentação:** 40% completo
+
 - ⚠️ README backend (60%)
 - ⚠️ README frontend (70%)
 - ⚠️ Swagger (60%)
@@ -728,6 +814,7 @@ Response: ReportData
 - 🔄 Guias técnicos (0%)
 
 **DevOps:** 30% completo
+
 - ⚠️ Scripts de build (80%)
 - 🔄 CI/CD (0%)
 - 🔄 Monitoring (0%)

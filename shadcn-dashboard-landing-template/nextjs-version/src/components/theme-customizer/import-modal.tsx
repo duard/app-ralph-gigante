@@ -1,10 +1,16 @@
 "use client"
 
-import React from 'react'
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Textarea } from '@/components/ui/textarea'
-import type { ImportedTheme } from '@/types/theme-customizer'
+import React from "react"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Textarea } from "@/components/ui/textarea"
+import type { ImportedTheme } from "@/types/theme-customizer"
 
 interface ImportModalProps {
   open: boolean
@@ -12,7 +18,11 @@ interface ImportModalProps {
   onImport: (theme: ImportedTheme) => void
 }
 
-export function ImportModal({ open, onOpenChange, onImport }: ImportModalProps) {
+export function ImportModal({
+  open,
+  onOpenChange,
+  onImport,
+}: ImportModalProps) {
   const [importText, setImportText] = React.useState("")
 
   const processImport = () => {
@@ -25,10 +35,10 @@ export function ImportModal({ open, onOpenChange, onImport }: ImportModalProps) 
       // Parse CSS content into light and dark theme variables
       const lightTheme: Record<string, string> = {}
       const darkTheme: Record<string, string> = {}
-      
+
       // Split CSS into sections
-      const cssText = importText.replace(/\/\*[\s\S]*?\*\//g, '') // Remove comments
-      
+      const cssText = importText.replace(/\/\*[\s\S]*?\*\//g, "") // Remove comments
+
       // Extract :root section (light theme)
       const rootMatch = cssText.match(/:root\s*\{([^}]+)\}/)
       if (rootMatch) {
@@ -39,7 +49,7 @@ export function ImportModal({ open, onOpenChange, onImport }: ImportModalProps) 
           lightTheme[variable.trim()] = value.trim()
         }
       }
-      
+
       // Extract .dark section (dark theme)
       const darkMatch = cssText.match(/\.dark\s*\{([^}]+)\}/)
       if (darkMatch) {
@@ -50,11 +60,11 @@ export function ImportModal({ open, onOpenChange, onImport }: ImportModalProps) 
           darkTheme[variable.trim()] = value.trim()
         }
       }
-      
+
       // Store the imported theme
       const importedThemeData = { light: lightTheme, dark: darkTheme }
       onImport(importedThemeData)
-      
+
       onOpenChange(false)
       setImportText("")
     } catch (error) {
@@ -68,7 +78,10 @@ export function ImportModal({ open, onOpenChange, onImport }: ImportModalProps) 
         <DialogHeader>
           <DialogTitle>Import Custom CSS</DialogTitle>
           <DialogDescription>
-            Paste your CSS theme below. Include both <code>:root</code> (light mode) and <code>.dark</code> (dark mode) sections with CSS variables like <code>--primary</code>, <code>--background</code>, etc. The theme will automatically switch between light and dark modes.
+            Paste your CSS theme below. Include both <code>:root</code> (light
+            mode) and <code>.dark</code> (dark mode) sections with CSS variables
+            like <code>--primary</code>, <code>--background</code>, etc. The
+            theme will automatically switch between light and dark modes.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
@@ -93,10 +106,18 @@ export function ImportModal({ open, onOpenChange, onImport }: ImportModalProps) 
             />
           </div>
           <div className="flex gap-2 justify-end">
-            <Button variant="outline" onClick={() => onOpenChange(false)} className="cursor-pointer">
+            <Button
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              className="cursor-pointer"
+            >
               Cancel
             </Button>
-            <Button onClick={processImport} disabled={!importText.trim()} className="cursor-pointer">
+            <Button
+              onClick={processImport}
+              disabled={!importText.trim()}
+              className="cursor-pointer"
+            >
               Import Theme
             </Button>
           </div>

@@ -1,10 +1,10 @@
-import type { 
-  SidebarVariant, 
-  SidebarCollapsibleOption, 
-  SidebarSideOption, 
-  RadiusOption, 
-  BrandColor 
-} from '@/types/theme-customizer'
+import type {
+  SidebarVariant,
+  SidebarCollapsibleOption,
+  SidebarSideOption,
+  RadiusOption,
+  BrandColor,
+} from "@/types/theme-customizer"
 
 // Radius options
 export const radiusOptions: RadiusOption[] = [
@@ -18,8 +18,16 @@ export const radiusOptions: RadiusOption[] = [
 // Sidebar variant options
 export const sidebarVariants: SidebarVariant[] = [
   { name: "Default", value: "sidebar", description: "Standard sidebar layout" },
-  { name: "Floating", value: "floating", description: "Floating sidebar with border" },
-  { name: "Inset", value: "inset", description: "Inset sidebar with rounded corners" },
+  {
+    name: "Floating",
+    value: "floating",
+    description: "Floating sidebar with border",
+  },
+  {
+    name: "Inset",
+    value: "inset",
+    description: "Inset sidebar with rounded corners",
+  },
 ]
 
 // Sidebar collapsible options

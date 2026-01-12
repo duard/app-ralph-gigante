@@ -34,28 +34,31 @@ import { Image3D } from "@/components/image-3d"
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `lightSrc` | `string` | - | Image source for light mode |
-| `darkSrc` | `string` | - | Image source for dark mode |
-| `alt` | `string` | - | Alt text for accessibility |
+| Prop        | Type                | Default  | Description                                            |
+| ----------- | ------------------- | -------- | ------------------------------------------------------ |
+| `lightSrc`  | `string`            | -        | Image source for light mode                            |
+| `darkSrc`   | `string`            | -        | Image source for dark mode                             |
+| `alt`       | `string`            | -        | Alt text for accessibility                             |
 | `direction` | `"left" \| "right"` | `"left"` | Controls gradient mask direction and shimmer animation |
-| `className` | `string` | - | Additional CSS classes |
+| `className` | `string`            | -        | Additional CSS classes                                 |
 
 ## Effects Breakdown
 
 ### 3D Transform
+
 - **Hover**: `rotate-x-8 rotate-y-12 translate-z-16`
 - **Perspective**: Uses `perspective-distant` for proper 3D viewing
 - **Transitions**: Smooth 700ms ease-out animations
 
 ### Visual Elements
+
 - **Depth Layer**: Subtle background frame for 3D depth
 - **Shimmer Effect**: Animated light sweep on hover
 - **Content Mask**: Gradient fade for seamless content integration
 - **Border Highlights**: Ring effects that intensify on hover
 
 ### Theme Integration
+
 - **Auto-switching**: Shows appropriate image based on dark/light mode
 - **Border adaptation**: Ring colors adjust to theme
 - **Gradient masks**: Blend with current background colors
@@ -83,16 +86,19 @@ The component accepts additional classes through the `className` prop:
 ## Implementation Details
 
 ### Performance
+
 - Uses CSS `transform-3d` for hardware acceleration
 - Optimized with `will-change` implications
 - Lazy loading and async decoding for images
 
 ### Accessibility
+
 - Proper alt text support
 - Respects user motion preferences
 - Keyboard navigation friendly
 
 ### Browser Support
+
 - Modern browsers with CSS Grid and 3D transforms
 - Graceful degradation for older browsers
 - Uses Tailwind CSS v4 3D utilities
@@ -100,6 +106,7 @@ The component accepts additional classes through the `className` prop:
 ## Examples
 
 ### Feature Section
+
 ```tsx
 <div className="grid items-center gap-12 lg:grid-cols-2">
   <Image3D
@@ -116,6 +123,7 @@ The component accepts additional classes through the `className` prop:
 ```
 
 ### Gallery Grid
+
 ```tsx
 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
   {features.map((feature, index) => (

@@ -37,32 +37,32 @@ The Vite configuration includes optimizations:
 export default defineConfig({
   build: {
     // Output directory
-    outDir: 'dist',
-    
+    outDir: "dist",
+
     // Generate source maps for debugging
     sourcemap: true,
-    
+
     // Optimize chunk sizes
     chunkSizeWarningLimit: 1000,
-    
+
     // Rollup options for advanced optimization
     rollupOptions: {
       output: {
         // Manual chunk splitting for better caching
         manualChunks: {
           // Separate vendor libraries
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
-          charts: ['recharts'],
-          table: ['@tanstack/react-table'],
+          vendor: ["react", "react-dom"],
+          router: ["react-router-dom"],
+          ui: ["@radix-ui/react-dialog", "@radix-ui/react-dropdown-menu"],
+          charts: ["recharts"],
+          table: ["@tanstack/react-table"],
         },
       },
     },
-    
+
     // Minification options
-    minify: 'esbuild',
-    target: 'es2015',
+    minify: "esbuild",
+    target: "es2015",
   },
 })
 ```
@@ -80,6 +80,7 @@ Vercel provides zero-configuration deployment for Vite applications:
    - Automatic deployments on every push
 
 2. **Configure Project:**
+
    ```bash
    # Vercel will auto-detect Vite configuration
    # Build Command: pnpm build
@@ -155,38 +156,38 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'pnpm'
-        
-    - name: Install pnpm
-      run: npm install -g pnpm
-      
-    - name: Install dependencies
-      run: pnpm install
-      working-directory: ./vite-version
-      
-    - name: Build
-      run: pnpm build
-      working-directory: ./vite-version
-      
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./vite-version/dist
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "pnpm"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: ./vite-version
+
+      - name: Build
+        run: pnpm build
+        working-directory: ./vite-version
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./vite-version/dist
 ```
 
 #### Base Path Configuration
@@ -196,7 +197,7 @@ For GitHub Pages subdirectory deployment:
 ```typescript
 // vite.config.ts
 export default defineConfig({
-  base: '/your-repo-name/', // Replace with your repository name
+  base: "/your-repo-name/", // Replace with your repository name
   // ... other configuration
 })
 ```
@@ -224,14 +225,16 @@ Create CloudFront distribution for CDN:
 
 ```json
 {
-  "Origins": [{
-    "DomainName": "your-bucket-name.s3-website.region.amazonaws.com",
-    "Id": "S3-your-bucket-name",
-    "CustomOriginConfig": {
-      "HTTPPort": 80,
-      "OriginProtocolPolicy": "http-only"
+  "Origins": [
+    {
+      "DomainName": "your-bucket-name.s3-website.region.amazonaws.com",
+      "Id": "S3-your-bucket-name",
+      "CustomOriginConfig": {
+        "HTTPPort": 80,
+        "OriginProtocolPolicy": "http-only"
+      }
     }
-  }],
+  ],
   "DefaultCacheBehavior": {
     "TargetOriginId": "S3-your-bucket-name",
     "ViewerProtocolPolicy": "redirect-to-https"
@@ -344,7 +347,7 @@ VITE_DEBUG=false
 const config = {
   appName: import.meta.env.VITE_APP_NAME,
   apiUrl: import.meta.env.VITE_API_URL,
-  isDebug: import.meta.env.VITE_DEBUG === 'true',
+  isDebug: import.meta.env.VITE_DEBUG === "true",
 }
 ```
 
@@ -381,10 +384,10 @@ export default defineConfig({
   build: {
     // Inline small assets as base64
     assetsInlineLimit: 4096,
-    
+
     // Optimize CSS
-    cssMinify: 'esbuild',
-    
+    cssMinify: "esbuild",
+
     // Enable compression
     reportCompressedSize: true,
   },
@@ -418,20 +421,20 @@ Add service worker for caching:
 
 ```typescript
 // vite.config.ts
-import { VitePWA } from 'vite-plugin-pwa'
+import { VitePWA } from "vite-plugin-pwa"
 
 export default defineConfig({
   plugins: [
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: "autoUpdate",
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        globPatterns: ["**/*.{js,css,html,ico,png,svg}"],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
+            handler: "CacheFirst",
             options: {
-              cacheName: 'google-fonts-cache',
+              cacheName: "google-fonts-cache",
               expiration: {
                 maxEntries: 10,
                 maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
@@ -453,14 +456,17 @@ Add CSP headers for security:
 
 ```html
 <!-- In index.html -->
-<meta http-equiv="Content-Security-Policy" content="
+<meta
+  http-equiv="Content-Security-Policy"
+  content="
   default-src 'self';
   script-src 'self' 'unsafe-inline';
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   font-src 'self' https://fonts.gstatic.com;
   img-src 'self' data: https:;
   connect-src 'self' https://api.yourdomain.com;
-">
+"
+/>
 ```
 
 ### Build Security
@@ -470,12 +476,12 @@ Add CSP headers for security:
 export default defineConfig({
   build: {
     // Remove source maps in production
-    sourcemap: process.env.NODE_ENV === 'development',
-    
+    sourcemap: process.env.NODE_ENV === "development",
+
     // Minify code
-    minify: 'esbuild',
+    minify: "esbuild",
   },
-  
+
   // Secure server options
   server: {
     https: false, // Enable HTTPS in development if needed
@@ -504,9 +510,14 @@ Add performance monitoring:
 
 ```typescript
 // Track page load performance
-window.addEventListener('load', () => {
-  const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
-  console.log('Page load time:', navigation.loadEventEnd - navigation.fetchStart)
+window.addEventListener("load", () => {
+  const navigation = performance.getEntriesByType(
+    "navigation"
+  )[0] as PerformanceNavigationTiming
+  console.log(
+    "Page load time:",
+    navigation.loadEventEnd - navigation.fetchStart
+  )
 })
 ```
 
@@ -515,6 +526,7 @@ window.addEventListener('load', () => {
 ### Common Build Issues
 
 **Module not found errors:**
+
 ```bash
 # Clear node_modules and reinstall
 rm -rf node_modules pnpm-lock.yaml
@@ -522,12 +534,14 @@ pnpm install
 ```
 
 **Build memory issues:**
+
 ```bash
 # Increase Node.js memory limit
 NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 ```
 
 **TypeScript errors:**
+
 ```bash
 # Run type checking separately
 pnpm type-check
@@ -536,14 +550,17 @@ pnpm type-check
 ### Deployment Issues
 
 **SPA routing not working:**
+
 - Ensure server redirects all routes to index.html
 - Check base path configuration for subdirectory deployments
 
 **Assets not loading:**
+
 - Verify asset paths in build output
 - Check CORS settings for cross-domain assets
 
 **Environment variables not working:**
+
 - Ensure variables start with `VITE_`
 - Check variable names and values in deployment platform
 

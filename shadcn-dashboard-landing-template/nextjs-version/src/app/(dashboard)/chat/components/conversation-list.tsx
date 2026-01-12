@@ -10,7 +10,7 @@ import {
   Hash,
   Settings,
   UserPlus,
-  Filter
+  Filter,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -24,7 +24,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useChat, type Conversation } from "../use-chat"
 
@@ -39,22 +39,22 @@ function formatMessageTime(timestamp: string): string {
   const date = new Date(timestamp)
 
   if (isToday(date)) {
-    return format(date, 'h:mm a') // 3:30 PM
+    return format(date, "h:mm a") // 3:30 PM
   } else if (isYesterday(date)) {
-    return 'Yesterday'
+    return "Yesterday"
   } else if (isThisWeek(date)) {
-    return format(date, 'EEEE') // Day name
+    return format(date, "EEEE") // Day name
   } else if (isThisYear(date)) {
-    return format(date, 'MMM d') // Jan 15
+    return format(date, "MMM d") // Jan 15
   } else {
-    return format(date, 'dd/MM/yy') // 15/01/24
+    return format(date, "dd/MM/yy") // 15/01/24
   }
 }
 
 export function ConversationList({
   conversations,
   selectedConversation,
-  onSelectConversation
+  onSelectConversation,
 }: ConversationListProps) {
   const { searchQuery, setSearchQuery } = useChat()
 
@@ -68,11 +68,17 @@ export function ConversationList({
     if (!a.isPinned && b.isPinned) return 1
 
     // Then by last message timestamp
-    return new Date(b.lastMessage.timestamp).getTime() - new Date(a.lastMessage.timestamp).getTime()
+    return (
+      new Date(b.lastMessage.timestamp).getTime() -
+      new Date(a.lastMessage.timestamp).getTime()
+    )
   })
 
   const getOnlineStatus = (conversation: Conversation) => {
-    if (conversation.type === "direct" && conversation.participants.length === 1) {
+    if (
+      conversation.type === "direct" &&
+      conversation.participants.length === 1
+    ) {
       // In a real app, you'd check user online status
       return Math.random() > 0.5 // Mock online status
     }
@@ -142,24 +148,35 @@ export function ConversationList({
             >
               {/* Avatar with online indicator */}
               <div className="relative flex-shrink-0">
-                <Avatar className={cn(
-                  "h-12 w-12",
-                  selectedConversation === conversation.id && "ring-2 ring-background"
-                )}>
-                  <AvatarImage src={conversation.avatar} alt={conversation.name} />
+                <Avatar
+                  className={cn(
+                    "h-12 w-12",
+                    selectedConversation === conversation.id &&
+                      "ring-2 ring-background"
+                  )}
+                >
+                  <AvatarImage
+                    src={conversation.avatar}
+                    alt={conversation.name}
+                  />
                   <AvatarFallback className="text-sm">
                     {conversation.type === "group" ? (
                       <Users className="h-5 w-5" />
                     ) : (
-                      conversation.name.split(' ').map(n => n[0]).join('').slice(0, 2)
+                      conversation.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .slice(0, 2)
                     )}
                   </AvatarFallback>
                 </Avatar>
 
                 {/* Online indicator for direct messages */}
-                {conversation.type === "direct" && getOnlineStatus(conversation) && (
-                  <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-green-500 border-2 border-background rounded-full" />
-                )}
+                {conversation.type === "direct" &&
+                  getOnlineStatus(conversation) && (
+                    <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-green-500 border-2 border-background rounded-full" />
+                  )}
 
                 {/* Group indicator */}
                 {conversation.type === "group" && (
@@ -173,7 +190,9 @@ export function ConversationList({
               <div className="flex-1 min-w-0 overflow-hidden">
                 <div className="flex items-center justify-between mb-1 min-w-0">
                   <div className="flex items-center gap-1 min-w-0 flex-1 overflow-hidden pr-2">
-                    <h3 className="font-medium truncate min-w-0 max-w-[160px] lg:max-w-[180px]">{conversation.name}</h3>
+                    <h3 className="font-medium truncate min-w-0 max-w-[160px] lg:max-w-[180px]">
+                      {conversation.name}
+                    </h3>
                     {conversation.isPinned && (
                       <Pin className="h-3 w-3 text-muted-foreground flex-shrink-0" />
                     )}
@@ -193,8 +212,13 @@ export function ConversationList({
 
                   {/* Unread count */}
                   {conversation.unreadCount > 0 && (
-                    <Badge variant="default" className="min-w-[20px] h-5 text-xs cursor-pointer flex-shrink-0">
-                      {conversation.unreadCount > 99 ? "99+" : conversation.unreadCount}
+                    <Badge
+                      variant="default"
+                      className="min-w-[20px] h-5 text-xs cursor-pointer flex-shrink-0"
+                    >
+                      {conversation.unreadCount > 99
+                        ? "99+"
+                        : conversation.unreadCount}
                     </Badge>
                   )}
                 </div>

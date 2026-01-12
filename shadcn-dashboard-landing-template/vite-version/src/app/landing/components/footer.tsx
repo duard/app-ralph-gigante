@@ -3,9 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { Separator } from '@/components/ui/separator'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Separator } from "@/components/ui/separator"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Form,
   FormControl,
@@ -13,8 +13,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form"
-import { Logo } from '@/components/logo'
-import { Github, Twitter, Linkedin, Youtube, Heart } from 'lucide-react'
+import { Logo } from "@/components/logo"
+import { Github, Twitter, Linkedin, Youtube, Heart } from "lucide-react"
 
 const newsletterSchema = z.object({
   email: z.string().email({
@@ -24,36 +24,40 @@ const newsletterSchema = z.object({
 
 const footerLinks = {
   product: [
-    { name: 'Features', href: '#features' },
-    { name: 'Pricing', href: '#pricing' },
-    { name: 'API', href: '#api' },
-    { name: 'Documentation', href: '#docs' },
+    { name: "Features", href: "#features" },
+    { name: "Pricing", href: "#pricing" },
+    { name: "API", href: "#api" },
+    { name: "Documentation", href: "#docs" },
   ],
   company: [
-    { name: 'About', href: '#about' },
-    { name: 'Blog', href: '#blog' },
-    { name: 'Careers', href: '#careers' },
-    { name: 'Press', href: '#press' },
+    { name: "About", href: "#about" },
+    { name: "Blog", href: "#blog" },
+    { name: "Careers", href: "#careers" },
+    { name: "Press", href: "#press" },
   ],
   resources: [
-    { name: 'Help Center', href: '#help' },
-    { name: 'Community', href: '#community' },
-    { name: 'Guides', href: '#guides' },
-    { name: 'Webinars', href: '#webinars' },
+    { name: "Help Center", href: "#help" },
+    { name: "Community", href: "#community" },
+    { name: "Guides", href: "#guides" },
+    { name: "Webinars", href: "#webinars" },
   ],
   legal: [
-    { name: 'Privacy', href: '#privacy' },
-    { name: 'Terms', href: '#terms' },
-    { name: 'Security', href: '#security' },
-    { name: 'Status', href: '#status' },
+    { name: "Privacy", href: "#privacy" },
+    { name: "Terms", href: "#terms" },
+    { name: "Security", href: "#security" },
+    { name: "Status", href: "#status" },
   ],
 }
 
 const socialLinks = [
-  { name: 'Twitter', href: '#', icon: Twitter },
-  { name: 'GitHub', href: 'https://github.com/silicondeck/shadcn-dashboard-landing-template', icon: Github },
-  { name: 'LinkedIn', href: '#', icon: Linkedin },
-  { name: 'YouTube', href: '#', icon: Youtube },
+  { name: "Twitter", href: "#", icon: Twitter },
+  {
+    name: "GitHub",
+    href: "https://github.com/silicondeck/shadcn-dashboard-landing-template",
+    icon: Github,
+  },
+  { name: "LinkedIn", href: "#", icon: Linkedin },
+  { name: "YouTube", href: "#", icon: Youtube },
 ]
 
 export function LandingFooter() {
@@ -79,10 +83,14 @@ export function LandingFooter() {
           <div className="mx-auto max-w-2xl text-center">
             <h3 className="text-2xl font-bold mb-4">Stay updated</h3>
             <p className="text-muted-foreground mb-6">
-              Get the latest updates, articles, and resources sent to your inbox weekly.
+              Get the latest updates, articles, and resources sent to your inbox
+              weekly.
             </p>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2 max-w-md mx-auto sm:flex-row">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="flex flex-col gap-2 max-w-md mx-auto sm:flex-row"
+              >
                 <FormField
                   control={form.control}
                   name="email"
@@ -99,7 +107,9 @@ export function LandingFooter() {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="cursor-pointer">Subscribe</Button>
+                <Button type="submit" className="cursor-pointer">
+                  Subscribe
+                </Button>
               </form>
             </Form>
           </div>
@@ -110,13 +120,19 @@ export function LandingFooter() {
           {/* Brand Column */}
           <div className="col-span-4 lg:col-span-2 max-w-2xl">
             <div className="flex items-center space-x-2 mb-4 max-lg:justify-center">
-              <a href="https://shadcnstore.com" target='_blank' className="flex items-center space-x-2 cursor-pointer">
+              <a
+                href="https://shadcnstore.com"
+                target="_blank"
+                className="flex items-center space-x-2 cursor-pointer"
+              >
                 <Logo size={32} />
                 <span className="font-bold text-xl">ShadcnStore</span>
               </a>
             </div>
             <p className="text-muted-foreground mb-6 max-lg:text-center max-lg:flex max-lg:justify-center">
-              Accelerating web development with curated blocks, templates, landing pages, and admin dashboards designed for modern developers.
+              Accelerating web development with curated blocks, templates,
+              landing pages, and admin dashboards designed for modern
+              developers.
             </p>
             <div className="flex space-x-4 max-lg:justify-center">
               {socialLinks.map((social) => (
@@ -135,7 +151,7 @@ export function LandingFooter() {
           </div>
 
           {/* Links Columns */}
-          <div className='max-md:col-span-2 lg:col-span-1'>
+          <div className="max-md:col-span-2 lg:col-span-1">
             <h4 className="font-semibold mb-4">Product</h4>
             <ul className="space-y-3">
               {footerLinks.product.map((link) => (
@@ -151,7 +167,7 @@ export function LandingFooter() {
             </ul>
           </div>
 
-          <div className='max-md:col-span-2 lg:col-span-1'>
+          <div className="max-md:col-span-2 lg:col-span-1">
             <h4 className="font-semibold mb-4">Company</h4>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
@@ -167,7 +183,7 @@ export function LandingFooter() {
             </ul>
           </div>
 
-          <div className='max-md:col-span-2 lg:col-span-1'>
+          <div className="max-md:col-span-2 lg:col-span-1">
             <h4 className="font-semibold mb-4">Resources</h4>
             <ul className="space-y-3">
               {footerLinks.resources.map((link) => (
@@ -183,7 +199,7 @@ export function LandingFooter() {
             </ul>
           </div>
 
-          <div className='max-md:col-span-2 lg:col-span-1'>
+          <div className="max-md:col-span-2 lg:col-span-1">
             <h4 className="font-semibold mb-4">Legal</h4>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
@@ -209,21 +225,36 @@ export function LandingFooter() {
               <span>Made with</span>
               <Heart className="h-4 w-4 text-red-500 fill-current" />
               <span>by</span>
-              <a href="https://shadcnstore.com" target='_blank' className="font-semibold text-foreground hover:text-primary transition-colors cursor-pointer">
+              <a
+                href="https://shadcnstore.com"
+                target="_blank"
+                className="font-semibold text-foreground hover:text-primary transition-colors cursor-pointer"
+              >
                 ShadcnStore
               </a>
             </div>
             <span className="hidden sm:inline">•</span>
-            <span>© {new Date().getFullYear()} for the developer community</span>
+            <span>
+              © {new Date().getFullYear()} for the developer community
+            </span>
           </div>
           <div className="flex items-center space-x-4 text-sm text-muted-foreground mt-4 md:mt-0">
-            <a href="#privacy" className="hover:text-foreground transition-colors">
+            <a
+              href="#privacy"
+              className="hover:text-foreground transition-colors"
+            >
               Privacy Policy
             </a>
-            <a href="#terms" className="hover:text-foreground transition-colors">
+            <a
+              href="#terms"
+              className="hover:text-foreground transition-colors"
+            >
               Terms of Service
             </a>
-            <a href="#cookies" className="hover:text-foreground transition-colors">
+            <a
+              href="#cookies"
+              className="hover:text-foreground transition-colors"
+            >
               Cookie Policy
             </a>
           </div>

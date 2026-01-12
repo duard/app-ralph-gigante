@@ -47,11 +47,7 @@ export default function ChatPage() {
   return (
     <BaseLayout title="Chat" description="Team communication and messaging">
       <div className="px-4 md:px-6">
-        <Chat
-          conversations={conversations}
-          messages={messages}
-          users={users}
-        />
+        <Chat conversations={conversations} messages={messages} users={users} />
       </div>
     </BaseLayout>
   )

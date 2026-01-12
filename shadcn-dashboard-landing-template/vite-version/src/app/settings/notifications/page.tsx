@@ -4,7 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { BaseLayout } from "@/components/layouts/base-layout"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -15,9 +21,22 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { Bell, Mail, MessageSquare } from "lucide-react"
 
 const notificationsFormSchema = z.object({
@@ -125,7 +144,8 @@ export default function NotificationSettings() {
                           <div className="space-y-1">
                             <FormLabel>Security alerts</FormLabel>
                             <p className="text-sm text-muted-foreground">
-                              Get notified when there are security events on your account.
+                              Get notified when there are security events on
+                              your account.
                             </p>
                           </div>
                         </FormItem>
@@ -145,7 +165,8 @@ export default function NotificationSettings() {
                           <div className="space-y-1">
                             <FormLabel>Product updates</FormLabel>
                             <p className="text-sm text-muted-foreground">
-                              Receive updates about new features and improvements.
+                              Receive updates about new features and
+                              improvements.
                             </p>
                           </div>
                         </FormItem>
@@ -165,7 +186,8 @@ export default function NotificationSettings() {
                           <div className="space-y-1">
                             <FormLabel>Marketing emails</FormLabel>
                             <p className="text-sm text-muted-foreground">
-                              Receive emails about our latest offers and promotions.
+                              Receive emails about our latest offers and
+                              promotions.
                             </p>
                           </div>
                         </FormItem>
@@ -262,7 +284,10 @@ export default function NotificationSettings() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Email Frequency</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger className="w-full">
                             <SelectValue placeholder="Select frequency" />
@@ -287,7 +312,10 @@ export default function NotificationSettings() {
                       control={form.control}
                       name="quietHoursStart"
                       render={({ field }) => (
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger className="w-50">
                               <SelectValue placeholder="Start" />
@@ -306,7 +334,10 @@ export default function NotificationSettings() {
                       control={form.control}
                       name="quietHoursEnd"
                       render={({ field }) => (
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger className="w-50">
                               <SelectValue placeholder="End" />
@@ -348,7 +379,9 @@ export default function NotificationSettings() {
                     </TableHeader>
                     <TableBody>
                       <TableRow>
-                        <TableCell className="font-medium">Order updates</TableCell>
+                        <TableCell className="font-medium">
+                          Order updates
+                        </TableCell>
                         <TableCell className="text-center">
                           <FormField
                             control={form.control}
@@ -399,7 +432,9 @@ export default function NotificationSettings() {
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell className="font-medium">Invoice reminders</TableCell>
+                        <TableCell className="font-medium">
+                          Invoice reminders
+                        </TableCell>
                         <TableCell className="text-center">
                           <FormField
                             control={form.control}
@@ -450,7 +485,9 @@ export default function NotificationSettings() {
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell className="font-medium">Promotional offers</TableCell>
+                        <TableCell className="font-medium">
+                          Promotional offers
+                        </TableCell>
                         <TableCell className="text-center">
                           <FormField
                             control={form.control}
@@ -501,7 +538,9 @@ export default function NotificationSettings() {
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell className="font-medium">System maintenance</TableCell>
+                        <TableCell className="font-medium">
+                          System maintenance
+                        </TableCell>
                         <TableCell className="text-center">
                           <FormField
                             control={form.control}
@@ -560,15 +599,22 @@ export default function NotificationSettings() {
                       name="notificationTiming"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>When should we send you notifications?</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormLabel>
+                            When should we send you notifications?
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
                             <FormControl>
                               <SelectTrigger className="w-full max-w-sm">
                                 <SelectValue placeholder="Select timing" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="online">Only When I'm online</SelectItem>
+                              <SelectItem value="online">
+                                Only When I'm online
+                              </SelectItem>
                               <SelectItem value="always">Always</SelectItem>
                               <SelectItem value="never">Never</SelectItem>
                             </SelectContent>
@@ -577,8 +623,6 @@ export default function NotificationSettings() {
                         </FormItem>
                       )}
                     />
-
-
                   </div>
                 </div>
               </CardContent>
@@ -588,7 +632,8 @@ export default function NotificationSettings() {
               <CardHeader>
                 <CardTitle>Notification Channels</CardTitle>
                 <CardDescription>
-                  Choose your preferred notification channels for different types of alerts.
+                  Choose your preferred notification channels for different
+                  types of alerts.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -601,8 +646,12 @@ export default function NotificationSettings() {
                         <div className="flex items-center space-x-3">
                           <Mail className="h-5 w-5 text-muted-foreground" />
                           <div>
-                            <FormLabel className="font-medium mb-1">Email</FormLabel>
-                            <div className="text-sm text-muted-foreground">Receive notifications via email</div>
+                            <FormLabel className="font-medium mb-1">
+                              Email
+                            </FormLabel>
+                            <div className="text-sm text-muted-foreground">
+                              Receive notifications via email
+                            </div>
                           </div>
                         </div>
                         <FormControl>
@@ -623,8 +672,12 @@ export default function NotificationSettings() {
                         <div className="flex items-center space-x-3">
                           <Bell className="h-5 w-5 text-muted-foreground" />
                           <div>
-                            <FormLabel className="font-medium mb-1">Push Notifications</FormLabel>
-                            <div className="text-sm text-muted-foreground">Receive browser push notifications</div>
+                            <FormLabel className="font-medium mb-1">
+                              Push Notifications
+                            </FormLabel>
+                            <div className="text-sm text-muted-foreground">
+                              Receive browser push notifications
+                            </div>
                           </div>
                         </div>
                         <FormControl>
@@ -645,8 +698,12 @@ export default function NotificationSettings() {
                         <div className="flex items-center space-x-3">
                           <MessageSquare className="h-5 w-5 text-muted-foreground" />
                           <div>
-                            <FormLabel className="font-medium mb-1">SMS</FormLabel>
-                            <div className="text-sm text-muted-foreground">Receive notifications via SMS</div>
+                            <FormLabel className="font-medium mb-1">
+                              SMS
+                            </FormLabel>
+                            <div className="text-sm text-muted-foreground">
+                              Receive notifications via SMS
+                            </div>
                           </div>
                         </div>
                         <FormControl>
@@ -663,8 +720,12 @@ export default function NotificationSettings() {
             </Card>
 
             <div className="flex space-x-2">
-              <Button type="submit" className="cursor-pointer">Save Preferences</Button>
-              <Button variant="outline" type="reset" className="cursor-pointer">Cancel</Button>
+              <Button type="submit" className="cursor-pointer">
+                Save Preferences
+              </Button>
+              <Button variant="outline" type="reset" className="cursor-pointer">
+                Cancel
+              </Button>
             </div>
           </form>
         </Form>

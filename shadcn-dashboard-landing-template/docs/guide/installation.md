@@ -34,6 +34,7 @@ Open `http://localhost:3000`
 ## Commands
 
 **Development:**
+
 ```bash
 pnpm dev          # Start development server
 pnpm build        # Build for production
@@ -42,6 +43,7 @@ pnpm start        # Start production server (Next.js)
 ```
 
 **Code Quality:**
+
 ```bash
 pnpm lint         # Check for issues
 pnpm type-check   # TypeScript validation

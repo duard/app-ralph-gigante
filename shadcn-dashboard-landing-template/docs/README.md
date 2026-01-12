@@ -7,20 +7,24 @@ This directory contains the complete documentation for the Shadcn Dashboard + La
 The documentation is organized into framework-specific sections to provide targeted guidance:
 
 ### 🏁 Getting Started
+
 - **[Overview](./index.md)** - Project introduction and features
 - **[Installation Guide](./guide/installation.md)** - Complete setup instructions
 - **[Framework Comparison](./guide/choosing-framework.md)** - Vite vs Next.js decision guide
 
 ### 🔧 Framework-Specific Guides
+
 - **[Vite Version](./vite/)** - React + Vite + React Router DOM
 - **[Next.js Version](./nextjs/)** - Next.js 15 + App Router
 
 ### 🎨 Component System
+
 - **[Component Library](./components/)** - shadcn/ui v3 integration
 - **[Theme Customizer](./theme-customizer/)** - Real-time theme editing
 - **[Layouts](./layouts/)** - Layout system and navigation
 
 ### 🚀 Advanced Topics
+
 - **[Deployment](./deployment/)** - Production deployment guides
 - **[Customization](./customization/)** - Styling and customization
 - **[Migration](./migration/)** - Framework and version migration
@@ -28,6 +32,7 @@ The documentation is organized into framework-specific sections to provide targe
 ## 🛠️ Development
 
 ### Prerequisites
+
 - Node.js (v18.0.0 or higher)
 - pnpm (recommended) or npm/yarn
 
@@ -60,19 +65,25 @@ pnpm preview
 This documentation follows these principles:
 
 ### Framework-Specific Organization
+
 Rather than mixing Vite and Next.js instructions, each framework has dedicated sections to avoid confusion and provide targeted guidance.
 
 ### User-Journey Focused
+
 Documentation is organized by user goals rather than technical implementation details:
+
 - Quick setup for immediate results
 - Deep customization for advanced users
 - Migration paths for framework switching
 
 ### Comprehensive Examples
+
 Every concept includes working code examples that can be copied and used immediately.
 
 ### Performance Oriented
+
 VitePress provides:
+
 - Fast site generation
 - Excellent search capabilities
 - Mobile-optimized experience
@@ -81,6 +92,7 @@ VitePress provides:
 ## 🔍 Search and Navigation
 
 The documentation includes:
+
 - **Full-text search** across all content
 - **Sidebar navigation** with collapsible sections
 - **Cross-references** between related topics
@@ -128,6 +140,7 @@ docs/
 The documentation can be deployed to any static hosting provider:
 
 ### Vercel (Recommended)
+
 ```bash
 # Deploy to Vercel
 vercel
@@ -136,12 +149,14 @@ vercel
 ```
 
 ### Netlify
+
 ```bash
 # Build command: pnpm build
 # Publish directory: .vitepress/dist
 ```
 
 ### GitHub Pages
+
 ```bash
 # Use GitHub Actions with VitePress deployment action
 ```
@@ -175,6 +190,7 @@ The documentation uses these VitePress features:
 ## 📊 Performance
 
 The documentation is optimized for:
+
 - **Fast Loading** - Minimal JavaScript, optimized assets
 - **Search Performance** - Efficient search indexing
 - **Mobile Experience** - Responsive design and touch-friendly navigation
@@ -185,16 +201,19 @@ The documentation is optimized for:
 ### Common Issues
 
 **Build Failures:**
+
 - Check for broken internal links
 - Verify all imported files exist
 - Ensure proper Markdown syntax
 
 **Search Not Working:**
+
 - Rebuild the documentation
 - Check for JavaScript errors
 - Verify search index generation
 
 **Navigation Issues:**
+
 - Check `.vitepress/config.ts` sidebar configuration
 - Ensure file paths match navigation links
 - Verify proper heading structure

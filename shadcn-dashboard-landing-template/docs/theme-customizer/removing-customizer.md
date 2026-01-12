@@ -1,4 +1,3 @@
-
 # Removing the Theme Customizer
 
 If you want a simpler template or don't need live theme editing, you can safely remove the theme customizer. Follow these steps for both Vite and Next.js versions:
@@ -98,9 +97,9 @@ Remove any remaining imports in your files:
 
 ```typescript
 // Remove these imports from files that used the customizer
-import { ThemeCustomizer } from '@/components/theme-customizer'
-import { useThemeManager } from '@/hooks/use-theme-manager'
-import { themeColors } from '@/config/theme-data'
+import { ThemeCustomizer } from "@/components/theme-customizer"
+import { useThemeManager } from "@/hooks/use-theme-manager"
+import { themeColors } from "@/config/theme-data"
 ```
 
 ### Step 5: Update Navigation
@@ -392,16 +391,16 @@ Remove theme customizer links from navigation:
 export const sidebarNavItems = [
   // ... other nav items
   {
-    title: 'Settings',
+    title: "Settings",
     items: [
       {
-        title: 'General',
-        url: '/settings',
+        title: "General",
+        url: "/settings",
         icon: Settings,
       },
       {
-        title: 'Profile',
-        url: '/settings/profile',
+        title: "Profile",
+        url: "/settings/profile",
         icon: User,
       },
       // Remove theme customizer link
@@ -421,7 +420,7 @@ Keep only essential CSS variables and remove customizer-specific ones:
 
 ```css
 /* src/index.css or globals.css */
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @layer base {
   :root {
@@ -442,7 +441,7 @@ Keep only essential CSS variables and remove customizer-specific ones:
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
-    
+
     /* Remove customizer-specific variables */
     /* --sidebar-width: 280px; */
     /* --header-height: 64px; */
@@ -464,7 +463,7 @@ Keep only essential CSS variables and remove customizer-specific ones:
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 94.0%;
+    --ring: 224.3 76.3% 94%;
   }
 }
 

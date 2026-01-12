@@ -6,15 +6,16 @@ Criar um aplicativo React + Vite baseado no template **shadcn-dashboard-landing-
 
 ## 📋 Arquivos Criados
 
-| Arquivo | Descrição |
-|---------|-----------|
-| `prd-app-produtos-sankhya.md` | PRD principal para o Ralph Loop |
+| Arquivo                         | Descrição                                 |
+| ------------------------------- | ----------------------------------------- |
+| `prd-app-produtos-sankhya.md`   | PRD principal para o Ralph Loop           |
 | `tasks-app-produtos-sankhya.md` | Lista detalhada de ~441 tasks em 16 fases |
-| `ralph-loop-guide.md` | Guia completo para executar o Ralph Loop |
+| `ralph-loop-guide.md`           | Guia completo para executar o Ralph Loop  |
 
 ## 🚀 Como Começar (Método 1: Automático com Ralph Loop)
 
 ### 1. Instalar o comando /ralph (se ainda não instalado)
+
 ```bash
 npx shadcn@latest add https://brennanmceachran.github.io/agent-utils/ralph-loop-opencode.json
 ```
@@ -22,12 +23,14 @@ npx shadcn@latest add https://brennanmceachran.github.io/agent-utils/ralph-loop-
 ### 2. Reiniciar o OpenCode
 
 ### 3. Iniciar a API Sankhya
+
 ```bash
 cd /home/carloshome/z-ralph-code/api-sankhya-center
 npm run start:dev
 ```
 
 ### 4. Mudar para agente Ralph no OpenCode e executar
+
 ```bash
 /ralph @prd-app-produtos-sankhya.md 50
 ```
@@ -35,6 +38,7 @@ npm run start:dev
 ## 🚀 Como Começar (Método 2: Manual)
 
 ### 1. Copiar template base
+
 ```bash
 cd /home/carloshome/z-ralph-code
 cp -r shadcn-dashboard-landing-template/vite-version sankhya-products-dashboard
@@ -42,6 +46,7 @@ cd sankhya-products-dashboard
 ```
 
 ### 2. Instalar dependências
+
 ```bash
 pnpm install
 # ou
@@ -49,11 +54,13 @@ npm install
 ```
 
 ### 3. Configurar .env
+
 ```bash
 VITE_API_URL=http://localhost:3000
 ```
 
 ### 4. Seguir as tasks em ordem
+
 Consulte `tasks-app-produtos-sankhya.md` para seguir as ~441 tasks organizadas em 16 fases.
 
 ## 📚 Referências
@@ -127,25 +134,25 @@ src/
 
 ## 🎯 Fases de Desenvolvimento
 
-| Fase | Descrição | Tasks Estimadas |
-|------|-----------|-----------------|
-| 1 | Setup Inicial | 25 |
-| 2 | Infraestrutura | 48 |
-| 3 | Autenticação | 24 |
-| 4 | Tipos de Produtos | 15 |
-| 5 | API de Produtos | 24 |
-| 6 | Componentes de UI | 40 |
-| 7 | Página de Produtos | 40 |
-| 8 | Detalhes do Produto | 18 |
-| 9 | Formulário CRUD | 30 |
-| 10 | Dashboard | 20 |
-| 11 | UX/UI e Polimento | 30 |
-| 12 | Testes | 40 |
-| 13 | Performance e Otimização | 25 |
-| 14 | Documentação | 24 |
-| 15 | Deploy e Monitoramento | 18 |
-| 16 | Extras e Melhorias Futuras | 20 |
-| **Total** | | **~441 tasks** |
+| Fase      | Descrição                  | Tasks Estimadas |
+| --------- | -------------------------- | --------------- |
+| 1         | Setup Inicial              | 25              |
+| 2         | Infraestrutura             | 48              |
+| 3         | Autenticação               | 24              |
+| 4         | Tipos de Produtos          | 15              |
+| 5         | API de Produtos            | 24              |
+| 6         | Componentes de UI          | 40              |
+| 7         | Página de Produtos         | 40              |
+| 8         | Detalhes do Produto        | 18              |
+| 9         | Formulário CRUD            | 30              |
+| 10        | Dashboard                  | 20              |
+| 11        | UX/UI e Polimento          | 30              |
+| 12        | Testes                     | 40              |
+| 13        | Performance e Otimização   | 25              |
+| 14        | Documentação               | 24              |
+| 15        | Deploy e Monitoramento     | 18              |
+| 16        | Extras e Melhorias Futuras | 20              |
+| **Total** |                            | **~441 tasks**  |
 
 ## ✅ Acceptance Criteria Resumidos
 
@@ -180,6 +187,7 @@ src/
 ## 📖 Mais Informações
 
 Para detalhes completos, consulte:
+
 1. **PRD**: `prd-app-produtos-sankhya.md`
 2. **Tasks**: `tasks-app-produtos-sankhya.md`
 3. **Guia Ralph Loop**: `ralph-loop-guide.md`

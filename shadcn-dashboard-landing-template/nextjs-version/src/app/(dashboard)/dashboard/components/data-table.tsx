@@ -100,12 +100,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 // Create a separate component for the drag handle
 function DragHandle({ id }: { id: number }) {
@@ -339,9 +334,13 @@ export function DataTable({
   focusDocumentsData?: z.infer<typeof schema>[]
 }) {
   const [data, setData] = React.useState(() => initialData)
-  const [pastPerformance, setPastPerformance] = React.useState(() => pastPerformanceData)
+  const [pastPerformance, setPastPerformance] = React.useState(
+    () => pastPerformanceData
+  )
   const [keyPersonnel, setKeyPersonnel] = React.useState(() => keyPersonnelData)
-  const [focusDocuments, setFocusDocuments] = React.useState(() => focusDocumentsData)
+  const [focusDocuments, setFocusDocuments] = React.useState(
+    () => focusDocumentsData
+  )
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -526,14 +525,14 @@ export function DataTable({
   }
 
   // Component for rendering table content
-  const TableContent = ({ 
-    currentTable, 
-    currentDataIds, 
-    handleCurrentDragEnd 
-  }: { 
-    currentTable: ReturnType<typeof useReactTable<z.infer<typeof schema>>>, 
-    currentDataIds: UniqueIdentifier[], 
-    handleCurrentDragEnd: (event: DragEndEvent) => void 
+  const TableContent = ({
+    currentTable,
+    currentDataIds,
+    handleCurrentDragEnd,
+  }: {
+    currentTable: ReturnType<typeof useReactTable<z.infer<typeof schema>>>
+    currentDataIds: UniqueIdentifier[]
+    handleCurrentDragEnd: (event: DragEndEvent) => void
   }) => (
     <>
       <div className="overflow-hidden rounded-lg border">
@@ -603,7 +602,11 @@ export function DataTable({
                 currentTable.setPageSize(Number(value))
               }}
             >
-              <SelectTrigger size="sm" className="w-20 cursor-pointer" id="rows-per-page">
+              <SelectTrigger
+                size="sm"
+                className="w-20 cursor-pointer"
+                id="rows-per-page"
+              >
                 <SelectValue
                   placeholder={currentTable.getState().pagination.pageSize}
                 />
@@ -655,7 +658,9 @@ export function DataTable({
               variant="outline"
               className="hidden size-8 lg:flex cursor-pointer"
               size="icon"
-              onClick={() => currentTable.setPageIndex(currentTable.getPageCount() - 1)}
+              onClick={() =>
+                currentTable.setPageIndex(currentTable.getPageCount() - 1)
+              }
               disabled={!currentTable.getCanNextPage()}
             >
               <span className="sr-only">Go to last page</span>
@@ -692,14 +697,18 @@ export function DataTable({
           </SelectContent>
         </Select>
         <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 sm:flex">
-          <TabsTrigger value="outline" className="cursor-pointer">Outline</TabsTrigger>
+          <TabsTrigger value="outline" className="cursor-pointer">
+            Outline
+          </TabsTrigger>
           <TabsTrigger value="past-performance" className="cursor-pointer">
             Past Performance <Badge variant="secondary">3</Badge>
           </TabsTrigger>
           <TabsTrigger value="key-personnel" className="cursor-pointer">
             Key Personnel <Badge variant="secondary">2</Badge>
           </TabsTrigger>
-          <TabsTrigger value="focus-documents" className="cursor-pointer">Focus Documents</TabsTrigger>
+          <TabsTrigger value="focus-documents" className="cursor-pointer">
+            Focus Documents
+          </TabsTrigger>
         </TabsList>
         <div className="flex items-center gap-2">
           <DropdownMenu>
@@ -812,7 +821,11 @@ export function DataTable({
                   table.setPageSize(Number(value))
                 }}
               >
-                <SelectTrigger size="sm" className="w-20 cursor-pointer" id="rows-per-page">
+                <SelectTrigger
+                  size="sm"
+                  className="w-20 cursor-pointer"
+                  id="rows-per-page"
+                >
                   <SelectValue
                     placeholder={table.getState().pagination.pageSize}
                   />
@@ -878,17 +891,17 @@ export function DataTable({
         value="past-performance"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
-        <TableContent 
+        <TableContent
           currentTable={pastPerformanceTable}
           currentDataIds={pastPerformanceIds}
           handleCurrentDragEnd={handlePastPerformanceDragEnd}
         />
       </TabsContent>
-      <TabsContent 
-        value="key-personnel" 
+      <TabsContent
+        value="key-personnel"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
-        <TableContent 
+        <TableContent
           currentTable={keyPersonnelTable}
           currentDataIds={keyPersonnelIds}
           handleCurrentDragEnd={handleKeyPersonnelDragEnd}
@@ -898,7 +911,7 @@ export function DataTable({
         value="focus-documents"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
-        <TableContent 
+        <TableContent
           currentTable={focusDocumentsTable}
           currentDataIds={focusDocumentsIds}
           handleCurrentDragEnd={handleFocusDocumentsDragEnd}
@@ -934,7 +947,10 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
   return (
     <Drawer direction={isMobile ? "bottom" : "right"}>
       <DrawerTrigger asChild>
-        <Button variant="link" className="text-foreground w-fit px-0 text-left cursor-pointer">
+        <Button
+          variant="link"
+          className="text-foreground w-fit px-0 text-left cursor-pointer"
+        >
           {item.header}
         </Button>
       </DrawerTrigger>
@@ -1079,7 +1095,9 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
         <DrawerFooter>
           <Button className="cursor-pointer">Submit</Button>
           <DrawerClose asChild>
-            <Button variant="outline" className="cursor-pointer">Done</Button>
+            <Button variant="outline" className="cursor-pointer">
+              Done
+            </Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

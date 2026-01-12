@@ -7,7 +7,7 @@ Developed by [ShadcnStore](https://shadcnstore.com) to accelerate your developme
 ## What's Included
 
 - **30+ Pre-built Pages** - Dashboard, landing page, authentication, and app interfaces
-- **Dual Framework Support** - Identical Vite and Next.js implementations  
+- **Dual Framework Support** - Identical Vite and Next.js implementations
 - **Live Theme Customizer** - Real-time editing with tweakcn integration
 - **Modern Tech Stack** - React 19, TypeScript, Tailwind CSS v4, shadcn/ui v3
 
@@ -21,24 +21,29 @@ Developed by [ShadcnStore](https://shadcnstore.com) to accelerate your developme
 ## Documentation
 
 ### Getting Started
+
 - **[Installation](/guide/installation)** - Setup instructions
 - **[Choosing Framework](/guide/choosing-framework)** - Vite vs Next.js
 
-### Learn More  
+### Learn More
+
 - **[Features](/guide/features)** - What's included overview
 - **[Tech Stack](/guide/tech-stack)** - Technologies used
 - **[Project Structure](/guide/project-structure)** - File organization
 
 ### Framework Guides
+
 - **[Vite Version](/vite/)** - SPA development with React Router
 - **[Next.js Version](/nextjs/)** - SSR/SSG with App Router
 
 ### Customization
+
 - **[Components](/components/)** - UI component library
 - **[Theme System](/guide/theme-system)** - Theming overview
 - **[Theme Customizer](/theme-customizer/)** - Live theme editing
 
 ### Community
+
 - **[Contributing](/guide/contributing)** - How to contribute
 - **[Support](/guide/support)** - Get help
 - **[License](/guide/license)** - MIT license

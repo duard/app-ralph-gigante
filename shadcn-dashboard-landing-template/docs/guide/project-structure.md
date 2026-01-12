@@ -14,6 +14,7 @@ shadcn-dashboard-landing-template/
 ```
 
 **Why Two Versions?**
+
 - **Vite**: Fast SPA development, client-side routing
 - **Next.js**: SEO optimization, SSR/SSG capabilities
 - **Identical Features**: Same UI components and functionality
@@ -42,18 +43,21 @@ src/
 ## Key Conventions
 
 **File Naming**
+
 - `page.tsx` - Route endpoints (Next.js App Router style)
 - `layout.tsx` - Shared layouts
 - `PascalCase.tsx` - Component files
 - `kebab-case.ts` - Utility files
 
 **Import Aliases**
+
 - `@/components` - UI components
 - `@/lib` - Utilities and configs
 - `@/hooks` - Custom hooks
 - `@/types` - Type definitions
 
 **Framework Differences**
+
 - **Vite**: `App.tsx` with React Router setup
 - **Next.js**: File-based routing with App Router
 - **Shared**: All UI components and styling
@@ -61,6 +65,7 @@ src/
 ## Data Organization
 
 Demo data is co-located with pages:
+
 ```text
 dashboard/
 ├── page.tsx

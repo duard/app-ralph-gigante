@@ -47,10 +47,10 @@ PORT=3001 pnpm dev
    const nextConfig = {
      experimental: {
        optimizePackageImports: [
-         'lucide-react',
-         '@radix-ui/react-icons',
-         'recharts',
-         '@tanstack/react-table',
+         "lucide-react",
+         "@radix-ui/react-icons",
+         "recharts",
+         "@tanstack/react-table",
        ],
      },
    }
@@ -80,12 +80,12 @@ PORT=3001 pnpm dev
 
    ```typescript
    // Correct imports
-   import { Button } from '@/components/ui/button'
-   import type { User } from '@/types/user'
-   
+   import { Button } from "@/components/ui/button"
+   import type { User } from "@/types/user"
+
    // Avoid these
-   import { Button } from '@/components/ui/button.tsx' // ❌
-   import { User } from '@/types/user.ts' // ❌
+   import { Button } from "@/components/ui/button.tsx" // ❌
+   import { User } from "@/types/user.ts" // ❌
    ```
 
 3. **Check Next.js configuration:**
@@ -110,9 +110,9 @@ PORT=3001 pnpm dev
    ```typescript
    // For components using hooks or event handlers
    "use client"
-   
-   import { useState } from 'react'
-   
+
+   import { useState } from "react"
+
    export function InteractiveComponent() {
      const [state, setState] = useState()
      // Component logic
@@ -124,16 +124,16 @@ PORT=3001 pnpm dev
    ```typescript
    // server-component.tsx (Server Component)
    import { ClientComponent } from './client-component'
-   
+
    export async function ServerComponent() {
      const data = await fetchData() // Server-side data fetching
-     
+
      return <ClientComponent data={data} />
    }
-   
+
    // client-component.tsx (Client Component)
    "use client"
-   
+
    export function ClientComponent({ data }) {
      const [state, setState] = useState()
      // Client-side logic
@@ -144,20 +144,20 @@ PORT=3001 pnpm dev
 
    ```typescript
    "use client"
-   
+
    import { useEffect, useState } from 'react'
-   
+
    export function HydratedComponent() {
      const [mounted, setMounted] = useState(false)
-   
+
      useEffect(() => {
        setMounted(true)
      }, [])
-   
+
      if (!mounted) {
        return <div>Loading...</div> // Prevent hydration mismatch
      }
-   
+
      return <div>{/* Client-only content */}</div>
    }
    ```
@@ -180,23 +180,23 @@ PORT=3001 pnpm dev
 
    ```typescript
    // Fix Server Component props
-   export default function Page({ 
-     params 
-   }: { 
-     params: { id: string } 
+   export default function Page({
+     params
+   }: {
+     params: { id: string }
    }) {
      return <div>Page {params.id}</div>
    }
-   
+
    // Fix async component types
    export default async function AsyncPage() {
      const data = await fetchData()
      return <div>{data}</div>
    }
-   
+
    // Fix metadata types
    import type { Metadata } from 'next'
-   
+
    export const metadata: Metadata = {
      title: 'Page Title',
    }
@@ -244,14 +244,14 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```typescript
    // next.config.ts
    const nextConfig = {
-     output: 'export',
+     output: "export",
      trailingSlash: true,
      images: {
        unoptimized: true, // Required for static export
      },
      experimental: {
        missingSuspenseWithCSRBailout: false,
-     }
+     },
    }
    ```
 
@@ -261,7 +261,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    // app/users/[id]/page.tsx
    export async function generateStaticParams() {
      const users = await getUsers()
-     
+
      return users.map((user) => ({
        id: user.id.toString(),
      }))
@@ -277,7 +277,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
        <div>
          {/* Remove Image optimization for static export */}
          <img src="/image.jpg" alt="Image" />
-         
+
          {/* Remove API routes references */}
          {/* <APIComponent /> */}
        </div>
@@ -315,11 +315,11 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 
    ```typescript
    import Link from 'next/link'
-   
+
    // Use Next.js Link for internal navigation
    <Link href="/dashboard">Dashboard</Link> // ✅
    <a href="/dashboard">Dashboard</a> // ❌ (causes full page reload)
-   
+
    // For external links
    <Link href="https://example.com" target="_blank" rel="noopener noreferrer">
      External
@@ -330,16 +330,16 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 
    ```typescript
    import Link from 'next/link'
-   
+
    // Dynamic route navigation
    <Link href={`/users/${user.id}`}>User Profile</Link>
-   
+
    // Programmatic navigation
    import { useRouter } from 'next/navigation'
-   
+
    function Component() {
      const router = useRouter()
-     
+
      const handleClick = () => {
        router.push(`/users/${userId}`)
      }
@@ -357,17 +357,17 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```typescript
    // lib/fonts.ts
    import { Inter } from 'next/font/google'
-   
+
    export const inter = Inter({
      subsets: ['latin'],
      variable: '--font-inter',
      display: 'swap', // Prevents FOIT
      preload: true,   // Preload for better performance
    })
-   
+
    // app/layout.tsx
    import { inter } from '@/lib/fonts'
-   
+
    export default function RootLayout({
      children,
    }: {
@@ -388,9 +388,9 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```css
    /* app/globals.css */
    :root {
-     --font-inter: 'Inter', system-ui, sans-serif;
+     --font-inter: "Inter", system-ui, sans-serif;
    }
-   
+
    .font-sans {
      font-family: var(--font-inter);
    }
@@ -400,12 +400,12 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 
    ```typescript
    // For local fonts
-   import localFont from 'next/font/local'
-   
+   import localFont from "next/font/local"
+
    const customFont = localFont({
-     src: './path/to/font.woff2',
-     variable: '--font-custom',
-     display: 'swap',
+     src: "./path/to/font.woff2",
+     variable: "--font-custom",
+     display: "swap",
    })
    ```
 
@@ -420,7 +420,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```typescript
    import { create } from 'zustand'
    import { persist } from 'zustand/middleware'
-   
+
    const useStore = create<State>()(
      persist(
        (set, get) => ({
@@ -433,21 +433,21 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
        }
      )
    )
-   
+
    // In component
    export function Component() {
      const store = useStore()
      const [hydrated, setHydrated] = useState(false)
-   
+
      useEffect(() => {
        useStore.persist.rehydrate()
        setHydrated(true)
      }, [])
-   
+
      if (!hydrated) {
        return <div>Loading...</div>
      }
-   
+
      return <div>{store.data}</div>
    }
    ```
@@ -457,21 +457,21 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```typescript
    // components/client-only.tsx
    "use client"
-   
+
    import { useEffect, useState } from 'react'
-   
+
    export function ClientOnly({ children }: { children: React.ReactNode }) {
      const [mounted, setMounted] = useState(false)
-   
+
      useEffect(() => {
        setMounted(true)
      }, [])
-   
+
      if (!mounted) return null
-   
+
      return <>{children}</>
    }
-   
+
    // Usage
    <ClientOnly>
      <StoreComponent />
@@ -488,10 +488,10 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 
    ```typescript
    import Image from 'next/image'
-   
+
    // For local images
    import heroImage from '@/public/hero.jpg'
-   
+
    export function Hero() {
      return (
        <Image
@@ -502,7 +502,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
        />
      )
    }
-   
+
    // For external images
    export function UserAvatar({ src, alt }: { src: string; alt: string }) {
      return (
@@ -525,13 +525,13 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
      images: {
        remotePatterns: [
          {
-           protocol: 'https',
-           hostname: 'images.unsplash.com',
+           protocol: "https",
+           hostname: "images.unsplash.com",
          },
          {
-           protocol: 'https',
-           hostname: 'example.com',
-           pathname: '/images/**',
+           protocol: "https",
+           hostname: "example.com",
+           pathname: "/images/**",
          },
        ],
      },
@@ -542,17 +542,17 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 
    ```typescript
    "use client"
-   
+
    import Image from 'next/image'
    import { useState } from 'react'
-   
+
    export function SafeImage({ src, alt, ...props }) {
      const [error, setError] = useState(false)
-   
+
      if (error) {
        return <div className="bg-muted">Image failed to load</div>
      }
-   
+
      return (
        <Image
          src={src}
@@ -595,13 +595,13 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```typescript
    // Client-side access
    const apiUrl = process.env.NEXT_PUBLIC_API_URL
-   
+
    // Server-side access
    const dbUrl = process.env.DATABASE_URL
-   
+
    // Runtime validation
    if (!process.env.NEXT_PUBLIC_API_URL) {
-     throw new Error('NEXT_PUBLIC_API_URL is required')
+     throw new Error("NEXT_PUBLIC_API_URL is required")
    }
    ```
 
@@ -622,13 +622,13 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 
    ```typescript
    // Handle development vs production differences
-   const isDevelopment = process.env.NODE_ENV === 'development'
-   const isProduction = process.env.NODE_ENV === 'production'
-   
+   const isDevelopment = process.env.NODE_ENV === "development"
+   const isProduction = process.env.NODE_ENV === "production"
+
    if (isDevelopment) {
      // Development-only code
    }
-   
+
    if (isProduction) {
      // Production-only code
    }
@@ -639,7 +639,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```typescript
    // Use absolute paths for static assets
    <Image src="/images/logo.png" alt="Logo" width={200} height={50} />
-   
+
    // For dynamic imports
    const Component = dynamic(() => import('@/components/heavy-component'), {
      ssr: false, // Disable SSR if needed
@@ -672,7 +672,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 
    ```typescript
    import dynamic from 'next/dynamic'
-   
+
    const HeavyChart = dynamic(() => import('@/components/heavy-chart'), {
      loading: () => <div>Loading chart...</div>,
      ssr: false, // Skip SSR if component is client-only
@@ -684,7 +684,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```typescript
    // Use streaming for slow data
    import { Suspense } from 'react'
-   
+
    export default function Page() {
      return (
        <div>
@@ -716,11 +716,11 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 
    ```typescript
    // Tree-shake properly
-   import { Button } from '@/components/ui/button' // ✅
-   import * as UI from '@/components/ui' // ❌
-   
+   import { Button } from "@/components/ui/button" // ✅
+   import * as UI from "@/components/ui" // ❌
+
    // Use dynamic imports for large libraries
-   const { format } = await import('date-fns')
+   const { format } = await import("date-fns")
    ```
 
 3. **Configure bundle optimization:**
@@ -729,16 +729,16 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    // next.config.ts
    const nextConfig = {
      experimental: {
-       optimizePackageImports: ['lucide-react', 'recharts'],
+       optimizePackageImports: ["lucide-react", "recharts"],
      },
      webpack: (config) => {
        config.optimization.splitChunks = {
-         chunks: 'all',
+         chunks: "all",
          cacheGroups: {
            vendor: {
              test: /[\\/]node_modules[\\/]/,
-             name: 'vendors',
-             chunks: 'all',
+             name: "vendors",
+             chunks: "all",
            },
          },
        }
@@ -760,7 +760,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    ```bash
    # Enable debug mode
    DEBUG=* pnpm dev
-   
+
    # Debug specific modules
    DEBUG=next:* pnpm dev
    ```
@@ -771,16 +771,16 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    // Server Component debugging
    export default async function Page() {
      console.log('Page rendered at:', new Date().toISOString())
-     
+
      const data = await fetchData()
      console.log('Data fetched:', data)
-     
+
      return <div>Page content</div>
    }
-   
+
    // Client Component debugging
    "use client"
-   
+
    export function ClientComponent() {
      useEffect(() => {
        console.log('Component mounted')
@@ -795,7 +795,7 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
    function MyComponent() {
      return <div>Content</div>
    }
-   
+
    MyComponent.displayName = 'MyComponent'
    ```
 
@@ -818,36 +818,36 @@ NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 
    ```typescript
    "use client"
-   
+
    import { Component, ErrorInfo, ReactNode } from 'react'
-   
+
    interface Props {
      children: ReactNode
    }
-   
+
    interface State {
      hasError: boolean
    }
-   
+
    export class ErrorBoundary extends Component<Props, State> {
      public state: State = {
        hasError: false
      }
-   
+
      public static getDerivedStateFromError(_: Error): State {
        return { hasError: true }
      }
-   
+
      public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
        console.error('Uncaught error:', error, errorInfo)
        // Send to error reporting service
      }
-   
+
      public render() {
        if (this.state.hasError) {
          return <div>Something went wrong.</div>
        }
-   
+
        return this.props.children
      }
    }

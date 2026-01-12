@@ -1,16 +1,16 @@
-import path from "path"
-import tailwindcss from "@tailwindcss/vite"
-import react from "@vitejs/plugin-react"
-import { defineConfig, loadEnv } from "vite"
+import path from 'path';
+import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '')
+  const env = loadEnv(mode, process.cwd(), '');
 
   return {
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "./src"),
+        '@': path.resolve(__dirname, './src'),
       },
     },
     define: {
@@ -47,115 +47,123 @@ export default defineConfig(({ mode }) => {
             // Vendor libraries - third-party dependencies
             if (id.includes('node_modules')) {
               // React ecosystem
-              if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
-                return 'react-vendor'
+              if (
+                id.includes('react') ||
+                id.includes('react-dom') ||
+                id.includes('react-router-dom')
+              ) {
+                return 'react-vendor';
               }
-              
+
               // UI components library
               if (id.includes('@radix-ui')) {
-                return 'ui-vendor'
+                return 'ui-vendor';
               }
-              
+
               // Charts and visualization
               if (id.includes('recharts') || id.includes('d3')) {
-                return 'charts-vendor'
+                return 'charts-vendor';
               }
-              
+
               // Form handling and validation
               if (id.includes('react-hook-form') || id.includes('zod')) {
-                return 'forms-vendor'
+                return 'forms-vendor';
               }
-              
+
               // State management and utilities
               if (id.includes('zustand') || id.includes('date-fns') || id.includes('axios')) {
-                return 'utils-vendor'
+                return 'utils-vendor';
               }
-              
+
               // Other vendor libraries
-              return 'vendor'
+              return 'vendor';
             }
-            
+
             // Route-based code splitting
             if (id.includes('/src/app/')) {
               // Dashboard and core pages
-              if (id.includes('/dashboard/') || id.includes('/bem-vindo/') || id.includes('/landing/')) {
-                return 'dashboard'
+              if (
+                id.includes('/dashboard/') ||
+                id.includes('/bem-vindo/') ||
+                id.includes('/landing/')
+              ) {
+                return 'dashboard';
               }
-              
+
               // Product management
               if (id.includes('/produtos/')) {
-                return 'produtos'
+                return 'produtos';
               }
-              
+
               // Authentication pages
               if (id.includes('/auth/')) {
-                return 'auth'
+                return 'auth';
               }
-              
+
               // Settings pages
               if (id.includes('/settings/')) {
-                return 'settings'
+                return 'settings';
               }
-              
+
               // Error pages
               if (id.includes('/errors/')) {
-                return 'errors'
+                return 'errors';
               }
-              
+
               // Communication features
               if (id.includes('/mail/') || id.includes('/chat/') || id.includes('/calendar/')) {
-                return 'communication'
+                return 'communication';
               }
-              
+
               // Task management
               if (id.includes('/tasks/')) {
-                return 'tasks'
+                return 'tasks';
               }
-              
+
               // User and content management
               if (id.includes('/users/') || id.includes('/faqs/') || id.includes('/pricing/')) {
-                return 'content'
+                return 'content';
               }
-              
+
               // Default chunk for other routes
-              return 'routes'
+              return 'routes';
             }
           },
           chunkFileNames: (chunkInfo) => {
             // Route chunks get more descriptive names
-            if (chunkInfo.name === 'dashboard' || chunkInfo.name === 'produtos' || 
-                chunkInfo.name === 'auth' || chunkInfo.name === 'settings' || 
-                chunkInfo.name === 'errors' || chunkInfo.name === 'communication' ||
-                chunkInfo.name === 'tasks' || chunkInfo.name === 'content' || 
-                chunkInfo.name === 'routes') {
-              return 'assets/routes/[name]-[hash].js'
+            if (
+              chunkInfo.name === 'dashboard' ||
+              chunkInfo.name === 'produtos' ||
+              chunkInfo.name === 'auth' ||
+              chunkInfo.name === 'settings' ||
+              chunkInfo.name === 'errors' ||
+              chunkInfo.name === 'communication' ||
+              chunkInfo.name === 'tasks' ||
+              chunkInfo.name === 'content' ||
+              chunkInfo.name === 'routes'
+            ) {
+              return 'assets/routes/[name]-[hash].js';
             }
             // Vendor chunks
-            return 'assets/js/[name]-[hash].js'
+            return 'assets/js/[name]-[hash].js';
           },
           entryFileNames: 'assets/js/[name]-[hash].js',
           assetFileNames: (assetInfo) => {
-            const name = assetInfo.name ?? ''
-            const ext = name.split('.').pop() ?? ''
-            if (ext === 'css') return 'assets/css/[name]-[hash][extname]'
+            const name = assetInfo.name ?? '';
+            const ext = name.split('.').pop() ?? '';
+            if (ext === 'css') return 'assets/css/[name]-[hash][extname]';
             if (['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'].includes(ext)) {
-              return 'assets/images/[name]-[hash][extname]'
+              return 'assets/images/[name]-[hash][extname]';
             }
-            return 'assets/[ext]/[name]-[hash][extname]'
+            return 'assets/[ext]/[name]-[hash][extname]';
           },
         },
       },
       chunkSizeWarningLimit: 1000,
     },
     optimizeDeps: {
-      include: [
-        'react',
-        'react-dom',
-        'react-router-dom',
-        'zustand',
-        'date-fns',
-      ],
+      include: ['react', 'react-dom', 'react-router-dom', 'zustand', 'date-fns'],
     },
     assetsInclude: ['**/*.glb', '**/*.gltf', '**/*.hdr'],
-  }
-})
+  };
+});

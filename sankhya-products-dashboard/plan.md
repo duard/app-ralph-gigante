@@ -11,9 +11,11 @@ Este documento descreve como o front-end deve integrar com a API Sankhya Center 
 **Endpoint:** `POST /auth/login`
 
 **Headers:**
+
 - `Content-Type: application/json`
 
 **Body:**
+
 ```json
 {
   "username": "CONVIDADO",
@@ -22,6 +24,7 @@ Este documento descreve como o front-end deve integrar com a API Sankhya Center 
 ```
 
 **Resposta de Sucesso:**
+
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -31,6 +34,7 @@ Este documento descreve como o front-end deve integrar com a API Sankhya Center 
 ```
 
 **Exemplo com cURL:**
+
 ```bash
 curl -X POST http://localhost:3000/auth/login \
   -H "Content-Type: application/json" \
@@ -40,6 +44,7 @@ curl -X POST http://localhost:3000/auth/login \
 ### Uso do Token
 
 Para todas as requisições autenticadas, inclua o header:
+
 ```
 Authorization: Bearer {access_token}
 ```
@@ -51,18 +56,22 @@ O token expira em 1 hora. Implemente refresh automático ou relogin quando neces
 ### Produtos
 
 #### Buscar Produto por Código
+
 **Endpoint:** `GET /tgfpro/{codprod}`
 
 **Exemplo:**
+
 ```bash
 curl -X GET "http://localhost:3000/tgfpro/3680" \
   -H "Authorization: Bearer {token}"
 ```
 
 #### Buscar Produtos com Filtros
+
 **Endpoint:** `GET /tgfpro`
 
 **Query Params:**
+
 - `page`: Página (padrão: 1)
 - `perPage`: Itens por página (padrão: 10)
 - `descrprod`: Filtro por descrição
@@ -70,15 +79,18 @@ curl -X GET "http://localhost:3000/tgfpro/3680" \
 - `includeEstoque`: Incluir estoque ('S' para sim)
 
 **Exemplo:**
+
 ```bash
 curl -X GET "http://localhost:3000/tgfpro?page=1&perPage=20&descrprod=papel" \
   -H "Authorization: Bearer {token}"
 ```
 
 #### Busca Avançada
+
 **Endpoint:** `GET /tgfpro/search/{termo}`
 
 **Exemplo:**
+
 ```bash
 curl -X GET "http://localhost:3000/tgfpro/search/papel" \
   -H "Authorization: Bearer {token}"
@@ -87,21 +99,25 @@ curl -X GET "http://localhost:3000/tgfpro/search/papel" \
 ### Consumo de Estoque
 
 #### Consumo Detalhado por Período (V2)
+
 **Endpoint:** `GET /tgfpro/consumo-periodo-v2/{codprod}`
 
 **Query Params obrigatórios:**
+
 - `dataInicio`: Data início (YYYY-MM-DD)
 - `dataFim`: Data fim (YYYY-MM-DD)
 - `page`: Página (opcional, padrão: 1)
 - `perPage`: Itens por página (opcional, padrão: 50)
 
 **Exemplo:**
+
 ```bash
 curl -X GET "http://localhost:3000/tgfpro/consumo-periodo-v2/3680?dataInicio=2025-12-01&dataFim=2025-12-31" \
   -H "Authorization: Bearer {token}"
 ```
 
 **Resposta inclui:**
+
 - Informações do produto
 - Saldo anterior
 - Movimentações detalhadas
@@ -111,23 +127,29 @@ curl -X GET "http://localhost:3000/tgfpro/consumo-periodo-v2/3680?dataInicio=202
 ### Dashboards
 
 #### Dashboard de Produtos - Resumo
+
 **Endpoint:** `GET /sankhya/dashboards/produtos/resumo`
 
 #### Dashboard de Produtos - Filtros
+
 **Endpoint:** `GET /sankhya/dashboards/produtos/filtros`
 
 #### Dashboard de Produtos - Estoque Baixo
+
 **Endpoint:** `GET /sankhya/dashboards/produtos/estoque-baixo`
 
 #### Dashboard de RH - Estatísticas
+
 **Endpoint:** `GET /sankhya/rh-dashboard/estatisticas`
 
 ### Dicionário de Dados
 
 #### Listar Tabelas
+
 **Endpoint:** `GET /dicionario/tabelas`
 
 #### Metadados de Tabela
+
 **Endpoint:** `GET /dicionario/metadados/{nomeTabela}`
 
 ## Integração com Front-End
@@ -135,21 +157,21 @@ curl -X GET "http://localhost:3000/tgfpro/consumo-periodo-v2/3680?dataInicio=202
 ### Axios Setup
 
 ```javascript
-import axios from 'axios'
+import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://localhost:3000',
   timeout: 10000,
-})
+});
 
 // Interceptor para adicionar token
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token');
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+    config.headers.Authorization = `Bearer ${token}`;
   }
-  return config
-})
+  return config;
+});
 
 // Interceptor para tratar erros de autenticação
 api.interceptors.response.use(
@@ -157,55 +179,55 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Redirecionar para login
-      window.location.href = '/login'
+      window.location.href = '/login';
     }
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
-)
+);
 
-export default api
+export default api;
 ```
 
 ### Exemplo de Uso
 
 ```javascript
-import api from './api'
+import api from './api';
 
 // Login
 const login = async (username, password) => {
   try {
-    const response = await api.post('/auth/login', { username, password })
-    const { access_token } = response.data
-    localStorage.setItem('token', access_token)
-    return access_token
+    const response = await api.post('/auth/login', { username, password });
+    const { access_token } = response.data;
+    localStorage.setItem('token', access_token);
+    return access_token;
   } catch (error) {
-    throw new Error('Credenciais inválidas')
+    throw new Error('Credenciais inválidas');
   }
-}
+};
 
 // Buscar produtos
 const buscarProdutos = async (filtros = {}) => {
   try {
-    const response = await api.get('/tgfpro', { params: filtros })
-    return response.data
+    const response = await api.get('/tgfpro', { params: filtros });
+    return response.data;
   } catch (error) {
-    console.error('Erro ao buscar produtos:', error)
-    throw error
+    console.error('Erro ao buscar produtos:', error);
+    throw error;
   }
-}
+};
 
 // Obter consumo
 const obterConsumo = async (codprod, dataInicio, dataFim) => {
   try {
     const response = await api.get(`/tgfpro/consumo-periodo-v2/${codprod}`, {
-      params: { dataInicio, dataFim }
-    })
-    return response.data
+      params: { dataInicio, dataFim },
+    });
+    return response.data;
   } catch (error) {
-    console.error('Erro ao obter consumo:', error)
-    throw error
+    console.error('Erro ao obter consumo:', error);
+    throw error;
   }
-}
+};
 ```
 
 ## Tratamento de Erros

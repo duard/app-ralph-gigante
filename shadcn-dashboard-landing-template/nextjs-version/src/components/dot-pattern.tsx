@@ -13,25 +13,27 @@ export function DotPattern({
   className,
   size = "md",
   opacity = "medium",
-  fadeStyle = "ellipse"
+  fadeStyle = "ellipse",
 }: DotPatternProps) {
   // Use predefined Tailwind classes instead of template literals for Next.js compatibility
   const sizeMap = {
     sm: "[background-size:12px_12px]",
     md: "[background-size:16px_16px]",
-    lg: "[background-size:20px_20px]"
+    lg: "[background-size:20px_20px]",
   }
 
   const opacityMap = {
     low: "opacity-30",
     medium: "opacity-50",
-    high: "opacity-70"
+    high: "opacity-70",
   }
 
   const fadeMap = {
-    ellipse: "[mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]",
-    circle: "[mask-image:radial-gradient(circle_at_50%_50%,#000_70%,transparent_100%)]",
-    none: ""
+    ellipse:
+      "[mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]",
+    circle:
+      "[mask-image:radial-gradient(circle_at_50%_50%,#000_70%,transparent_100%)]",
+    none: "",
   }
 
   return (
@@ -52,25 +54,27 @@ export function DotPatternLight({
   className,
   size = "md",
   opacity = "medium",
-  fadeStyle = "ellipse"
+  fadeStyle = "ellipse",
 }: DotPatternProps) {
   // Use predefined Tailwind classes instead of template literals for Next.js compatibility
   const sizeMap = {
     sm: "[background-size:12px_12px]",
     md: "[background-size:16px_16px]",
-    lg: "[background-size:20px_20px]"
+    lg: "[background-size:20px_20px]",
   }
 
   const opacityMap = {
     low: "opacity-20",
     medium: "opacity-40",
-    high: "opacity-60"
+    high: "opacity-60",
   }
 
   const fadeMap = {
-    ellipse: "[mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]",
-    circle: "[mask-image:radial-gradient(circle_at_50%_50%,#000_70%,transparent_100%)]",
-    none: ""
+    ellipse:
+      "[mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]",
+    circle:
+      "[mask-image:radial-gradient(circle_at_50%_50%,#000_70%,transparent_100%)]",
+    none: "",
   }
 
   return (
@@ -90,25 +94,27 @@ export function DotPatternDark({
   className,
   size = "md",
   opacity = "medium",
-  fadeStyle = "ellipse"
+  fadeStyle = "ellipse",
 }: DotPatternProps) {
   // Use predefined Tailwind classes instead of template literals for Next.js compatibility
   const sizeMap = {
     sm: "[background-size:12px_12px]",
     md: "[background-size:16px_16px]",
-    lg: "[background-size:20px_20px]"
+    lg: "[background-size:20px_20px]",
   }
 
   const opacityMap = {
     low: "opacity-30",
     medium: "opacity-50",
-    high: "opacity-70"
+    high: "opacity-70",
   }
 
   const fadeMap = {
-    ellipse: "[mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]",
-    circle: "[mask-image:radial-gradient(circle_at_50%_50%,#000_70%,transparent_100%)]",
-    none: ""
+    ellipse:
+      "[mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]",
+    circle:
+      "[mask-image:radial-gradient(circle_at_50%_50%,#000_70%,transparent_100%)]",
+    none: "",
   }
 
   return (

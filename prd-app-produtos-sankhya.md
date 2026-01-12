@@ -25,11 +25,13 @@
 - **Type Safety**: TypeScript strict mode, Zod schemas para validação
 - **Accessibility**: WCAG 2.1 AA compliant
 - **Responsiveness**: Mobile-first, suporte a dark/light mode
- 
+
 ## Acceptance Criteria
+
 - A tela deve conter todas OPERACOES CRUD, mas não edita, não excluir, não incluir VERDADEIRAMENTE, somente le dados
 
 ### Autenticação e Segurança
+
 - [ ] Sistema de login funcional consumindo POST /auth/login
 - [ ] Armazenamento seguro de tokens (access_token e refresh_token)
 - [ ] Renovação automática de token ao expirar (401 → refresh)
@@ -42,6 +44,7 @@
 - [ ] Tratamento de erros de autenticação com feedback visual
 
 ### Listagem de Produtos
+
 - [ ] Grid/Table de produtos com paginação
 - [ ] Colunas configuráveis: codprod, descricao, codvol, unidade, preco, status
 - [ ] Ordenação por todas as colunas clicáveis
@@ -55,6 +58,7 @@
 - [ ] Estados de erro com retry
 
 ### Detalhes do Produto
+
 - [ ] Modal/Drawer para detalhes do produto
 - [ ] Exibição completa dos campos do TGFPRO
 - [ ] Imagem do produto (se disponível)
@@ -66,6 +70,7 @@
 - [ ] Botão de edição rápida
 
 ### Filtros Avançados
+
 - [ ] Sidebar de filtros colapsável
 - [ ] Filtro por preço (range slider)
 - [ ] Filtro por código/nome (search input)
@@ -78,6 +83,7 @@
 - [ ] Contagem de resultados ao aplicar filtros
 
 ### Gestão de Produtos (CRUD - mas comente modo leitura, nos não editamos, ou incluimos, ou excluimod)
+
 - [ ] A tela deve conter todas OPERACOES CRUD, mas não edita, não excluir, não incluir VERDADEIRAMENTE, somente le dados
 - [ ] Formulário de criação de produto
 - [ ] Validação com Zod schemas
@@ -91,6 +97,7 @@
 - [ ] Exclusão em lote (bulk delete)
 
 ### Dashboard e Métricas
+
 - [ ] Cards de métricas principais (total produtos, ativos, inativos, sem estoque)
 - [ ] Gráfico de distribuição por categoria
 - [ ] Gráfico de tendência de preços
@@ -101,6 +108,7 @@
 - [ ] Atualização automática em tempo real
 
 ### UI/UX
+
 - [ ] Layout responsivo mobile-first
 - [ ] Navegação lateral (sidebar) com menus
 - [ ] Breadcrumb de navegação
@@ -115,6 +123,7 @@
 - [ ] Transições suaves entre páginas
 
 ### Performance
+
 - [ ] Lazy loading de componentes
 - [ ] Code splitting por rotas
 - [ ] Memoização de componentes pesados
@@ -126,13 +135,14 @@
 - [ ] Lighthouse score > 90
 
 ### Testes
+
 - [ ] Testes unitários de hooks customizados
 - [ ] Testes de componentes principais
 - [ ] Testes de integração com API (mockada)
 - [ ] Coverage > 70%
 
-
 ### Documentação
+
 - [ ] README com instruções de setup
 - [ ] Documentação de componentes internos
 - [ ] API Client documentado
@@ -140,6 +150,7 @@
 - [ ] Arquitetura do projeto
 
 ### DevOps
+
 - [ ] Configuração de ambiente (.env)
 - [ ] Scripts de build e deploy
 - [ ] CI/CD pipeline configurado
@@ -155,6 +166,7 @@
 ## Verification
 
 ### Automação de Testes
+
 ```bash
 # Executar testes unitários
 npm run test
@@ -177,6 +189,7 @@ npm run preview
 ```
 
 ### Testes Manuais
+
 1. **Autenticação**: Fazer login com CONVIDADO/guest123, verificar token, logout
 2. **Listagem**: Navegar para /produtos, verificar lista, paginação, ordenação
 3. **Filtros**: Aplicar filtros, verificar resultados, limpar filtros
@@ -193,6 +206,7 @@ npm run preview
 14. **Performance**: Verificar Lighthouse scores, bundle size
 
 ### Checklist de Verificação
+
 - [ ] Aplicação inicia sem erros
 - [ ] Login funciona corretamente
 - [ ] Produtos listados corretamente
@@ -217,12 +231,14 @@ npm run preview
 ## Notes
 
 ### API Endpoints Principais
+
 - **Auth**: POST /auth/login, POST /auth/refresh, GET /auth/me
 - **Produtos**: GET /tgfpro, GET /tgfpro/:codprod
 - **Grupos**: GET /tgfgru
 - **Teste**: GET /tgfpro/admin/test
 
 ### Estrutura da API Response
+
 ```typescript
 interface ProductsResponse {
   data: Product[];
@@ -245,6 +261,7 @@ interface Product {
 ```
 
 ### Arquitetura do App
+
 ```
 src/
 ├── app/
@@ -278,11 +295,13 @@ src/
 ```
 
 ### Estados Globais (Zustand)
+
 - `authStore`: token, user, isAuthenticated
 - `productsStore`: products, filters, pagination
 - `uiStore`: theme, sidebar, notifications
 
 ### Convenções
+
 - Components: PascalCase (ProductTable.tsx)
 - Hooks: camelCase prefix "use" (useProducts.ts)
 - Types/Interfaces: PascalCase (Product.ts)
@@ -291,6 +310,7 @@ src/
 - Testes: `.spec.ts` ou `.test.ts`
 
 ### Design System
+
 - Fonte: Inter (padrão shadcn)
 - Cores: Primária customizável (padrão: blue-600)
 - Espaçamento: 4px grid system

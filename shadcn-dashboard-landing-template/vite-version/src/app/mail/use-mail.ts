@@ -1,9 +1,9 @@
-import { create } from "zustand";
-import type { Mail } from "@/app/mail/data";
-import { mails } from "@/app/mail/data";
+import { create } from "zustand"
+import type { Mail } from "@/app/mail/data"
+import { mails } from "@/app/mail/data"
 
 interface Config {
-  selected: Mail["id"] | null;
+  selected: Mail["id"] | null
 }
 
 const useMailStore = create<
@@ -11,10 +11,10 @@ const useMailStore = create<
 >((set) => ({
   selected: mails[0].id,
   setState: (newState) => set((state) => ({ ...state, ...newState })),
-}));
+}))
 
 export function useMail(): [Config, (newState: Partial<Config>) => void] {
-  const selected = useMailStore((state) => state.selected);
-  const setState = useMailStore((state) => state.setState);
-  return [{ selected }, setState];
+  const selected = useMailStore((state) => state.selected)
+  const setState = useMailStore((state) => state.setState)
+  return [{ selected }, setState]
 }

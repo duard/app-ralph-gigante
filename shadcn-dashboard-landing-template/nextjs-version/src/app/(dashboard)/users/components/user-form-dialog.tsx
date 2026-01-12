@@ -130,7 +130,10 @@ export function UserFormDialog({ onAddUser }: UserFormDialogProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Role</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger className="cursor-pointer w-full">
                           <SelectValue placeholder="Select role" />
@@ -154,7 +157,10 @@ export function UserFormDialog({ onAddUser }: UserFormDialogProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Plan</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger className="cursor-pointer w-full">
                           <SelectValue placeholder="Select plan" />
@@ -162,7 +168,9 @@ export function UserFormDialog({ onAddUser }: UserFormDialogProps) {
                       </FormControl>
                       <SelectContent>
                         <SelectItem value="Basic">Basic</SelectItem>
-                        <SelectItem value="Professional">Professional</SelectItem>
+                        <SelectItem value="Professional">
+                          Professional
+                        </SelectItem>
                         <SelectItem value="Enterprise">Enterprise</SelectItem>
                       </SelectContent>
                     </Select>
@@ -178,7 +186,10 @@ export function UserFormDialog({ onAddUser }: UserFormDialogProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Billing</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger className="cursor-pointer w-full">
                           <SelectValue placeholder="Select billing" />
@@ -200,7 +211,10 @@ export function UserFormDialog({ onAddUser }: UserFormDialogProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Status</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger className="cursor-pointer w-full">
                           <SelectValue placeholder="Select status" />

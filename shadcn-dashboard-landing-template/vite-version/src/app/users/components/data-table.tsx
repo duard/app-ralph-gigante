@@ -84,7 +84,12 @@ interface DataTableProps {
   onAddUser: (userData: UserFormValues) => void
 }
 
-export function DataTable({ users, onDeleteUser, onEditUser, onAddUser }: DataTableProps) {
+export function DataTable({
+  users,
+  onDeleteUser,
+  onEditUser,
+  onAddUser,
+}: DataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -137,7 +142,9 @@ export function DataTable({ users, onDeleteUser, onEditUser, onAddUser }: DataTa
               table.getIsAllPageRowsSelected() ||
               (table.getIsSomePageRowsSelected() && "indeterminate")
             }
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
             aria-label="Select all"
           />
         </div>
@@ -169,7 +176,9 @@ export function DataTable({ users, onDeleteUser, onEditUser, onAddUser }: DataTa
             </Avatar>
             <div className="flex flex-col">
               <span className="font-medium">{user.name}</span>
-              <span className="text-sm text-muted-foreground">{user.email}</span>
+              <span className="text-sm text-muted-foreground">
+                {user.email}
+              </span>
             </div>
           </div>
         )
@@ -225,7 +234,11 @@ export function DataTable({ users, onDeleteUser, onEditUser, onAddUser }: DataTa
         const user = row.original
         return (
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 cursor-pointer"
+            >
               <Eye className="size-4" />
               <span className="sr-only">View user</span>
             </Button>
@@ -240,7 +253,11 @@ export function DataTable({ users, onDeleteUser, onEditUser, onAddUser }: DataTa
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 cursor-pointer">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 cursor-pointer"
+                >
                   <EllipsisVertical className="size-4" />
                   <span className="sr-only">More actions</span>
                 </Button>
@@ -328,7 +345,9 @@ export function DataTable({ users, onDeleteUser, onEditUser, onAddUser }: DataTa
           <Select
             value={roleFilter || ""}
             onValueChange={(value) =>
-              table.getColumn("role")?.setFilterValue(value === "all" ? "" : value)
+              table
+                .getColumn("role")
+                ?.setFilterValue(value === "all" ? "" : value)
             }
           >
             <SelectTrigger className="cursor-pointer w-full" id="role-filter">
@@ -351,7 +370,9 @@ export function DataTable({ users, onDeleteUser, onEditUser, onAddUser }: DataTa
           <Select
             value={planFilter || ""}
             onValueChange={(value) =>
-              table.getColumn("plan")?.setFilterValue(value === "all" ? "" : value)
+              table
+                .getColumn("plan")
+                ?.setFilterValue(value === "all" ? "" : value)
             }
           >
             <SelectTrigger className="cursor-pointer w-full" id="plan-filter">
@@ -372,7 +393,9 @@ export function DataTable({ users, onDeleteUser, onEditUser, onAddUser }: DataTa
           <Select
             value={statusFilter || ""}
             onValueChange={(value) =>
-              table.getColumn("status")?.setFilterValue(value === "all" ? "" : value)
+              table
+                .getColumn("status")
+                ?.setFilterValue(value === "all" ? "" : value)
             }
           >
             <SelectTrigger className="cursor-pointer w-full" id="status-filter">
@@ -388,7 +411,6 @@ export function DataTable({ users, onDeleteUser, onEditUser, onAddUser }: DataTa
           </Select>
         </div>
         <div className="space-y-2">
-
           <Label htmlFor="column-visibility" className="text-sm font-medium">
             Column Visibility
           </Label>
@@ -473,7 +495,6 @@ export function DataTable({ users, onDeleteUser, onEditUser, onAddUser }: DataTa
       </div>
 
       <div className="flex items-center justify-between space-x-2 py-4">
-
         <div className="flex items-center space-x-2">
           <Label htmlFor="page-size" className="text-sm font-medium">
             Show

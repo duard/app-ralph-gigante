@@ -8,7 +8,7 @@ import {
   Image as ImageIcon,
   FileText,
   Mic,
-  MoreHorizontal
+  MoreHorizontal,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -18,13 +18,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger
+  TooltipTrigger,
 } from "@/components/ui/tooltip"
 
 interface MessageInputProps {
@@ -36,7 +36,7 @@ interface MessageInputProps {
 export function MessageInput({
   onSendMessage,
   disabled = false,
-  placeholder = "Type a message..."
+  placeholder = "Type a message...",
 }: MessageInputProps) {
   const [message, setMessage] = useState("")
   const [isTyping, setIsTyping] = useState(false)

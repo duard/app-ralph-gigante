@@ -30,19 +30,23 @@ pnpm dev  # In each version directory
 ## Contribution Guidelines
 
 ### Code Standards
+
 - **TypeScript** for all new code
 - **ESLint/Prettier** formatting
 - **Consistent** naming conventions
 - **Client components** must use `"use client"` directive
 
 ### Testing Requirements
+
 - Test changes in **both Vite and Next.js** versions
 - Verify **responsive** design on mobile/desktop
 - Check **accessibility** with screen readers
 - Test **dark/light** mode compatibility
 
 ### Dual-Version Compatibility
+
 All changes must work in both frameworks:
+
 - **Vite**: React Router DOM, client-side rendering
 - **Next.js**: App Router, server-side rendering
 - **Shared components**: Use framework-agnostic patterns
@@ -50,24 +54,28 @@ All changes must work in both frameworks:
 ## Areas for Contribution
 
 ### Components
+
 - New shadcn/ui components
 - Enhanced existing components
 - Accessibility improvements
 - Performance optimizations
 
 ### Features
+
 - Dashboard widgets
 - Theme customizations
 - Layout variations
 - Data table enhancements
 
 ### Documentation
+
 - Code examples
 - Implementation guides
 - Best practices
 - Video tutorials
 
 ### Bug Fixes
+
 - Cross-browser compatibility
 - Mobile responsiveness
 - Performance issues
@@ -96,12 +104,14 @@ Thank you for contributing! Every improvement helps the community.
 ### Development Environment
 
 **Prerequisites**
+
 - Node.js 18+ installed
 - pnpm package manager (recommended)
 - Git for version control
 - Code editor (VS Code recommended)
 
 **Fork and Clone**
+
 ```bash
 # Fork the repository on GitHub
 # Then clone your fork
@@ -113,6 +123,7 @@ git remote add upstream https://github.com/silicondeck/shadcn-dashboard-landing-
 ```
 
 **Install Dependencies**
+
 ```bash
 # Install dependencies for both versions
 cd vite-version && pnpm install
@@ -121,6 +132,7 @@ cd ../docs && pnpm install
 ```
 
 **Start Development**
+
 ```bash
 # Vite version
 cd vite-version && pnpm dev
@@ -137,6 +149,7 @@ cd docs && pnpm dev
 ### Branch Strategy
 
 **Create Feature Branch**
+
 ```bash
 # Update main branch
 git checkout main
@@ -149,6 +162,7 @@ git checkout -b fix/bug-description
 ```
 
 **Branch Naming Conventions**
+
 - `feature/component-name` - New features
 - `fix/issue-description` - Bug fixes
 - `docs/section-name` - Documentation updates
@@ -158,12 +172,14 @@ git checkout -b fix/bug-description
 ### Code Standards
 
 **TypeScript First**
+
 - All new code must be TypeScript
 - Provide proper type definitions
 - Use strict TypeScript configuration
 - Export types for reusable components
 
 **Component Guidelines**
+
 ```typescript
 // Good: Proper TypeScript component
 interface ButtonProps {
@@ -189,6 +205,7 @@ export function Button({ variant = 'default', size = 'md', children, onClick }: 
 ```
 
 **Styling Guidelines**
+
 - Use Tailwind CSS utility classes
 - Follow existing component patterns
 - Ensure dark mode compatibility
@@ -196,6 +213,7 @@ export function Button({ variant = 'default', size = 'md', children, onClick }: 
 - Use CSS variables for theming
 
 **Code Formatting**
+
 ```bash
 # Run formatting before commits
 pnpm lint
@@ -212,11 +230,13 @@ pnpm lint:fix
 All changes must be compatible with both Vite and Next.js versions:
 
 **Client Component Requirements**
+
 - Always use `"use client"` for interactive components
 - Test components in both frameworks
 - Avoid framework-specific APIs
 
 **Cross-Platform Patterns**
+
 ```typescript
 // ✅ Good: Works in both frameworks
 "use client"
@@ -242,6 +262,7 @@ import { useState } from 'react'  // Will break in Next.js without "use client"
 ### Testing Requirements
 
 **Manual Testing**
+
 - Test in both Vite and Next.js versions
 - Verify light and dark modes
 - Check responsive design
@@ -249,6 +270,7 @@ import { useState } from 'react'  // Will break in Next.js without "use client"
 - Ensure accessibility compliance
 
 **Build Testing**
+
 ```bash
 # Test Vite build
 cd vite-version
@@ -260,6 +282,7 @@ pnpm build && pnpm start
 ```
 
 **Browser Testing**
+
 - Chrome/Chromium
 - Firefox
 - Safari (if possible)
@@ -270,12 +293,14 @@ pnpm build && pnpm start
 ### 1. Issue Discussion
 
 **For Large Changes**
+
 - Create or comment on a GitHub issue
 - Discuss approach and implementation
 - Get feedback before starting work
 - Ensure alignment with project goals
 
 **For Small Changes**
+
 - Bug fixes and typos can skip discussion
 - Minor improvements can be submitted directly
 - Document the change in your PR description
@@ -283,6 +308,7 @@ pnpm build && pnpm start
 ### 2. Code Development
 
 **Development Checklist**
+
 - [ ] Code follows TypeScript standards
 - [ ] Components work in both Vite and Next.js
 - [ ] Styles follow Tailwind conventions
@@ -292,6 +318,7 @@ pnpm build && pnpm start
 - [ ] No console errors or warnings
 
 **File Organization**
+
 - Follow existing project structure
 - Place files in appropriate directories
 - Update both versions when needed
@@ -300,6 +327,7 @@ pnpm build && pnpm start
 ### 3. Commit Guidelines
 
 **Commit Message Format**
+
 ```bash
 type(scope): description
 
@@ -312,6 +340,7 @@ perf(charts): optimize chart rendering
 ```
 
 **Commit Types**
+
 - `feat` - New features
 - `fix` - Bug fixes
 - `docs` - Documentation changes
@@ -324,6 +353,7 @@ perf(charts): optimize chart rendering
 ### 4. Pull Request
 
 **Before Submitting**
+
 ```bash
 # Ensure code quality
 pnpm lint
@@ -336,11 +366,14 @@ pnpm build
 ```
 
 **PR Description Template**
+
 ```markdown
 ## Description
+
 Brief description of changes made.
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Documentation update
@@ -348,6 +381,7 @@ Brief description of changes made.
 - [ ] Refactoring
 
 ## Testing
+
 - [ ] Tested in Vite version
 - [ ] Tested in Next.js version
 - [ ] Verified dark mode compatibility
@@ -355,13 +389,16 @@ Brief description of changes made.
 - [ ] No console errors
 
 ## Screenshots
+
 Include screenshots for UI changes.
 
 ## Additional Notes
+
 Any additional context or considerations.
 ```
 
 **PR Guidelines**
+
 - Keep changes focused and atomic
 - Write clear, descriptive titles
 - Reference related issues
@@ -373,18 +410,21 @@ Any additional context or considerations.
 ### Review Criteria
 
 **Functionality**
+
 - Code works as intended
 - No regressions introduced
 - Edge cases considered
 - Error handling implemented
 
 **Code Quality**
+
 - TypeScript best practices
 - Clean, readable code
 - Proper abstractions
 - Performance considerations
 
 **Design Consistency**
+
 - Follows existing patterns
 - UI/UX consistency
 - Accessibility compliance
@@ -393,12 +433,14 @@ Any additional context or considerations.
 ### Reviewer Guidelines
 
 **For Reviewers**
+
 - Be constructive and helpful
 - Suggest improvements, not just problems
 - Test changes locally when possible
 - Consider maintainability and scalability
 
 **For Contributors**
+
 - Address feedback promptly
 - Ask questions when unclear
 - Update based on suggestions
@@ -409,12 +451,14 @@ Any additional context or considerations.
 ### Code of Conduct
 
 **Be Respectful**
+
 - Treat all contributors with respect
 - Value diverse perspectives
 - Provide constructive feedback
 - Help others learn and grow
 
 **Be Professional**
+
 - Keep discussions focused and relevant
 - Avoid personal attacks or harassment
 - Respect project maintainer decisions
@@ -423,18 +467,21 @@ Any additional context or considerations.
 ### Communication
 
 **GitHub Discussions**
+
 - General questions and ideas
 - Feature discussions
 - Community showcase
 - Help and support
 
 **GitHub Issues**
+
 - Bug reports
 - Feature requests
 - Specific problems
 - Task tracking
 
 **Discord Community**
+
 - Real-time chat and help
 - Quick questions
 - Community interaction
@@ -445,6 +492,7 @@ Any additional context or considerations.
 ### Contributors
 
 All contributors are recognized in:
+
 - GitHub contributors list
 - Project documentation
 - Release notes
@@ -453,18 +501,21 @@ All contributors are recognized in:
 ### Contribution Levels
 
 **First-time Contributors**
+
 - Welcome and guidance provided
 - Good first issues labeled
 - Mentorship available
 - Documentation improvements encouraged
 
 **Regular Contributors**
+
 - Increased review privileges
 - Feature discussion participation
 - Community event participation
 - Special recognition
 
 **Core Contributors**
+
 - Repository permissions
 - Release participation
 - Roadmap input
@@ -473,17 +524,20 @@ All contributors are recognized in:
 ## Resources
 
 ### Documentation
+
 - [Project Structure](/guide/project-structure) - Understand codebase organization
 - [Tech Stack](/guide/tech-stack) - Learn about technologies used
 - [Theme System](/guide/theme-system) - Understand theming architecture
 
 ### Tools and Extensions
+
 - [VS Code](https://code.visualstudio.com/) - Recommended editor
 - [TypeScript](https://www.typescriptlang.org/) - Language documentation
 - [Tailwind CSS](https://tailwindcss.com/) - Styling framework
 - [shadcn/ui](https://ui.shadcn.com/) - Component library
 
 ### Community
+
 - [GitHub Repository](https://github.com/silicondeck/shadcn-dashboard-landing-template)
 - [Discord Server](https://discord.com/invite/XEQhPc9a6p)
 - [ShadcnStore](https://shadcnstore.com) - Premium components and templates
@@ -493,12 +547,14 @@ All contributors are recognized in:
 ### Need Assistance?
 
 **Technical Help**
+
 - Check existing documentation
 - Search GitHub issues and discussions
 - Ask questions in Discord
 - Create detailed issue reports
 
 **Contribution Questions**
+
 - Join Discord #contributors channel
 - Comment on relevant GitHub issues
 - Email [contribute@shadcnstore.com](mailto:contribute@shadcnstore.com)

@@ -7,18 +7,23 @@ The Shadcn Dashboard + Landing Page Template includes a comprehensive component 
 The component library is organized into several categories:
 
 ### UI Foundation Components
+
 Core building blocks from shadcn/ui v3 including buttons, inputs, cards, dialogs, and other essential interface elements.
 
 ### Data Display Components
+
 Advanced components for presenting information such as data tables, charts, calendars, and progress indicators.
 
 ### Navigation Components
+
 Purpose-built navigation elements including sidebar, breadcrumbs, pagination, and command palette.
 
 ### Form Components
+
 Complete form handling solution with React Hook Form integration, validation, and various input types.
 
 ### Layout Components
+
 Structural components for page organization including layouts, headers, footers, and containers.
 
 ## Key Features

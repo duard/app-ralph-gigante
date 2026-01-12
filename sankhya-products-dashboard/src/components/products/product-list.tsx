@@ -152,18 +152,11 @@ export function ProductList({ onAddProduct, onEditProduct }: ProductListProps) {
     defaultPageSize: 10,
   });
 
-  const {
-    filteredProducts,
-    pagination,
-    isLoading,
-    error,
-    isRefetching,
-    retry,
-    searchProducts,
-  } = useProductsWithCache({
-    page: urlPagination.page,
-    pageSize: urlPagination.pageSize,
-  });
+  const { filteredProducts, pagination, isLoading, error, isRefetching, retry, searchProducts } =
+    useProductsWithCache({
+      page: urlPagination.page,
+      pageSize: urlPagination.pageSize,
+    });
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);

@@ -20,7 +20,6 @@ Comprehensive guide for developing with the Next.js version of Shadcn Dashboard 
    ```
 
 3. **Open in browser:**
-
    - Local: <http://localhost:3000>
    - Network: Available on your local IP
 
@@ -83,7 +82,7 @@ import { Card } from '@/components/ui/card'
 
 export function DashboardStats() {
   const [stats, setStats] = useState(null)
-  
+
   useEffect(() => {
     // Client-side logic here
   }, [])
@@ -108,7 +107,7 @@ Route groups organize files without affecting URL structure:
 ├── dashboard/page.tsx   # /dashboard
 └── analytics/page.tsx   # /analytics
 
-(auth)/               # Groups auth pages  
+(auth)/               # Groups auth pages
 ├── layout.tsx        # Shared layout for auth pages
 ├── login/page.tsx    # /login
 └── register/page.tsx # /register
@@ -188,17 +187,17 @@ async function getUsers() {
   const res = await fetch('https://api.example.com/users', {
     next: { revalidate: 3600 } // Revalidate every hour
   })
-  
+
   if (!res.ok) {
     throw new Error('Failed to fetch users')
   }
-  
+
   return res.json()
 }
 
 export default async function UsersPage() {
   const users = await getUsers()
-  
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Users</h1>
@@ -275,11 +274,11 @@ function Navigation() {
       <Link href="/dashboard">
         <Button variant="ghost">Dashboard</Button>
       </Link>
-      
+
       <Link href="/users" prefetch={false}>
         <Button variant="ghost">Users</Button>
       </Link>
-      
+
       {/* External links */}
       <Link href="https://example.com" target="_blank" rel="noopener noreferrer">
         <Button variant="outline">External</Button>
@@ -303,7 +302,7 @@ function LoginForm() {
   const handleLogin = async (formData: FormData) => {
     // Login logic
     const success = await login(formData)
-    
+
     if (success) {
       router.push('/dashboard')
       router.refresh() // Refresh server components
@@ -337,8 +336,8 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
       href={href}
       className={cn(
         'px-4 py-2 rounded-md transition-colors',
-        isActive 
-          ? 'bg-primary text-primary-foreground' 
+        isActive
+          ? 'bg-primary text-primary-foreground'
           : 'hover:bg-muted'
       )}
     >
@@ -354,17 +353,17 @@ Create API endpoints in the `app/api/` directory:
 
 ```typescript
 // app/api/users/route.ts
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
   try {
     // Fetch users from database or external API
     const users = await fetchUsers()
-    
+
     return NextResponse.json(users)
   } catch (error) {
     return NextResponse.json(
-      { error: 'Failed to fetch users' },
+      { error: "Failed to fetch users" },
       { status: 500 }
     )
   }
@@ -374,11 +373,11 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const user = await createUser(body)
-    
+
     return NextResponse.json(user, { status: 201 })
   } catch (error) {
     return NextResponse.json(
-      { error: 'Failed to create user' },
+      { error: "Failed to create user" },
       { status: 500 }
     )
   }
@@ -391,8 +390,8 @@ export async function POST(request: NextRequest) {
 
 ```typescript
 // hooks/use-user-store.ts
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 interface UserState {
   user: User | null
@@ -408,7 +407,7 @@ export const useUserStore = create<UserState>()(
       logout: () => set({ user: null }),
     }),
     {
-      name: 'user-storage',
+      name: "user-storage",
       partialize: (state) => ({ user: state.user }),
     }
   )
@@ -421,15 +420,15 @@ export const useUserStore = create<UserState>()(
 // hooks/use-users.ts
 "use client"
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from "@tanstack/react-query"
 
 export function useUsers() {
   return useQuery({
-    queryKey: ['users'],
+    queryKey: ["users"],
     queryFn: async () => {
-      const response = await fetch('/api/users')
+      const response = await fetch("/api/users")
       if (!response.ok) {
-        throw new Error('Failed to fetch users')
+        throw new Error("Failed to fetch users")
       }
       return response.json()
     },
@@ -506,7 +505,7 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const user = await getUser(params.id)
-  
+
   return {
     title: `${user.name} - User Profile`,
     description: `View profile information for ${user.name}`,
@@ -515,7 +514,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function UserPage({ params }: Props) {
   const user = await getUser(params.id)
-  
+
   return (
     <div>
       <h1>{user.name}</h1>
@@ -603,42 +602,42 @@ const jwtSecret = process.env.JWT_SECRET
 
 ```javascript
 // eslint.config.mjs
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import { dirname } from "path"
+import { fileURLToPath } from "url"
+import { FlatCompat } from "@eslint/eslintrc"
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
-});
+})
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
-];
+]
 
-export default eslintConfig;
+export default eslintConfig
 ```
 
 ### Next.js Configuration
 
 ```typescript
 // next.config.ts
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: [
-      'lucide-react',
-      '@radix-ui/react-icons',
-      'recharts'
+      "lucide-react",
+      "@radix-ui/react-icons",
+      "recharts",
     ],
     turbo: {
       rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
+        "*.svg": {
+          loaders: ["@svgr/webpack"],
+          as: "*.js",
         },
       },
     },
@@ -646,14 +645,14 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
     ],
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig
 ```
 
 ## Testing
@@ -662,15 +661,15 @@ export default nextConfig;
 
 ```javascript
 // jest.config.js
-const nextJest = require('next/jest')
+const nextJest = require("next/jest")
 
 const createJestConfig = nextJest({
-  dir: './',
+  dir: "./",
 })
 
 const config = {
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jest-environment-jsdom',
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+  testEnvironment: "jest-environment-jsdom",
 }
 
 module.exports = createJestConfig(config)
@@ -686,7 +685,7 @@ import { Button } from '@/components/ui/button'
 describe('Button', () => {
   it('renders correctly', () => {
     render(<Button>Click me</Button>)
-    
+
     const button = screen.getByRole('button', { name: /click me/i })
     expect(button).toBeInTheDocument()
   })
@@ -747,7 +746,7 @@ if (process.env.NODE_ENV === 'development') {
 // Use Next.js built-in debugging
 export default function DebugPage() {
   console.log('Page rendered at:', new Date().toISOString())
-  
+
   return <div>Debug page</div>
 }
 ```
@@ -757,11 +756,11 @@ export default function DebugPage() {
 ```typescript
 // lib/error-reporting.ts
 export function reportError(error: Error, context?: any) {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     // Send to error reporting service
-    console.error('Error reported:', error, context)
+    console.error("Error reported:", error, context)
   } else {
-    console.error('Development error:', error, context)
+    console.error("Development error:", error, context)
   }
 }
 ```
@@ -774,7 +773,7 @@ Next.js Fast Refresh preserves component state during development:
 // This will preserve state during hot reload
 function Counter() {
   const [count, setCount] = useState(0)
-  
+
   return (
     <div>
       <p>Count: {count}</p>
@@ -817,8 +816,8 @@ export function PageTemplate({ title, description, children }: PageTemplateProps
 // Usage in pages
 export default function UsersPage() {
   return (
-    <PageTemplate 
-      title="Users" 
+    <PageTemplate
+      title="Users"
       description="Manage your application users"
     >
       <UsersList />

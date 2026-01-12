@@ -77,9 +77,7 @@ export const columns: ColumnDef<Task>[] = [
 
       return (
         <div className="flex w-[120px] items-center">
-          <Badge variant="outline">
-            {category.label}
-          </Badge>
+          <Badge variant="outline">{category.label}</Badge>
         </div>
       )
     },
