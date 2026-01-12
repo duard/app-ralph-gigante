@@ -11,11 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
@@ -87,12 +83,7 @@ export function ProductFiltersToolbar({
   }, [filters]);
 
   return (
-    <div
-      className={cn(
-        'flex flex-col gap-4 rounded-lg border bg-card p-4 shadow-sm',
-        className
-      )}
-    >
+    <div className={cn('flex flex-col gap-4 rounded-lg border bg-card p-4 shadow-sm', className)}>
       {/* Main toolbar */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-3">
         {/* Search */}
@@ -178,10 +169,7 @@ export function ProductFiltersToolbar({
             <SelectContent>
               <SelectItem value="all">Todos os grupos</SelectItem>
               {groups.map((grp) => (
-                <SelectItem
-                  key={grp.codgrupoprod}
-                  value={grp.codgrupoprod.toString()}
-                >
+                <SelectItem key={grp.codgrupoprod} value={grp.codgrupoprod.toString()}>
                   {grp.descrgrupoprod}
                 </SelectItem>
               ))}
@@ -318,12 +306,7 @@ export function ProductFiltersToolbar({
 
         {/* Clear Filters */}
         {activeFiltersCount > 0 && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClearFilters}
-            className="whitespace-nowrap"
-          >
+          <Button variant="ghost" size="sm" onClick={onClearFilters} className="whitespace-nowrap">
             <X className="mr-2 h-4 w-4" />
             Limpar ({activeFiltersCount})
           </Button>
@@ -365,8 +348,7 @@ export function ProductFiltersToolbar({
           )}
           {filters.codgrupoprod && (
             <Badge variant="secondary" className="gap-1">
-              Grupo:{' '}
-              {groups.find((g) => g.codgrupoprod === filters.codgrupoprod)?.descrgrupoprod}
+              Grupo: {groups.find((g) => g.codgrupoprod === filters.codgrupoprod)?.descrgrupoprod}
               <X
                 className="h-3 w-3 cursor-pointer"
                 onClick={() => onFilterChange({ codgrupoprod: undefined })}
@@ -376,10 +358,7 @@ export function ProductFiltersToolbar({
           {filters.marca && (
             <Badge variant="secondary" className="gap-1">
               Marca: {filters.marca}
-              <X
-                className="h-3 w-3 cursor-pointer"
-                onClick={() => onFilterChange({ marca: '' })}
-              />
+              <X className="h-3 w-3 cursor-pointer" onClick={() => onFilterChange({ marca: '' })} />
             </Badge>
           )}
           {filters.comControle && (

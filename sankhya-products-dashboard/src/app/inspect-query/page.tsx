@@ -71,7 +71,7 @@ export default function Page() {
       const diffMinutes = Math.floor(diff / 60000);
       const diffHours = Math.floor(diffMinutes / 60);
       const diffDays = Math.floor(diffHours / 24);
-      
+
       let relative = '';
       if (key === 'exp') {
         if (diffDays > 0) relative = ` (expira em ${diffDays} dias)`;
@@ -79,10 +79,10 @@ export default function Page() {
         else if (diffMinutes > 0) relative = ` (expira em ${diffMinutes}min)`;
         else relative = ' (EXPIRADO!)';
       }
-      
+
       return `${date.toLocaleString('pt-BR')}${relative}`;
     }
-    
+
     if (typeof value === 'object' && value !== null) {
       return JSON.stringify(value, null, 2);
     }

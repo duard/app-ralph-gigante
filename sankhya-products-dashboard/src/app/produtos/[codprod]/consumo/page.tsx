@@ -41,41 +41,47 @@ export default function Page() {
   const { codprod } = useParams<{ codprod: string }>();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   // ===== LER ESTADO DA URL =====
   // Período padrão: últimos 3 meses
   const defaultDataFim = format(new Date(), 'yyyy-MM-dd');
   const defaultDataInicio = format(subMonths(new Date(), 3), 'yyyy-MM-dd');
-  
+
   const dataInicio = searchParams.get('dataInicio') || defaultDataInicio;
   const dataFim = searchParams.get('dataFim') || defaultDataFim;
   const page = Number(searchParams.get('page')) || 1;
   const perPage = Number(searchParams.get('perPage')) || 50;
 
   // ===== HELPER PARA ATUALIZAR URL =====
-    const updateSearchParams = React.useCallback((updates: Record<string, string | number | undefined | null>) => {
-    const newParams = new URLSearchParams(searchParams);
-    
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === undefined || value === null || value === '') {
-        newParams.delete(key);
-      } else {
-        newParams.set(key, String(value));
-      }
-    });
-    
-    setSearchParams(newParams);
-  }, [searchParams, setSearchParams]);
+  const updateSearchParams = React.useCallback(
+    (updates: Record<string, string | number | undefined | null>) => {
+      const newParams = new URLSearchParams(searchParams);
+
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value === undefined || value === null || value === '') {
+          newParams.delete(key);
+        } else {
+          newParams.set(key, String(value));
+        }
+      });
+
+      setSearchParams(newParams);
+    },
+    [searchParams, setSearchParams]
+  );
 
   // ===== QUERIES =====
-  const { data: product, isLoading: isLoadingProduct, refetch: refetchProduct } = useProduct(Number(codprod));
-  const { data: consumoData, isLoading: isLoadingConsumo, refetch: refetchConsumo, error: consumoError } = useProductConsumo(
-    Number(codprod),
-    dataInicio,
-    dataFim,
-    page,
-    perPage
-  );
+  const {
+    data: product,
+    isLoading: isLoadingProduct,
+    refetch: refetchProduct,
+  } = useProduct(Number(codprod));
+  const {
+    data: consumoData,
+    isLoading: isLoadingConsumo,
+    refetch: refetchConsumo,
+    error: consumoError,
+  } = useProductConsumo(Number(codprod), dataInicio, dataFim, page, perPage);
 
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const { printPDF } = usePrintPDF();
@@ -93,19 +99,25 @@ export default function Page() {
   // Debug log removed to comply with no-console rule
 
   // ===== HANDLERS =====
-  const handleDateRangeChange = React.useCallback((range: DateRange | undefined) => {
-    if (range?.from && range?.to) {
-      updateSearchParams({
-        dataInicio: format(range.from, 'yyyy-MM-dd'),
-        dataFim: format(range.to, 'yyyy-MM-dd'),
-        page: 1, // Reset para página 1 ao mudar período
-      });
-    }
-  }, [updateSearchParams]);
+  const handleDateRangeChange = React.useCallback(
+    (range: DateRange | undefined) => {
+      if (range?.from && range?.to) {
+        updateSearchParams({
+          dataInicio: format(range.from, 'yyyy-MM-dd'),
+          dataFim: format(range.to, 'yyyy-MM-dd'),
+          page: 1, // Reset para página 1 ao mudar período
+        });
+      }
+    },
+    [updateSearchParams]
+  );
 
-  const handlePageChange = React.useCallback((newPage: number) => {
-    updateSearchParams({ page: newPage });
-  }, [updateSearchParams]);
+  const handlePageChange = React.useCallback(
+    (newPage: number) => {
+      updateSearchParams({ page: newPage });
+    },
+    [updateSearchParams]
+  );
 
   // Preparar DateRange para o picker
   const dateRange: DateRange | undefined = React.useMemo(() => {
@@ -148,10 +160,7 @@ export default function Page() {
   }
 
   return (
-    <BaseLayout
-      title="Histórico de Consumo"
-      description=""
-    >
+    <BaseLayout title="Histórico de Consumo" description="">
       <div id="printable-consumo-v1" className="container mx-auto px-4 py-6 space-y-4">
         {/* Toolbar compacta no topo */}
         <Card>
@@ -159,22 +168,25 @@ export default function Page() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               {/* Informações do produto */}
               <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate('/produtos')}
-                >
+                <Button variant="ghost" size="sm" onClick={() => navigate('/produtos')}>
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Voltar
                 </Button>
                 <div className="border-l pl-4">
                   <h1 className="text-lg font-bold">{product.descrprod}</h1>
                   <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="outline" className="text-xs">#{product.codprod}</Badge>
+                    <Badge variant="outline" className="text-xs">
+                      #{product.codprod}
+                    </Badge>
                     {product.referencia && (
-                      <Badge variant="secondary" className="text-xs">Ref: {product.referencia}</Badge>
+                      <Badge variant="secondary" className="text-xs">
+                        Ref: {product.referencia}
+                      </Badge>
                     )}
-                    <Badge variant={product.ativo === 'S' ? 'default' : 'secondary'} className="text-xs">
+                    <Badge
+                      variant={product.ativo === 'S' ? 'default' : 'secondary'}
+                      className="text-xs"
+                    >
                       {product.ativo === 'S' ? 'Ativo' : 'Inativo'}
                     </Badge>
                   </div>
@@ -183,10 +195,7 @@ export default function Page() {
 
               {/* Seletor de período e ações */}
               <div className="flex items-center gap-2">
-                <DateRangePicker
-                  date={dateRange}
-                  onDateChange={handleDateRangeChange}
-                />
+                <DateRangePicker date={dateRange} onDateChange={handleDateRangeChange} />
                 <Button
                   variant="outline"
                   size="sm"
@@ -215,7 +224,9 @@ export default function Page() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t">
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Saldo Anterior</div>
-                  <div className="text-2xl font-bold">{consumoData.saldoAnterior.saldo_qtd || 0}</div>
+                  <div className="text-2xl font-bold">
+                    {consumoData.saldoAnterior.saldo_qtd || 0}
+                  </div>
                   <div className="text-xs text-muted-foreground">
                     {new Intl.NumberFormat('pt-BR', {
                       style: 'currency',
@@ -226,7 +237,9 @@ export default function Page() {
 
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Saldo Atual</div>
-                  <div className="text-2xl font-bold">{consumoData.saldoAtual.saldo_qtd_final || 0}</div>
+                  <div className="text-2xl font-bold">
+                    {consumoData.saldoAtual.saldo_qtd_final || 0}
+                  </div>
                   <div className="text-xs text-muted-foreground">
                     {new Intl.NumberFormat('pt-BR', {
                       style: 'currency',
@@ -238,15 +251,21 @@ export default function Page() {
                 <div>
                   <div className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
                     Variação
-                    {(consumoData.saldoAtual.saldo_qtd_final || 0) > (consumoData.saldoAnterior.saldo_qtd || 0) ? (
+                    {(consumoData.saldoAtual.saldo_qtd_final || 0) >
+                    (consumoData.saldoAnterior.saldo_qtd || 0) ? (
                       <TrendingUp className="h-3 w-3 text-green-600" />
                     ) : (
                       <TrendingDown className="h-3 w-3 text-red-600" />
                     )}
                   </div>
-                  <div className={`text-2xl font-bold ${((consumoData.saldoAtual.saldo_qtd_final || 0) - (consumoData.saldoAnterior.saldo_qtd || 0)) > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {((consumoData.saldoAtual.saldo_qtd_final || 0) - (consumoData.saldoAnterior.saldo_qtd || 0)) > 0 && '+'}
-                    {(consumoData.saldoAtual.saldo_qtd_final || 0) - (consumoData.saldoAnterior.saldo_qtd || 0)}
+                  <div
+                    className={`text-2xl font-bold ${(consumoData.saldoAtual.saldo_qtd_final || 0) - (consumoData.saldoAnterior.saldo_qtd || 0) > 0 ? 'text-green-600' : 'text-red-600'}`}
+                  >
+                    {(consumoData.saldoAtual.saldo_qtd_final || 0) -
+                      (consumoData.saldoAnterior.saldo_qtd || 0) >
+                      0 && '+'}
+                    {(consumoData.saldoAtual.saldo_qtd_final || 0) -
+                      (consumoData.saldoAnterior.saldo_qtd || 0)}
                   </div>
                   <div className="text-xs text-muted-foreground">No período</div>
                 </div>
@@ -289,24 +308,25 @@ export default function Page() {
                     {consumoData.movimentacoes.map((mov, index) => {
                       // Traduzir tipo de movimento
                       const tipoMovMap: Record<string, string> = {
-                        'C': 'Compra',
-                        'P': 'Pedido Venda',
-                        'Q': 'Requisição',
-                        'O': 'Ordem Compra',
-                        'J': 'Transferência',
-                        'D': 'Devolução',
-                        'V': 'Venda',
+                        C: 'Compra',
+                        P: 'Pedido Venda',
+                        Q: 'Requisição',
+                        O: 'Ordem Compra',
+                        J: 'Transferência',
+                        D: 'Devolução',
+                        V: 'Venda',
                       };
                       const tipoDesc = mov.tipmov ? tipoMovMap[mov.tipmov] || mov.tipmov : 'Mov.';
-                      
+
                       // Determinar o nome a exibir
-                      const nomeExibir = mov.nome_parceiro || 
-                                        mov.usuario_alteracao || 
-                                        mov.usuario_inclusao || 
-                                        'Sistema';
-                      
+                      const nomeExibir =
+                        mov.nome_parceiro ||
+                        mov.usuario_alteracao ||
+                        mov.usuario_inclusao ||
+                        'Sistema';
+
                       const isParceiro = !!mov.nome_parceiro;
-                      
+
                       return (
                         <TableRow key={index}>
                           <TableCell className="whitespace-nowrap">
@@ -331,9 +351,7 @@ export default function Page() {
                           </TableCell>
                           <TableCell className="max-w-[200px]">
                             <div className="space-y-1">
-                              <div className="font-medium truncate">
-                                {nomeExibir}
-                              </div>
+                              <div className="font-medium truncate">{nomeExibir}</div>
                               {!isParceiro && (mov.usuario_inclusao || mov.usuario_alteracao) && (
                                 <Badge variant="secondary" className="text-xs">
                                   Usuário
@@ -366,7 +384,9 @@ export default function Page() {
                             {new Intl.NumberFormat('pt-BR', {
                               style: 'currency',
                               currency: 'BRL',
-                            }).format(mov.valor_unitario || (mov.valor_mov / Math.abs(mov.quantidade_mov)))}
+                            }).format(
+                              mov.valor_unitario || mov.valor_mov / Math.abs(mov.quantidade_mov)
+                            )}
                           </TableCell>
                           <TableCell className="text-right font-mono font-medium">
                             {mov.saldo_qtd_final}
@@ -376,12 +396,14 @@ export default function Page() {
                     })}
                   </TableBody>
                 </Table>
-                
+
                 {/* Paginação */}
                 {consumoData.totalMovimentacoes > perPage && (
                   <div className="flex items-center justify-between px-2 py-4 border-t">
                     <div className="text-sm text-muted-foreground">
-                      Mostrando {((page - 1) * perPage) + 1} a {Math.min(page * perPage, consumoData.totalMovimentacoes)} de {consumoData.totalMovimentacoes} movimentações
+                      Mostrando {(page - 1) * perPage + 1} a{' '}
+                      {Math.min(page * perPage, consumoData.totalMovimentacoes)} de{' '}
+                      {consumoData.totalMovimentacoes} movimentações
                     </div>
                     <div className="flex items-center gap-2">
                       <Button
@@ -411,14 +433,12 @@ export default function Page() {
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Erro ao carregar movimentações: {typeof consumoError === 'object' && consumoError && 'message' in consumoError ? (consumoError as { message?: string }).message : 'Erro desconhecido'}
+                  Erro ao carregar movimentações:{' '}
+                  {typeof consumoError === 'object' && consumoError && 'message' in consumoError
+                    ? (consumoError as { message?: string }).message
+                    : 'Erro desconhecido'}
                 </AlertDescription>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mt-2"
-                  onClick={handleRefresh}
-                >
+                <Button variant="outline" size="sm" className="mt-2" onClick={handleRefresh}>
                   Tentar novamente
                 </Button>
               </Alert>
@@ -434,7 +454,9 @@ export default function Page() {
                     <div>Debug Info:</div>
                     <div>- Total Movimentações: {consumoData.totalMovimentacoes || 0}</div>
                     <div>- Array length: {consumoData.movimentacoes?.length || 0}</div>
-                    <div>- Data recebida: {JSON.stringify(consumoData, null, 2).substring(0, 200)}...</div>
+                    <div>
+                      - Data recebida: {JSON.stringify(consumoData, null, 2).substring(0, 200)}...
+                    </div>
                   </div>
                 )}
               </div>

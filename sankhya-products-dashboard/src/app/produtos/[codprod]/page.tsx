@@ -40,8 +40,17 @@ export default function Page() {
   const { codprod } = useParams<{ codprod: string }>();
   const navigate = useNavigate();
 
-  const { data: product, isLoading: isLoadingProduct, refetch: refetchProduct, error: errorProduct } = useProduct(Number(codprod));
-  const { data: locations, isLoading: isLoadingLocations, refetch: refetchLocations } = useProductLocations(Number(codprod));
+  const {
+    data: product,
+    isLoading: isLoadingProduct,
+    refetch: refetchProduct,
+    error: errorProduct,
+  } = useProduct(Number(codprod));
+  const {
+    data: locations,
+    isLoading: isLoadingLocations,
+    refetch: refetchLocations,
+  } = useProductLocations(Number(codprod));
 
   const [isRefreshing, setIsRefreshing] = React.useState(false);
 
@@ -92,10 +101,7 @@ export default function Page() {
   const isAtivo = product.ativo === 'S';
 
   return (
-    <BaseLayout
-      title={`${product.descrprod}`}
-      description={`Código: ${product.codprod}`}
-    >
+    <BaseLayout title={`${product.descrprod}`} description={`Código: ${product.codprod}`}>
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Header */}
         <Card>
@@ -106,7 +112,7 @@ export default function Page() {
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Voltar
                 </Button>
-                
+
                 <div className="border-l pl-4 flex-1">
                   <div className="flex items-start gap-3">
                     <div className="p-3 bg-primary/10 rounded-lg">
@@ -118,8 +124,12 @@ export default function Page() {
                         <p className="text-muted-foreground mb-3">{product.compldesc}</p>
                       )}
                       <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant="outline" className="font-mono">#{product.codprod}</Badge>
-                        {product.referencia && <Badge variant="secondary">Ref: {product.referencia}</Badge>}
+                        <Badge variant="outline" className="font-mono">
+                          #{product.codprod}
+                        </Badge>
+                        {product.referencia && (
+                          <Badge variant="secondary">Ref: {product.referencia}</Badge>
+                        )}
                         {product.marca && <Badge variant="secondary">{product.marca}</Badge>}
                         <Badge variant={isAtivo ? 'default' : 'secondary'}>
                           {isAtivo ? 'Ativo' : 'Inativo'}
@@ -179,7 +189,9 @@ export default function Page() {
               {product.ultimaCompraData ? (
                 <>
                   <div className="text-lg font-bold">
-                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.ultimaCompraValor || 0)}
+                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
+                      product.ultimaCompraValor || 0
+                    )}
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
                     {format(new Date(product.ultimaCompraData), 'dd/MM/yyyy', { locale: ptBR })}
@@ -203,9 +215,15 @@ export default function Page() {
             </CardHeader>
             <CardContent>
               <div className="text-lg font-bold">
-                {product.tipcontest === 'L' ? 'Lote' : product.tipcontest === 'S' ? 'Série' : 'Sem controle'}
+                {product.tipcontest === 'L'
+                  ? 'Lote'
+                  : product.tipcontest === 'S'
+                    ? 'Série'
+                    : 'Sem controle'}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">Tipo: {product.tipcontest || 'N'}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Tipo: {product.tipcontest || 'N'}
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -240,7 +258,9 @@ export default function Page() {
                 {product.codgrupoprod && (
                   <div className="col-span-2">
                     <div className="text-xs text-muted-foreground mb-1">Grupo</div>
-                    <div className="font-medium">{product.descrgrupoprod || `#${product.codgrupoprod}`}</div>
+                    <div className="font-medium">
+                      {product.descrgrupoprod || `#${product.codgrupoprod}`}
+                    </div>
                   </div>
                 )}
               </div>
@@ -255,15 +275,27 @@ export default function Page() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button className="w-full justify-start" variant="outline" onClick={() => navigate(`/produtos/${codprod}/consumo`)}>
+              <Button
+                className="w-full justify-start"
+                variant="outline"
+                onClick={() => navigate(`/produtos/${codprod}/consumo`)}
+              >
                 <History className="mr-2 h-4 w-4" />
                 Consumo Simples (V1)
               </Button>
-              <Button className="w-full justify-start" variant="outline" onClick={() => navigate(`/produtos/${codprod}/consumo-v2`)}>
+              <Button
+                className="w-full justify-start"
+                variant="outline"
+                onClick={() => navigate(`/produtos/${codprod}/consumo-v2`)}
+              >
                 <TrendingUp className="mr-2 h-4 w-4" />
                 Consumo Detalhado (V2)
               </Button>
-              <Button className="w-full justify-start" variant="outline" onClick={() => navigate(`/produtos/${codprod}/consumo-v3`)}>
+              <Button
+                className="w-full justify-start"
+                variant="outline"
+                onClick={() => navigate(`/produtos/${codprod}/consumo-v3`)}
+              >
                 <Calendar className="mr-2 h-4 w-4" />
                 Visão 360° (V3)
               </Button>
@@ -301,14 +333,22 @@ export default function Page() {
                         </TableCell>
                         <TableCell>
                           {loc.controle ? (
-                            <Badge variant="outline" className="font-mono text-xs">{loc.controle}</Badge>
+                            <Badge variant="outline" className="font-mono text-xs">
+                              {loc.controle}
+                            </Badge>
                           ) : (
                             <span className="text-xs text-muted-foreground">-</span>
                           )}
                         </TableCell>
-                        <TableCell className="text-right font-bold font-mono">{loc.estoque}</TableCell>
-                        <TableCell className="text-right text-muted-foreground font-mono">{loc.estmin || '-'}</TableCell>
-                        <TableCell className="text-right text-muted-foreground font-mono">{loc.estmax || '-'}</TableCell>
+                        <TableCell className="text-right font-bold font-mono">
+                          {loc.estoque}
+                        </TableCell>
+                        <TableCell className="text-right text-muted-foreground font-mono">
+                          {loc.estmin || '-'}
+                        </TableCell>
+                        <TableCell className="text-right text-muted-foreground font-mono">
+                          {loc.estmax || '-'}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

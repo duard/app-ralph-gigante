@@ -13,17 +13,17 @@ export interface ProductWithLocations {
   tipcontest?: string;
   liscontest?: string | string[];
   controleAtual?: string;
-  
+
   // Última compra
   ultimaCompraData?: string;
   ultimaCompraValor?: number;
   ultimaCompraQtd?: number;
-  
+
   // Metadados
   codusu?: number;
   nomeusu?: string;
   dtalter?: string;
-  
+
   // Locais
   locais?: Array<{
     codlocal: number;
@@ -34,13 +34,13 @@ export interface ProductWithLocations {
     estmax?: number;
     codemp?: number;
   }>;
-  
+
   // Grupo
   tgfgru?: {
     codgrupoprod: number;
     descgrupoprod: string;
   };
-  
+
   // Estoque agregado
   estoque?: {
     estoqueTotal: number;
@@ -81,20 +81,20 @@ export interface ConsumoMovimentacao {
   tipo_movimentacao?: string;
   codparc?: number;
   nome_parceiro?: string;
-  
+
   // Informações de usuário
   codusuinc?: number;
   usuario_inclusao?: string;
   codusualt?: number;
   usuario_alteracao?: string;
   dhalter?: string;
-  
+
   // Informações da operação (TGFTOP)
   codtipoper?: number;
   descricao_operacao?: string;
   top_atualiza_estoque?: number;
   bonificacao?: string;
-  
+
   // Controle e valores
   controle?: string;
   sequencia?: number;
@@ -102,7 +102,7 @@ export interface ConsumoMovimentacao {
   valor_mov: number;
   valor_unitario?: number;
   atualestoque?: number;
-  
+
   // Saldos calculados
   saldo_qtd_anterior: number;
   saldo_qtd_final: number;
@@ -115,18 +115,18 @@ export interface ConsumoPeriodoResponse {
   page: number;
   perPage: number;
   totalMovimentacoes: number;
-  saldoAnterior: { 
+  saldoAnterior: {
     tipo_registro: string;
     data_referencia: string;
-    saldo_qtd: number; 
+    saldo_qtd: number;
     saldo_valor: number;
     saldo_valor_formatted?: string;
   };
   movimentacoes: ConsumoMovimentacao[];
-  saldoAtual: { 
+  saldoAtual: {
     tipo_registro: string;
     data_referencia: string;
-    saldo_qtd_final: number; 
+    saldo_qtd_final: number;
     saldo_valor_final: number;
     saldo_valor_final_formatted?: string;
   };
@@ -332,7 +332,7 @@ export const productsApi = {
    */
   async getAll(filters: ProductFilters = {}): Promise<PaginatedResult<ProductWithLocations>> {
     const params = new URLSearchParams();
-    
+
     if (filters.page) params.append('page', filters.page.toString());
     if (filters.perPage) params.append('perPage', filters.perPage.toString());
     if (filters.search) params.append('search', filters.search);
@@ -343,7 +343,7 @@ export const productsApi = {
     if (filters.marca) params.append('marca', filters.marca);
     if (filters.comControle) params.append('comControle', 'true');
     if (filters.semControle) params.append('semControle', 'true');
-    
+
     const response = await apiClient.get('/tgfpro/ultra-search', { params });
     return response.data;
   },
@@ -359,22 +359,24 @@ export const productsApi = {
   /**
    * Buscar produtos com array de locais de estoque
    */
-  async getWithStockLocations(filters: ProductFilters = {}): Promise<PaginatedResult<ProductWithLocations>> {
+  async getWithStockLocations(
+    filters: ProductFilters = {}
+  ): Promise<PaginatedResult<ProductWithLocations>> {
     const params = new URLSearchParams();
-    
+
     if (filters.page) params.append('page', filters.page.toString());
     if (filters.perPage) params.append('perPage', filters.perPage.toString());
     if (filters.search) params.append('search', filters.search);
-    
+
     // Converter status para formato Sankhya
     if (filters.status === 'active') params.append('ativo', 'S');
     if (filters.status === 'inactive') params.append('ativo', 'N');
-    
+
     if (filters.codlocal) params.append('codlocal', filters.codlocal.toString());
     if (filters.codgrupoprod) params.append('codgrupoprod', filters.codgrupoprod.toString());
-    
+
     console.log('[getWithStockLocations] Params:', Object.fromEntries(params.entries()));
-    
+
     const response = await apiClient.get('/tgfpro/with-stock-locations', { params });
     console.log('[getWithStockLocations] Response:', response.data);
     return response.data;
@@ -396,7 +398,7 @@ export const productsApi = {
       page: page.toString(),
       perPage: perPage.toString(),
     });
-    
+
     const response = await apiClient.get(`/tgfpro/consumo-periodo/${codprod}`, { params });
     return response.data;
   },
@@ -418,7 +420,7 @@ export const productsApi = {
       page: page.toString(),
       perPage: perPage.toString(),
     });
-    
+
     const response = await apiClient.get(`/tgfpro/consumo-periodo-v2/${codprod}`, { params });
     return response.data;
   },
@@ -435,7 +437,10 @@ export const productsApi = {
   /**
    * Busca avançada com relevância
    */
-  async searchAvancada(termo: string, limit: number = 50): Promise<PaginatedResult<ProductWithLocations>> {
+  async searchAvancada(
+    termo: string,
+    limit: number = 50
+  ): Promise<PaginatedResult<ProductWithLocations>> {
     const response = await apiClient.get(`/tgfpro/search/${termo}`, { params: { limit } });
     return response.data;
   },

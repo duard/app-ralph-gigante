@@ -40,12 +40,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProductFiltersToolbar } from './product-filters-toolbar';
 import { DataTablePagination } from '@/components/ui/data-table-pagination';
@@ -64,22 +59,22 @@ export interface ProductWithHistory {
   descrgrupoprod?: string; // Grupo/Categoria
   tipcontest?: string;
   controleAtual?: string; // Controle específico desta linha
-  
+
   // Estoque
   estoqueTotal?: number;
   estmin?: number;
   estmax?: number;
-  
+
   // Última compra
   ultimaCompraData?: string;
   ultimaCompraValor?: number;
   ultimaCompraQtd?: number;
-  
+
   // Metadados
   codusu?: number;
   nomeusu?: string;
   dtalter?: string;
-  
+
   // Locais
   locais?: Array<{
     codlocal: number;
@@ -89,7 +84,7 @@ export interface ProductWithHistory {
     estmin?: number;
     estmax?: number;
   }>;
-  
+
   // Grupo
   tgfgru?: {
     codgrupoprod: number;
@@ -151,9 +146,7 @@ export function ProductListComplete({
         );
       },
       cell: ({ row }) => (
-        <div className="font-mono text-sm font-medium">
-          {row.getValue('codprod')}
-        </div>
+        <div className="font-mono text-sm font-medium">{row.getValue('codprod')}</div>
       ),
     },
     {
@@ -165,9 +158,7 @@ export function ProductListComplete({
           <div className="max-w-[300px]">
             <div className="font-medium truncate">{produto.descrprod}</div>
             {produto.referencia && (
-              <div className="text-xs text-muted-foreground">
-                Ref: {produto.referencia}
-              </div>
+              <div className="text-xs text-muted-foreground">Ref: {produto.referencia}</div>
             )}
             {produto.marca && (
               <Badge variant="outline" className="mt-1 text-xs">
@@ -190,9 +181,7 @@ export function ProductListComplete({
               {grupo}
             </Badge>
             {produto.tgfgru?.codgrupoprod && (
-              <div className="text-xs text-muted-foreground">
-                #{produto.tgfgru.codgrupoprod}
-              </div>
+              <div className="text-xs text-muted-foreground">#{produto.tgfgru.codgrupoprod}</div>
             )}
           </div>
         ) : (
@@ -214,9 +203,7 @@ export function ProductListComplete({
                   {controle}
                 </Badge>
               </TooltipTrigger>
-              <TooltipContent>
-                Produto com controle de {controle}
-              </TooltipContent>
+              <TooltipContent>Produto com controle de {controle}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         ) : (
@@ -230,8 +217,8 @@ export function ProductListComplete({
       cell: ({ row }) => {
         const produto = row.original;
         const locais = produto.locais || [];
-        const estoqueTotal = produto.estoque?.estoqueTotal || 
-                             locais.reduce((sum, loc) => sum + loc.estoque, 0);
+        const estoqueTotal =
+          produto.estoque?.estoqueTotal || locais.reduce((sum, loc) => sum + loc.estoque, 0);
         const locaisCount = produto.estoque?.locais || locais.length;
 
         // Se não tem estoque
@@ -243,18 +230,14 @@ export function ProductListComplete({
             </div>
           );
         }
-        
+
         // Se tem estoque mas não tem detalhes de locais
         if (locais.length === 0 && estoqueTotal > 0) {
           return (
             <div className="space-y-1">
-              <div className="font-medium text-sm">
-                {estoqueTotal} unidades
-              </div>
+              <div className="font-medium text-sm">{estoqueTotal} unidades</div>
               {locaisCount > 0 && (
-                <div className="text-xs text-muted-foreground">
-                  {locaisCount} local(is)
-                </div>
+                <div className="text-xs text-muted-foreground">{locaisCount} local(is)</div>
               )}
             </div>
           );
@@ -276,9 +259,7 @@ export function ProductListComplete({
                   <div className="flex items-start gap-2">
                     <MapPin className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div className="flex-1">
-                      <div className="font-medium text-sm truncate">
-                        {locais[0].descrlocal}
-                      </div>
+                      <div className="font-medium text-sm truncate">{locais[0].descrlocal}</div>
                       <div className="text-xs text-muted-foreground">
                         {locais[0].estoque} un
                         {locais[0].controle && (
@@ -287,7 +268,7 @@ export function ProductListComplete({
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Outros locais resumidos */}
                   {locais.length > 1 && (
                     <div className="pl-6 text-xs text-muted-foreground">
@@ -300,11 +281,11 @@ export function ProductListComplete({
                 <div className="space-y-2">
                   <div className="font-semibold text-sm mb-2">Hierarquia de Locais</div>
                   {locais.map((loc, idx) => (
-                    <div 
-                      key={idx} 
+                    <div
+                      key={idx}
                       className={cn(
-                        "flex items-start justify-between gap-4 text-xs py-1",
-                        idx === 0 && "border-b pb-2"
+                        'flex items-start justify-between gap-4 text-xs py-1',
+                        idx === 0 && 'border-b pb-2'
                       )}
                     >
                       <div className="flex-1">
@@ -365,9 +346,7 @@ export function ProductListComplete({
               </div>
             )}
             {produto.ultimaCompraQtd && (
-              <div className="text-xs text-muted-foreground">
-                Qtd: {produto.ultimaCompraQtd}
-              </div>
+              <div className="text-xs text-muted-foreground">Qtd: {produto.ultimaCompraQtd}</div>
             )}
           </div>
         );
@@ -378,13 +357,11 @@ export function ProductListComplete({
       header: 'Alterado Por',
       cell: ({ row }) => {
         const produto = row.original;
-        
+
         return (
           <div className="space-y-1 text-xs">
             {produto.nomeusu && (
-              <div className="font-medium truncate max-w-[120px]">
-                {produto.nomeusu}
-              </div>
+              <div className="font-medium truncate max-w-[120px]">{produto.nomeusu}</div>
             )}
             {produto.dtalter && (
               <div className="text-muted-foreground">
@@ -430,8 +407,10 @@ export function ProductListComplete({
                 Ver Detalhes
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuLabel className="text-xs text-muted-foreground">Histórico de Consumo</DropdownMenuLabel>
-              <DropdownMenuItem 
+              <DropdownMenuLabel className="text-xs text-muted-foreground">
+                Histórico de Consumo
+              </DropdownMenuLabel>
+              <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
                   onViewHistory?.(produto.codprod);
@@ -440,7 +419,7 @@ export function ProductListComplete({
                 <History className="mr-2 h-4 w-4" />
                 Consumo Simples (V1)
               </DropdownMenuItem>
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
                   window.location.href = `/produtos/${produto.codprod}/consumo-v2`;
@@ -449,7 +428,7 @@ export function ProductListComplete({
                 <TrendingUp className="mr-2 h-4 w-4" />
                 Consumo Detalhado (V2)
               </DropdownMenuItem>
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
                   window.location.href = `/produtos/${produto.codprod}/consumo-v3`;
@@ -526,10 +505,7 @@ export function ProductListComplete({
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>

@@ -39,8 +39,17 @@ export default function Page() {
   const { codprod } = useParams<{ codprod: string }>();
   const navigate = useNavigate();
 
-  const { data: product, isLoading: isLoadingProduct, refetch: refetchProduct } = useProduct(Number(codprod));
-  const { data: data360, isLoading: isLoading360, refetch: refetch360, error: error360 } = useProduct360V3(Number(codprod));
+  const {
+    data: product,
+    isLoading: isLoadingProduct,
+    refetch: refetchProduct,
+  } = useProduct(Number(codprod));
+  const {
+    data: data360,
+    isLoading: isLoading360,
+    refetch: refetch360,
+    error: error360,
+  } = useProduct360V3(Number(codprod));
 
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const { printPDF } = usePrintPDF();
@@ -83,10 +92,7 @@ export default function Page() {
   }
 
   return (
-    <BaseLayout
-      title="Visão 360° (V3)"
-      description="Dashboard executivo do produto"
-    >
+    <BaseLayout title="Visão 360° (V3)" description="Dashboard executivo do produto">
       <div id="printable-consumo-v3" className="container mx-auto px-4 py-6 space-y-4">
         {/* Header */}
         <Card>
@@ -99,13 +105,21 @@ export default function Page() {
                 </Button>
                 <div className="border-l pl-4">
                   <div className="flex items-center gap-2">
-                    <h1 className="text-lg font-bold">{data360?.produto.descrprod || product.descrprod}</h1>
-                    <Badge variant="secondary" className="text-xs">V3 Dashboard</Badge>
+                    <h1 className="text-lg font-bold">
+                      {data360?.produto.descrprod || product.descrprod}
+                    </h1>
+                    <Badge variant="secondary" className="text-xs">
+                      V3 Dashboard
+                    </Badge>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="outline" className="text-xs">#{data360?.produto.codprod || product.codprod}</Badge>
+                    <Badge variant="outline" className="text-xs">
+                      #{data360?.produto.codprod || product.codprod}
+                    </Badge>
                     {data360?.produto.complemento && (
-                      <Badge variant="secondary" className="text-xs">{data360.produto.complemento}</Badge>
+                      <Badge variant="secondary" className="text-xs">
+                        {data360.produto.complemento}
+                      </Badge>
                     )}
                   </div>
                 </div>
@@ -147,7 +161,10 @@ export default function Page() {
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              Erro ao carregar: {typeof error360 === 'object' && error360 && 'message' in error360 ? (error360 as { message?: string }).message : 'Erro desconhecido'}
+              Erro ao carregar:{' '}
+              {typeof error360 === 'object' && error360 && 'message' in error360
+                ? (error360 as { message?: string }).message
+                : 'Erro desconhecido'}
             </AlertDescription>
             <Button variant="outline" size="sm" className="mt-2" onClick={handleRefresh}>
               Tentar novamente
@@ -166,7 +183,9 @@ export default function Page() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold">{data360.estoque_atual.fisico}</div>
-                  <div className="text-xs text-muted-foreground mt-1">{data360.produto.unidade}</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {data360.produto.unidade}
+                  </div>
                 </CardContent>
               </Card>
 
@@ -193,7 +212,9 @@ export default function Page() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{data360.estoque_atual.valor_total_formatted}</div>
+                  <div className="text-2xl font-bold">
+                    {data360.estoque_atual.valor_total_formatted}
+                  </div>
                   <div className="text-xs text-muted-foreground mt-1">Estoque valorizado</div>
                 </CardContent>
               </Card>
@@ -206,7 +227,9 @@ export default function Page() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold">{data360.metricas.cobertura_estoque_meses.toFixed(1)}</div>
+                  <div className="text-3xl font-bold">
+                    {data360.metricas.cobertura_estoque_meses.toFixed(1)}
+                  </div>
                   <div className="text-xs text-muted-foreground mt-1">
                     Meses (média {data360.metricas.media_consumo_mensal_formatted}/mês)
                   </div>
@@ -240,8 +263,12 @@ export default function Page() {
                           <TableCell className="font-medium">{hist.mes_ano}</TableCell>
                           <TableCell className="text-right font-mono">{hist.saldo_qtd}</TableCell>
                           <TableCell className="text-right">{hist.saldo_valor_formatted}</TableCell>
-                          <TableCell className="text-right text-green-600 font-semibold">{hist.entradas_qtd}</TableCell>
-                          <TableCell className="text-right text-red-600 font-semibold">{hist.consumo_qtd}</TableCell>
+                          <TableCell className="text-right text-green-600 font-semibold">
+                            {hist.entradas_qtd}
+                          </TableCell>
+                          <TableCell className="text-right text-red-600 font-semibold">
+                            {hist.consumo_qtd}
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -267,7 +294,9 @@ export default function Page() {
                         <div key={ped.NUNOTA} className="border-b pb-2">
                           <div className="flex justify-between items-start">
                             <div className="text-sm font-medium">#{ped.NUNOTA}</div>
-                            <Badge variant="default" className="text-xs">{ped.qtd_pendente}</Badge>
+                            <Badge variant="default" className="text-xs">
+                              {ped.qtd_pendente}
+                            </Badge>
                           </div>
                           <div className="text-xs text-muted-foreground">{ped.nome_parceiro}</div>
                           <div className="text-xs text-muted-foreground">
@@ -297,7 +326,9 @@ export default function Page() {
                         <div key={ped.NUNOTA} className="border-b pb-2">
                           <div className="flex justify-between items-start">
                             <div className="text-sm font-medium">#{ped.NUNOTA}</div>
-                            <Badge variant="destructive" className="text-xs">{ped.qtd_pendente}</Badge>
+                            <Badge variant="destructive" className="text-xs">
+                              {ped.qtd_pendente}
+                            </Badge>
                           </div>
                           <div className="text-xs text-muted-foreground">{ped.nome_parceiro}</div>
                           <div className="text-xs text-muted-foreground">
@@ -327,7 +358,9 @@ export default function Page() {
                         <div key={ped.NUNOTA} className="border-b pb-2">
                           <div className="flex justify-between items-start">
                             <div className="text-sm font-medium">#{ped.NUNOTA}</div>
-                            <Badge variant="secondary" className="text-xs">{ped.qtd_pendente}</Badge>
+                            <Badge variant="secondary" className="text-xs">
+                              {ped.qtd_pendente}
+                            </Badge>
                           </div>
                           <div className="text-xs text-muted-foreground">{ped.nome_parceiro}</div>
                           <div className="text-xs text-muted-foreground">
@@ -337,7 +370,9 @@ export default function Page() {
                       ))}
                     </div>
                   ) : (
-                    <div className="text-sm text-muted-foreground">Nenhuma transferência pendente</div>
+                    <div className="text-sm text-muted-foreground">
+                      Nenhuma transferência pendente
+                    </div>
                   )}
                 </CardContent>
               </Card>
@@ -358,22 +393,30 @@ export default function Page() {
                     <div className="space-y-3">
                       <div>
                         <div className="text-xs text-muted-foreground">Fornecedor</div>
-                        <div className="text-sm font-medium">{data360.ultima_compra.nome_fornecedor}</div>
+                        <div className="text-sm font-medium">
+                          {data360.ultima_compra.nome_fornecedor}
+                        </div>
                       </div>
                       <div className="grid grid-cols-3 gap-4">
                         <div>
                           <div className="text-xs text-muted-foreground">Data</div>
                           <div className="text-sm font-medium">
-                            {format(new Date(data360.ultima_compra.data_entrada), 'dd/MM/yyyy', { locale: ptBR })}
+                            {format(new Date(data360.ultima_compra.data_entrada), 'dd/MM/yyyy', {
+                              locale: ptBR,
+                            })}
                           </div>
                         </div>
                         <div>
                           <div className="text-xs text-muted-foreground">Quantidade</div>
-                          <div className="text-sm font-medium">{data360.ultima_compra.quantidade}</div>
+                          <div className="text-sm font-medium">
+                            {data360.ultima_compra.quantidade}
+                          </div>
                         </div>
                         <div>
                           <div className="text-xs text-muted-foreground">Valor Unit.</div>
-                          <div className="text-sm font-medium">{data360.ultima_compra.valor_unitario_formatted}</div>
+                          <div className="text-sm font-medium">
+                            {data360.ultima_compra.valor_unitario_formatted}
+                          </div>
                         </div>
                       </div>
                       <div className="text-xs text-muted-foreground">
@@ -398,12 +441,19 @@ export default function Page() {
                   {data360.maiores_consumidores.length > 0 ? (
                     <div className="space-y-2">
                       {data360.maiores_consumidores.map((cons, index) => (
-                        <div key={index} className="flex justify-between items-center border-b pb-2">
+                        <div
+                          key={index}
+                          className="flex justify-between items-center border-b pb-2"
+                        >
                           <div className="flex-1">
                             <div className="text-sm font-medium">{cons.nome_parceiro}</div>
-                            <div className="text-xs text-muted-foreground">{cons.total_valor_formatted}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {cons.total_valor_formatted}
+                            </div>
                           </div>
-                          <Badge variant="outline" className="text-xs">{cons.total_qtd}</Badge>
+                          <Badge variant="outline" className="text-xs">
+                            {cons.total_qtd}
+                          </Badge>
                         </div>
                       ))}
                     </div>

@@ -32,12 +32,7 @@ import {
 } from 'lucide-react';
 import * as React from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type DateRange = {
   from: Date | undefined;
@@ -48,35 +43,41 @@ export default function Page() {
   const { codprod } = useParams<{ codprod: string }>();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   const defaultDataFim = format(new Date(), 'yyyy-MM-dd');
   const defaultDataInicio = format(subMonths(new Date(), 3), 'yyyy-MM-dd');
-  
+
   const dataInicio = searchParams.get('dataInicio') || defaultDataInicio;
   const dataFim = searchParams.get('dataFim') || defaultDataFim;
   const page = Number(searchParams.get('page')) || 1;
   const perPage = Number(searchParams.get('perPage')) || 50;
 
-  const updateSearchParams = React.useCallback((updates: Record<string, string | number | undefined | null>) => {
-    const newParams = new URLSearchParams(searchParams);
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === undefined || value === null || value === '') {
-        newParams.delete(key);
-      } else {
-        newParams.set(key, String(value));
-      }
-    });
-    setSearchParams(newParams);
-  }, [searchParams, setSearchParams]);
-
-  const { data: product, isLoading: isLoadingProduct, refetch: refetchProduct } = useProduct(Number(codprod));
-  const { data: consumoData, isLoading: isLoadingConsumo, refetch: refetchConsumo, error: consumoError } = useProductConsumoV2(
-    Number(codprod),
-    dataInicio,
-    dataFim,
-    page,
-    perPage
+  const updateSearchParams = React.useCallback(
+    (updates: Record<string, string | number | undefined | null>) => {
+      const newParams = new URLSearchParams(searchParams);
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value === undefined || value === null || value === '') {
+          newParams.delete(key);
+        } else {
+          newParams.set(key, String(value));
+        }
+      });
+      setSearchParams(newParams);
+    },
+    [searchParams, setSearchParams]
   );
+
+  const {
+    data: product,
+    isLoading: isLoadingProduct,
+    refetch: refetchProduct,
+  } = useProduct(Number(codprod));
+  const {
+    data: consumoData,
+    isLoading: isLoadingConsumo,
+    refetch: refetchConsumo,
+    error: consumoError,
+  } = useProductConsumoV2(Number(codprod), dataInicio, dataFim, page, perPage);
 
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const { printPDF } = usePrintPDF();
@@ -90,19 +91,25 @@ export default function Page() {
     }
   }, [refetchProduct, refetchConsumo]);
 
-  const handleDateRangeChange = React.useCallback((range: DateRange | undefined) => {
-    if (range?.from && range?.to) {
-      updateSearchParams({
-        dataInicio: format(range.from, 'yyyy-MM-dd'),
-        dataFim: format(range.to, 'yyyy-MM-dd'),
-        page: 1,
-      });
-    }
-  }, [updateSearchParams]);
+  const handleDateRangeChange = React.useCallback(
+    (range: DateRange | undefined) => {
+      if (range?.from && range?.to) {
+        updateSearchParams({
+          dataInicio: format(range.from, 'yyyy-MM-dd'),
+          dataFim: format(range.to, 'yyyy-MM-dd'),
+          page: 1,
+        });
+      }
+    },
+    [updateSearchParams]
+  );
 
-  const handlePageChange = React.useCallback((newPage: number) => {
-    updateSearchParams({ page: newPage });
-  }, [updateSearchParams]);
+  const handlePageChange = React.useCallback(
+    (newPage: number) => {
+      updateSearchParams({ page: newPage });
+    },
+    [updateSearchParams]
+  );
 
   const dateRange: DateRange | undefined = React.useMemo(() => {
     try {
@@ -154,25 +161,32 @@ export default function Page() {
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate('/produtos')}
-                >
+                <Button variant="ghost" size="sm" onClick={() => navigate('/produtos')}>
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Voltar
                 </Button>
                 <div className="border-l pl-4">
                   <div className="flex items-center gap-2">
-                    <h1 className="text-lg font-bold">{consumoData?.produto.descrprod || product.descrprod}</h1>
-                    <Badge variant="secondary" className="text-xs">V2 Detalhado</Badge>
+                    <h1 className="text-lg font-bold">
+                      {consumoData?.produto.descrprod || product.descrprod}
+                    </h1>
+                    <Badge variant="secondary" className="text-xs">
+                      V2 Detalhado
+                    </Badge>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="outline" className="text-xs">#{consumoData?.produto.codprod || product.codprod}</Badge>
+                    <Badge variant="outline" className="text-xs">
+                      #{consumoData?.produto.codprod || product.codprod}
+                    </Badge>
                     {consumoData?.produto.complemento && (
-                      <Badge variant="secondary" className="text-xs">{consumoData.produto.complemento}</Badge>
+                      <Badge variant="secondary" className="text-xs">
+                        {consumoData.produto.complemento}
+                      </Badge>
                     )}
-                    <Badge variant={consumoData?.produto.ativo === 'S' ? 'default' : 'secondary'} className="text-xs">
+                    <Badge
+                      variant={consumoData?.produto.ativo === 'S' ? 'default' : 'secondary'}
+                      className="text-xs"
+                    >
                       {consumoData?.produto.ativo === 'S' ? 'Ativo' : 'Inativo'}
                     </Badge>
                   </div>
@@ -180,10 +194,7 @@ export default function Page() {
               </div>
 
               <div className="flex items-center gap-2">
-                <DateRangePicker
-                  date={dateRange}
-                  onDateChange={handleDateRangeChange}
-                />
+                <DateRangePicker date={dateRange} onDateChange={handleDateRangeChange} />
                 <Button
                   variant="outline"
                   size="sm"
@@ -213,12 +224,16 @@ export default function Page() {
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Saldo Anterior</div>
                   <div className="text-2xl font-bold">{consumoData.saldoAnterior.saldoQtd}</div>
-                  <div className="text-xs text-muted-foreground">{consumoData.saldoAnterior.saldoValorFormatted}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {consumoData.saldoAnterior.saldoValorFormatted}
+                  </div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Saldo Atual</div>
                   <div className="text-2xl font-bold">{consumoData.saldoAtual.saldoQtdFinal}</div>
-                  <div className="text-xs text-muted-foreground">{consumoData.saldoAtual.saldoValorFinalFormatted}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {consumoData.saldoAtual.saldoValorFinalFormatted}
+                  </div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
@@ -229,7 +244,9 @@ export default function Page() {
                       <TrendingDown className="h-3 w-3 text-red-600" />
                     )}
                   </div>
-                  <div className={`text-2xl font-bold ${consumoData.movimentoLiquido > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <div
+                    className={`text-2xl font-bold ${consumoData.movimentoLiquido > 0 ? 'text-green-600' : 'text-red-600'}`}
+                  >
                     {consumoData.movimentoLiquido > 0 && '+'}
                     {consumoData.movimentoLiquido}
                   </div>
@@ -238,12 +255,18 @@ export default function Page() {
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Movimentações</div>
                   <div className="text-2xl font-bold">{consumoData.totalMovimentacoes}</div>
-                  <div className="text-xs text-muted-foreground">{consumoData.periodo.totalDias} dias</div>
+                  <div className="text-xs text-muted-foreground">
+                    {consumoData.periodo.totalDias} dias
+                  </div>
                 </div>
                 <div>
                   <div className="text-xs text-muted-foreground mb-1">Média/Dia</div>
-                  <div className="text-2xl font-bold">{consumoData.metrics.mediaConsumoDia.toFixed(1)}</div>
-                  <div className="text-xs text-muted-foreground">Dias cobertura: {consumoData.metrics.diasEstoqueDisponivel.toFixed(0)}</div>
+                  <div className="text-2xl font-bold">
+                    {consumoData.metrics.mediaConsumoDia.toFixed(1)}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Dias cobertura: {consumoData.metrics.diasEstoqueDisponivel.toFixed(0)}
+                  </div>
                 </div>
               </div>
             )}
@@ -251,29 +274,33 @@ export default function Page() {
         </Card>
 
         {/* Localizações de Estoque */}
-        {consumoData && consumoData.saldoAtual.localizacoes && consumoData.saldoAtual.localizacoes.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm flex items-center gap-2">
-                <MapPin className="h-4 w-4" />
-                Localizações de Estoque
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {consumoData.saldoAtual.localizacoes.map((loc) => (
-                  <div key={loc.codlocal} className="border rounded-lg p-3">
-                    <div className="font-medium text-sm">{loc.descricao}</div>
-                    <div className="text-2xl font-bold mt-1">{loc.estoque}</div>
-                    {loc.controle && (
-                      <Badge variant="outline" className="text-xs mt-2">{loc.controle}</Badge>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {consumoData &&
+          consumoData.saldoAtual.localizacoes &&
+          consumoData.saldoAtual.localizacoes.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  Localizações de Estoque
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {consumoData.saldoAtual.localizacoes.map((loc) => (
+                    <div key={loc.codlocal} className="border rounded-lg p-3">
+                      <div className="font-medium text-sm">{loc.descricao}</div>
+                      <div className="text-2xl font-bold mt-1">{loc.estoque}</div>
+                      {loc.controle && (
+                        <Badge variant="outline" className="text-xs mt-2">
+                          {loc.controle}
+                        </Badge>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
         {/* Tabela de movimentações */}
         <Card>
@@ -327,24 +354,36 @@ export default function Page() {
                           </div>
                         </TableCell>
                         <TableCell className="font-mono text-sm">#{mov.nunota}</TableCell>
-                        <TableCell className="max-w-[150px] truncate text-sm">{mov.nomeParceiro}</TableCell>
+                        <TableCell className="max-w-[150px] truncate text-sm">
+                          {mov.nomeParceiro}
+                        </TableCell>
                         <TableCell>
                           {mov.controle ? (
-                            <Badge variant="default" className="text-xs font-mono">{mov.controle}</Badge>
+                            <Badge variant="default" className="text-xs font-mono">
+                              {mov.controle}
+                            </Badge>
                           ) : (
                             <span className="text-muted-foreground text-xs">-</span>
                           )}
                         </TableCell>
                         <TableCell>
-                          {(mov.observacao || mov.observacaoItem) ? (
+                          {mov.observacao || mov.observacaoItem ? (
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger>
                                   <Info className="h-4 w-4 text-muted-foreground" />
                                 </TooltipTrigger>
                                 <TooltipContent className="max-w-xs">
-                                  {mov.observacao && <p><strong>Nota:</strong> {mov.observacao}</p>}
-                                  {mov.observacaoItem && <p><strong>Item:</strong> {mov.observacaoItem}</p>}
+                                  {mov.observacao && (
+                                    <p>
+                                      <strong>Nota:</strong> {mov.observacao}
+                                    </p>
+                                  )}
+                                  {mov.observacaoItem && (
+                                    <p>
+                                      <strong>Item:</strong> {mov.observacaoItem}
+                                    </p>
+                                  )}
                                 </TooltipContent>
                               </Tooltip>
                             </TooltipProvider>
@@ -353,33 +392,57 @@ export default function Page() {
                           )}
                         </TableCell>
                         <TableCell className="text-right font-mono">
-                          <span className={mov.quantidadeMov > 0 ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
-                            {mov.quantidadeMov > 0 && '+'}{mov.quantidadeMov}
+                          <span
+                            className={
+                              mov.quantidadeMov > 0
+                                ? 'text-green-600 font-semibold'
+                                : 'text-red-600 font-semibold'
+                            }
+                          >
+                            {mov.quantidadeMov > 0 && '+'}
+                            {mov.quantidadeMov}
                           </span>
                         </TableCell>
                         <TableCell className="text-right font-mono text-sm">
-                          {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(mov.valorUnitario)}
+                          {new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL',
+                          }).format(mov.valorUnitario)}
                         </TableCell>
-                        <TableCell className="text-right font-mono font-medium">{mov.saldoQtdFinal}</TableCell>
+                        <TableCell className="text-right font-mono font-medium">
+                          {mov.saldoQtdFinal}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
-                
+
                 {/* Paginação */}
                 {consumoData.totalMovimentacoes > perPage && (
                   <div className="flex items-center justify-between px-2 py-4 border-t">
                     <div className="text-sm text-muted-foreground">
-                      Mostrando {((page - 1) * perPage) + 1} a {Math.min(page * perPage, consumoData.totalMovimentacoes)} de {consumoData.totalMovimentacoes}
+                      Mostrando {(page - 1) * perPage + 1} a{' '}
+                      {Math.min(page * perPage, consumoData.totalMovimentacoes)} de{' '}
+                      {consumoData.totalMovimentacoes}
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm" onClick={() => handlePageChange(Math.max(1, page - 1))} disabled={page === 1}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(Math.max(1, page - 1))}
+                        disabled={page === 1}
+                      >
                         Anterior
                       </Button>
                       <div className="text-sm font-medium">
                         Página {page} de {Math.ceil(consumoData.totalMovimentacoes / perPage)}
                       </div>
-                      <Button variant="outline" size="sm" onClick={() => handlePageChange(page + 1)} disabled={page >= Math.ceil(consumoData.totalMovimentacoes / perPage)}>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(page + 1)}
+                        disabled={page >= Math.ceil(consumoData.totalMovimentacoes / perPage)}
+                      >
                         Próxima
                       </Button>
                     </div>
@@ -390,7 +453,10 @@ export default function Page() {
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Erro ao carregar: {typeof consumoError === 'object' && consumoError && 'message' in consumoError ? (consumoError as { message?: string }).message : 'Erro desconhecido'}
+                  Erro ao carregar:{' '}
+                  {typeof consumoError === 'object' && consumoError && 'message' in consumoError
+                    ? (consumoError as { message?: string }).message
+                    : 'Erro desconhecido'}
                 </AlertDescription>
                 <Button variant="outline" size="sm" className="mt-2" onClick={handleRefresh}>
                   Tentar novamente

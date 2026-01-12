@@ -10,9 +10,10 @@ npm install react-to-print
 
 ✅ Componente reutilizável `PrintableReport` criado
 ✅ Botão "Exportar PDF" adicionado em:
-  - V1: /produtos/:codprod/consumo
-  - V2: /produtos/:codprod/consumo-v2
-  - V3: /produtos/:codprod/consumo-v3
+
+- V1: /produtos/:codprod/consumo
+- V2: /produtos/:codprod/consumo-v2
+- V3: /produtos/:codprod/consumo-v3
 
 ## Como Funciona
 
@@ -24,6 +25,7 @@ npm install react-to-print
 ## Alternativas
 
 Se `react-to-print` não atender, outras opções:
+
 - **jsPDF** + **html2canvas**: Mais controle sobre o PDF
 - **pdfmake**: Construir PDF do zero com API programática
 - **@react-pdf/renderer**: Componentes React para PDF

@@ -14,17 +14,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export function ProdutosPageContainer() {
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   // ===== LER ESTADO DA URL =====
   const activeTab = (searchParams.get('aba') || 'com-estoque') as 'com-estoque' | 'sem-estoque';
   const page = Number(searchParams.get('page')) || 1;
   const pageSize = Number(searchParams.get('perPage')) || 20;
-  
+
   const filters = {
     search: searchParams.get('search') || '',
     status: (searchParams.get('status') || 'active') as 'all' | 'active' | 'inactive',
     codlocal: searchParams.get('codlocal') ? Number(searchParams.get('codlocal')) : undefined,
-    codgrupoprod: searchParams.get('codgrupoprod') ? Number(searchParams.get('codgrupoprod')) : undefined,
+    codgrupoprod: searchParams.get('codgrupoprod')
+      ? Number(searchParams.get('codgrupoprod'))
+      : undefined,
     marca: searchParams.get('marca') || '',
     comControle: searchParams.get('comControle') === 'true',
     semControle: searchParams.get('semControle') === 'true',
@@ -35,23 +37,30 @@ export function ProdutosPageContainer() {
   };
 
   // ===== HELPERS PARA ATUALIZAR URL =====
-  const updateSearchParams = React.useCallback((updates: Record<string, any>) => {
-    const newParams = new URLSearchParams(searchParams);
-    
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === undefined || value === null || value === '' || value === false) {
-        newParams.delete(key);
-      } else {
-        newParams.set(key, String(value));
-      }
-    });
-    
-    setSearchParams(newParams);
-  }, [searchParams, setSearchParams]);
+  const updateSearchParams = React.useCallback(
+    (updates: Record<string, any>) => {
+      const newParams = new URLSearchParams(searchParams);
+
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value === undefined || value === null || value === '' || value === false) {
+          newParams.delete(key);
+        } else {
+          newParams.set(key, String(value));
+        }
+      });
+
+      setSearchParams(newParams);
+    },
+    [searchParams, setSearchParams]
+  );
 
   // Query ÚNICA que busca todos produtos e filtra no cliente
   // IMPORTANTE: Ambos os hooks devem ser chamados sempre (regras do React)
-  const { data: productsData, isLoading: isLoadingProducts, error: productsError } = useQuery({
+  const {
+    data: productsData,
+    isLoading: isLoadingProducts,
+    error: productsError,
+  } = useQuery({
     queryKey: ['products', 'ultra-search', activeTab, filters, page, pageSize],
     queryFn: async () => {
       const response = await apiClient.get('/tgfpro/ultra-search', {
@@ -66,7 +75,7 @@ export function ProdutosPageContainer() {
           ...(filters.comControle && { comControle: true }),
           ...(filters.semControle && { semControle: true }),
           includeEstoque: 'S',
-        }
+        },
       });
 
       // Filtrar baseado na aba ativa
@@ -93,40 +102,54 @@ export function ProdutosPageContainer() {
   const { data: groups = [], isLoading: isLoadingGroups } = useGroups();
 
   // ===== HANDLERS QUE ATUALIZAM URL =====
-  const handleFilterChange = React.useCallback((newFilters: Partial<typeof filters>) => {
-    updateSearchParams({
-      ...newFilters,
-      page: 1, // Reseta página ao mudar filtro
-    });
-  }, [updateSearchParams]);
+  const handleFilterChange = React.useCallback(
+    (newFilters: Partial<typeof filters>) => {
+      updateSearchParams({
+        ...newFilters,
+        page: 1, // Reseta página ao mudar filtro
+      });
+    },
+    [updateSearchParams]
+  );
 
   const handleClearFilters = React.useCallback(() => {
     // Manter apenas aba e status padrão
-    setSearchParams(new URLSearchParams({
-      aba: activeTab,
-      status: 'active',
-      page: '1',
-      perPage: String(pageSize),
-    }));
+    setSearchParams(
+      new URLSearchParams({
+        aba: activeTab,
+        status: 'active',
+        page: '1',
+        perPage: String(pageSize),
+      })
+    );
   }, [activeTab, pageSize, setSearchParams]);
 
-  const handlePageChange = React.useCallback((newPage: number) => {
-    updateSearchParams({ page: newPage });
-  }, [updateSearchParams]);
+  const handlePageChange = React.useCallback(
+    (newPage: number) => {
+      updateSearchParams({ page: newPage });
+    },
+    [updateSearchParams]
+  );
 
-  const handlePageSizeChange = React.useCallback((newPageSize: number) => {
-    updateSearchParams({ 
-      perPage: newPageSize,
-      page: 1, // Reseta para página 1
-    });
-  }, [updateSearchParams]);
-  
-  const handleTabChange = React.useCallback((newTab: string) => {
-    updateSearchParams({ 
-      aba: newTab,
-      page: 1, // Reseta página ao trocar aba
-    });
-  }, [updateSearchParams]);
+  const handlePageSizeChange = React.useCallback(
+    (newPageSize: number) => {
+      updateSearchParams({
+        perPage: newPageSize,
+        page: 1, // Reseta para página 1
+      });
+    },
+    [updateSearchParams]
+  );
+
+  const handleTabChange = React.useCallback(
+    (newTab: string) => {
+      updateSearchParams({
+        aba: newTab,
+        page: 1, // Reseta página ao trocar aba
+      });
+    },
+    [updateSearchParams]
+  );
 
   const handleViewHistory = React.useCallback((codprod: number) => {
     // Navegar para tela de consumo
@@ -149,7 +172,7 @@ export function ProdutosPageContainer() {
       aba: activeTab,
       page,
       pageSize,
-      filters
+      filters,
     });
   }, [activeTab, page, pageSize, filters]);
 

@@ -10,13 +10,16 @@
 Sistema full-stack para gestão de produtos do ERP Sankhya, com dashboard moderno em React e API robusta em NestJS.
 
 ### Objetivo Principal
+
 Criar interface moderna e eficiente para consulta e visualização de produtos (TGFPRO) do sistema Sankhya, com foco em:
+
 - ✅ Performance (carregamento < 2s)
 - ✅ UX moderna (mobile-first, dark mode)
 - ✅ Dados em tempo real
 - ✅ Controle de estoque por local
 
 ### O que o sistema faz?
+
 - 📦 Lista produtos com paginação e filtros avançados
 - 🔍 Busca inteligente multi-campo
 - 📊 Dashboard com métricas e gráficos
@@ -25,6 +28,7 @@ Criar interface moderna e eficiente para consulta e visualização de produtos (
 - 🔐 Autenticação JWT segura
 
 ### O que o sistema NÃO faz?
+
 - ❌ Não edita produtos (somente leitura)
 - ❌ Não cria produtos novos
 - ❌ Não exclui produtos
@@ -157,8 +161,10 @@ projeto-produtos-sankhya/
 ## 🗄️ Principais Tabelas do Sankhya
 
 ### TGFPRO - Produtos
+
 **Descrição:** Tabela principal de produtos  
 **Campos principais:**
+
 - `CODPROD` (PK) - Código do produto
 - `DESCRPROD` - Descrição
 - `REFERENCIA` - Referência/código interno
@@ -170,8 +176,10 @@ projeto-produtos-sankhya/
 - `MARCA` - Marca
 
 ### TGFEST - Estoque
+
 **Descrição:** Controla estoque por local  
 **Campos principais:**
+
 - `CODPROD` (FK) - Produto
 - `CODLOCAL` (FK) - Local de estoque
 - `ESTOQUE` - Quantidade em estoque
@@ -181,15 +189,19 @@ projeto-produtos-sankhya/
 - `CODPARC` - Parceiro (0 = estoque próprio)
 
 ### TGFLOC - Locais de Estoque
+
 **Descrição:** Depósitos/locais onde produtos ficam armazenados  
 **Campos principais:**
+
 - `CODLOCAL` (PK) - Código do local
 - `DESCRLOCAL` - Nome do local
 - `ATIVO` - Status (S/N)
 
 ### TGFGRU - Grupos de Produtos
+
 **Descrição:** Categorias/grupos de produtos  
 **Campos principais:**
+
 - `CODGRUPOPROD` (PK) - Código do grupo
 - `DESCRGRUPOPROD` - Descrição do grupo
 - `ATIVO` - Status (S/N)
@@ -199,34 +211,37 @@ projeto-produtos-sankhya/
 ## 🚀 Stack Tecnológico
 
 ### Backend
-| Tecnologia | Versão | Uso |
-|------------|--------|-----|
-| NestJS | 10.x | Framework base |
-| TypeScript | 5.x | Linguagem |
-| Axios | 1.x | HTTP client para Sankhya |
-| JWT | - | Autenticação |
-| Swagger | - | Documentação API |
-| RxJS | 7.x | Programação reativa |
+
+| Tecnologia | Versão | Uso                      |
+| ---------- | ------ | ------------------------ |
+| NestJS     | 10.x   | Framework base           |
+| TypeScript | 5.x    | Linguagem                |
+| Axios      | 1.x    | HTTP client para Sankhya |
+| JWT        | -      | Autenticação             |
+| Swagger    | -      | Documentação API         |
+| RxJS       | 7.x    | Programação reativa      |
 
 ### Frontend
-| Tecnologia | Versão | Uso |
-|------------|--------|-----|
-| React | 19.2.3 | Framework UI |
-| Vite | 7.3.0 | Build tool |
-| TypeScript | 5.9.3 | Linguagem |
-| Tailwind CSS | 4.1.18 | Estilização |
-| shadcn/ui | latest | Componentes |
-| React Router | 7.11.0 | Roteamento |
-| Zustand | 5.0.9 | Estado global |
-| React Query | - | Cache e queries |
-| Recharts | 3.6.0 | Gráficos |
-| Axios | latest | HTTP client |
+
+| Tecnologia   | Versão | Uso             |
+| ------------ | ------ | --------------- |
+| React        | 19.2.3 | Framework UI    |
+| Vite         | 7.3.0  | Build tool      |
+| TypeScript   | 5.9.3  | Linguagem       |
+| Tailwind CSS | 4.1.18 | Estilização     |
+| shadcn/ui    | latest | Componentes     |
+| React Router | 7.11.0 | Roteamento      |
+| Zustand      | 5.0.9  | Estado global   |
+| React Query  | -      | Cache e queries |
+| Recharts     | 3.6.0  | Gráficos        |
+| Axios        | latest | HTTP client     |
 
 ---
 
 ## 📡 API Endpoints (Backend)
 
 ### Autenticação
+
 ```
 POST /auth/login
 Body: { username, password }
@@ -240,6 +255,7 @@ Response: { id, username, nome }
 ### Produtos (TGFPRO)
 
 #### 1. Listar Produtos
+
 ```
 GET /tgfpro?page=1&perPage=10&search=parafuso&ativo=S
 Query params:
@@ -263,6 +279,7 @@ Response: {
 ```
 
 #### 2. Buscar Produto por ID
+
 ```
 GET /tgfpro/:codprod
 
@@ -270,6 +287,7 @@ Response: Product
 ```
 
 #### 3. Produtos com Estoque
+
 ```
 GET /tgfpro/with-stock/all?page=1&perPage=10
 
@@ -280,6 +298,7 @@ Response: {
 ```
 
 #### 4. Busca Avançada
+
 ```
 GET /tgfpro/search/:termo?limit=50
 
@@ -289,6 +308,7 @@ Response: {
 ```
 
 #### 5. Ultra Search (Filtros Completos)
+
 ```
 GET /tgfpro/ultra-search?search=...&marca=...&codgrupoprod=...
 
@@ -296,6 +316,7 @@ Response: PaginatedResult<Product>
 ```
 
 #### 6. Consumo por Período
+
 ```
 GET /tgfpro/consumo-periodo/:codprod?dataInicio=2025-01-01&dataFim=2025-12-31
 
@@ -310,6 +331,7 @@ Response: {
 ### Locais (TGFLOC)
 
 #### 1. Listar Locais
+
 ```
 GET /tgfloc
 
@@ -317,6 +339,7 @@ Response: Tgfloc[]
 ```
 
 #### 2. Buscar Local por ID
+
 ```
 GET /tgfloc/:codlocal
 
@@ -324,6 +347,7 @@ Response: Tgfloc
 ```
 
 #### 3. Locais com Estoque de Produto
+
 ```
 GET /tgfloc/with-stock/:codprod
 
@@ -331,6 +355,7 @@ Response: LocalEstoque[] (locais que tem o produto)
 ```
 
 #### 4. Locais com Contagem de Produtos
+
 ```
 GET /tgfloc/with-product-count
 
@@ -345,6 +370,7 @@ Response: {
 ```
 
 #### 5. Estatísticas de Local
+
 ```
 GET /tgfloc/:codlocal/statistics
 
@@ -358,6 +384,7 @@ Response: {
 ```
 
 ### Grupos (TGFGRU)
+
 ```
 GET /tgfgru
 GET /tgfgru/:codgrupoprod
@@ -370,39 +397,48 @@ GET /tgfgru/:codgrupoprod
 ### Páginas Principais
 
 #### 1. `/bem-vindo` - Página Inicial
+
 - Tela de boas-vindas
 - Links rápidos para seções
 
 #### 2. `/dashboard` - Dashboard de Métricas
+
 **Componentes:**
+
 - `DashboardCards` - Cards com métricas (total produtos, ativos, etc)
 - `CategoryDistributionChart` - Gráfico pizza de distribuição
 - `PriceTrendChart` - Gráfico de tendência de preços
 - `SectionCards` - Cards de produtos mais vendidos/recentes
 
 **Hooks usados:**
+
 - `useDashboardMetrics()` - Busca métricas do dashboard
 
 #### 3. `/produtos` - Listagem de Produtos
+
 **Componentes principais:**
+
 - `ProductList` - Tabela de produtos com paginação
 - `ProductFiltersSidebar` - Sidebar com filtros
 - `ProductDetailsModal` - Modal de detalhes
 - `ProductTableToolbar` - Toolbar de ações
 
 **Hooks usados:**
+
 - `useProducts()` - Busca produtos paginados
 - `useProductsWithCache()` - Produtos com cache React Query
 
 **Estado (Zustand):**
+
 - `useProductsStore` - Filtros, paginação, produtos selecionados
 
 ### Componentes de Produtos
 
 #### ProductList
+
 ```tsx
 // src/components/products/product-list.tsx
-<ProductList 
+<ProductList
   products={data}
   isLoading={isLoading}
   onProductClick={handleClick}
@@ -410,20 +446,23 @@ GET /tgfgru/:codgrupoprod
 ```
 
 **Props:**
+
 - `products`: Array de produtos
 - `isLoading`: Estado de carregamento
 - `onProductClick`: Callback ao clicar em produto
 
 **Features:**
+
 - Virtualização para listas grandes (react-virtual)
 - Ordenação por colunas
 - Seleção múltipla
 - Ações em lote
 
 #### ProductDetailsModal
+
 ```tsx
 // src/components/products/product-details-modal.tsx
-<ProductDetailsModal 
+<ProductDetailsModal
   product={selectedProduct}
   isOpen={isOpen}
   onClose={handleClose}
@@ -431,15 +470,17 @@ GET /tgfgru/:codgrupoprod
 ```
 
 **Abas:**
+
 1. Informações Gerais
 2. Estoque e Preços
 3. Histórico de Movimentações (planejado)
 4. Locais de Estoque (planejado)
 
 #### ProductFiltersSidebar
+
 ```tsx
 // src/components/products/product-filters-sidebar.tsx
-<ProductFiltersSidebar 
+<ProductFiltersSidebar
   filters={filters}
   onFilterChange={handleFilterChange}
   onClearFilters={handleClear}
@@ -447,6 +488,7 @@ GET /tgfgru/:codgrupoprod
 ```
 
 **Filtros disponíveis:**
+
 - Busca por nome/código
 - Status (Ativo/Inativo)
 - Grupo de produtos
@@ -459,6 +501,7 @@ GET /tgfgru/:codgrupoprod
 ## 🔧 Configuração do Ambiente
 
 ### Pré-requisitos
+
 - Node.js 18+
 - pnpm (recomendado) ou npm
 - Git
@@ -466,17 +509,20 @@ GET /tgfgru/:codgrupoprod
 ### Setup Backend
 
 1. **Navegar para pasta:**
+
 ```bash
 cd api-sankhya-center
 ```
 
 2. **Instalar dependências:**
+
 ```bash
 pnpm install
 ```
 
 3. **Configurar variáveis de ambiente:**
-Criar arquivo `.env`:
+   Criar arquivo `.env`:
+
 ```env
 PORT=3000
 JWT_SECRET=seu-jwt-secret-aqui
@@ -486,6 +532,7 @@ SANKHYA_PASSWORD=guest123
 ```
 
 4. **Iniciar desenvolvimento:**
+
 ```bash
 pnpm run start:dev
 ```
@@ -496,23 +543,27 @@ Swagger em: `http://localhost:3000/api`
 ### Setup Frontend
 
 1. **Navegar para pasta:**
+
 ```bash
 cd sankhya-products-dashboard
 ```
 
 2. **Instalar dependências:**
+
 ```bash
 pnpm install
 ```
 
 3. **Configurar variáveis de ambiente:**
-Criar arquivo `.env.local`:
+   Criar arquivo `.env.local`:
+
 ```env
 VITE_API_URL=http://localhost:3000
 VITE_APP_NAME=Sankhya Center
 ```
 
 4. **Iniciar desenvolvimento:**
+
 ```bash
 pnpm dev
 ```
@@ -520,6 +571,7 @@ pnpm dev
 App estará em: `http://localhost:5173`
 
 ### Credenciais de Acesso
+
 - **Usuário:** CONVIDADO
 - **Senha:** guest123
 
@@ -528,6 +580,7 @@ App estará em: `http://localhost:5173`
 ## 🧪 Testes
 
 ### Backend
+
 ```bash
 cd api-sankhya-center
 
@@ -545,6 +598,7 @@ pnpm test:watch
 ```
 
 ### Frontend
+
 ```bash
 cd sankhya-products-dashboard
 
@@ -566,6 +620,7 @@ pnpm test:ui
 ## 📋 Roadmap e Status Atual
 
 ### ✅ Implementado (Backend)
+
 - [x] Autenticação JWT
 - [x] Módulo TGFPRO completo
 - [x] Módulo TGFLOC completo
@@ -576,6 +631,7 @@ pnpm test:ui
 - [x] Guards de autenticação
 
 ### ✅ Implementado (Frontend)
+
 - [x] Dashboard principal com métricas
 - [x] Listagem de produtos com paginação
 - [x] Filtros avançados (sidebar)
@@ -586,6 +642,7 @@ pnpm test:ui
 - [x] Layout responsivo
 
 ### 🔄 Em Progresso
+
 - [ ] **Backend:** Endpoint `/tgfpro/with-stock-locations` (produtos com array de locais)
 - [ ] **Backend:** Filtros `comControle`/`semControle` no ultraSearch
 - [ ] **Backend:** Filtro `codlocal` no TgfproFindAllDto
@@ -594,6 +651,7 @@ pnpm test:ui
 - [ ] **Frontend:** Aba de "Locais de Estoque" no modal de detalhes
 
 ### 📅 Planejado (Próximas Sprints)
+
 - [ ] Testes automatizados (70%+ coverage)
 - [ ] Exportação (CSV, Excel, PDF)
 - [ ] Visão de comparação de produtos
@@ -609,30 +667,38 @@ pnpm test:ui
 ## 🐛 Troubleshooting Comum
 
 ### Problema: API não conecta ao Sankhya
+
 **Sintoma:** Erros 500 ao buscar produtos  
 **Solução:**
+
 1. Verificar `.env` do backend
 2. Testar credenciais no Postman
 3. Verificar URL do Sankhya
 
 ### Problema: Token inválido no frontend
+
 **Sintoma:** Erro 401 ao fazer requests  
 **Solução:**
+
 1. Fazer logout e login novamente
 2. Limpar localStorage: `localStorage.clear()`
 3. Verificar se token está sendo enviado no header
 
 ### Problema: Produtos não carregam
+
 **Sintoma:** Lista vazia ou loading infinito  
 **Solução:**
+
 1. Abrir DevTools → Network
 2. Verificar se request `/tgfpro` retorna 200
 3. Verificar response body
 4. Limpar cache React Query
 
 ### Problema: Build frontend falha
+
 **Sintoma:** Erro ao rodar `pnpm build`  
 **Solução:**
+
 ```bash
 # Limpar node_modules e reinstalar
 rm -rf node_modules pnpm-lock.yaml
@@ -646,8 +712,10 @@ pnpm lint
 ```
 
 ### Problema: Porta 3000 em uso
+
 **Sintoma:** `Error: listen EADDRINUSE: address already in use :::3000`  
 **Solução:**
+
 ```bash
 # Linux/Mac
 lsof -ti:3000 | xargs kill -9
@@ -676,6 +744,7 @@ PORT=3001
    - Escolher task com status 🔄 A fazer
 
 2. **Criar branch:**
+
 ```bash
 git checkout -b feature/nome-da-feature
 # ou
@@ -688,6 +757,7 @@ git checkout -b fix/nome-do-fix
    - Documentar código
 
 4. **Testar:**
+
 ```bash
 # Backend
 cd api-sankhya-center
@@ -702,6 +772,7 @@ pnpm lint
 ```
 
 5. **Commit:**
+
 ```bash
 git add .
 git commit -m "feat: adiciona filtro por local de estoque"
@@ -710,6 +781,7 @@ git commit -m "fix: corrige bug na paginação"
 ```
 
 **Convenção de commits:**
+
 - `feat:` - Nova funcionalidade
 - `fix:` - Correção de bug
 - `docs:` - Documentação
@@ -719,14 +791,17 @@ git commit -m "fix: corrige bug na paginação"
 - `chore:` - Manutenção
 
 6. **Push e Pull Request:**
+
 ```bash
 git push origin feature/nome-da-feature
 ```
+
 Abrir PR no GitHub/GitLab
 
 ### Padrões de Código
 
 #### Backend (NestJS)
+
 ```typescript
 // Sempre usar tipos explícitos
 async findAll(dto: TgfproFindAllDto): Promise<PaginatedResult<Tgfpro>> {
@@ -743,6 +818,7 @@ this.logger.log('Buscando produtos...');
 ```
 
 #### Frontend (React)
+
 ```typescript
 // Componentes em PascalCase
 export function ProductList({ products, isLoading }: Props) {
@@ -756,16 +832,16 @@ export function useProducts() {
 
 // Props sempre tipadas
 interface ProductListProps {
-  products: Product[]
-  isLoading: boolean
-  onProductClick: (product: Product) => void
+  products: Product[];
+  isLoading: boolean;
+  onProductClick: (product: Product) => void;
 }
 
 // Usar hooks do React Query para dados
 const { data, isLoading } = useQuery({
   queryKey: ['products', filters],
-  queryFn: () => productService.getAll(filters)
-})
+  queryFn: () => productService.getAll(filters),
+});
 ```
 
 ---
@@ -773,12 +849,14 @@ const { data, isLoading } = useQuery({
 ## 📞 Contatos e Suporte
 
 ### Equipe
+
 - **Tech Lead:** [Nome]
 - **Backend:** [Nome]
 - **Frontend:** [Nome]
 - **QA:** [Nome]
 
 ### Canais
+
 - **Slack:** #projeto-sankhya
 - **Email:** team@empresa.com
 - **Reuniões:** Segundas 10h (Daily)
@@ -788,18 +866,21 @@ const { data, isLoading } = useQuery({
 ## 📊 Métricas do Projeto
 
 ### Backend
+
 - **Linhas de código:** ~15.000
 - **Endpoints:** 30+
 - **Módulos:** 8
 - **Testes:** 40% coverage (meta: 70%)
 
 ### Frontend
+
 - **Linhas de código:** ~12.000
 - **Componentes:** 50+
 - **Páginas:** 10
 - **Testes:** 40% coverage (meta: 70%)
 
 ### Performance
+
 - **API Response Time:** < 500ms (média)
 - **Frontend Load Time:** < 2s
 - **Bundle Size:** ~400KB (gzipped)
@@ -810,6 +891,7 @@ const { data, isLoading } = useQuery({
 ## 🎓 Recursos de Aprendizado
 
 ### Documentação Oficial
+
 - [NestJS Docs](https://docs.nestjs.com/)
 - [React Docs](https://react.dev/)
 - [Vite Guide](https://vitejs.dev/guide/)
@@ -817,6 +899,7 @@ const { data, isLoading } = useQuery({
 - [TanStack Query](https://tanstack.com/query/latest)
 
 ### Tutoriais Internos
+
 - [Como criar um novo endpoint](docs/new-endpoint.md) (TODO)
 - [Como adicionar um novo filtro](docs/new-filter.md) (TODO)
 - [Como criar um componente](docs/new-component.md) (TODO)

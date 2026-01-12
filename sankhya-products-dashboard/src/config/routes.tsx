@@ -14,10 +14,18 @@ const BemVindo = lazy(() => import(/* webpackChunkName: "dashboard" */ '@/app/be
 
 // Main application features
 const Produtos = lazy(() => import(/* webpackChunkName: "produtos" */ '@/app/produtos/page'));
-const ProdutoDetalhes = lazy(() => import(/* webpackChunkName: "produtos" */ '@/app/produtos/[codprod]/page'));
-const ProdutoConsumo = lazy(() => import(/* webpackChunkName: "produtos" */ '@/app/produtos/[codprod]/consumo/page'));
-const ProdutoConsumoV2 = lazy(() => import(/* webpackChunkName: "produtos" */ '@/app/produtos/[codprod]/consumo-v2/page'));
-const ProdutoConsumoV3 = lazy(() => import(/* webpackChunkName: "produtos" */ '@/app/produtos/[codprod]/consumo-v3/page'));
+const ProdutoDetalhes = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos/[codprod]/page')
+);
+const ProdutoConsumo = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos/[codprod]/consumo/page')
+);
+const ProdutoConsumoV2 = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos/[codprod]/consumo-v2/page')
+);
+const ProdutoConsumoV3 = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos/[codprod]/consumo-v3/page')
+);
 const Mail = lazy(() => import(/* webpackChunkName: "communication" */ '@/app/mail/page'));
 const Chat = lazy(() => import(/* webpackChunkName: "communication" */ '@/app/chat/page'));
 const Calendar = lazy(() => import(/* webpackChunkName: "communication" */ '@/app/calendar/page'));
