@@ -113,13 +113,10 @@ export function useAuthWithCache() {
         setLoading(true);
         setAuthError(null);
 
-        console.log('[useAuthWithCache] Calling loginMutation...');
         const response = await loginMutation.mutateAsync({
           credentials,
           rememberMe,
         });
-
-        console.log('[useAuthWithCache] Login mutation response:', response);
 
         if (response) {
           // Set tokens in store so queries can run
@@ -130,7 +127,6 @@ export function useAuthWithCache() {
 
         return null;
       } catch (error) {
-        console.error('[useAuthWithCache] Login mutation error:', error);
         const errorMessage = error instanceof Error ? error.message : 'Erro ao fazer login';
         setAuthError(errorMessage);
         return null;

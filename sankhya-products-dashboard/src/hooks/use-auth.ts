@@ -34,23 +34,18 @@ export function useAuth() {
   const login = useCallback(
     async (credentials: LoginRequest) => {
       try {
-        console.log('[useAuth] Attempting login...');
         const response = await loginWithCache(credentials, credentials.rememberMe);
-        console.log('[useAuth] Login response:', response);
 
         if (response && response.access_token) {
-          console.log('[useAuth] Login successful, navigating to /bem-vindo');
           toast.success('Bem-vindo!');
           navigate('/bem-vindo');
           return { success: true };
         }
 
         // If no response or no token, it's a failure
-        console.log('[useAuth] Login failed - no token in response');
         const errorMessage = error || 'Falha no login';
         return { success: false, error: errorMessage };
       } catch (err) {
-        console.error('[useAuth] Login error:', err);
         const errorMessage = err instanceof Error ? err.message : 'Erro ao fazer login';
         return { success: false, error: errorMessage };
       }

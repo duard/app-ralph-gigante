@@ -46,8 +46,17 @@ export function useProductsWithCache(params?: ProductSearchParams) {
     getTotalStockValue,
   } = useProductsStore();
 
-  // React Query hooks
-  const productsQuery = useProductsQuery(params);
+  // React Query hooks - merge passed params with correct structure
+  const queryParams: ProductSearchParams = {
+    ...params,
+    pagination: {
+      page: params?.page || 1,
+      pageSize: params?.pageSize || 10,
+    },
+  };
+  
+  console.log('[useProductsWithCache] Query params:', queryParams);
+  const productsQuery = useProductsQuery(queryParams);
   const createProductMutation = useCreateProductMutation();
   const updateProductMutation = useUpdateProductMutation();
   const deleteProductMutation = useDeleteProductMutation();

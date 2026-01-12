@@ -79,12 +79,15 @@ export const productService = {
 
     if (params?.sort && params.sort.length > 0) {
       queryParams.set('sortBy', params.sort[0].field);
+    }
+    
+    const url = `/tgfpro${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    console.log('[productService] Fetching products with URL:', url, 'params:', params);
       queryParams.set('sortOrder', params.sort[0].order);
     }
 
     const queryString = queryParams.toString();
     const url = `/tgfpro${queryString ? `?${queryString}` : ''}`;
-    console.log('[productService] Fetching products with URL:', url, 'params:', params);
 
     return sankhyaClient.get<PaginatedResponse<Product>>(url).then((response) => response.data);
   },

@@ -5,7 +5,15 @@
       "Bash(curl -X POST http://localhost:3000/auth/login -H \"Content-Type: application/json\" -d '{\"username\":\"CONVIDADO\",\"password\":\"guest123\"}' -v)",
       "Bash(curl -X GET http://localhost:3000/auth/me -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMxMSwidXNlcm5hbWUiOiJDT05WSURBRE8iLCJlbWFpbCI6IiIsImlhdCI6MTc2ODIxMDQ2MCwiZXhwIjoxNzY4MjE0MDYwfQ.E4q6SXWYjK-PbNFFVZi1PDNHF7cqeX1pt8LYK5_qOG0\" -v)",
       "Bash(curl -X GET http://localhost:3000/auth/me -v 2>&1 | grep -A 5 \"< HTTP\")",
-      "Edit(sankhya-products-dashboard/src/lib/react-query/**)"
+      "Edit(sankhya-products-dashboard/src/lib/react-query/**)",
+      "Write(**)",
+      "Edit(sankhya-products-dashboard/src/components/products/**)",
+      "Edit(sankhya-products-dashboard/src/**)",
+      "Bash(cd /home/carloshome/z-ralph-code/sankhya-products-dashboard && sed -n '75,95p' src/lib/api/product-service.ts)",
+      "Bash(cd /home/carloshome/z-ralph-code/sankhya-products-dashboard && sed -n '50,100p' src/lib/api/product-service.ts)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(cd /home/carloshome/z-ralph-code/sankhya-products-dashboard && sed -i '90d' src/lib/api/product-service.ts && sed -n '85,92p' src/lib/api/product-service.ts)"
     ]
   }
 }

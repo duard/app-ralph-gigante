@@ -21,6 +21,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeletons } from '@/components/ui/skeletons';
 
 import { useProductsWithCache } from '@/hooks/use-products-with-cache';
+import { useUrlPagination } from '@/hooks/use-url-pagination';
 import type { Product } from '@/stores/products-store';
 import {
   formatProductCode,
@@ -145,17 +146,24 @@ interface ProductListProps {
 }
 
 export function ProductList({ onAddProduct, onEditProduct }: ProductListProps) {
+  // URL-based pagination state
+  const urlPagination = useUrlPagination({
+    defaultPage: 1,
+    defaultPageSize: 10,
+  });
+
   const {
     filteredProducts,
     pagination,
-    goToPage,
-    changePageSize,
     isLoading,
     error,
     isRefetching,
     retry,
     searchProducts,
-  } = useProductsWithCache();
+  } = useProductsWithCache({
+    page: urlPagination.page,
+    pageSize: urlPagination.pageSize,
+  });
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -434,8 +442,8 @@ export function ProductList({ onAddProduct, onEditProduct }: ProductListProps) {
         <DataTablePagination
           table={table}
           pagination={pagination}
-          goToPage={goToPage}
-          changePageSize={changePageSize}
+          goToPage={urlPagination.goToPage}
+          changePageSize={urlPagination.changePageSize}
         />
 
         <Suspense fallback={<LazyProductLoadingFallback />}>

@@ -16,8 +16,8 @@ function App() {
   useEffect(() => {
     initGTM();
 
-    // Initialize route preloader for better performance
-    initializeRoutePreloader();
+    // TODO: Fix route preloader - currently causing 404 errors in development
+    // initializeRoutePreloader();
   }, []);
 
   return (
