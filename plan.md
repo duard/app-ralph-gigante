@@ -423,6 +423,11 @@ Add entries below this line:
 
 - **2025-01-11**: ✅ Implementada navegação lateral (sidebar) com menus expansíveis para Sankhya Center. Atualizado AppSidebar com branding específico Sankhya Center, reorganizada navegação em seções: Principal (Bem-Vindo, Dashboard), Produtos (Lista, Análise, Filtros Avançados, Exportação), Sistema (Relatórios, Usuários, Configurações) e Ajuda (Documentação, Planos, API). Traduzidos labels para português, adicionados ícones apropriados (Package, Building, etc.), configurados menus expansíveis para sub-itens, removida navegação genérica não relevante. Build e lint funcionando sem erros críticos.
 
+- **2025-01-11**: ✅ **CORREÇÃO CRÍTICA**: Resolvido problema de loop infinito de navegação que impedia o carregamento da aplicação
+  - **Causa**: Rota padrão "/" redirecionava para "/bem-vindo" (rota protegida), causando loop de autenticação
+  - **Solução**: Alterada rota padrão para "/dashboard" diretamente
+  - **Resultado**: Aplicação carrega corretamente sem erros de navegação
+
 - **2025-01-11**: ✅ Implementada exportação PDF usando jsPDF e jspdf-autotable. Adicionada funcionalidade completa de exportação PDF com formatação profissional de tabela, incluindo cabeçalho, data de geração, total de produtos, e rodapé com numeração de páginas. Implementada função `downloadPDF` com layout em landscape para melhor legibilidade, formatação de moeda brasileira, e tratamento de erros. Pacotes jspdf e jspdf-autotable instalados. Botão de exportação PDF adicionado à toolbar da tabela de produtos. Build e typecheck funcionando sem erros.
 
 - **2025-01-11**: ✅ Implementada exportação Excel usando xlsx package. Adicionada funcionalidade completa de exportação Excel com botão dedicado na toolbar da tabela de produtos. Implementada função `downloadExcel` com formatação adequada de colunas, larguras otimizadas para legibilidade, e tratamento de erros. Pacote xlsx adicionado como dependência. Build e lint funcionando sem erros críticos.
