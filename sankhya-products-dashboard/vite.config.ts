@@ -188,62 +188,29 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 1000,
       reportCompressedSize: false,
     },
-    chunkFileNames: (chunkInfo) => {
-      // Route chunks get more descriptive names
-      if (
-        chunkInfo.name === 'dashboard' ||
-        chunkInfo.name === 'produtos' ||
-        chunkInfo.name === 'auth' ||
-        chunkInfo.name === 'settings' ||
-        chunkInfo.name === 'errors' ||
-        chunkInfo.name === 'communication' ||
-        chunkInfo.name === 'tasks' ||
-        chunkInfo.name === 'content' ||
-        chunkInfo.name === 'routes'
-      ) {
-        return 'assets/routes/[name]-[hash].js';
-      }
-      // Vendor chunks
-      return 'assets/js/[name]-[hash].js';
+    optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        'react-router-dom',
+        'zustand',
+        'date-fns',
+        '@radix-ui/react-dialog',
+        '@radix-ui/react-dropdown-menu',
+        '@radix-ui/react-select',
+        '@radix-ui/react-tabs',
+        '@radix-ui/react-tooltip',
+        '@tanstack/react-table',
+        '@tanstack/react-virtual',
+        'framer-motion',
+        'recharts',
+        'lucide-react',
+        'axios',
+        'react-hook-form',
+        'zod',
+      ],
+      exclude: ['@tanstack/react-query-devtools'],
     },
-    entryFileNames: 'assets/js/[name]-[hash].js',
-    assetFileNames: (assetInfo) => {
-      const name = assetInfo.name ?? '';
-      const ext = name.split('.').pop() ?? '';
-      if (ext === 'css') return 'assets/css/[name]-[hash][extname]';
-      if (['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'].includes(ext)) {
-        return 'assets/images/[name]-[hash][extname]';
-      }
-      return 'assets/[ext]/[name]-[hash][extname]';
-    },
-  },
-      },
-  chunkSizeWarningLimit: 1000,
-    },
-  optimizeDeps: {
-  include: [
-    'react',
-    'react-dom',
-    'react-router-dom',
-    'zustand',
-    'date-fns',
-    '@radix-ui/react-dialog',
-    '@radix-ui/react-dropdown-menu',
-    '@radix-ui/react-select',
-    '@radix-ui/react-tabs',
-    '@radix-ui/react-tooltip',
-    '@tanstack/react-table',
-    '@tanstack/react-virtual',
-    'framer-motion',
-    'recharts',
-    'lucide-react',
-    'axios',
-    'react-hook-form',
-    'zod',
-  ],
-  exclude: ['@tanstack/react-query-devtools'],
-  include: ['react', 'react-dom', 'react-router-dom', 'zustand', 'date-fns'],
-},
   assetsInclude: ['**/*.glb', '**/*.gltf', '**/*.hdr'],
   };
 });
