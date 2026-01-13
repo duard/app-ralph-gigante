@@ -8,76 +8,76 @@
 ## Fase 1: Infraestrutura API
 
 ### 1.1 Criar módulo produtos-v2
-- [ ] Criar pasta `api-sankhya-center/src/sankhya/produtos-v2/`
-- [ ] Criar arquivo `produtos-v2.module.ts` com imports SharedModule
-- [ ] Criar arquivo `produtos-v2.service.ts` com injeção SankhyaApiService
-- [ ] Criar arquivo `produtos-v2.controller.ts` com decorators ApiTags e UseGuards
-- [ ] Criar pasta `models/` para interfaces e DTOs
-- [ ] Criar arquivo `models/index.ts` para exports
-- [ ] Registrar ProdutosV2Module em `sankhya.module.ts`
-- [ ] Testar build do NestJS
+- [x] Criar pasta `api-sankhya-center/src/sankhya/produtos-v2/`
+- [x] Criar arquivo `produtos-v2.module.ts` com imports SharedModule
+- [x] Criar arquivo `produtos-v2.service.ts` com injeção SankhyaApiService
+- [x] Criar arquivo `produtos-v2.controller.ts` com decorators ApiTags e UseGuards
+- [x] Criar pasta `models/` para interfaces e DTOs
+- [x] Criar arquivo `models/index.ts` para exports
+- [x] Registrar ProdutosV2Module em `sankhya.module.ts`
+- [x] Testar build do NestJS
 
 ### 1.2 Interfaces e DTOs base
-- [ ] Criar `models/dashboard-kpis.interface.ts`
-- [ ] Criar `models/produto-v2.interface.ts`
-- [ ] Criar `models/grupo-resumo.interface.ts`
-- [ ] Criar `models/local-resumo.interface.ts`
-- [ ] Criar `models/filtro-opcao.interface.ts`
-- [ ] Criar `models/produto-v2-find-all.dto.ts`
+- [x] Criar `models/dashboard-kpis.interface.ts`
+- [x] Criar `models/produto-v2.interface.ts`
+- [x] Criar `models/grupo-resumo.interface.ts` (em filtro-opcao.interface.ts)
+- [x] Criar `models/local-resumo.interface.ts` (em filtro-opcao.interface.ts)
+- [x] Criar `models/filtro-opcao.interface.ts`
+- [x] Criar `models/produto-v2-find-all.dto.ts`
 
 ### 1.3 Endpoint GET /produtos-v2/dashboard/kpis
-- [ ] Adicionar método `getDashboardKpis()` no service
-- [ ] SQL: COUNT produtos ativos
-- [ ] SQL: COUNT grupos distintos com produtos
-- [ ] SQL: COUNT locais distintos com estoque
-- [ ] SQL: COUNT produtos com estoque < estmin
-- [ ] SQL: COUNT produtos sem movimento 90 dias (JOIN TGFITE)
-- [ ] SQL: SUM valor total estoque (estoque * custo médio)
-- [ ] Adicionar endpoint no controller com Swagger docs
+- [x] Adicionar método `getDashboardKpis()` no service
+- [x] SQL: COUNT produtos ativos
+- [x] SQL: COUNT grupos distintos com produtos
+- [x] SQL: COUNT locais distintos com estoque
+- [x] SQL: COUNT produtos com estoque < estmin
+- [x] SQL: COUNT produtos sem movimento 90 dias (JOIN TGFITE)
+- [x] SQL: SUM valor total estoque (estoque * custo médio)
+- [x] Adicionar endpoint no controller com Swagger docs
 - [ ] Testar endpoint via curl/Swagger
 
 ### 1.4 Endpoint GET /produtos-v2/listagem
-- [ ] Adicionar método `findAll(dto)` no service
-- [ ] Implementar filtro: search (DESCRPROD, REFERENCIA, MARCA)
-- [ ] Implementar filtro: grupos[] (IN clause)
-- [ ] Implementar filtro: locais[] (IN clause com TGFEST)
-- [ ] Implementar filtro: controles[] (TIPCONTEST IN)
-- [ ] Implementar filtro: marcas[] (IN clause)
-- [ ] Implementar filtro: ativo (S/N)
-- [ ] Implementar filtro: estoqueMin/estoqueMax
-- [ ] Implementar filtro: comEstoque/semEstoque
-- [ ] Implementar ordenação dinâmica com whitelist
-- [ ] Implementar paginação (page, perPage, offset)
-- [ ] JOIN TGFGRU para nome do grupo
-- [ ] JOIN TGFEST (subquery) para estoque agregado
-- [ ] Adicionar endpoint no controller com todos @ApiQuery
+- [x] Adicionar método `findAll(dto)` no service
+- [x] Implementar filtro: search (DESCRPROD, REFERENCIA, MARCA)
+- [x] Implementar filtro: grupos[] (IN clause)
+- [x] Implementar filtro: locais[] (IN clause com TGFEST)
+- [x] Implementar filtro: controles[] (TIPCONTEST IN)
+- [x] Implementar filtro: marcas[] (IN clause)
+- [x] Implementar filtro: ativo (S/N)
+- [x] Implementar filtro: estoqueMin/estoqueMax
+- [x] Implementar filtro: comEstoque/semEstoque
+- [x] Implementar ordenação dinâmica com whitelist
+- [x] Implementar paginação (page, perPage, offset)
+- [x] JOIN TGFGRU para nome do grupo
+- [x] JOIN TGFEST (subquery) para estoque agregado
+- [x] Adicionar endpoint no controller com todos @ApiQuery
 - [ ] Testar endpoint com diferentes combinações
 
 ### 1.5 Endpoints de filtros (agregações)
-- [ ] Adicionar método `getGruposComContagem()` no service
-- [ ] SQL: SELECT CODGRUPOPROD, DESCRGRUPOPROD, COUNT(*) FROM TGFPRO GROUP BY
-- [ ] Adicionar endpoint GET /produtos-v2/filtros/grupos
-- [ ] Adicionar método `getLocaisComContagem()` no service
-- [ ] SQL: SELECT CODLOCAL, COUNT(DISTINCT CODPROD) FROM TGFEST GROUP BY
-- [ ] Adicionar endpoint GET /produtos-v2/filtros/locais
-- [ ] Adicionar método `getControlesComContagem()` no service
-- [ ] SQL: SELECT TIPCONTEST, COUNT(*) FROM TGFPRO WHERE TIPCONTEST IS NOT NULL GROUP BY
-- [ ] Adicionar endpoint GET /produtos-v2/filtros/controles
-- [ ] Adicionar método `getMarcasComContagem()` no service
-- [ ] SQL: SELECT MARCA, COUNT(*) FROM TGFPRO WHERE MARCA IS NOT NULL GROUP BY
-- [ ] Adicionar endpoint GET /produtos-v2/filtros/marcas
+- [x] Adicionar método `getGruposComContagem()` no service
+- [x] SQL: SELECT CODGRUPOPROD, DESCRGRUPOPROD, COUNT(*) FROM TGFPRO GROUP BY
+- [x] Adicionar endpoint GET /produtos-v2/filtros/grupos
+- [x] Adicionar método `getLocaisComContagem()` no service
+- [x] SQL: SELECT CODLOCAL, COUNT(DISTINCT CODPROD) FROM TGFEST GROUP BY
+- [x] Adicionar endpoint GET /produtos-v2/filtros/locais
+- [x] Adicionar método `getControlesComContagem()` no service
+- [x] SQL: SELECT TIPCONTEST, COUNT(*) FROM TGFPRO WHERE TIPCONTEST IS NOT NULL GROUP BY
+- [x] Adicionar endpoint GET /produtos-v2/filtros/controles
+- [x] Adicionar método `getMarcasComContagem()` no service
+- [x] SQL: SELECT MARCA, COUNT(*) FROM TGFPRO WHERE MARCA IS NOT NULL GROUP BY
+- [x] Adicionar endpoint GET /produtos-v2/filtros/marcas
 
 ### 1.6 Endpoints de vista por grupo
-- [ ] Adicionar método `getGrupoResumo(codgrupoprod)` no service
-- [ ] SQL: Dados do grupo + contagens + valor estoque
-- [ ] Adicionar endpoint GET /produtos-v2/grupo/:codgrupoprod/resumo
-- [ ] Adicionar método `getProdutosPorGrupo(codgrupoprod, dto)` no service
-- [ ] Reutilizar lógica de findAll com filtro fixo
-- [ ] Adicionar endpoint GET /produtos-v2/grupo/:codgrupoprod/produtos
+- [x] Adicionar método `getGrupoResumo(codgrupoprod)` no service
+- [x] SQL: Dados do grupo + contagens + valor estoque
+- [x] Adicionar endpoint GET /produtos-v2/grupo/:codgrupoprod/resumo
+- [x] Adicionar método `getProdutosPorGrupo(codgrupoprod, dto)` no service
+- [x] Reutilizar lógica de findAll com filtro fixo
+- [x] Adicionar endpoint GET /produtos-v2/grupo/:codgrupoprod/produtos
 
 ### 1.7 Endpoints de vista por local
-- [ ] Adicionar método `getLocalResumo(codlocal)` no service
-- [ ] SQL: Dados do local + contagens + valor estoque
+- [x] Adicionar método `getLocalResumo(codlocal)` no service
+- [x] SQL: Dados do local + contagens + valor estoque
 - [ ] Adicionar endpoint GET /produtos-v2/local/:codlocal/resumo
 - [ ] Adicionar método `getProdutosPorLocal(codlocal, dto)` no service
 - [ ] SQL: JOIN TGFEST para produtos neste local
@@ -303,16 +303,16 @@
 
 | Fase | Tarefas | Concluídas | % |
 |------|---------|------------|---|
-| 1. API | 58 | 0 | 0% |
+| 1. API | 58 | 52 | 90% |
 | 2. Dashboard FE | 20 | 0 | 0% |
 | 3. Listagem FE | 35 | 0 | 0% |
 | 4. Vistas FE | 18 | 0 | 0% |
 | 5. Detalhe FE | 22 | 0 | 0% |
 | 6. Polish | 13 | 0 | 0% |
-| **TOTAL** | **166** | **0** | **0%** |
+| **TOTAL** | **166** | **52** | **31%** |
 
 ---
 
 ## 🎯 Próxima Tarefa
 
-**Fase 1.1** - Criar pasta `api-sankhya-center/src/sankhya/produtos-v2/`
+**Fase 2.1** - Criar estrutura base do Dashboard Frontend
