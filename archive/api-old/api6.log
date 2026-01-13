@@ -1,0 +1,250 @@
+
+> api-sankhya-center@1.0.0 start
+> nest start
+
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSankhyaModule dependencies initialized[39m[38;5;3m +21ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mThrottlerModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mHttpModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mEstoqueModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mHealthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mCacheModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mHttpModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[SankhyaBaseService] [39m[32mSankhyaBaseService instanciado para AD_GIG_LOG[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[SankhyaBaseService] [39m[32mSankhyaBaseService instanciado para TFPCAR[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[SankhyaBaseService] [39m[32mSankhyaBaseService instanciado para TFPDEP[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[SankhyaBaseService] [39m[32mSankhyaBaseService instanciado para TGFPAR[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[SankhyaBaseService] [39m[32mSankhyaBaseService instanciado para TGFCAB[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[SankhyaBaseService] [39m[32mSankhyaBaseService instanciado para TGFGRU[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[SankhyaBaseService] [39m[32mSankhyaBaseService instanciado para TGFEST[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[SankhyaBaseService] [39m[32mSankhyaBaseService instanciado para TGFVEN[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[SankhyaBaseService] [39m[32mSankhyaBaseService instanciado para TGFTAB[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[SankhyaBaseService] [39m[32mSankhyaBaseService instanciado para TGFEST[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mSharedModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAdGigLogModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mProfileModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTsiusuModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTgfgruModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTgfestModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTgfvenModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTgftabModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mEstoquesDashboardModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mProdutosDashboardModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTddopcModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTddpcoModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTddinsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTddligModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTddlgcModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTrdconModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTgfproModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConsumoModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mEstoqueGiroModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDicionarioModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTsiempModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTfpcarModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTfpdepModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTgfparModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTfpfunModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTgfcabModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTgftopModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTgfiteModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPessoasModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRhDashboardModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[HealthGateway] [39m[32mHealth WebSocket Gateway initialized[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[WebSocketsController] [39m[32mHealthGateway subscribed to the "ping" message[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mInspectionController {/inspection}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/inspection/table-schema, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/inspection/table-relations, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/inspection/primary-keys/:tableName, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/inspection/query, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdGigLogController {/sankhya/ad-gig-log}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/ad-gig-log, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/ad-gig-log/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/ad-gig-log/admin/test, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/auth/login, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mProfileController {/profile}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/profile/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTsiempController {/sankhya/tsiemp}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tsiemp/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTsiusuController {/sankhya/tsiusu}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tsiusu/all, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tsiusu, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tsiusu/:codusu, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTfpcarController {/sankhya/tfpcar}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tfpcar/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tfpcar, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tfpcar/:codcargo, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTfpdepController {/sankhya/tfpdep}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tfpdep, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tfpdep/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tfpdep/:coddep, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tfpdep/admin/test, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTgfparController {/tgfpar}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfpar, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfpar/admin/test, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfpar/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTfpfunController {/sankhya/tfpfun}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tfpfun/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tfpfun, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tfpfun/detalhes, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tfpfun/:codemp/:codfunc, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tfpfun/any/:codfunc, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tfpfun/admin/test, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTgfcabController {/tgfcab}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfcab, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfcab/:nunota, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfcab/admin/test, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTgftopController {/tgftop}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgftop, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgftop/:codtipoper, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgftop/admin/test, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTgfiteController {/tgfite}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfite, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfite/:nunota/:sequencia, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfite/movimentacoes/locais, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfite/admin/test, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTgfgruController {/sankhya/tgfgru}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tgfgru, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tgfgru/:codgrupoprod, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tgfgru/admin/test, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTgfproController {/tgfpro}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfpro, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfpro/:codprod(\d+), GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfpro/with-stock/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfpro/search/:termo, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfpro/ultra-search, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfpro/consumo-periodo/:codprod, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfpro/admin/test, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mConsumoController {/tgfpro}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfpro/consumo-periodo/:codprod, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfpro/consumo-periodo-v2/:codprod, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfpro/produto-360-v3/:codprod, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mConsumoHealthController {/consumo}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/consumo/health, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/consumo/health/detailed, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/consumo/health/cache, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTgfestController {/sankhya/tgfest}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tgfest/resumo-ultimas-compras, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/tgfest/search-avancado, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mEstoqueDashboardController {/sankhya/estoque/dashboard}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/estoque/dashboard/capacidades, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/estoque/dashboard/estrutura, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/estoque/dashboard/teste-saude-completa, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/estoque/dashboard/consultas-completas, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/estoque/dashboard/exemplos-uso, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mProdutosController {/sankhya/produtos}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/produtos/dashboard-visao-geral, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/produtos/listagem-completa, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/produtos/por-grupo/:codgrupoprod, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/produtos/por-marca/:marca, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/produtos/por-fornecedor/:codparc, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/produtos/busca-avancada, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/produtos/dashboard-categoria/:codgrupoprod, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/produtos/relatorio-qualidade, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/produtos/comparativo-marcas, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/produtos/precos-inteligentes, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/produtos/admin/test, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTgfvenController {/tgfven}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfven, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfven/:codvend, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgfven/admin/test, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTgftabController {/tgftab}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgftab, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgftab/:codtab, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/tgftab/admin/test, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPessoasController {/sankhya/pessoas}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/pessoas, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mRhDashboardController {/sankhya/rh-dashboard}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/rh-dashboard/estatisticas, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/rh-dashboard/turnover, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/rh-dashboard/demografia, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/rh-dashboard/talentos-risco, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/rh-dashboard/resumo-requisicoes, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/rh-dashboard/ausencias, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/rh-dashboard/monitor-requisicoes, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/rh-dashboard/monitor-folha, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/rh-dashboard/monitor-demografia, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mEstoquesDashboardController {/estoques-dashboard}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/estoques-dashboard/overview, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/estoques-dashboard/grupos, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/estoques-dashboard/locais, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/estoques-dashboard/alertas, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/estoques-dashboard/tendencias, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mProdutosDashboardController {/sankhya/dashboards/produtos}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/dashboards/produtos/resumo, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/dashboards/produtos/filtros, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/dashboards/produtos/estoque-baixo, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/dashboards/produtos/por-grupo, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/dashboards/produtos/recentes, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/dashboards/produtos/buscar, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/dashboards/produtos/estatisticas/por-grupo, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/dashboards/produtos/controle/produtos, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/dashboards/produtos/controle/estatisticas, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/dashboards/produtos/controle/:codprod, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/sankhya/dashboards/produtos/admin/test, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mEstoqueGiroController {/estoque-giro}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/estoque-giro/dashboard, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/estoque-giro/inventario, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/estoque-giro/movimentacoes, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/estoque-giro/produtos-parados, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/estoque-giro/top-produtos, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/estoque-giro/alertas, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/estoque-giro/kardex, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mHealthController {/health}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/health, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mDicionarioController {/dicionario}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/tabelas, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/tabelas/:nomeTabela, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/metadados/:nomeTabela, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/tabelas/lista, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/campos, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/campos/tabela/:nomeTabela, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/admin/test, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTddopcController {/dicionario/opcoes-campos}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/opcoes-campos, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/opcoes-campos/:nucampo/:valor, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTddpcoController {/dicionario/parametros-campos}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/parametros-campos, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/parametros-campos/:nucampo/:nome, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTddinsController {/dicionario/instancias-campos}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/instancias-campos, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/instancias-campos/:nuinstancia, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTddligController {/dicionario/ligacoes-campos}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/ligacoes-campos, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/ligacoes-campos/:nuinstorig/:nuinstdest, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTddlgcController {/dicionario/logs-ligacoes-campos}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/logs-ligacoes-campos, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/logs-ligacoes-campos/:nuinstorig/:nucampoorig/:nuinstdest/:nucampodest, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mTrdconController {/dicionario/traducao-configuracoes}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/traducao-configuracoes, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/dicionario/traducao-configuracoes/:nucontrole, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +2ms[39m
+[31m[Nest] 732542  - [39m01/11/2026, 9:44:44 AM [31m  ERROR[39m [38;5;3m[NestApplication] [39m[31mError: listen EADDRINUSE: address already in use :::3000[39m[38;5;3m +2ms[39m
+node:net:1940
+    const ex = new UVExceptionWithHostPort(err, 'listen', address, port);
+               ^
+
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+    at listenInCluster (node:net:1997:12)
+    at Server.listen (node:net:2102:7)
+    at ExpressAdapter.listen (/home/carloshome/z-ralph-code/api-sankhya-center/node_modules/.pnpm/@nestjs+platform-express@10.4.20_@nestjs+common@10.4.20_class-transformer@0.5.1_class-v_bd7e093f0b2f45f3454d4c6bd5ff4f44/node_modules/@nestjs/platform-express/adapters/express-adapter.js:95:32)
+    at /home/carloshome/z-ralph-code/api-sankhya-center/node_modules/.pnpm/@nestjs+core@10.4.20_@nestjs+common@10.4.20_class-transformer@0.5.1_class-validator@0.1_abd9a23d84c140d158c413f58d441b3d/node_modules/@nestjs/core/nest-application.js:183:30
+    at new Promise (<anonymous>)
+    at NestApplication.listen (/home/carloshome/z-ralph-code/api-sankhya-center/node_modules/.pnpm/@nestjs+core@10.4.20_@nestjs+common@10.4.20_class-transformer@0.5.1_class-validator@0.1_abd9a23d84c140d158c413f58d441b3d/node_modules/@nestjs/core/nest-application.js:173:16)
+    at async bootstrap (/home/carloshome/z-ralph-code/api-sankhya-center/src/main.ts:44:3) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '::',
+  port: 3000
+}
+
+Node.js v22.21.0

@@ -1,0 +1,184 @@
+{
+  "tasks": [
+    {
+      "id": "US-001",
+      "title": "As a product manager, I want dashboard KPIs for products to understand inventory status",
+      "description": "Implement dashboard KPIs endpoint that provides total products, groups, locations, critical products, products without movement, and total inventory value",
+      "acceptance_criteria": "- GET /produtos-v2/dashboard/kpis returns JSON with totalProdutos, totalGrupos, totalLocais, produtosCriticos, produtosSemMovimento, valorTotalEstoque\n- All values are numbers, defaulting to 0 if no data\n- Query uses NOLOCK for performance\n- Handles SQL errors gracefully with proper logging",
+      "passes": false,
+      "priority": 1,
+      "blockers": []
+    },
+    {
+      "id": "US-002",
+      "title": "As a user, I want advanced product listing with multiple filters",
+      "description": "Implement advanced product listing with search, group filters, location filters, control type filters, brand filters, and stock filters",
+      "acceptance_criteria": "- GET /produtos-v2/listagem supports filters: search, grupos[], locais[], controles[], marcas[], ativo, comEstoque, semEstoque, critico, estoqueMin, estoqueMax\n- Supports pagination with page, perPage (max 200)\n- Supports sorting by codprod, descrprod, grupo, estoque, marca\n- Returns paginated result with data, total, page, perPage, lastPage, hasMore\n- Includes stock aggregates (summed across locations)\n- Query performance optimized with proper joins",
+      "passes": false,
+      "priority": 1,
+      "blockers": []
+    },
+    {
+      "id": "US-003",
+      "title": "As a user, I want product group filters with counts",
+      "description": "Implement endpoint to get all product groups with product counts for filtering",
+      "acceptance_criteria": "- GET /produtos-v2/filtros/grupos returns array of {codigo, descricao, contagem}\n- Groups are from TGFGRU table\n- Count includes only active products (ATIVO = 'S')\n- Ordered by group description\n- Handles empty results gracefully",
+      "passes": false,
+      "priority": 2,
+      "blockers": []
+    },
+    {
+      "id": "US-004",
+      "title": "As a user, I want location filters with counts",
+      "description": "Implement endpoint to get all locations with product counts for filtering",
+      "acceptance_criteria": "- GET /produtos-v2/filtros/locais returns array of {codigo, descricao, contagem}\n- Locations are from TGFLOC table\n- Count includes distinct products with active stock\n- Ordered by location description\n- Handles empty results gracefully",
+      "passes": false,
+      "priority": 2,
+      "blockers": []
+    },
+    {
+      "id": "US-005",
+      "title": "As a user, I want control type filters with counts",
+      "description": "Implement endpoint to get all control types with product counts for filtering",
+      "acceptance_criteria": "- GET /produtos-v2/filtros/controles returns array of {codigo, descricao, contagem}\n- Control types from TGFPRO.TIPCONTEST\n- Only active products with non-null TIPCONTEST\n- Grouped by TIPCONTEST\n- Ordered by TIPCONTEST",
+      "passes": false,
+      "priority": 2,
+      "blockers": []
+    },
+    {
+      "id": "US-006",
+      "title": "As a user, I want brand filters with counts",
+      "description": "Implement endpoint to get all brands with product counts for filtering",
+      "acceptance_criteria": "- GET /produtos-v2/filtros/marcas returns array of {codigo, descricao, contagem}\n- Brands from TGFPRO.MARCA\n- Only active products with non-null MARCA\n- Grouped by MARCA\n- Ordered by MARCA",
+      "passes": false,
+      "priority": 2,
+      "blockers": []
+    },
+    {
+      "id": "US-007",
+      "title": "As a user, I want group summary information",
+      "description": "Implement endpoint to get detailed summary for a specific product group",
+      "acceptance_criteria": "- GET /produtos-v2/grupo/:codgrupoprod/resumo returns {codgrupoprod, descrgrupoprod, totalProdutos, produtosAtivos, produtosCriticos, valorEstoque}\n- Includes critical products count (stock below minimum)\n- Includes total inventory value for the group\n- Returns default values if group not found",
+      "passes": false,
+      "priority": 2,
+      "blockers": []
+    },
+    {
+      "id": "US-008",
+      "title": "As a user, I want location summary information",
+      "description": "Implement endpoint to get detailed summary for a specific location",
+      "acceptance_criteria": "- GET /produtos-v2/local/:codlocal/resumo returns {codlocal, descrlocal, totalProdutos, valorEstoque}\n- Total products with stock in that location\n- Total inventory value for that location\n- Returns default values if location not found",
+      "passes": false,
+      "priority": 2,
+      "blockers": []
+    },
+    {
+      "id": "US-009",
+      "title": "As a user, I want complete product details",
+      "description": "Implement endpoint to get complete information for a specific product",
+      "acceptance_criteria": "- GET /produtos-v2/:codprod/completo returns full product data including COMPLDESC, CARACTERISTICAS, NCM, weights, etc.\n- Includes stock aggregates\n- Returns null if product not found\n- Joins with TGFGRU for group description",
+      "passes": false,
+      "priority": 2,
+      "blockers": []
+    },
+    {
+      "id": "US-010",
+      "title": "As a user, I want products filtered by group",
+      "description": "Implement endpoint to list products within a specific group",
+      "acceptance_criteria": "- GET /produtos-v2/grupo/:codgrupoprod/produtos uses same filters as main listing\n- Automatically filters by the specified group\n- Supports all pagination and sorting options\n- Reuses the main findAll logic",
+      "passes": false,
+      "priority": 2,
+      "blockers": ["US-002"]
+    },
+    {
+      "id": "US-011",
+      "title": "As a user, I want stock details by location for a product",
+      "description": "Implement endpoint to get stock breakdown by location for a specific product",
+      "acceptance_criteria": "- GET /produtos-v2/:codprod/estoque-por-local returns array of stock details per location\n- Includes CODLOCAL, DESCRLOCAL, ESTOQUE, ESTMIN, ESTMAX, CUSTOGER, VALORESTOQUE\n- Only active stock records\n- Ordered by location description",
+      "passes": false,
+      "priority": 2,
+      "blockers": []
+    },
+    {
+      "id": "US-012",
+      "title": "As a user, I want monthly consumption history for a product",
+      "description": "Implement endpoint to get consumption data by month for a specific product",
+      "acceptance_criteria": "- GET /produtos-v2/:codprod/consumo-mensal returns monthly consumption data\n- Supports periodo parameter (default 12 months)\n- Returns ano, mes, descricaoMes, quantidade, valor\n- Based on sales transactions (TIPOPER = 'S')\n- Handles month names in Portuguese",
+      "passes": false,
+      "priority": 2,
+      "blockers": []
+    },
+    {
+      "id": "US-013",
+      "title": "As a user, I want products filtered by location",
+      "description": "Implement endpoint to list products within a specific location",
+      "acceptance_criteria": "- GET /produtos-v2/local/:codlocal/produtos uses same filters as main listing\n- Automatically filters by the specified location\n- Supports all pagination and sorting options\n- Reuses the main findAll logic",
+      "passes": false,
+      "priority": 2,
+      "blockers": ["US-002"]
+    },
+    {
+      "id": "US-014",
+      "title": "As a developer, I want proper error handling in produtos-v2 service",
+      "description": "Implement comprehensive error handling and logging for all service methods",
+      "acceptance_criteria": "- All service methods have try-catch blocks\n- Errors are logged with descriptive messages\n- Errors are re-thrown to be handled by controller\n- SQL errors are properly caught and logged",
+      "passes": false,
+      "priority": 3,
+      "blockers": []
+    },
+    {
+      "id": "US-015",
+      "title": "As a developer, I want performance optimized queries",
+      "description": "Optimize SQL queries for better performance using proper indexing hints and efficient joins",
+      "acceptance_criteria": "- All queries use WITH (NOLOCK) for read operations\n- Complex aggregations are optimized\n- Subqueries are used efficiently\n- Query execution time is logged for monitoring",
+      "passes": false,
+      "priority": 3,
+      "blockers": []
+    },
+    {
+      "id": "US-016",
+      "title": "As a developer, I want comprehensive API documentation",
+      "description": "Document all endpoints with Swagger decorators including parameters, responses, and examples",
+      "acceptance_criteria": "- All endpoints have @ApiOperation with descriptions\n- Parameters documented with @ApiParam or @ApiQuery\n- Response schemas defined with examples\n- Error responses documented\n- Controller has proper @ApiTags",
+      "passes": false,
+      "priority": 3,
+      "blockers": []
+    },
+    {
+      "id": "US-017",
+      "title": "As a developer, I want unit tests for produtos-v2 service",
+      "description": "Implement unit tests covering all service methods and edge cases",
+      "acceptance_criteria": "- Tests for all public methods\n- Mock SankhyaApiService\n- Test error scenarios\n- Test data transformation\n- Coverage > 80%",
+      "passes": false,
+      "priority": 3,
+      "blockers": []
+    },
+    {
+      "id": "US-018",
+      "title": "As a developer, I want integration tests for produtos-v2 endpoints",
+      "description": "Implement integration tests for all controller endpoints",
+      "acceptance_criteria": "- Tests for all GET endpoints\n- Mock authentication\n- Test pagination and filters\n- Test error responses\n- Use test database or mocked API",
+      "passes": false,
+      "priority": 3,
+      "blockers": ["US-017"]
+    },
+    {
+      "id": "US-019",
+      "title": "As a user, I want API versioning consistency",
+      "description": "Ensure produtos-v2 API follows consistent versioning and deprecation practices",
+      "acceptance_criteria": "- All endpoints under /produtos-v2/\n- Consistent response formats\n- Backward compatibility maintained\n- Version clearly indicated in URL",
+      "passes": false,
+      "priority": 4,
+      "blockers": []
+    },
+    {
+      "id": "US-020",
+      "title": "As a system administrator, I want database relations properly handled",
+      "description": "Ensure all database relations (TGFPRO, TGFEST, TGFGRU, TGFLOC, TGFCAB, TGFITE) are properly joined and queried",
+      "acceptance_criteria": "- Foreign key relationships respected\n- LEFT JOINs used appropriately\n- Data consistency maintained\n- Performance considerations for joins",
+      "passes": false,
+      "priority": 4,
+      "blockers": []
+    }
+  ]
+}
