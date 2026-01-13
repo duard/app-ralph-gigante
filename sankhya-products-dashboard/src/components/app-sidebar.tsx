@@ -19,7 +19,6 @@ import {
   Zap,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { SidebarNotification } from '@/components/sidebar-notification';
 
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';

@@ -56,8 +56,6 @@ export function useCurrentUserQuery(enabled = true) {
  * Hook for user login
  */
 export function useLoginMutation() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({
       credentials,

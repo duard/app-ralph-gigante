@@ -80,7 +80,7 @@ export function ProdutosPageContainer() {
       });
 
       // Filtrar baseado na aba ativa
-      let data = response.data.data;
+      let data = response.data.data || [];
       if (activeTab === 'com-estoque') {
         data = data.filter((p: any) => p.estoque && p.estoque.estoqueTotal > 0);
       } else {
@@ -100,8 +100,8 @@ export function ProdutosPageContainer() {
     enabled: page >= 1 && pageSize > 0,
   });
 
-  const { data: locations = [], isLoading: isLoadingLocations } = useLocations();
-  const { data: groups = [], isLoading: isLoadingGroups } = useGroups();
+  const { data: locations = [] } = useLocations();
+  const { data: groups = [] } = useGroups();
 
   // ===== HANDLERS QUE ATUALIZAM URL =====
   const handleFilterChange = React.useCallback(

@@ -134,7 +134,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
       clearTimeout(maxTimeoutRef.current);
       maxTimeoutRef.current = null;
     }
-    return invokeFunc(Date.now());
+    return invokeFunc(Date.now(), lastArgsRef.current);
   }, [invokeFunc]);
 
   const pending = useCallback(() => {

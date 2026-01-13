@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api/client';
-import { ProdutoV2Completo } from '@/types/produto-v2';
+import type { ProdutoV2Completo } from '@/types/produto-v2';
 
 export function useProdutoV2Detalhe(codprod: number) {
   return useQuery<ProdutoV2Completo, Error>({

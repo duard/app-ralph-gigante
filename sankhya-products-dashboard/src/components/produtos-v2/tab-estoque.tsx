@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { EstoquePorLocalAPI } from '@/hooks/produtos-v2/use-produto-v2-estoque';
+import type { EstoquePorLocalAPI } from '@/hooks/produtos-v2/use-produto-v2-estoque';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
@@ -93,7 +93,7 @@ export function TabEstoque({ estoquePorLocal, loading }: TabEstoqueProps) {
                     {item.estoque !== null && item.estmin !== null ? (
                       item.estoque < item.estmin ? (
                         <Badge variant="destructive">Crítico</Badge>
-                      ) : item.estoque > item.estmax ? (
+                      ) : item.estmax !== null && item.estoque > item.estmax ? (
                         <Badge variant="secondary">Excesso</Badge>
                       ) : (
                         <Badge variant="default">OK</Badge>

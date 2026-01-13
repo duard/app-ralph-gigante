@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3100';
 
 // Criar instância do axios
 export const apiClient = axios.create({
@@ -52,8 +52,6 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
-
     // 401: Token inválido ou expirado
     if (error.response?.status === 401) {
       console.error('[Axios] 401 Unauthorized - Token inválido ou expirado');

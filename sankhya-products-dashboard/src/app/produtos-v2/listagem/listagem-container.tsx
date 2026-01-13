@@ -6,7 +6,7 @@ import { useProdutosV2Filtros } from '@/hooks/produtos-v2/use-produtos-v2-filtro
 import { FilterPanel } from '@/components/produtos-v2/filter-panel';
 import { ProdutoTable } from '@/components/produtos-v2/produto-table';
 import { Pagination } from '@/components/produtos-v2/pagination';
-import { Skeleton } from '@/components/ui/skeleton';
+
 import { Card } from '@/components/ui/card';
 import { useSearchParams } from 'react-router-dom';
 
@@ -58,7 +58,8 @@ export function ListagemContainer({}: ProdutoV2ListagemContainerProps) {
 
   const [ativo, setAtivo] = useState<string>(() => {
     const param = searchParams.get('ativo');
-    return param || '';
+    // If URL param is 'all', treat it as empty string (default state)
+    return param === 'all' ? '' : param || '';
   });
 
   const [comEstoque, setComEstoque] = useState<boolean>(() => {
@@ -98,7 +99,7 @@ export function ListagemContainer({}: ProdutoV2ListagemContainerProps) {
     if (locais.length > 0) params.set('locais', locais.join(','));
     if (controles.length > 0) params.set('controles', controles.join(','));
     if (marcas.length > 0) params.set('marcas', marcas.join(','));
-    if (ativo) params.set('ativo', ativo);
+    if (ativo && ativo !== 'all') params.set('ativo', ativo);
     if (comEstoque) params.set('comEstoque', 'true');
     if (semEstoque) params.set('semEstoque', 'true');
     if (critico) params.set('critico', 'true');
@@ -133,7 +134,7 @@ export function ListagemContainer({}: ProdutoV2ListagemContainerProps) {
     locais: locais.map(Number),
     controles,
     marcas,
-    ativo: ativo || undefined,
+    ativo: ativo === 'all' ? undefined : ativo || undefined,
     comEstoque,
     semEstoque,
     critico,
@@ -170,7 +171,7 @@ export function ListagemContainer({}: ProdutoV2ListagemContainerProps) {
     setLocais([]);
     setControles([]);
     setMarcas([]);
-    setAtivo('');
+    setAtivo(''); // Reset to empty string which represents 'all'
     setComEstoque(false);
     setSemEstoque(false);
     setCritico(false);

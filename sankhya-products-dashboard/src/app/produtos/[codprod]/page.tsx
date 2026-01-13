@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Separator } from '@/components/ui/separator';
+
 import {
   Table,
   TableBody,
@@ -46,11 +46,7 @@ export default function Page() {
     refetch: refetchProduct,
     error: errorProduct,
   } = useProduct(Number(codprod));
-  const {
-    data: locations,
-    isLoading: isLoadingLocations,
-    refetch: refetchLocations,
-  } = useProductLocations(Number(codprod));
+  const { data: locations, refetch: refetchLocations } = useProductLocations(Number(codprod));
 
   const [isRefreshing, setIsRefreshing] = React.useState(false);
 

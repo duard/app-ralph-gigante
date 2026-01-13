@@ -11,7 +11,10 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
+        'react': path.resolve(__dirname, './node_modules/react'),
+        'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
       },
+      dedupe: ['react', 'react-dom', '@radix-ui/react-context'],
     },
     define: {
       'import.meta.env.VITE_BASENAME': JSON.stringify(process.env.VITE_BASENAME || ''),
@@ -209,8 +212,10 @@ export default defineConfig(({ mode }) => {
         'react-router-dom',
         'zustand',
         'date-fns',
+        '@radix-ui/react-context',
         '@radix-ui/react-dialog',
         '@radix-ui/react-dropdown-menu',
+        '@radix-ui/react-popover',
         '@radix-ui/react-select',
         '@radix-ui/react-tabs',
         '@radix-ui/react-tooltip',

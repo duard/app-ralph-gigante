@@ -157,11 +157,11 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
   };
 
   const handleCategoryChange = (value: string) => {
-    setFilters({ category: value === 'all' ? '' : value });
+    setFilters({ category: value === 'all' ? '' : value === 'null' ? '' : value });
   };
 
   const handleUnitChange = (value: string) => {
-    setFilters({ unit: value === 'all' ? '' : value });
+    setFilters({ unit: value === 'all' ? '' : value === 'null' ? '' : value });
   };
 
   const handlePriceRangeChange = (value: number[]) => {
@@ -287,21 +287,23 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
               <div className="space-y-2">
                 <Label htmlFor="sidebar-category">Categoria</Label>
                 <Select
-                  value={filters?.category || 'all'}
-                  onValueChange={(value) => handleCategoryChange(value || '')}
+                  value={filters?.category ? (filters.category === '' ? 'null' : filters.category) : 'all'}
+                  onValueChange={(value) => handleCategoryChange(value)}
                 >
-                  <SelectTrigger id="sidebar-category">
-                    <SelectValue placeholder="Todas as categorias" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas as categorias</SelectItem>
-                    {categories.map((category) => (
-                      <SelectItem key={category || 'undefined'} value={category || ''}>
-                        {category || 'Sem categoria'}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                                  <SelectTrigger id="sidebar-category">
+                                    <SelectValue placeholder="Todas as categorias" />
+                                  </SelectTrigger>
+                                                    <SelectContent>
+                                                      <SelectItem value="all">Todas as categorias</SelectItem>
+                                                      <SelectItem value="null">Sem categoria</SelectItem>
+                                                      {categories
+                                                        .filter(category => category !== null && category !== undefined && category !== '')
+                                                        .map((category) => (
+                                                          <SelectItem key={category} value={category}>
+                                                            {category}
+                                                          </SelectItem>
+                                                        ))}
+                                                    </SelectContent>                </Select>
               </div>
             )}
 
@@ -310,19 +312,22 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
               <div className="space-y-2">
                 <Label htmlFor="sidebar-unit">Unidade</Label>
                 <Select
-                  value={filters?.unit || 'all'}
-                  onValueChange={(value) => handleUnitChange(value || '')}
+                  value={filters?.unit ? (filters.unit === '' ? 'null' : filters.unit) : 'all'}
+                  onValueChange={(value) => handleUnitChange(value)}
                 >
                   <SelectTrigger id="sidebar-unit">
                     <SelectValue placeholder="Todas as unidades" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todas as unidades</SelectItem>
-                    {units.map((unit) => (
-                      <SelectItem key={unit || 'undefined'} value={unit || ''}>
-                        {unit || 'Sem unidade'}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="null">Sem unidade</SelectItem>
+                    {units
+                      .filter(unit => unit !== null && unit !== undefined && unit !== '')
+                      .map((unit) => (
+                        <SelectItem key={unit} value={unit}>
+                          {unit}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>

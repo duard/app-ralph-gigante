@@ -179,7 +179,7 @@ export function FilterPanel({
               <SelectValue placeholder="Todos" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todos</SelectItem>
+              <SelectItem value="all">Todos</SelectItem>
               <SelectItem value="S">Ativo</SelectItem>
               <SelectItem value="N">Inativo</SelectItem>
             </SelectContent>

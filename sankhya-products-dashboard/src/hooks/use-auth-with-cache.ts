@@ -21,7 +21,7 @@ export function useAuthWithCache() {
   // Auth initialization state
   const hasCheckedAuthRef = useRef(false);
   const [authInitialized, setAuthInitialized] = useState(false);
-  const previousUserIdRef = useRef<string | null>(null);
+
   const hasTokenRef = useRef(false);
 
   const {

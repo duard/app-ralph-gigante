@@ -17,7 +17,6 @@ import {
   PackageX,
   History,
   MapPin,
-  AlertTriangle,
   TrendingUp,
   Calendar,
 } from 'lucide-react';
@@ -218,8 +217,8 @@ export function ProductListComplete({
         const produto = row.original;
         const locais = produto.locais || [];
         const estoqueTotal =
-          produto.estoque?.estoqueTotal || locais.reduce((sum, loc) => sum + loc.estoque, 0);
-        const locaisCount = produto.estoque?.locais || locais.length;
+          produto.estoqueTotal || locais.reduce((sum, loc) => sum + loc.estoque, 0);
+        const locaisCount = locais.length;
 
         // Se não tem estoque
         if (!estoqueTotal || estoqueTotal === 0) {
@@ -542,9 +541,14 @@ export function ProductListComplete({
       {pagination && onPageChange && onPageSizeChange && (
         <DataTablePagination
           table={table}
-          pagination={pagination}
-          onPageChange={onPageChange}
-          onPageSizeChange={onPageSizeChange}
+          pagination={{
+            page: pagination.pageIndex + 1,
+            pageSize: pagination.pageSize,
+            totalPages: pagination.totalPages,
+            total: pagination.totalItems,
+          }}
+          goToPage={onPageChange}
+          changePageSize={onPageSizeChange}
         />
       )}
     </div>

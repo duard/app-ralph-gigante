@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Calendar, Download } from 'lucide-react';
-import { ConsumoMensal } from '@/types/produto-v2';
+import type { ConsumoMensal } from '@/types/produto-v2';
 import { apiClient } from '@/lib/api/client';
 
 interface TabConsumoProps {

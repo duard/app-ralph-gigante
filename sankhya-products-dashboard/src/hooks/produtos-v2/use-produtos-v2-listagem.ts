@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api/client';
-import { PaginatedResponse } from '@/types/api';
+import type { PaginatedResponse } from '@/types/api';
 
 export interface ProdutoV2 {
   codprod: number;

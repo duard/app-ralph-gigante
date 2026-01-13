@@ -9,9 +9,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ProdutoV2 } from '@/hooks/produtos-v2/use-produtos-v2-listagem';
+import type { ProdutoV2 } from '@/hooks/produtos-v2/use-produtos-v2-listagem';
 import { cn } from '@/lib/utils';
-import { ProductDataPreloader } from '@/lib/product-data-preloader';
+
 import { useEffect, useRef } from 'react';
 
 interface ProdutoTableProps {

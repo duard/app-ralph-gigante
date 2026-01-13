@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api/client';
-import { EstoquePorLocal } from '@/types/produto-v2';
+import type { EstoquePorLocal } from '@/types/produto-v2';
 
 export interface EstoquePorLocalAPI {
   codlocal: number;

@@ -154,8 +154,10 @@ export function ProductList({ onAddProduct, onEditProduct }: ProductListProps) {
 
   const { filteredProducts, pagination, isLoading, error, isRefetching, retry, searchProducts } =
     useProductsWithCache({
-      page: urlPagination.page,
-      pageSize: urlPagination.pageSize,
+      pagination: {
+        page: urlPagination.page,
+        pageSize: urlPagination.pageSize,
+      },
     });
 
   const [sorting, setSorting] = React.useState<SortingState>([]);

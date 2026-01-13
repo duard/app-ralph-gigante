@@ -70,7 +70,7 @@ export function ProductFilters() {
   };
 
   const handleCategoryChange = (value: string) => {
-    setFilters({ category: value === 'all' ? '' : value });
+    setFilters({ category: value === 'all' ? '' : value === 'null' ? '' : value });
   };
 
   const handlePriceRangeChange = (value: number[]) => {
@@ -150,17 +150,20 @@ export function ProductFilters() {
             {categories.length > 0 && (
               <div className="space-y-2">
                 <Label htmlFor="category-filter">Categoria</Label>
-                <Select value={filters?.category || 'all'} onValueChange={handleCategoryChange}>
+                <Select value={filters?.category ? (filters.category === '' ? 'null' : filters.category) : 'all'} onValueChange={handleCategoryChange}>
                   <SelectTrigger id="category-filter">
                     <SelectValue placeholder="Todas as categorias" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todas as categorias</SelectItem>
-                    {categories.map((category) => (
-                      <SelectItem key={category || 'undefined'} value={category || ''}>
-                        {category || 'Sem categoria'}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="null">Sem categoria</SelectItem>
+                    {categories
+                      .filter(category => category !== null && category !== undefined && category !== '')
+                      .map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>

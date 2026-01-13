@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ProdutoV2Completo } from '@/types/produto-v2';
+import type { ProdutoV2Completo } from '@/types/produto-v2';
 import { Link } from 'react-router-dom';
 import { Package, Scale, Weight, Tag, Warehouse } from 'lucide-react';
 

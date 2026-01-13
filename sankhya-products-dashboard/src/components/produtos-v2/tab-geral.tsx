@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ProdutoV2Completo } from '@/types/produto-v2';
+import type { ProdutoV2Completo } from '@/types/produto-v2';
 
 interface TabGeralProps {
   produto: ProdutoV2Completo | undefined;

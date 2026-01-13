@@ -5,7 +5,6 @@ import { KpiCard } from '@/components/produtos-v2/kpi-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Package, Tags, Warehouse, AlertTriangle, DollarSign } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 export function DashboardContainer() {
   const { data, isLoading, error } = useProdutosV2Dashboard();
@@ -27,41 +26,33 @@ export function DashboardContainer() {
     <div className="space-y-4">
       {/* KPI Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-        <Link to="/produtos-v2/listagem">
-          <KpiCard
-            title="Total Produtos"
-            value={data.totalProdutos}
-            icon={<Package className="h-6 w-6" />}
-            href="/produtos-v2/listagem"
-          />
-        </Link>
+        <KpiCard
+          title="Total Produtos"
+          value={data.totalProdutos}
+          icon={<Package className="h-6 w-6" />}
+          href="/produtos-v2/listagem"
+        />
 
-        <Link to="/produtos-v2/listagem?view=grupos">
-          <KpiCard
-            title="Grupos"
-            value={data.totalGrupos}
-            icon={<Tags className="h-6 w-6" />}
-            href="/produtos-v2/listagem?view=grupos"
-          />
-        </Link>
+        <KpiCard
+          title="Grupos"
+          value={data.totalGrupos}
+          icon={<Tags className="h-6 w-6" />}
+          href="/produtos-v2/listagem?view=grupos"
+        />
 
-        <Link to="/produtos-v2/listagem?view=locais">
-          <KpiCard
-            title="Locais"
-            value={data.totalLocais}
-            icon={<Warehouse className="h-6 w-6" />}
-            href="/produtos-v2/listagem?view=locais"
-          />
-        </Link>
+        <KpiCard
+          title="Locais"
+          value={data.totalLocais}
+          icon={<Warehouse className="h-6 w-6" />}
+          href="/produtos-v2/listagem?view=locais"
+        />
 
-        <Link to="/produtos-v2/listagem?critico=true">
-          <KpiCard
-            title="Críticos"
-            value={data.produtosCriticos}
-            icon={<AlertTriangle className="h-6 w-6" />}
-            href="/produtos-v2/listagem?critico=true"
-          />
-        </Link>
+        <KpiCard
+          title="Críticos"
+          value={data.produtosCriticos}
+          icon={<AlertTriangle className="h-6 w-6" />}
+          href="/produtos-v2/listagem?critico=true"
+        />
 
         <KpiCard
           title="Valor Total"

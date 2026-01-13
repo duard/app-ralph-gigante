@@ -111,7 +111,11 @@ export class ProductDataPreloader {
   /**
    * Prefetch data based on hover events
    */
-  static prefetchOnHover(element: HTMLElement, dataKey: string, prefetchFn: () => void): void {
+  static prefetchOnHover(
+    element: HTMLElement,
+    dataKey: string,
+    prefetchFn: () => void
+  ): () => void {
     const handleMouseEnter = () => {
       // Small delay to avoid unnecessary prefetching if user just scrolls past
       setTimeout(() => {
