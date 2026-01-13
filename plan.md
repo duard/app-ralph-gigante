@@ -114,7 +114,7 @@
 - [x] Otimizar debounce em searches e inputs (já implementado em alguns)
 - [x] Implementar cache de requisições API usando React Query/SWR
 - [ ] Melhorar virtualização para listas longas (já implementado)
-- [ ] Otimizar rebuild Vite com configurações apropriadas
+- [x] Otimizar rebuild Vite com configurações apropriadas
 - [ ] Reduzir bundle size removendo dependências desnecessárias
 - [ ] Melhorar Lighthouse score com otimizações de performance
 
@@ -414,6 +414,8 @@ src/
 - Usar Ralph para implementar tarefas de forma autônoma
 
 - **2025-01-11**: ✅ Adicionados filtros de período para métricas do dashboard e produtos recentes. Implementado componente DashboardCards com filtros de período (hoje, semana, mês, todo período), atualizado hook useDashboardMetrics com lógica de filtragem por data usando campos dtcad/dtalter, adicionado seletor de período ao componente RecentProducts, e mantida compatibilidade com versão legada. Build e lint funcionando sem erros críticos.
+
+- **2025-01-13**: ✅ Otimizar rebuild Vite com configurações apropriadas. Implementadas otimizações completas no vite.config.ts incluindo: watch configuration melhorado com ignored patterns específicos e followSymlinks: false, aumento do chunkSizeWarningLimit para 1500 (reduz falsos positivos), remoção de reportCompressedSize para builds mais rápidos, emptyOutDir: true para builds limpos, expansão do optimizeDeps.include com dependências críticas (sonner, clsx, tailwind-merge, class-variance-authority), prebundleDependencies: true para melhor DX, configuração esbuild com drop de console/debugger em produção, target: 'esnext' e supported: { 'top-level-await': true }. Servidor iniciando em 328ms com HMR rápido e eficiente.
 
 ## Progress
 
