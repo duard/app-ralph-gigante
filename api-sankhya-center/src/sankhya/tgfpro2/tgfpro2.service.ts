@@ -25,8 +25,30 @@ export class Tgfpro2Service {
       `Finding all products with filters: ${JSON.stringify(dto)}`,
     )
 
-    // Query base
-    let query = `
+    const page = dto.page || 1
+    const perPage = dto.perPage || 10
+
+    // Construir WHERE clause
+    const { whereClause, params } = this.buildWhereClause(dto)
+
+    // 1. Contar total de registros (sem paginação)
+    const countQuery = `
+      SELECT COUNT(*) AS total
+      FROM TGFPRO P WITH (NOLOCK)
+      WHERE 1=1 ${whereClause}
+    `
+
+    const countResult = await this.sankhyaApiService.executeQuery(
+      countQuery,
+      params,
+    )
+    const total = Number(countResult[0]?.total || 0)
+
+    // 2. Buscar apenas a página solicitada
+    const sortOrder = dto.sort || 'CODPROD DESC'
+    const offset = (page - 1) * perPage
+
+    const query = `
       SELECT
         P.CODPROD,
         P.DESCRPROD,
@@ -47,68 +69,19 @@ export class Tgfpro2Service {
       FROM TGFPRO P WITH (NOLOCK)
       LEFT JOIN TGFGRU G WITH (NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
       LEFT JOIN TGFVOL V WITH (NOLOCK) ON V.CODVOL = P.CODVOL
-      WHERE 1=1
+      WHERE 1=1 ${whereClause}
+      ORDER BY ${sortOrder}
+      OFFSET ${offset} ROWS
+      FETCH NEXT ${perPage} ROWS ONLY
     `
 
-    const params: any[] = []
-
-    // Aplicar filtros
-    if (dto.search) {
-      query += ` AND (P.DESCRPROD LIKE @search OR P.REFERENCIA LIKE @search OR P.MARCA LIKE @search)`
-      params.push({ name: 'search', value: `%${dto.search}%` })
-    }
-
-    if (dto.descrprod) {
-      query += ` AND P.DESCRPROD LIKE @descrprod`
-      params.push({ name: 'descrprod', value: `%${dto.descrprod}%` })
-    }
-
-    if (dto.referencia) {
-      query += ` AND P.REFERENCIA LIKE @referencia`
-      params.push({ name: 'referencia', value: `%${dto.referencia}%` })
-    }
-
-    if (dto.marca) {
-      query += ` AND P.MARCA LIKE @marca`
-      params.push({ name: 'marca', value: `%${dto.marca}%` })
-    }
-
-    if (dto.codgrupoprod) {
-      query += ` AND P.CODGRUPOPROD = @codgrupoprod`
-      params.push({ name: 'codgrupoprod', value: dto.codgrupoprod })
-    }
-
-    if (dto.ativo) {
-      query += ` AND P.ATIVO = @ativo`
-      params.push({ name: 'ativo', value: dto.ativo })
-    }
-
-    if (dto.localizacao) {
-      query += ` AND P.LOCALIZACAO LIKE @localizacao`
-      params.push({ name: 'localizacao', value: `%${dto.localizacao}%` })
-    }
-
-    if (dto.tipcontest) {
-      query += ` AND P.TIPCONTEST LIKE @tipcontest`
-      params.push({ name: 'tipcontest', value: `%${dto.tipcontest}%` })
-    }
-
-    if (dto.ncm) {
-      query += ` AND P.NCM LIKE @ncm`
-      params.push({ name: 'ncm', value: `%${dto.ncm}%` })
-    }
-
-    // Ordenação
-    const sortOrder = dto.sort || 'CODPROD DESC'
-    query += ` ORDER BY ${sortOrder}`
-
-    // Executar query
+    // Executar query paginada
     const result = await this.sankhyaApiService.executeQuery(query, params)
 
-    // Mapear resultados
+    // Mapear resultados (apenas a página atual)
     const produtos = result.map((item) => this.mapToProduto2(item))
 
-    // Se solicitado, incluir estoque agregado
+    // Enriquecer apenas os produtos da página atual (se solicitado)
     if (dto.includeEstoque || dto.includeEstoqueLocais) {
       for (const produto of produtos) {
         await this.enrichWithEstoque(
@@ -118,17 +91,70 @@ export class Tgfpro2Service {
       }
     }
 
-    // Paginação
-    const page = dto.page || 1
-    const perPage = dto.perPage || 10
-    const total = produtos.length
-
     return buildPaginatedResult({
       data: produtos,
       total,
       page,
       perPage,
     })
+  }
+
+  /**
+   * Constrói a cláusula WHERE baseada nos filtros
+   */
+  private buildWhereClause(dto: ProdutoFindAllDto): {
+    whereClause: string
+    params: any[]
+  } {
+    const params: any[] = []
+    let whereClause = ''
+
+    if (dto.search) {
+      whereClause += ` AND (P.DESCRPROD LIKE @search OR P.REFERENCIA LIKE @search OR P.MARCA LIKE @search)`
+      params.push({ name: 'search', value: `%${dto.search}%` })
+    }
+
+    if (dto.descrprod) {
+      whereClause += ` AND P.DESCRPROD LIKE @descrprod`
+      params.push({ name: 'descrprod', value: `%${dto.descrprod}%` })
+    }
+
+    if (dto.referencia) {
+      whereClause += ` AND P.REFERENCIA LIKE @referencia`
+      params.push({ name: 'referencia', value: `%${dto.referencia}%` })
+    }
+
+    if (dto.marca) {
+      whereClause += ` AND P.MARCA LIKE @marca`
+      params.push({ name: 'marca', value: `%${dto.marca}%` })
+    }
+
+    if (dto.codgrupoprod) {
+      whereClause += ` AND P.CODGRUPOPROD = @codgrupoprod`
+      params.push({ name: 'codgrupoprod', value: dto.codgrupoprod })
+    }
+
+    if (dto.ativo) {
+      whereClause += ` AND P.ATIVO = @ativo`
+      params.push({ name: 'ativo', value: dto.ativo })
+    }
+
+    if (dto.localizacao) {
+      whereClause += ` AND P.LOCALIZACAO LIKE @localizacao`
+      params.push({ name: 'localizacao', value: `%${dto.localizacao}%` })
+    }
+
+    if (dto.tipcontest) {
+      whereClause += ` AND P.TIPCONTEST LIKE @tipcontest`
+      params.push({ name: 'tipcontest', value: `%${dto.tipcontest}%` })
+    }
+
+    if (dto.ncm) {
+      whereClause += ` AND P.NCM LIKE @ncm`
+      params.push({ name: 'ncm', value: `%${dto.ncm}%` })
+    }
+
+    return { whereClause, params }
   }
 
   /**

@@ -169,6 +169,54 @@ Before committing, verify:
 
 ## Common Patterns
 
+### TGFPRO2 Module (Produtos com Estoque por Local)
+
+**Descobertas da implementação:**
+
+1. **Paginação**:
+   - `buildPaginatedResult` aceita objeto: `{ data, total, page, perPage }`
+   - Não usar parâmetros separados (padrão antigo)
+   - Sempre calcular `total` antes da paginação
+
+2. **SankhyaApiService**:
+   - Método correto: `executeQuery(query, params)`
+   - NÃO usar: `executarQuery` (nomenclatura antiga)
+   - Params no formato: `[{ name: 'param', value: valor }]`
+
+3. **Estrutura de Módulos Sankhya**:
+   ```
+   tgfpro2/
+   ├── interfaces/          # Tipos TypeScript
+   │   ├── estoque-local.interface.ts
+   │   ├── produto2.interface.ts
+   │   ├── produto-kpi.interface.ts
+   │   └── index.ts        # Barrel export
+   ├── dtos/               # DTOs com validação
+   │   ├── produto-find-all.dto.ts
+   │   └── index.ts
+   ├── tgfpro2.service.ts  # Lógica de negócio
+   ├── tgfpro2.controller.ts
+   └── tgfpro2.module.ts
+   ```
+
+4. **Estoque por Local (TGFEST)**:
+   - Chave composta: `(CODPROD, CODLOCAL, CONTROLE)`
+   - Filtrar sempre: `CODPARC = 0` (estoque próprio)
+   - Filtrar sempre: `ATIVO = 'S'`
+   - `CONTROLE` pode ser NULL ou vazio
+   - Status calculado: NORMAL, BAIXO, CRITICO, EXCESSO
+
+5. **Queries SQL - Boas Práticas**:
+   - Usar parâmetros nomeados para evitar SQL injection
+   - WITH (NOLOCK) em todas as tabelas para performance
+   - Sempre fazer LEFT JOIN para relacionamentos opcionais
+   - ORDER BY no final da query
+
+6. **Enriquecimento de Dados**:
+   - Fazer enriquecimento de estoque apenas se solicitado
+   - Usar flags: `includeEstoque`, `includeEstoqueLocais`
+   - Processar após paginação (não antes)
+
 ### Prisma
 
 - Soft-delete uses `deleted_at DateTime? @default(dbgenerated("NULL")) @db.Timestamp(6)`
