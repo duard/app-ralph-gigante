@@ -82,7 +82,7 @@ const data = {
           icon: Package,
         },
         {
-          title: 'Produtos (Rápido)',
+          title: 'Produto Simples V2',
           url: '/produtos-simples',
           icon: Zap,
         },

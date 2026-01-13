@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, X, ArrowUpDown, ArrowUp, ArrowDown, MapPin, MapPinOff } from 'lucide-react';
-import { useProductsSimplified } from '@/hooks/use-products-simplified';
+import { backendClient as client } from '@/lib/api/client';
+import { useQuery } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -27,7 +28,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type SortColumn = 'codprod' | 'descrprod' | 'grupo' | 'localizacao' | 'tipcontest' | 'ativo';
+type SortColumn = 'codprod' | 'descrprod' | 'localizacao' | 'valor_medio' | 'valor_ultima_compra';
 type SortDir = 'asc' | 'desc';
 
 export function ProdutosSimplesContainer() {
@@ -57,13 +58,14 @@ export function ProdutosSimplesContainer() {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  const { data, isLoading, error } = useProductsSimplified({
-    search,
-    page,
-    perPage,
-    sort: `${sortCol} ${sortDir}`,
-    comLocal: tab === 'com-local',
-    semLocal: tab === 'sem-local',
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['produtos-simples-v2', search, page, perPage, sortCol, sortDir],
+    queryFn: async () => {
+      const response = await client.get('/produtos-simples-v2', {
+        params: { search, page, perPage, sort: `${sortCol} ${sortDir}` },
+      });
+      return response.data;
+    },
   });
 
   const updateParam = (key: string, value: string | null) => {
@@ -139,40 +141,30 @@ export function ProdutosSimplesContainer() {
               </div>
             </TableHead>
             <TableHead
-              className="w-28 cursor-pointer hover:bg-muted/50"
-              onClick={() => handleSort('grupo')}
-            >
-              <div className="flex items-center">
-                Grupo
-                <SortIcon col="grupo" />
-              </div>
-            </TableHead>
-            <TableHead
-              className="w-24 cursor-pointer hover:bg-muted/50"
+              className="w-32 cursor-pointer hover:bg-muted/50"
               onClick={() => handleSort('localizacao')}
             >
               <div className="flex items-center">
-                Local
+                Localização
                 <SortIcon col="localizacao" />
               </div>
             </TableHead>
             <TableHead
-              className="w-24 cursor-pointer hover:bg-muted/50"
-              onClick={() => handleSort('tipcontest')}
+              className="w-28 cursor-pointer hover:bg-muted/50"
+              onClick={() => handleSort('valor_medio')}
             >
               <div className="flex items-center">
-                Controle
-                <SortIcon col="tipcontest" />
+                Valor Médio
+                <SortIcon col="valor_medio" />
               </div>
             </TableHead>
-            <TableHead className="w-20 text-center">Estoque</TableHead>
             <TableHead
-              className="w-16 text-center cursor-pointer hover:bg-muted/50"
-              onClick={() => handleSort('ativo')}
+              className="w-32 cursor-pointer hover:bg-muted/50"
+              onClick={() => handleSort('valor_ultima_compra')}
             >
-              <div className="flex items-center justify-center">
-                Ativo
-                <SortIcon col="ativo" />
+              <div className="flex items-center">
+                Última Compra
+                <SortIcon col="valor_ultima_compra" />
               </div>
             </TableHead>
           </TableRow>
@@ -188,86 +180,41 @@ export function ProdutosSimplesContainer() {
                   <Skeleton className="h-4 w-full" />
                 </TableCell>
                 <TableCell>
+                  <Skeleton className="h-4 w-24" />
+                </TableCell>
+                <TableCell>
                   <Skeleton className="h-4 w-20" />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className="h-4 w-16" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-4 w-16" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-4 w-12" />
-                </TableCell>
-                <TableCell className="text-center">
-                  <Skeleton className="h-5 w-8 mx-auto" />
+                  <Skeleton className="h-4 w-20" />
                 </TableCell>
               </TableRow>
             ))
           ) : data?.data?.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+              <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                 Nenhum produto encontrado
               </TableCell>
             </TableRow>
           ) : (
-            data?.data?.map((product, idx) => {
-              const estoqueStatus =
-                product.estoque != null && product.estmin != null
-                  ? product.estoque <= product.estmin
-                    ? 'low'
-                    : product.estoque >= (product.estmax || Infinity)
-                      ? 'high'
-                      : 'ok'
-                  : null;
-              return (
-                <TableRow key={`${product.codprod}-${idx}`}>
-                  <TableCell className="font-mono text-xs">{product.codprod}</TableCell>
-                  <TableCell className="max-w-[300px] truncate text-sm" title={product.descrprod}>
-                    {product.descrprod}
-                  </TableCell>
-                  <TableCell
-                    className="text-xs text-muted-foreground"
-                    title={product.descrgrupoprod || ''}
-                  >
-                    {product.descrgrupoprod || '-'}
-                  </TableCell>
-                  <TableCell className="text-xs font-mono">{product.localizacao || '-'}</TableCell>
-                  <TableCell className="text-xs">
-                    {product.tipcontest ? (
-                      <Badge variant="outline" className="text-xs">
-                        {product.tipcontest}
-                      </Badge>
-                    ) : (
-                      '-'
-                    )}
-                  </TableCell>
-                  <TableCell className="text-center text-xs">
-                    {product.estoque != null ? (
-                      <span
-                        className={cn(
-                          'font-mono',
-                          estoqueStatus === 'low' && 'text-destructive font-semibold',
-                          estoqueStatus === 'high' && 'text-green-600'
-                        )}
-                      >
-                        {product.estoque}
-                      </span>
-                    ) : (
-                      '-'
-                    )}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Badge
-                      variant={product.ativo === 'S' ? 'default' : 'secondary'}
-                      className="text-xs"
-                    >
-                      {product.ativo === 'S' ? 'S' : 'N'}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              );
-            })
+            data?.map((product, idx) => (
+              <TableRow
+                key={`${product.codprod}-${idx}`}
+                className={cn(product.ativo !== 'S' && 'text-muted-foreground')}
+              >
+                <TableCell className="font-mono text-xs">{product.codprod}</TableCell>
+                <TableCell className="max-w-[300px] truncate text-sm" title={product.descrprod}>
+                  {product.descrprod}
+                </TableCell>
+                <TableCell className="text-xs font-mono">{product.localizacao || '-'}</TableCell>
+                <TableCell className="text-xs font-mono">
+                  R$ {product.valor_medio?.toFixed(2) || '0.00'}
+                </TableCell>
+                <TableCell className="text-xs font-mono">
+                  R$ {product.valor_ultima_compra?.toFixed(2) || '0.00'}
+                </TableCell>
+              </TableRow>
+            ))
           )}
         </TableBody>
       </Table>
