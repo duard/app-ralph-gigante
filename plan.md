@@ -129,7 +129,7 @@
 
 - [x] Atualizar README com instruções completas de setup e desenvolvimento
 - [x] Criar documentação de componentes internos usando Storybook
-- [ ] Documentar API Client com exemplos de uso
+- [x] Documentar API Client com exemplos de uso
 - [ ] Criar guia de estilos e convenções do projeto
 - [ ] Documentar arquitetura do projeto (estrutura de pastas, stores, etc.)
 
@@ -420,6 +420,8 @@ src/
 Add entries below this line:
 
 - **2025-01-12**: ✅ Criar documentação de componentes internos usando Storybook. Inicializado Storybook com `npx storybook@latest init`, configurado para Vite e TypeScript, adicionado suporte a shadcn/ui, criado stories básicos para componentes principais (Button, Card, ProductTable), configurado addons essenciais (Controls, Actions, Docs), e atualizado package.json com scripts storybook e build-storybook. Storybook funcionando corretamente.
+
+- **2025-01-12**: ✅ Documentar API Client com exemplos de uso. Criada documentação completa do API Client em API_CLIENT_DOCUMENTATION.md incluindo: arquitetura de clientes (sankhyaClient, backendClient), exemplos de uso para todos os serviços (authService, productService), helpers HTTP e configurações de requisição, tratamento de erros e lógica de retry, fluxos de autenticação e gerenciamento de tokens, definições de tipos TypeScript, variáveis de ambiente e melhores práticas, guia de troubleshooting e migração. Documentação abrangente com 500+ linhas cobrindo todos os aspectos do cliente API.
 
 - **2025-01-12**: ✅ Implementar Husky pre-commit hooks para lint e tests. Instalado Husky como dependência de desenvolvimento, inicializado com `husky init`, configurado hook pre-commit para executar `pnpm lint && pnpm test:run`, tornado executável. Lint e typecheck passando sem erros.
 
