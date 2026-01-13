@@ -12,8 +12,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { MultiSelect } from '@/components/ui/multi-select';
-import { FiltroOpcao } from '@/hooks/produtos-v2/use-produtos-v2-filtros';
-import { X, FilterX } from 'lucide-react';
+import { type FiltroOpcao } from '@/hooks/produtos-v2/use-produtos-v2-filtros';
+import { FilterX } from 'lucide-react';
 
 interface FilterPanelProps {
   search: string;

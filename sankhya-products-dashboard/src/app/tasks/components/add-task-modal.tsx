@@ -11,6 +11,7 @@ import { AnimatedDialog } from '@/components/ui/animated-dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   Select,
   SelectContent,
@@ -236,21 +237,6 @@ export function AddTaskModal({ onAddTask, trigger }: AddTaskModalProps) {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex justify-end space-x-2 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleCancel}
-              className="cursor-pointer"
-            >
-              Cancel
-            </Button>
-            <Button type="submit" className="cursor-pointer">
-              <Plus className="w-4 h-4 mr-2" />
-              Create Task
-            </Button>
-          </div>
-          {/* Action Buttons */}
           <motion.div
             className="flex justify-end space-x-2 pt-4"
             initial={{ opacity: 0, y: 20 }}
@@ -258,20 +244,34 @@ export function AddTaskModal({ onAddTask, trigger }: AddTaskModalProps) {
             transition={{ delay: 0.4, duration: 0.3 }}
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleCancel}
-                className="cursor-pointer"
-              >
-                Cancel
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleCancel}
+                    className="cursor-pointer"
+                  >
+                    Cancel
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Cancelar criação da tarefa</p>
+                </TooltipContent>
+              </Tooltip>
             </motion.div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button type="submit" className="cursor-pointer">
-                <Plus className="w-4 h-4 mr-2" />
-                Create Task
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button type="submit" className="cursor-pointer">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Task
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Criar nova tarefa</p>
+                </TooltipContent>
+              </Tooltip>
             </motion.div>
           </motion.div>
         </form>

@@ -1,6 +1,7 @@
-import { Component, ReactNode } from 'react';
+import { Component, type ReactNode } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { RotateCcw } from 'lucide-react';
 
 interface Props {
@@ -42,14 +43,21 @@ class ErrorBoundary extends Component<Props, State> {
               <p className="text-red-700">
                 {this.state.error?.message || 'Ocorreu um erro inesperado.'}
               </p>
-              <Button
-                variant="outline"
-                onClick={() => window.location.reload()}
-                className="flex items-center gap-2"
-              >
-                <RotateCcw className="h-4 w-4" />
-                Recarregar página
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    onClick={() => window.location.reload()}
+                    className="flex items-center gap-2"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                    Recarregar página
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Recarregar a página para tentar novamente</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </CardContent>
         </Card>

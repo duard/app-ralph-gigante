@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   formatProductCode,
   formatProductPrice,
@@ -130,40 +131,61 @@ export function ProductDetailsModal({
               className="flex items-center gap-2"
             >
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    if (hasPrevious && onPrevious) {
-                      onPrevious();
-                      toast.info('Navegando para produto anterior');
-                    }
-                  }}
-                  disabled={!hasPrevious}
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        if (hasPrevious && onPrevious) {
+                          onPrevious();
+                          toast.info('Navegando para produto anterior');
+                        }
+                      }}
+                      disabled={!hasPrevious}
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Produto anterior</p>
+                  </TooltipContent>
+                </Tooltip>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    if (hasNext && onNext) {
-                      onNext();
-                      toast.info('Navegando para próximo produto');
-                    }
-                  }}
-                  disabled={!hasNext}
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        if (hasNext && onNext) {
+                          onNext();
+                          toast.info('Navegando para próximo produto');
+                        }
+                      }}
+                      disabled={!hasNext}
+                    >
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Próximo produto</p>
+                  </TooltipContent>
+                </Tooltip>
               </motion.div>
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" size="sm" onClick={handleEdit}>
-                  <Edit className="h-4 w-4 mr-2" />
-                  Editar
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" size="sm" onClick={handleEdit}>
+                      <Edit className="h-4 w-4 mr-2" />
+                      Editar
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Editar produto</p>
+                  </TooltipContent>
+                </Tooltip>
               </motion.div>
             </motion.div>
           </div>

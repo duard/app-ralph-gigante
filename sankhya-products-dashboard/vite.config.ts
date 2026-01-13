@@ -43,7 +43,19 @@ export default defineConfig(({ mode }) => {
       },
       watch: {
         usePolling: false,
-        ignored: ['!**/node_modules/**', '**/.git/**', '**/dist/**', '**/coverage/**'],
+        ignored: [
+          '!**/node_modules/**',
+          '**/.git/**',
+          '**/dist/**',
+          '**/coverage/**',
+          '**/test-results/**',
+          '**/.storybook/**',
+          '**/*.log',
+          '**/pnpm-lock.yaml',
+          '**/package-lock.json',
+          '**/yarn.lock',
+        ],
+        followSymlinks: false,
       },
     },
     build: {
@@ -51,6 +63,10 @@ export default defineConfig(({ mode }) => {
       minify: mode === 'production' ? 'esbuild' : false,
       target: 'esnext',
       cssCodeSplit: true,
+      // Optimize rebuild performance
+      emptyOutDir: true,
+      // Reduce chunk size warnings for better DX
+      chunkSizeWarningLimit: 1500,
       rollupOptions: {
         output: {
           manualChunks: (id) => {
@@ -184,7 +200,6 @@ export default defineConfig(({ mode }) => {
           tryCatchDeoptimization: false,
         },
       },
-      chunkSizeWarningLimit: 1000,
       reportCompressedSize: false,
     },
     optimizeDeps: {
@@ -207,9 +222,27 @@ export default defineConfig(({ mode }) => {
         'axios',
         'react-hook-form',
         'zod',
+        'sonner',
+        'clsx',
+        'tailwind-merge',
+        'class-variance-authority',
       ],
       exclude: ['@tanstack/react-query-devtools'],
+      // Force optimization even when dependencies are linked
+      force: false,
+      // Add pre-bundling for better performance
+      prebundleDependencies: true,
     },
     assetsInclude: ['**/*.glb', '**/*.gltf', '**/*.hdr'],
+    // Improve build performance with esbuild optimizations
+    esbuild: {
+      target: 'esnext',
+      // Drop console and debugger in production for smaller bundle
+      drop: mode === 'production' ? ['console', 'debugger'] : [],
+      // Optimize for modern browsers
+      supported: {
+        'top-level-await': true,
+      },
+    },
   };
 });
