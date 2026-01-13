@@ -1,159 +1,925 @@
 {
-  "project": "sankhya-products-dashboard",
-  "branchName": "feature/tgfpro-dashboard",
-  "description": "Complete TGFPRO products dashboard with advanced filters, metrics, UI enhancements and performance optimizations",
-  "userStories": [
+  "title": "PRD: Sankhya TGFPRO V2 Backend Module Enhancement",
+  "version": "2.0",
+  "date": "2026-01-13",
+  "author": "opencode",
+  "overview": {
+    "description": "Comprehensive Product Requirements Document for upgrading the Sankhya TGFPRO module in api-sankhya-center to version 2. This PRD focuses exclusively on backend enhancements, laying the foundation for frontend produtos V2. The upgrade aims to modernize the product management system with enhanced analytics, real-time capabilities, advanced search, and improved performance while maintaining compatibility with the existing Sankhya ERP integration and strengthening relationships between TGFPRO and related tables (TGFGRU, TGFVOL, TGFEST, TGFLOC, TGFCAB/TGFITE).",
+    "scope": "Backend API development for product management, analytics, and integrations. Includes new endpoints, database optimizations, caching layers, and microservices preparation. Full integration with TGFGRU groups, TGFVOL units, TGFEST stock controls, TGFLOC locations, and TGFCAB/TGFITE transaction system.",
+    "goals": [
+      "Implement real dashboard data replacing mock endpoints with proper table joins",
+      "Add advanced analytics and KPI tracking across all related tables",
+      "Enhance search capabilities with AI recommendations and control-aware filtering",
+      "Implement real-time stock alerts with TIPCONTEST control logic",
+      "Add product image management system integrated with product codes",
+      "Optimize database queries and add caching for complex multi-table joins",
+      "Prepare for microservices architecture while maintaining table relationship integrity",
+      "Improve API performance and scalability for control-aware operations"
+    ],
+    "constraints": [
+      "Maintain backward compatibility with existing Sankhya ERP integration",
+      "Respect TIPCONTEST control logic (N=None, S=Series, E=Location, L=Lot)",
+      "Use existing NestJS/TypeScript/MikroORM stack",
+      "Follow current code conventions and patterns",
+      "Ensure data consistency across TGFPRO relationships"
+    ]
+  },
+  "features": [
     {
-      "id": "US-001",
-      "title": "Create ProductFiltersSidebar component with collapsible layout",
-      "description": "As a user, I want a sidebar with advanced filters to narrow down product searches.",
-      "acceptanceCriteria": [
-        "Create ProductFiltersSidebar component in src/components/products/",
-        "Implement collapsible sidebar with toggle button",
-        "Add basic layout structure with form elements",
-        "Integrate with products page layout",
-        "Typecheck passes"
-      ],
-      "priority": 1,
-      "passes": false,
-      "notes": ""
+      "id": "dashboard-real-data",
+      "name": "Real Dashboard Data with Table Joins",
+      "description": "Replace all mock data in dashboard endpoints with actual Sankhya SQL queries joining TGFPRO with TGFGRU, TGFEST, and transaction tables",
+      "priority": "high",
+      "category": "analytics"
     },
     {
-      "id": "US-002",
-      "title": "Implement price range filter with slider",
-      "description": "As a user, I want to filter products by price range using a slider.",
-      "acceptanceCriteria": [
-        "Install and configure react-range for price slider",
-        "Add min/max price inputs with slider control",
-        "Update product filters state to include price range",
-        "Apply price filter to API calls",
-        "Typecheck passes"
-      ],
-      "priority": 2,
-      "passes": false,
-      "notes": ""
+      "id": "advanced-kpis",
+      "name": "Advanced KPIs and Metrics",
+      "description": "Implement comprehensive product performance metrics including turnover ratios, margins, and sales trends with proper multi-table aggregations",
+      "priority": "high",
+      "category": "analytics"
     },
     {
-      "id": "US-003",
-      "title": "Add status filter (active/inactive)",
-      "description": "As a user, I want to filter products by their active/inactive status.",
-      "acceptanceCriteria": [
-        "Add radio buttons or select for status filter",
-        "Include 'All', 'Active', 'Inactive' options",
-        "Update filters state and API integration",
-        "Show filtered results correctly",
-        "Typecheck passes"
-      ],
-      "priority": 3,
-      "passes": false,
-      "notes": ""
+      "id": "realtime-stock",
+      "name": "Real-time Stock Management with Controls",
+      "description": "Add WebSocket integration for live inventory updates respecting TIPCONTEST control types and CONTROLE field logic",
+      "priority": "high",
+      "category": "inventory"
     },
     {
-      "id": "US-004",
-      "title": "Implement category/group filter with API integration",
-      "description": "As a user, I want to filter products by category using data from /tgfgru endpoint.",
-      "acceptanceCriteria": [
-        "Create hook to fetch groups from /tgfgru",
-        "Add dropdown select for group filter",
-        "Populate dropdown with API data",
-        "Apply group filter to product queries",
-        "Typecheck passes"
-      ],
-      "priority": 4,
-      "passes": false,
-      "notes": ""
+      "id": "ai-search",
+      "name": "AI-powered Search with Relationships",
+      "description": "Implement semantic search with product recommendations, including group hierarchy and control-aware filtering",
+      "priority": "medium",
+      "category": "search"
     },
     {
-      "id": "US-005",
-      "title": "Create DashboardCards component with key metrics",
-      "description": "As a user, I want to see key metrics on the dashboard like total products, active/inactive counts.",
-      "acceptanceCriteria": [
-        "Create DashboardCards component in src/components/dashboard/",
-        "Display total products count",
-        "Show active vs inactive product counts",
-        "Add out of stock count if available",
-        "Use shadcn Card components",
-        "Typecheck passes"
-      ],
-      "priority": 5,
-      "passes": false,
-      "notes": ""
+      "id": "image-management",
+      "name": "Product Image Management",
+      "description": "Add image upload, storage, and management system linked to TGFPRO.CODPROD",
+      "priority": "medium",
+      "category": "media"
     },
     {
-      "id": "US-006",
-      "title": "Implement category distribution chart",
-      "description": "As a user, I want to see a chart showing product distribution by categories.",
-      "acceptanceCriteria": [
-        "Install and configure Recharts",
-        "Create chart component for category distribution",
-        "Fetch data from products API grouped by category",
-        "Display pie or bar chart",
-        "Integrate into dashboard page",
-        "Typecheck passes"
-      ],
-      "priority": 6,
-      "passes": false,
-      "notes": ""
+      "id": "supplier-integration",
+      "name": "Supplier Integration with Transactions",
+      "description": "Enhanced supplier performance tracking integrated with TGFCAB/TGFITE transaction history",
+      "priority": "medium",
+      "category": "procurement"
     },
     {
-      "id": "US-007",
-      "title": "Add dark/light theme toggle with persistence",
-      "description": "As a user, I want to switch between dark and light themes with my preference saved.",
-      "acceptanceCriteria": [
-        "Add theme toggle button to header/sidebar",
-        "Implement theme switching logic",
-        "Persist theme choice in localStorage",
-        "Apply theme to entire application",
-        "Test theme switching works correctly"
-      ],
-      "priority": 7,
-      "passes": false,
-      "notes": ""
+      "id": "reporting-engine",
+      "name": "Advanced Reporting Engine",
+      "description": "Custom report builder with multi-table joins and control-aware aggregations",
+      "priority": "medium",
+      "category": "reporting"
     },
     {
-      "id": "US-008",
-      "title": "Implement lazy loading for components",
-      "description": "As a developer, I want components to load lazily to improve initial bundle size.",
-      "acceptanceCriteria": [
-        "Convert heavy components to use React.lazy",
-        "Add Suspense boundaries with loading fallbacks",
-        "Verify lazy loading works in dev and build",
-        "Check bundle splitting in build output",
-        "Typecheck passes"
-      ],
-      "priority": 8,
-      "passes": false,
-      "notes": ""
+      "id": "caching-layer",
+      "name": "Caching and Performance Layer",
+      "description": "Implement Redis-based caching for complex queries involving TGFPRO relationships",
+      "priority": "high",
+      "category": "performance"
     },
     {
-      "id": "US-009",
-      "title": "Add unit tests for custom hooks",
-      "description": "As a developer, I want unit tests for custom hooks to ensure reliability.",
-      "acceptanceCriteria": [
-        "Set up Vitest and Testing Library",
-        "Create tests for useProducts hook",
-        "Create tests for useAuth hook",
-        "Achieve >70% coverage for hooks",
-        "Tests pass in CI"
-      ],
-      "priority": 9,
-      "passes": false,
-      "notes": ""
+      "id": "microservices-prep",
+      "name": "Microservices Preparation",
+      "description": "Refactor monolithic API towards microservices while maintaining table relationship integrity",
+      "priority": "low",
+      "category": "architecture"
     },
     {
-      "id": "US-010",
-      "title": "Configure Prettier for consistent formatting",
-      "description": "As a developer, I want consistent code formatting with Prettier.",
-      "acceptanceCriteria": [
-        "Install and configure Prettier",
-        "Set up 2-space indentation",
-        "Configure Prettier with project conventions",
-        "Add format script to package.json",
-        "Integrate with ESLint if possible"
-      ],
-      "priority": 10,
-      "passes": false,
-      "notes": ""
+      "id": "compliance-audit",
+      "name": "Compliance and Audit with History",
+      "description": "Add audit trails for all TGFPRO changes and transaction history tracking",
+      "priority": "medium",
+      "category": "compliance"
     }
-  ]
+  ],
+  "technical_requirements": [
+    {
+      "category": "database",
+      "requirements": [
+        "Optimize existing SQL queries for multi-table joins (TGFPRO + TGFGRU + TGFEST + TGFLOC)",
+        "Add database indexes for frequently queried fields including CODGRUPOPROD, CODVOL, CODLOCAL",
+        "Implement database connection pooling optimized for complex joins",
+        "Add read replicas for heavy read operations on transaction tables"
+      ]
+    },
+    {
+      "category": "api",
+      "requirements": [
+        "Implement RESTful API versioning (v2) with backward compatibility",
+        "Add comprehensive error handling and logging for multi-table operations",
+        "Implement rate limiting and throttling for heavy queries",
+        "Add API documentation with Swagger/OpenAPI including control logic"
+      ]
+    },
+    {
+      "category": "caching",
+      "requirements": [
+        "Integrate Redis for caching complex multi-table query results",
+        "Implement cache invalidation strategies for related table updates",
+        "Add cache warming for frequently accessed product-group-stock combinations"
+      ]
+    },
+    {
+      "category": "security",
+      "requirements": [
+        "Implement proper authentication and authorization for multi-table operations",
+        "Add input validation and sanitization for control fields and foreign keys",
+        "Implement CORS policies for frontend integration",
+        "Add request/response encryption for sensitive transaction data"
+      ]
+    }
+  ],
+  "tasks": {
+    "backend": [
+      {
+        "id": "task-001",
+        "description": "Analyze current TGFPRO v1 implementation and all table relationships (TGFGRU, TGFVOL, TGFEST, TGFLOC, TGFCAB/TGFITE)",
+        "priority": "high",
+        "category": "analysis",
+        "dependencies": []
+      },
+      {
+        "id": "task-002",
+        "description": "Document TIPCONTEST control logic and CONTROLE field usage across all stock operations",
+        "priority": "high",
+        "category": "analysis",
+        "dependencies": ["task-001"]
+      },
+      {
+        "id": "task-003",
+        "description": "Map all foreign key relationships and join patterns in current queries",
+        "priority": "high",
+        "category": "analysis",
+        "dependencies": ["task-002"]
+      },
+      {
+        "id": "task-004",
+        "description": "Analyze current mock dashboard endpoints and identify required table joins for real data",
+        "priority": "high",
+        "category": "analysis",
+        "dependencies": ["task-003"]
+      },
+      {
+        "id": "task-005",
+        "description": "Create new database entity for dashboard KPIs with proper table relationships",
+        "priority": "high",
+        "category": "database",
+        "dependencies": ["task-004"]
+      },
+      {
+        "id": "task-006",
+        "description": "Implement SankhyaApiService method for fetching top-selling products data with TGFGRU joins",
+        "priority": "high",
+        "category": "api",
+        "dependencies": ["task-005"]
+      },
+      {
+        "id": "task-007",
+        "description": "Create DTOs for dashboard visao geral endpoint with proper typing for multi-table data",
+        "priority": "high",
+        "category": "models",
+        "dependencies": ["task-004"]
+      },
+      {
+        "id": "task-008",
+        "description": "Implement SQL query for product category performance metrics joining TGFPRO and TGFGRU",
+        "priority": "high",
+        "category": "queries",
+        "dependencies": ["task-006"]
+      },
+      {
+        "id": "task-009",
+        "description": "Add stock turnover ratio calculation logic respecting TIPCONTEST controls",
+        "priority": "high",
+        "category": "business_logic",
+        "dependencies": ["task-008"]
+      },
+      {
+        "id": "task-010",
+        "description": "Create new /tgfpro/dashboard-visao-geral/v2 endpoint with table joins",
+        "priority": "high",
+        "category": "endpoints",
+        "dependencies": ["task-007", "task-009"]
+      },
+      {
+        "id": "task-011",
+        "description": "Implement error handling and logging for multi-table dashboard operations",
+        "priority": "high",
+        "category": "error_handling",
+        "dependencies": ["task-010"]
+      },
+      {
+        "id": "task-012",
+        "description": "Add unit tests for dashboard service methods with mock table relationships",
+        "priority": "high",
+        "category": "testing",
+        "dependencies": ["task-010"]
+      },
+      {
+        "id": "task-013",
+        "description": "Update API documentation for new dashboard endpoint with relationship details",
+        "priority": "high",
+        "category": "documentation",
+        "dependencies": ["task-010"]
+      },
+      {
+        "id": "task-014",
+        "description": "Analyze current stock alert requirements respecting control types and table relationships",
+        "priority": "high",
+        "category": "analysis",
+        "dependencies": ["task-003"]
+      },
+      {
+        "id": "task-015",
+        "description": "Create StockAlert entity with relationships to TGFPRO and TGFLOC",
+        "priority": "high",
+        "category": "database",
+        "dependencies": ["task-014"]
+      },
+      {
+        "id": "task-016",
+        "description": "Implement StockAlertService with control-aware alert logic",
+        "priority": "high",
+        "category": "services",
+        "dependencies": ["task-015"]
+      },
+      {
+        "id": "task-017",
+        "description": "Create DTOs for stock alert configuration respecting TIPCONTEST types",
+        "priority": "high",
+        "category": "models",
+        "dependencies": ["task-014"]
+      },
+      {
+        "id": "task-018",
+        "description": "Implement SQL query for detecting low stock conditions with TGFEST joins and CONTROLE filtering",
+        "priority": "high",
+        "category": "queries",
+        "dependencies": ["task-016"]
+      },
+      {
+        "id": "task-019",
+        "description": "Add WebSocket gateway for real-time stock updates with control-aware broadcasting",
+        "priority": "high",
+        "category": "realtime",
+        "dependencies": ["task-018"]
+      },
+      {
+        "id": "task-020",
+        "description": "Create /tgfpro/stock-alerts endpoint for alert management with relationship validation",
+        "priority": "high",
+        "category": "endpoints",
+        "dependencies": ["task-017", "task-019"]
+      },
+      {
+        "id": "task-021",
+        "description": "Implement notification service for sending stock alerts with product details from joins",
+        "priority": "high",
+        "category": "notifications",
+        "dependencies": ["task-020"]
+      },
+      {
+        "id": "task-022",
+        "description": "Add scheduled job for checking stock levels with complex multi-table queries",
+        "priority": "high",
+        "category": "scheduling",
+        "dependencies": ["task-021"]
+      },
+      {
+        "id": "task-023",
+        "description": "Create unit tests for stock alert functionality with control logic",
+        "priority": "high",
+        "category": "testing",
+        "dependencies": ["task-022"]
+      },
+      {
+        "id": "task-024",
+        "description": "Research and select AI search library for semantic search with relationship awareness",
+        "priority": "medium",
+        "category": "analysis",
+        "dependencies": ["task-003"]
+      },
+      {
+        "id": "task-025",
+        "description": "Create ProductSearchIndex entity for storing search vectors with group relationships",
+        "priority": "medium",
+        "category": "database",
+        "dependencies": ["task-024"]
+      },
+      {
+        "id": "task-026",
+        "description": "Implement AISearchService for semantic product search with TGFGRU hierarchy",
+        "priority": "medium",
+        "category": "services",
+        "dependencies": ["task-025"]
+      },
+      {
+        "id": "task-027",
+        "description": "Create DTOs for search requests with group filtering and control options",
+        "priority": "medium",
+        "category": "models",
+        "dependencies": ["task-024"]
+      },
+      {
+        "id": "task-028",
+        "description": "Implement product recommendation algorithm using transaction history from TGFCAB/TGFITE",
+        "priority": "medium",
+        "category": "algorithms",
+        "dependencies": ["task-026"]
+      },
+      {
+        "id": "task-029",
+        "description": "Create /tgfpro/search-ai/v2 endpoint with relationship-aware recommendations",
+        "priority": "medium",
+        "category": "endpoints",
+        "dependencies": ["task-027", "task-028"]
+      },
+      {
+        "id": "task-030",
+        "description": "Implement visual search functionality using image analysis linked to CODPROD",
+        "priority": "medium",
+        "category": "image_processing",
+        "dependencies": ["task-029"]
+      },
+      {
+        "id": "task-031",
+        "description": "Add search analytics for tracking user search patterns across groups and controls",
+        "priority": "medium",
+        "category": "analytics",
+        "dependencies": ["task-029"]
+      },
+      {
+        "id": "task-032",
+        "description": "Create unit tests for AI search with mock table relationships",
+        "priority": "medium",
+        "category": "testing",
+        "dependencies": ["task-031"]
+      },
+      {
+        "id": "task-033",
+        "description": "Analyze current image storage requirements linked to TGFPRO.CODPROD",
+        "priority": "medium",
+        "category": "analysis",
+        "dependencies": ["task-003"]
+      },
+      {
+        "id": "task-034",
+        "description": "Create ProductImage entity with foreign key to TGFPRO",
+        "priority": "medium",
+        "category": "database",
+        "dependencies": ["task-033"]
+      },
+      {
+        "id": "task-035",
+        "description": "Implement ImageUploadService for handling file uploads with product validation",
+        "priority": "medium",
+        "category": "services",
+        "dependencies": ["task-034"]
+      },
+      {
+        "id": "task-036",
+        "description": "Create DTOs for image upload with CODPROD relationship",
+        "priority": "medium",
+        "category": "models",
+        "dependencies": ["task-033"]
+      },
+      {
+        "id": "task-037",
+        "description": "Implement image resizing and optimization with control for different product types",
+        "priority": "medium",
+        "category": "image_processing",
+        "dependencies": ["task-035"]
+      },
+      {
+        "id": "task-038",
+        "description": "Add CDN integration for image delivery with product-specific caching",
+        "priority": "medium",
+        "category": "cdn",
+        "dependencies": ["task-037"]
+      },
+      {
+        "id": "task-039",
+        "description": "Create /tgfpro/images endpoint with product relationship validation",
+        "priority": "medium",
+        "category": "endpoints",
+        "dependencies": ["task-036", "task-038"]
+      },
+      {
+        "id": "task-040",
+        "description": "Implement image deletion with cascade updates to product records",
+        "priority": "medium",
+        "category": "file_management",
+        "dependencies": ["task-039"]
+      },
+      {
+        "id": "task-041",
+        "description": "Add image validation and security checks for product uploads",
+        "priority": "medium",
+        "category": "security",
+        "dependencies": ["task-039"]
+      },
+      {
+        "id": "task-042",
+        "description": "Create unit tests for image management with product relationships",
+        "priority": "medium",
+        "category": "testing",
+        "dependencies": ["task-041"]
+      },
+      {
+        "id": "task-043",
+        "description": "Analyze supplier data structure in Sankhya with TGFCAB/TGFITE relationships",
+        "priority": "medium",
+        "category": "analysis",
+        "dependencies": ["task-003"]
+      },
+      {
+        "id": "task-044",
+        "description": "Create SupplierPerformance entity linked to TGFPRO transaction history",
+        "priority": "medium",
+        "category": "database",
+        "dependencies": ["task-043"]
+      },
+      {
+        "id": "task-045",
+        "description": "Implement SupplierService with transaction-based performance tracking",
+        "priority": "medium",
+        "category": "services",
+        "dependencies": ["task-044"]
+      },
+      {
+        "id": "task-046",
+        "description": "Create DTOs for supplier data with transaction relationship details",
+        "priority": "medium",
+        "category": "models",
+        "dependencies": ["task-043"]
+      },
+      {
+        "id": "task-047",
+        "description": "Implement SQL queries for supplier reliability using TGFCAB/TGFITE joins",
+        "priority": "medium",
+        "category": "queries",
+        "dependencies": ["task-045"]
+      },
+      {
+        "id": "task-048",
+        "description": "Add supplier price comparison using transaction history data",
+        "priority": "medium",
+        "category": "business_logic",
+        "dependencies": ["task-047"]
+      },
+      {
+        "id": "task-049",
+        "description": "Create /tgfpro/suppliers endpoint with transaction relationship data",
+        "priority": "medium",
+        "category": "endpoints",
+        "dependencies": ["task-046", "task-048"]
+      },
+      {
+        "id": "task-050",
+        "description": "Implement procurement integration with purchase orders from transaction tables",
+        "priority": "medium",
+        "category": "integration",
+        "dependencies": ["task-049"]
+      },
+      {
+        "id": "task-051",
+        "description": "Add supplier contract management linked to product procurement history",
+        "priority": "medium",
+        "category": "contracts",
+        "dependencies": ["task-050"]
+      },
+      {
+        "id": "task-052",
+        "description": "Create unit tests for supplier integration with mock transaction data",
+        "priority": "medium",
+        "category": "testing",
+        "dependencies": ["task-051"]
+      },
+      {
+        "id": "task-053",
+        "description": "Analyze reporting requirements with multi-table joins and control aggregations",
+        "priority": "medium",
+        "category": "analysis",
+        "dependencies": ["task-003"]
+      },
+      {
+        "id": "task-054",
+        "description": "Create ReportTemplate entity for custom report configurations with table relationships",
+        "priority": "medium",
+        "category": "database",
+        "dependencies": ["task-053"]
+      },
+      {
+        "id": "task-055",
+        "description": "Implement ReportBuilderService for generating reports with complex joins",
+        "priority": "medium",
+        "category": "services",
+        "dependencies": ["task-054"]
+      },
+      {
+        "id": "task-056",
+        "description": "Create DTOs for report configuration with relationship-aware options",
+        "priority": "medium",
+        "category": "models",
+        "dependencies": ["task-053"]
+      },
+      {
+        "id": "task-057",
+        "description": "Implement Excel export with proper handling of control fields and relationships",
+        "priority": "medium",
+        "category": "export",
+        "dependencies": ["task-055"]
+      },
+      {
+        "id": "task-058",
+        "description": "Add PDF report generation with charts for multi-table data visualization",
+        "priority": "medium",
+        "category": "export",
+        "dependencies": ["task-057"]
+      },
+      {
+        "id": "task-059",
+        "description": "Implement scheduled report generation with relationship-aware queries",
+        "priority": "medium",
+        "category": "scheduling",
+        "dependencies": ["task-058"]
+      },
+      {
+        "id": "task-060",
+        "description": "Create /tgfpro/reports endpoint with relationship validation",
+        "priority": "medium",
+        "category": "endpoints",
+        "dependencies": ["task-056", "task-059"]
+      },
+      {
+        "id": "task-061",
+        "description": "Add report distribution with email functionality including relationship data",
+        "priority": "medium",
+        "category": "notifications",
+        "dependencies": ["task-060"]
+      },
+      {
+        "id": "task-062",
+        "description": "Create unit tests for reporting with mock multi-table scenarios",
+        "priority": "medium",
+        "category": "testing",
+        "dependencies": ["task-061"]
+      },
+      {
+        "id": "task-063",
+        "description": "Research Redis integration for caching complex relationship queries",
+        "priority": "high",
+        "category": "analysis",
+        "dependencies": ["task-003"]
+      },
+      {
+        "id": "task-064",
+        "description": "Install and configure Redis with relationship-aware cache keys",
+        "priority": "high",
+        "category": "infrastructure",
+        "dependencies": ["task-063"]
+      },
+      {
+        "id": "task-065",
+        "description": "Create CacheService abstraction for multi-table query caching",
+        "priority": "high",
+        "category": "services",
+        "dependencies": ["task-064"]
+      },
+      {
+        "id": "task-066",
+        "description": "Implement cache decorators for existing service methods with relationship handling",
+        "priority": "high",
+        "category": "decorators",
+        "dependencies": ["task-065"]
+      },
+      {
+        "id": "task-067",
+        "description": "Add cache invalidation logic for related table updates (TGFPRO → TGFEST → TGFLOC)",
+        "priority": "high",
+        "category": "cache_management",
+        "dependencies": ["task-066"]
+      },
+      {
+        "id": "task-068",
+        "description": "Implement cache warming for frequently accessed product-group-stock combinations",
+        "priority": "high",
+        "category": "performance",
+        "dependencies": ["task-067"]
+      },
+      {
+        "id": "task-069",
+        "description": "Add cache metrics and monitoring for relationship query performance",
+        "priority": "high",
+        "category": "monitoring",
+        "dependencies": ["task-068"]
+      },
+      {
+        "id": "task-070",
+        "description": "Optimize existing SQL queries for multi-table joins and control filtering",
+        "priority": "high",
+        "category": "optimization",
+        "dependencies": ["task-003"]
+      },
+      {
+        "id": "task-071",
+        "description": "Add database indexes for foreign key relationships (CODGRUPOPROD, CODVOL, CODLOCAL)",
+        "priority": "high",
+        "category": "database",
+        "dependencies": ["task-070"]
+      },
+      {
+        "id": "task-072",
+        "description": "Implement database connection pooling optimized for complex Sankhya joins",
+        "priority": "high",
+        "category": "infrastructure",
+        "dependencies": ["task-071"]
+      },
+      {
+        "id": "task-073",
+        "description": "Add read replicas configuration for heavy transaction table queries",
+        "priority": "high",
+        "category": "scalability",
+        "dependencies": ["task-072"]
+      },
+      {
+        "id": "task-074",
+        "description": "Implement API versioning for v2 endpoints with relationship compatibility",
+        "priority": "high",
+        "category": "api",
+        "dependencies": []
+      },
+      {
+        "id": "task-075",
+        "description": "Add comprehensive error handling for multi-table operation failures",
+        "priority": "high",
+        "category": "error_handling",
+        "dependencies": ["task-074"]
+      },
+      {
+        "id": "task-076",
+        "description": "Implement rate limiting with awareness of query complexity and relationships",
+        "priority": "high",
+        "category": "security",
+        "dependencies": ["task-075"]
+      },
+      {
+        "id": "task-077",
+        "description": "Add Swagger documentation with control logic and relationship details",
+        "priority": "high",
+        "category": "documentation",
+        "dependencies": ["task-074"]
+      },
+      {
+        "id": "task-078",
+        "description": "Implement authentication guards for multi-table operations",
+        "priority": "high",
+        "category": "security",
+        "dependencies": []
+      },
+      {
+        "id": "task-079",
+        "description": "Add input validation for control fields and foreign key relationships",
+        "priority": "high",
+        "category": "validation",
+        "dependencies": ["task-078"]
+      },
+      {
+        "id": "task-080",
+        "description": "Configure CORS policies for frontend integration with complex queries",
+        "priority": "high",
+        "category": "security",
+        "dependencies": ["task-079"]
+      },
+      {
+        "id": "task-081",
+        "description": "Add request/response encryption for sensitive transaction and relationship data",
+        "priority": "high",
+        "category": "encryption",
+        "dependencies": ["task-080"]
+      },
+      {
+        "id": "task-082",
+        "description": "Analyze current architecture for microservices separation respecting relationships",
+        "priority": "low",
+        "category": "analysis",
+        "dependencies": ["task-003"]
+      },
+      {
+        "id": "task-083",
+        "description": "Identify service boundaries while maintaining table relationship integrity",
+        "priority": "low",
+        "category": "architecture",
+        "dependencies": ["task-082"]
+      },
+      {
+        "id": "task-084",
+        "description": "Create service discovery patterns for relationship-aware microservices",
+        "priority": "low",
+        "category": "microservices",
+        "dependencies": ["task-083"]
+      },
+      {
+        "id": "task-085",
+        "description": "Implement event-driven architecture for table relationship updates",
+        "priority": "low",
+        "category": "events",
+        "dependencies": ["task-084"]
+      },
+      {
+        "id": "task-086",
+        "description": "Add circuit breaker patterns for external relationship queries",
+        "priority": "low",
+        "category": "resilience",
+        "dependencies": ["task-085"]
+      },
+      {
+        "id": "task-087",
+        "description": "Create AuditLog entity for tracking all TGFPRO relationship changes",
+        "priority": "medium",
+        "category": "database",
+        "dependencies": []
+      },
+      {
+        "id": "task-088",
+        "description": "Implement AuditService for comprehensive change tracking across tables",
+        "priority": "medium",
+        "category": "services",
+        "dependencies": ["task-087"]
+      },
+      {
+        "id": "task-089",
+        "description": "Add GDPR compliance features for relationship data privacy",
+        "priority": "medium",
+        "category": "compliance",
+        "dependencies": ["task-088"]
+      },
+      {
+        "id": "task-090",
+        "description": "Implement change management workflow for product relationship updates",
+        "priority": "medium",
+        "category": "workflows",
+        "dependencies": ["task-088"]
+      },
+      {
+        "id": "task-091",
+        "description": "Add regulatory compliance tracking linked to product certifications",
+        "priority": "medium",
+        "category": "compliance",
+        "dependencies": ["task-090"]
+      },
+      {
+        "id": "task-092",
+        "description": "Create version control for product master data and relationships",
+        "priority": "medium",
+        "category": "versioning",
+        "dependencies": ["task-091"]
+      },
+      {
+        "id": "task-093",
+        "description": "Implement comprehensive integration tests for multi-table operations",
+        "priority": "high",
+        "category": "testing",
+        "dependencies": ["task-092"]
+      },
+      {
+        "id": "task-094",
+        "description": "Add performance benchmarking for relationship query optimization",
+        "priority": "high",
+        "category": "testing",
+        "dependencies": ["task-093"]
+      },
+      {
+        "id": "task-095",
+        "description": "Implement health checks for all table relationship endpoints",
+        "priority": "high",
+        "category": "monitoring",
+        "dependencies": ["task-094"]
+      },
+      {
+        "id": "task-096",
+        "description": "Add application metrics for relationship query performance monitoring",
+        "priority": "high",
+        "category": "monitoring",
+        "dependencies": ["task-095"]
+      },
+      {
+        "id": "task-097",
+        "description": "Create deployment scripts with relationship-aware migration strategies",
+        "priority": "high",
+        "category": "deployment",
+        "dependencies": ["task-096"]
+      },
+      {
+        "id": "task-098",
+        "description": "Implement blue-green deployment with relationship data integrity checks",
+        "priority": "high",
+        "category": "deployment",
+        "dependencies": ["task-097"]
+      },
+      {
+        "id": "task-099",
+        "description": "Add rollback procedures preserving table relationship consistency",
+        "priority": "high",
+        "category": "disaster_recovery",
+        "dependencies": ["task-098"]
+      },
+      {
+        "id": "task-100",
+        "description": "Create comprehensive API documentation portal with relationship diagrams",
+        "priority": "medium",
+        "category": "documentation",
+        "dependencies": ["task-077"]
+      },
+      {
+        "id": "task-101",
+        "description": "Implement developer portal with API playground for relationship queries",
+        "priority": "medium",
+        "category": "documentation",
+        "dependencies": ["task-100"]
+      },
+      {
+        "id": "task-102",
+        "description": "Add interactive examples for complex multi-table operations",
+        "priority": "medium",
+        "category": "documentation",
+        "dependencies": ["task-101"]
+      },
+      {
+        "id": "task-103",
+        "description": "Create final integration test suite validating all table relationships",
+        "priority": "high",
+        "category": "testing",
+        "dependencies": ["task-102"]
+      }
+    ]
+  },
+  "acceptance_criteria": [
+    "All new endpoints return real data from Sankhya with proper table joins (TGFPRO + TGFGRU + TGFEST + TGFLOC)",
+    "API response times under 500ms for cached relationship queries",
+    "Stock alerts respect TIPCONTEST control logic and CONTROLE field requirements",
+    "AI search returns relevant results with 95% accuracy across group hierarchies",
+    "Image uploads process within 10 seconds and link properly to CODPROD",
+    "Reports generate in under 30 seconds for complex multi-table queries",
+    "Cache hit rate above 80% for frequently accessed relationship combinations",
+    "All endpoints documented with working examples of table joins and control logic",
+    "100% test coverage for new functionality including relationship validation",
+    "Zero security vulnerabilities in penetration testing of relationship endpoints"
+  ],
+  "risks_and_mitigations": [
+    {
+      "risk": "Performance degradation from complex multi-table joins",
+      "mitigation": "Implement comprehensive caching and query optimization from day one"
+    },
+    {
+      "risk": "Data consistency issues with TIPCONTEST control logic across tables",
+      "mitigation": "Add transaction management and control-aware validation"
+    },
+    {
+      "risk": "Foreign key constraint violations in relationship updates",
+      "mitigation": "Implement cascade update logic and referential integrity checks"
+    },
+    {
+      "risk": "Security vulnerabilities in multi-table query endpoints",
+      "mitigation": "Conduct security audits and implement proper input validation for all relationships"
+    }
+  ],
+  "timeline": {
+    "phase1": {
+      "name": "Foundation & Relationships",
+      "tasks": ["task-001 to task-023"],
+      "milestones": [
+        "Complete relationship analysis",
+        "Real dashboard data with joins",
+        "Stock alerts with control logic"
+      ]
+    },
+    "phase2": {
+      "name": "Core Features & Integration",
+      "tasks": ["task-024 to task-062"],
+      "milestones": [
+        "AI search with relationships",
+        "Image management linked to products",
+        "Reporting engine with table joins"
+      ]
+    },
+    "phase3": {
+      "name": "Performance & Security",
+      "tasks": ["task-063 to task-099"],
+      "milestones": [
+        "Caching layer for relationships",
+        "Security hardening",
+        "Production deployment ready"
+      ]
+    },
+    "phase4": {
+      "name": "Documentation & Validation",
+      "tasks": ["task-100 to task-103"],
+      "milestones": ["Complete documentation", "Full test suite validation"]
+    }
+  }
 }
