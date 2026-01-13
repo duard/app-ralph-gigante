@@ -1,0 +1,1090 @@
+[
+  {
+    "COLUMN_NAME": "CODUSU",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "CODPROD",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "NOMEUSU",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 20,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "CONTACESSO",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 50,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "DTLIMACESSO",
+    "DATA_TYPE": "datetime",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "INTERNO",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 32,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "CODGRUPO",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "CODEMP",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "CODFUNC",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "EMAIL",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 80,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "OPTGAT",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "VLRMAXAUT",
+    "DATA_TYPE": "money",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 19,
+    "NUMERIC_SCALE": 4,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "NIVEL",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "DTALTER",
+    "DATA_TYPE": "datetime",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "CODCENCUSPAD",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "CAIXA",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "CODPARC",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "SERVIDORSMTP",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 80,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "TIPOSMTP",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "USUARIOSMTP",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 80,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "SENHASMTP",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 250,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "NOMEFILA",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 30,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "DTULTIMASENHA",
+    "DATA_TYPE": "datetime",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "SENHANUNCAEXPIRA",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "TEMECF",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "TOPBAIXARECEITA",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "TOPBAIXADESPESA",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "BAIXAREC",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "BAIXADESP",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "ALTCTAFAT",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "ALTCTAIMPBOL",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "CODCTABCOINT",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "CODCTABCOINT2",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "RENDIASVALJUR",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "VERCABPROPRIA",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "PORTASMTP",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "SEGURANCASMTP",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "ALTORDCFECH",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "EXIBIRVALANALRENT",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "APROVCOT",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "USER_NAME",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 50,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "CODETAPA",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "CONTAGOL",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 30,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "DTULTACESSO",
+    "DATA_TYPE": "datetime",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "EMAILSOLLIB",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 80,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "NOTSLAFILA",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "CPF",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 11,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "RG",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 15,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "NOMEUSUCPLT",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 40,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "DTNASC",
+    "DATA_TYPE": "datetime",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "IMPNFCENTRAL",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "CODUSUALTER",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "NOMEUSUALTER",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 10,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "MINUTOSFIN",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "CODVEND",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "ACESSOVISUALCAB",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "RESTRINGECART",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "CODPARCPERFIL",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "CODCONTATOPERFIL",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "VERIMPCURS",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "EXCLIBORC",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "LOCALE",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 8,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "FOTO",
+    "DATA_TYPE": "image",
+    "CHARACTER_MAXIMUM_LENGTH": 2147483647,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "PERMEXPREL",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "CODCARGAACESSO",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "TOLERANCIAACESSO",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "VISACESOUTUSU",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "APENASCOMPLIB",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "IMPSEP",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 250,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "ACESSAFORMULAREL",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "INTEGRAECONECT",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "INFRECSEN",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 4000,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AVISAVARPRECO",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "NIVELACESSO",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "PERMALTMOEDA",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "PERMIMPRIMEREL",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "INSTALAPACOTESS",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "INFBIOMDIG",
+    "DATA_TYPE": "text",
+    "CHARACTER_MAXIMUM_LENGTH": 2147483647,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "IGNORAHORASCRUZ",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "SENHAECONECT",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "CODIDECONECT",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 40,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "IDPERFILECONECT",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 20,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "PERMREPERRO",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "SELECTWCAPO",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "PROPRIETARIO",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "OPERACIONAL",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "IMPLANTADOR",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "GESTOR",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "CODPERFIL",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "NUVERSAO",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "TIMVERTODASFACS",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "TIMPATHSCANNER",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 100,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "CORCODIGO",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "TIMBAIXAWORD",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "USUREDE",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 200,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "GRUPOREDE",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 50,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "IGNORALDAP",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "TIMBAIXTITRECABE",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "ATUNUVERSAO",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "ACCOUNTDHEXPIRA",
+    "DATA_TYPE": "datetime",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "ACCOUNTTOKEN",
+    "DATA_TYPE": "text",
+    "CHARACTER_MAXIMUM_LENGTH": 2147483647,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "ACCOUNTID",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 255,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "ACCOUNTNOMEFOTO",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 255,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "ACCOUNTEMAIL",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 256,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "TOKENCHECKOUT",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 13,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "ACESSOPDVCANCITENS",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "ACESSOPDVSANG",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "ACESSOPDVSUPR",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "ACESSOPDVSANGPDESP",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "TIPENVNOTSOL",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "LIBERACREDITO",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 10,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "CODEMPNEGOC",
+    "DATA_TYPE": "smallint",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 5,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "PODEALTERARPEF",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_IDEXTERNO",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 100,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_CODVEICULO",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_RECEBENOTIFICACAO",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 10,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "CODEQUIP",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_REABRIROS",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 10,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_AUTOSIRVO",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 10,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_RECEBENOTIFASO",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 10,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "ACCOUNTPARTNER",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "TIPOUSU",
+    "DATA_TYPE": "int",
+    "CHARACTER_MAXIMUM_LENGTH": null,
+    "NUMERIC_PRECISION": 10,
+    "NUMERIC_SCALE": 0,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "IMP2SANSUPCAI",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "NO"
+  },
+  {
+    "COLUMN_NAME": "ABREGAVETA",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_CADEADOMOS",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 100,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_AUTOPERAR1",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 100,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_AUTOPERAR2",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 100,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_AUTOPERAR3",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 100,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_AUTOPERAR4",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 100,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_AUTOPERAR5",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 100,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_AUTOPERAR6",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 100,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_AUTOPERAR7",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 100,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "DESCTOTALNOTAPDV",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_TELEFONECORP",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 20,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_MATMOSAIC",
+    "DATA_TYPE": "varchar",
+    "CHARACTER_MAXIMUM_LENGTH": 20,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  },
+  {
+    "COLUMN_NAME": "AD_ENVIA_WPP",
+    "DATA_TYPE": "char",
+    "CHARACTER_MAXIMUM_LENGTH": 1,
+    "NUMERIC_PRECISION": null,
+    "NUMERIC_SCALE": null,
+    "IS_NULLABLE": "YES"
+  }
+]

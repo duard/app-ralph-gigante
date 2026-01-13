@@ -1,0 +1,1 @@
+{"statusCode":400,"timestamp":"2026-01-05T13:25:45.949Z","path":"/inspection/query","error":"Unexpected token 'W', ...\"{\"query\": WITH purch\"... is not valid JSON"}

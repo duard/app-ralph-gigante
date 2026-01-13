@@ -1,0 +1,3 @@
+CODLOCAL | CODPROD | DESCRPROD                         | TOTAL_ESTOQUE
+---------+---------+-----------------------------------+--------------
+101010   | 3706    | PALHETA LIMPADOR PARA BRISA VETOR | 11           

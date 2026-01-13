@@ -1,0 +1,32 @@
+Note: Unnecessary use of -X or --request, GET is already inferred.
+* Host localhost:3000 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying [::1]:3000...
+* Connected to localhost (::1) port 3000
+> GET /inspection/table-schema?tableName=TGFDEP HTTP/1.1
+> Host: localhost:3000
+> User-Agent: curl/8.5.0
+> Accept: */*
+> Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkNBUkxPUy5BUVVJTk8iLCJzdWIiOjI5Miwibm9tZSI6IkNBUkxPUy5BUVVJTk8iLCJlbWFpbCI6InNpc3RlbWEwMkBnaWdhbnRhb2xvY2Fkb3JhLmNvbS5iciAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIiwiY29kZW1wIjo1LCJyYXphb1NvY2lhbCI6IkdJR0FOVEFPIE1BTlVURU5DQU8gICAgICAgICAgICAgICAgICAgICAiLCJjb2RmdW5jIjoxMDAsIm5vbWVGdW5jaW9uYXJpbyI6IkNBUkxPUyBFRFVBUkRPIEJPUkdFUyBERSBBUVVJTk8iLCJjZ2MiOiI1MTAwNDE2ODAwMDEwNiIsImlhdCI6MTc2NjY3Njk4MCwiZXhwIjoxNzY2NjgwNTgwfQ.pnH4i_ZZS3NwoHICcvMrSbJ7GxvLFLX6TAgSUefhxH4
+> 
+< HTTP/1.1 500 Internal Server Error
+< X-Powered-By: Express
+< Vary: Origin
+< Access-Control-Allow-Credentials: true
+< X-RateLimit-Limit: 100
+< X-RateLimit-Remaining: 99
+< X-RateLimit-Reset: 60
+< Content-Type: application/json; charset=utf-8
+< Content-Length: 178
+< ETag: W/"b2-LgsYuHevUwVlxaS3GII23LOSRC8"
+< Date: Thu, 25 Dec 2025 15:37:02 GMT
+< Connection: keep-alive
+< Keep-Alive: timeout=5
+< 
+{ [178 bytes data]
+100   178  100   178    0     0   1619      0 --:--:-- --:--:-- --:--:--  1633
+* Connection #0 to host localhost left intact
+{"statusCode":500,"timestamp":"2025-12-25T15:37:02.576Z","path":"/inspection/table-schema?tableName=TGFDEP","error":"Cannot read properties of undefined (reading 'accessToken')"}

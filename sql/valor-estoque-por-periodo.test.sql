@@ -1,0 +1,80 @@
+-- TEST: Valor em Estoque por Período (amostra + checks)
+-- Execute via SQL Server extension. Ajuste @dtInicio/@dtFim/@CODEMP/@CODLOCAL conforme necessário.
+
+SET NOCOUNT ON;
+DECLARE @dtInicio DATE = '2025-01-01';
+DECLARE @dtFim    DATE = '2025-12-31';
+DECLARE @CODEMP   INT  = NULL;
+-- filtrar se desejar
+DECLARE @CODLOCAL INT  = NULL;
+-- filtrar se desejar
+
+WITH
+  purchases_period
+  AS
+  (
+    SELECT
+      i.CODPROD,
+      SUM(ISNULL(i.QTDNEG, 0)) AS QTD_COMPRADA,
+      SUM(ISNULL(i.VLRUNIT, 0) * ISNULL(i.QTDNEG, 0)) AS VALOR_TOTAL_COMPRAS,
+      CASE WHEN SUM(ISNULL(i.QTDNEG, 0)) > 0 THEN SUM(ISNULL(i.VLRUNIT, 0) * ISNULL(i.QTDNEG, 0)) / SUM(ISNULL(i.QTDNEG, 0)) ELSE NULL END AS PRECO_PONDERADO
+    FROM [SANKHYA].[TGFCAB] c
+      JOIN [SANKHYA].[TGFITE] i ON i.NUNOTA = c.NUNOTA
+    WHERE c.TIPMOV = 'O' AND c.STATUSNOTA = 'L' AND c.DTMOV BETWEEN @dtInicio AND @dtFim
+      AND i.CODPROD NOT IN (5568,6689,8076)
+    GROUP BY i.CODPROD
+  ),
+  last_purchase_price
+  AS
+  (
+    SELECT t.CODPROD, t.VLRUNIT as last_vlrunit
+    FROM (
+    SELECT I.CODPROD, I.VLRUNIT,
+        ROW_NUMBER() OVER (PARTITION BY I.CODPROD ORDER BY C.DTNEG DESC, I.NUNOTA DESC) as rn
+      FROM [SANKHYA].[TGFITE] I
+        JOIN [SANKHYA].[TGFCAB] C ON C.NUNOTA = I.NUNOTA AND C.TIPMOV = 'C' AND C.STATUSNOTA = 'L'
+  ) t
+    WHERE t.rn = 1
+  ),
+  stock
+  AS
+  (
+    SELECT e.CODPROD, SUM(ISNULL(e.ESTOQUE,0)) AS ESTOQUE_ATUAL
+    FROM [SANKHYA].[TGFEST] e
+    WHERE (@CODEMP IS NULL OR e.CODEMP = @CODEMP) AND (@CODLOCAL IS NULL OR e.CODLOCAL = @CODLOCAL)
+    GROUP BY e.CODPROD
+  )
+
+-- Sample: top 100
+SELECT TOP 100
+  p.CODPROD,
+  pr.DESCRPROD,
+  ISNULL(st.ESTOQUE_ATUAL,0) AS ESTOQUE_ATUAL,
+  p.QTD_COMPRADA AS QTD_COMPRADA_PERIOD,
+  p.PRECO_PONDERADO,
+  lp.last_vlrunit,
+  COALESCE(p.PRECO_PONDERADO, lp.last_vlrunit, pr.VLRUNIT, 0) AS PRECO_USADO,
+  CASE WHEN ISNULL(st.ESTOQUE_ATUAL,0) < ISNULL(p.QTD_COMPRADA,0) THEN ISNULL(st.ESTOQUE_ATUAL,0) ELSE ISNULL(p.QTD_COMPRADA,0) END AS QTD_APLICAVEL,
+  (CASE WHEN ISNULL(st.ESTOQUE_ATUAL,0) < ISNULL(p.QTD_COMPRADA,0) THEN ISNULL(st.ESTOQUE_ATUAL,0) ELSE ISNULL(p.QTD_COMPRADA,0) END) * COALESCE(p.PRECO_PONDERADO, lp.last_vlrunit, pr.VLRUNIT, 0) AS VALOR_REMANESCENTE
+FROM purchases_period p
+  LEFT JOIN stock st ON st.CODPROD = p.CODPROD
+  LEFT JOIN last_purchase_price lp ON lp.CODPROD = p.CODPROD
+  LEFT JOIN [SANKHYA].[TGFPRO] pr ON pr.CODPROD = p.CODPROD
+ORDER BY VALOR_REMANESCENTE DESC;
+
+-- Aggregated checks
+SELECT COUNT(*) AS produtos_com_compras_no_periodo
+FROM purchases_period;
+SELECT SUM(QTD_COMPRADA) AS soma_qtd_comprada_periodo
+FROM purchases_period;
+SELECT SUM(VALOR_TOTAL_COMPRAS) AS soma_valor_compras_periodo
+FROM purchases_period;
+SELECT SUM(ISNULL(ESTOQUE_ATUAL,0)) AS soma_estoque_total
+FROM stock;
+SELECT SUM((CASE WHEN ISNULL(stock.ESTOQUE_ATUAL,0) < ISNULL(p.QTD_COMPRADA,0) THEN ISNULL(stock.ESTOQUE_ATUAL,0) ELSE ISNULL(p.QTD_COMPRADA,0) END) * COALESCE(p.PRECO_PONDERADO, lp.last_vlrunit, pr.VLRUNIT,0)) AS soma_valor_remanescente
+FROM purchases_period p
+  LEFT JOIN stock ON stock.CODPROD = p.CODPROD
+  LEFT JOIN last_purchase_price lp ON lp.CODPROD = p.CODPROD
+  LEFT JOIN [SANKHYA].[TGFPRO] pr ON pr.CODPROD = p.CODPROD;
+
+PRINT 'Teste finalizado';

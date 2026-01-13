@@ -1,0 +1,5 @@
+export * from './inventario.entity'
+export * from './movimentacao.entity'
+export * from './produto-parado.entity'
+export * from './top-produto.entity'
+export * from './kardex.entity'

@@ -1,0 +1,21 @@
+# Ambiente
+ENVIRONMENT=production
+SERVICE_NAME=gigantao-admin
+
+# Portas
+PORT=3100
+
+# API URLs
+VITE_API_PONTOTEL_URL=https://api-pontotel.gigantao.net
+VITE_PONTOTEL_BASE_URL=https://api-pontotel.gigantao.net
+VITE_API_AUTH_URL=https://api-auth.gigantao.net/
+VITE_API_GIGANTE_PLUS_BASE_URL=https://api-pontotel.gigantao.net/
+VITE_API_SANKHYA_BASE_URL=https://api-sankhya.gigantao.net
+API_SANKHYA_READ_BASE_URL=https://api-nestjs-sankhya-read-producao.gigantao.net
+# Credenciais obrigatórias para API Sankhya (LEITURA APENAS)
+SANKHYA_USERNAME=CONVIDADO
+SANKHYA_PASSWORD=guest123
+
+# Credenciais administrativas para acesso a logs de auditoria (AD_GIG_LOG)
+SANKHYA_ADMIN_USERNAME=ADMIN
+SANKHYA_ADMIN_PASSWORD=admin123

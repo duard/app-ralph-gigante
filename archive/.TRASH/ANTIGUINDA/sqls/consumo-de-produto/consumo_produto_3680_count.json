@@ -1,0 +1,1 @@
+{"query":"SELECT COUNT(1) AS CNT FROM [SANKHYA].[TGFITE] WHERE CODPROD = 3680;","originalQuery":"SELECT COUNT(1) AS CNT FROM [SANKHYA].[TGFITE] WHERE CODPROD = 3680;","params":[],"data":[{"CNT":541}],"rowCount":1}

@@ -1,0 +1,6 @@
+export * from './dashboard-filters.dto'
+export * from './inventario.dto'
+export * from './movimentacoes.dto'
+export * from './produtos-parados.dto'
+export * from './top-produtos.dto'
+export * from './dashboard-response.dto'

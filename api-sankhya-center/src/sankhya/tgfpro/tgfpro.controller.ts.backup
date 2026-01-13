@@ -1,0 +1,265 @@
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common'
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger'
+
+import {
+  PaginatedResult,
+  wrapAllAsSinglePage,
+} from '../../common/pagination/pagination.types'
+import { TokenAuthGuard } from '../auth/token-auth.guard'
+import { TgfproFindAllDto } from './models/tgfpro-find-all.dto'
+import { Tgfpro } from './models/tgfpro.interface'
+import { TgfproService } from './tgfpro.service'
+
+@ApiBearerAuth('JWT-auth')
+@ApiTags('E. tgfpro')
+@UseGuards(TokenAuthGuard)
+@Controller('tgfpro')
+export class TgfproController {
+  constructor(private readonly tgfproService: TgfproService) {}
+
+  @Get()
+  @ApiOperation({ summary: 'Listar produtos' })
+  @ApiResponse({ status: 200, description: 'Lista de produtos', type: Object })
+  async findAll(
+    @Query() dto: TgfproFindAllDto,
+  ): Promise<PaginatedResult<Tgfpro>> {
+    const hasSpecificFilters =
+      dto.search ||
+      dto.descrprod ||
+      dto.referencia ||
+      dto.marca ||
+      dto.codgrupoprod ||
+      dto.tipcontest ||
+      dto.liscontest
+    const effectiveDto = {
+      ...dto,
+      sort: dto.sort || (hasSpecificFilters ? 'DESCRPROD ASC' : 'CODPROD DESC'),
+      page: dto.page || 1,
+      perPage: dto.perPage || 10,
+    }
+    return this.tgfproService.findAll(effectiveDto)
+  }
+
+  // Colocar rotas estáticas antes e restringir o parâmetro para evitar conflitos
+  @Get(':codprod(\\d+)')
+  @ApiOperation({ summary: 'Buscar produto por código' })
+  @ApiResponse({ status: 200, description: 'Produto encontrado', type: Object })
+  @ApiResponse({ status: 404, description: 'Produto não encontrado' })
+  async findById(@Param('codprod') codprod: number): Promise<Tgfpro | null> {
+    return this.tgfproService.findById(codprod)
+  }
+
+  @Get('with-stock/all')
+  @ApiOperation({ summary: 'Listar produtos com informações de estoque' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de produtos com estoque',
+    type: Object,
+  })
+  async findAllWithStock(
+    @Query() dto: TgfproFindAllDto,
+  ): Promise<PaginatedResult<any>> {
+    return this.tgfproService.findAllWithStock(dto)
+  }
+
+  // === ENDPOINTS ULTRA PODEROSOS ===
+
+  @Get('search/:termo')
+  @ApiOperation({
+    summary: 'Busca avançada de produtos com relevância',
+    description:
+      'Busca inteligente que engloba múltiplos campos com pontuação de relevância. Ultra rápida e precisa.',
+  })
+  @ApiParam({
+    name: 'termo',
+    description: 'Termo de busca (mínimo 2 caracteres)',
+    example: 'parafuso',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Limite de resultados (padrão: 50, máximo: 200)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Resultados ordenados por relevância',
+    schema: {
+      example: {
+        data: [
+          {
+            codprod: 123,
+            descrprod: 'PARAFUSO CABECA CHATA',
+            referencia: 'P123',
+            marca: 'GENERICO',
+          },
+        ],
+        total: 1,
+        page: 1,
+        perPage: 1,
+        lastPage: 1,
+        hasMore: false,
+      },
+    },
+  })
+  async searchAvancada(
+    @Param('termo') termo: string,
+    @Query('limit') limit?: number,
+  ): Promise<PaginatedResult<Tgfpro>> {
+    const maxLimit = Math.min(limit || 50, 200)
+    const results = await this.tgfproService.searchAvancada(termo, maxLimit)
+    return wrapAllAsSinglePage(results)
+  }
+
+  @Get('ultra-search')
+  @ApiOperation({ summary: 'Ultra search for products with rich data' })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Search term for product description',
+  })
+  @ApiQuery({ name: 'marca', required: false, description: 'Brand filter' })
+  @ApiQuery({
+    name: 'ativo',
+    required: false,
+    description: 'Active status (S/N)',
+  })
+  @ApiQuery({
+    name: 'codgrupoprod',
+    required: false,
+    description: 'Grupo de produto (código numérico)',
+  })
+  @ApiQuery({
+    name: 'ncm',
+    required: false,
+    description: 'Filtro por NCM (LIKE)',
+  })
+  @ApiQuery({
+    name: 'localizacao',
+    required: false,
+    description: 'Filtro por localização (LIKE)',
+  })
+  @ApiQuery({
+    name: 'codcencus',
+    required: false,
+    description: 'Centro de custo (código numérico)',
+  })
+  @ApiQuery({
+    name: 'tipcontest',
+    required: false,
+    description: 'Tipo de controle (LIKE)',
+  })
+  @ApiQuery({
+    name: 'liscontest',
+    required: false,
+    description: 'Lista de controle contém (LIKE)',
+  })
+  @ApiQuery({
+    name: 'includeEstoque',
+    required: false,
+    description: 'Incluir agregados de estoque (S/N)',
+  })
+  @ApiQuery({
+    name: 'includeJoins',
+    required: false,
+    description: 'Incluir joins (grupo/volume) (S/N)',
+  })
+  @ApiQuery({ name: 'page', required: false, description: 'Page number' })
+  @ApiQuery({ name: 'perPage', required: false, description: 'Items per page' })
+  @ApiQuery({ name: 'sort', required: false, description: 'Sort order' })
+  @ApiResponse({
+    status: 200,
+    description: 'Products found',
+    schema: {
+      example: {
+        data: [
+          {
+            codprod: 123,
+            descrprod: 'PARAFUSO CABECA CHATA',
+            codgrupoprod: 1,
+            codvol: 'UN',
+            pesobruto: 0.1,
+            pesoliq: 0.09,
+          },
+        ],
+        total: 1,
+        page: 1,
+        perPage: 10,
+        lastPage: 1,
+        hasMore: false,
+      },
+    },
+  })
+  async ultraSearch(
+    @Query() dto: TgfproFindAllDto,
+  ): Promise<PaginatedResult<Tgfpro>> {
+    return this.tgfproService.ultraSearch(dto as any)
+  }
+
+  @Get('admin/test')
+  async test() {
+    return { message: 'Teste TGFPRO', timestamp: new Date().toISOString() }
+  @Get('consumo-periodo/:codprod')
+  @ApiOperation({
+    summary: 'Consultar consumo/movimentações de produto em período',
+    description: 'Retorna todas as movimentações de entrada/saída de um produto em um período específico'
+  })
+  @ApiParam({
+    name: 'codprod',
+    description: 'Código do produto',
+    example: 3680,
+    type: Number
+  })
+  @ApiQuery({
+    name: 'dataInicio',
+    description: 'Data inicial (YYYY-MM-DD)',
+    example: '2025-12-01',
+    required: true
+  })
+  @ApiQuery({
+    name: 'dataFim',
+    description: 'Data final (YYYY-MM-DD)',
+    example: '2025-12-31',
+    required: true
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Movimentações do produto no período',
+    schema: {
+      example: {
+        codprod: 3680,
+        dataInicio: '2025-12-01',
+        dataFim: '2025-12-31',
+        movimentacoes: [{
+          data_referencia: '2025-12-26T00:00:00.000Z',
+          tipo_registro: 'MOVIMENTACAO',
+          nunota: 273279,
+          tipmov: 'Q',
+          codparc: 3618,
+          nome_parceiro: 'DANUBIA CRISTINA GARCIA DE OLIVEIRA',
+          usuario: 'ELLEN.SOUZA',
+          quantidade_mov: -3,
+          valor_mov: -71.07
+        }],
+        totalMovimentacoes: 9,
+        movimentoLiquido: -37
+      }
+    }
+  })
+  async consultarConsumoPeriodo(
+    @Param('codprod') codprod: number,
+    @Query('dataInicio') dataInicio: string,
+    @Query('dataFim') dataFim: string,
+  ) {
+    return this.tgfproService.consultarConsumoPeriodo(codprod, dataInicio, dataFim)
+  }
+}
+
+

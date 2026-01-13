@@ -1,0 +1,61 @@
+-- Tree view: locais (pai → subpai → ... → local) com métricas de produtos
+-- Uso: substituir @root pelo CODLOCAL raiz desejado e executar no SQL Server
+DECLARE @root INT = 101000;
+-- troque para o local raiz desejado
+
+;WITH
+  descendants
+  AS
+  (
+          SELECT L.CODLOCAL,
+        L.CODLOCALPAI,
+        LTRIM(RTRIM(L.DESCRLOCAL)) AS DESCRLOCAL,
+        CAST(LTRIM(RTRIM(L.DESCRLOCAL)) AS VARCHAR(MAX)) AS LOCAL_PATH,
+        CAST(CONVERT(VARCHAR(20), L.CODLOCAL) AS VARCHAR(MAX)) AS LOCAL_PATH_CODES,
+        0 AS LEVEL
+      FROM [SANKHYA].[TGFLOC] L
+      WHERE L.CODLOCAL = @root
+    UNION ALL
+      SELECT c.CODLOCAL,
+        c.CODLOCALPAI,
+        LTRIM(RTRIM(c.DESCRLOCAL)) AS DESCRLOCAL,
+        CAST(d.LOCAL_PATH + ' > ' + LTRIM(RTRIM(c.DESCRLOCAL)) AS VARCHAR(MAX)) AS LOCAL_PATH,
+        CAST(d.LOCAL_PATH_CODES + '.' + CONVERT(VARCHAR(20), c.CODLOCAL) AS VARCHAR(MAX)) AS LOCAL_PATH_CODES,
+        d.LEVEL + 1
+      FROM descendants d
+        JOIN [SANKHYA].[TGFLOC] c ON c.CODLOCALPAI = d.CODLOCAL
+  ),
+  est_agg
+  AS
+  (
+    -- agregados por local (produtos qtd + estoque total + lista resumida)
+    SELECT E.CODLOCAL,
+      COUNT(DISTINCT E.CODPROD) AS QTD_PRODUTOS,
+      SUM(ISNULL(E.ESTOQUE,0)) AS TOTAL_ESTOQUE,
+      STUFF((
+           SELECT ', ' + CAST(p2.CODPROD AS VARCHAR(20)) + ':' + LTRIM(RTRIM(LEFT(p2.DESCRPROD,120))) + '(' + CAST(e2.ESTOQUE AS VARCHAR(50)) + ')'
+      FROM [SANKHYA].[TGFEST] e2
+        JOIN [SANKHYA].[TGFPRO] p2 ON p2.CODPROD = e2.CODPROD
+      WHERE e2.CODLOCAL = E.CODLOCAL
+      ORDER BY LTRIM(RTRIM(p2.DESCRPROD))
+      FOR XML PATH(''), TYPE
+         ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS PROD_LIST
+    FROM [SANKHYA].[TGFEST] E
+      JOIN [SANKHYA].[TGFPRO] P ON P.CODPROD = E.CODPROD
+    GROUP BY E.CODLOCAL
+  )
+
+SELECT d.CODLOCAL,
+  d.DESCRLOCAL,
+  d.CODLOCALPAI,
+  d.LOCAL_PATH,
+  d.LOCAL_PATH_CODES,
+  d.LEVEL,
+  LTRIM(RTRIM(parent.DESCRLOCAL)) AS PARENT_DESCRLOCAL,
+  ISNULL(ea.QTD_PRODUTOS,0) AS QTD_PRODUTOS,
+  ISNULL(ea.TOTAL_ESTOQUE,0) AS TOTAL_ESTOQUE,
+  ISNULL(LTRIM(RTRIM(ea.PROD_LIST)),'') AS PRODUTOS_NO_LOCAL
+FROM descendants d
+  LEFT JOIN [SANKHYA].[TGFLOC] parent ON parent.CODLOCAL = d.CODLOCALPAI
+  LEFT JOIN est_agg ea ON ea.CODLOCAL = d.CODLOCAL
+ORDER BY d.LOCAL_PATH, d.CODLOCAL;

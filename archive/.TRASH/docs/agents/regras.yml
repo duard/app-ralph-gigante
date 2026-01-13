@@ -1,0 +1,186 @@
+
+---
+## Devemos usar NestJS
+
+Nosso projeto é um backend que se comunica com uma API externa: `https://api-nestjs-sankhya-read-producao.gigantao.net/api#/`
+
+Você deve ter essa URL configurada em uma variável no `.env` e um módulo de comunicação centralizado com a API externa. Este módulo enviará requisições e receberá respostas.
+
+### Exemplo de Autenticação
+
+```bash
+curl -X 'POST' \
+  'https://api-nestjs-sankhya-read-producao.gigantao.net/auth/login' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "username": "CONVIDADO",
+  "password": "guest123"
+}'
+```
+
+**Resposta:**
+
+```json
+{
+  "access_token": "YOUR_ACCESS_TOKEN_HERE"
+}
+```
+
+## Com o token podemos fazer mais requisições
+
+Devemos usar o token obtido para autenticar as próximas requisições.
+
+### Exemplo: Perfil do Usuário
+
+```bash
+curl -X 'POST' \
+  'https://api-nestjs-sankhya-read-producao.gigantao.net/auth/profile' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer YOUR_ACCESS_TOKEN_HERE' \
+  -d ''
+```
+
+**Resposta:**
+
+```json
+{
+  "userId": 311,
+  "username": "CONVIDADO"
+}
+```
+
+## Inspeção de Tabelas Externas
+
+### Listar todas as tabelas
+
+```bash
+curl -X 'GET' \
+  'https://api-nestjs-sankhya-read-producao.gigantao.net/inspection/tables' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer YOUR_ACCESS_TOKEN_HERE'
+```
+
+### Inspecionar uma tabela específica (Schema)
+
+```bash
+curl -X 'GET' \
+  'https://api-nestjs-sankhya-read-producao.gigantao.net/inspection/table-schema?tableName=TGFVEN' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer YOUR_ACCESS_TOKEN_HERE'
+```
+
+### Inspecionar relacionamentos de uma tabela
+
+```bash
+curl -X 'GET' \
+  'https://api-nestjs-sankhya-read-producao.gigantao.net/inspection/table-relations?tableName=TGFVEN' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer YOUR_ACCESS_TOKEN_HERE'
+```
+
+### Inspecionar Primary Keys de uma tabela
+
+```bash
+curl -X 'GET' \
+  'https://api-nestjs-sankhya-read-producao.gigantao.net/inspection/primary-keys/TGFVEN' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer YOUR_ACCESS_TOKEN_HERE'
+```
+
+
+## Estrutura de Tomada de Decisão
+
+Quando existirem múltiplas opções, priorize nesta ordem:
+
+1. Padrões existentes na base de código
+2. Simplicidade sobre astúcia
+3. Manutenibilidade sobre micro-otimizações
+4. Explicitude sobre "mágica"
+5. Compatibilidade retroativa sobre novidade
+
+Toda decisão não óbvia deve ser justificada.
+
+---
+
+## Princípios Arquiteturais
+
+Sempre favoreça:
+
+- Fronteiras claras
+- Baixo acoplamento
+- Alta coesão
+- Contratos explícitos
+- Comportamento previsível
+
+Evite:
+
+- Superengenharia (Over-engineering)
+- Abstração prematura
+- Abstrações com vazamento (Leaky abstractions)
+- Efeitos colaterais ocultos
+- Código "esperto" difícil de ler
+
+---
+
+## Antipadrões a Prevenir Ativamente
+
+- Misturar responsabilidades em um único módulo
+- Funções grandes e com múltiplos propósitos
+- Comportamento implícito baseado em contexto
+- Acoplamento forte entre sistemas não relacionados
+- Refatorações sem testes
+- Funcionalidades sem documentação
+
+Se você detectar um antipadrão:
+- Aponte-o
+- Explique o porquê
+- Proponha uma alternativa mais segura
+
+---
+
+## Estilo de Comunicação
+
+Sua comunicação deve ser:
+
+- Estruturada
+- Precisa
+- Orientada à ação
+
+Sempre:
+
+- Relate o progresso nos principais marcos
+- Expha bloqueios imediatamente
+- Forneça resumos concisos
+- Referencie:
+  - Caminhos de arquivos
+  - Nomes de funções
+  - Números de linha (quando relevante)
+
+Nunca:
+
+- Minimize a complexidade sem base
+- Esconda incertezas
+- Assuma contexto compartilhado sem verificar
+
+---
+
+## Padrão de Qualidade de Saída
+
+Antes de responder, pergunte-se:
+
+- Um engenheiro sênior confiaria neste plano?
+- Todas as principais decisões estão justificadas?
+- Outro engenheiro poderia continuar este trabalho sem mim?
+
+Se a resposta for "não", melhore a saída.
+
+---
+
+## Regra Final
+
+Você não está aqui para ser rápido.
+Você está aqui para ser **correto, claro e escalável**.
+
+Em caso de dúvida:
+**Desacelere, planeje melhor e orquestre deliberadamente.**

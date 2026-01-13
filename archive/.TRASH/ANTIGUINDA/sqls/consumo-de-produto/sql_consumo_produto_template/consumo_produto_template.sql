@@ -1,0 +1,80 @@
+-- Template: consumo por produto
+-- Usage: set @codprod, @dt_start, @dt_end and run. Adjust filters as needed (TIPMOV, STATUSNOTA, CODUSUINC)
+
+DECLARE @codprod INT = 3680;
+-- product code
+DECLARE @dt_start DATETIME = '2025-01-01';
+DECLARE @dt_end DATETIME   = '2025-12-31 23:59:59';
+
+/*
+Core queries provided:
+ 1) Detailed lines for the product in the period (join TGFCAB + TGFITE + TGFTOP + TGFPRO)
+ 2) Summary counts (lines, distinct notes, sum of QTDNEG)
+ 3) By comprador (ROLLUP) — counts and values
+ 4) By month (ANALYSIS over time)
+Notes on interpretation:
+ - TGFCAB: note header (NUNOTA, DTNEG, TIPMOV, STATUSNOTA)
+ - TGFITE: line items (CODPROD, QTDNEG, QTDENTREGUE, VLRUNIT, VLRTOT)
+ - TGFTOP: operation type (CODTIPOPER) and field ATUALEST indicates how it affects stock (e.g., 'B' lowers stock)
+ - TIPMOV = 'O' indicates purchase entries (ignore those when counting consumption)
+*/
+
+-- 1) Details
+SELECT
+  C.NUNOTA, C.CODEMP, C.DTNEG, C.DTMOV, C.TIPMOV, C.STATUSNOTA,
+  TGFTOP.CODTIPOPER, TGFTOP.DESCROPER, TGFTOP.ATUALEST,
+  I.SEQ, I.CODPROD, I.QTDE, I.QTDNEG, I.QTDENTREGUE, I.VLRUNIT, I.VLRTOT,
+  P.DESCRPROD,
+  LTRIM(RTRIM(L.DESCRLOCAL)) AS DESCRLOCAL
+FROM [SANKHYA].[TGFITE] I
+  JOIN [SANKHYA].[TGFCAB] C ON C.NUNOTA = I.NUNOTA AND C.CODEMP = I.CODEMP
+  LEFT JOIN [SANKHYA].[TGFTOP] TGFTOP ON TGFTOP.CODTIPOPER = C.CODTIPOPER
+  LEFT JOIN [SANKHYA].[TGFPRO] P ON P.CODPROD = I.CODPROD
+  LEFT JOIN [SANKHYA].[TGFLOC] L ON L.CODLOCAL = I.CODLOCAL
+WHERE I.CODPROD = @codprod
+  AND C.DTNEG BETWEEN @dt_start AND @dt_end
+ORDER BY C.DTNEG DESC, C.NUNOTA, I.SEQ;
+
+-- 2) Summary (period)
+SELECT
+  COUNT(1) AS LINHAS, -- linhas de item
+  COUNT(DISTINCT C.NUNOTA) AS NOTAS, -- notas distintas que conteram o produto
+  SUM(ISNULL(I.QTDNEG,0)) AS QTD_NEGADA, -- soma das QTDNEG
+  SUM(ISNULL(I.QTDENTREGUE,0)) AS QTD_ENTREGUE
+FROM [SANKHYA].[TGFITE] I
+  JOIN [SANKHYA].[TGFCAB] C ON C.NUNOTA = I.NUNOTA AND C.CODEMP = I.CODEMP
+WHERE I.CODPROD = @codprod
+  AND C.DTNEG BETWEEN @dt_start AND @dt_end
+  AND C.TIPMOV <> 'O' -- excluir compras
+  AND C.STATUSNOTA = 'L';
+-- considerar só liberadas (ajustável)
+
+-- 3) By comprador (ROLLUP)
+SELECT
+  CASE WHEN GROUPING(USU.NOMEUSU) = 1 THEN 'TOTAL GERAL' ELSE USU.NOMEUSU END AS comprador,
+  COUNT(DISTINCT C.NUNOTA) AS qtdConfirmados,
+  SUM(ISNULL(I.QTDNEG,0)) AS qtdTotalNegada,
+  SUM(C.VLRNOTA) AS vlrConfirmados
+FROM [SANKHYA].[TGFCAB] C
+  JOIN [SANKHYA].[TGFITE] I ON I.NUNOTA = C.NUNOTA AND I.CODEMP = C.CODEMP
+  LEFT JOIN [SANKHYA].[TSIUSU] USU ON USU.CODUSU = C.CODUSUINC
+WHERE I.CODPROD = @codprod
+  AND C.DTNEG BETWEEN @dt_start AND @dt_end
+  AND C.TIPMOV <> 'O'
+  AND C.STATUSNOTA = 'L'
+GROUP BY ROLLUP(USU.NOMEUSU)
+ORDER BY CASE WHEN GROUPING(USU.NOMEUSU) = 1 THEN 2 ELSE 1 END, USU.NOMEUSU;
+
+-- 4) By month (trend)
+SELECT
+  LEFT(CONVERT(VARCHAR(7), C.DTNEG, 120),7) AS ANO_MES,
+  COUNT(DISTINCT C.NUNOTA) AS NOTAS,
+  SUM(ISNULL(I.QTDNEG,0)) AS QTD_TOTAL
+FROM [SANKHYA].[TGFITE] I
+  JOIN [SANKHYA].[TGFCAB] C ON C.NUNOTA = I.NUNOTA AND C.CODEMP = I.CODEMP
+WHERE I.CODPROD = @codprod
+  AND C.DTNEG BETWEEN @dt_start AND @dt_end
+  AND C.TIPMOV <> 'O'
+  AND C.STATUSNOTA = 'L'
+GROUP BY LEFT(CONVERT(VARCHAR(7), C.DTNEG, 120),7)
+ORDER BY ANO_MES DESC;

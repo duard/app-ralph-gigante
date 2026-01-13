@@ -1,0 +1,1 @@
+{"statusCode":500,"timestamp":"2026-01-05T14:15:21.597Z","path":"/inspection/query","error":"Apenas consultas SELECT são permitidas"}

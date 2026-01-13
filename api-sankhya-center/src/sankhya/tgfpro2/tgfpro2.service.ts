@@ -103,7 +103,7 @@ export class Tgfpro2Service {
     query += ` ORDER BY ${sortOrder}`
 
     // Executar query
-    const result = await this.sankhyaApiService.executarQuery(query, params)
+    const result = await this.sankhyaApiService.executeQuery(query, params)
 
     // Mapear resultados
     const produtos = result.map((item) => this.mapToProduto2(item))
@@ -121,10 +121,14 @@ export class Tgfpro2Service {
     // Paginação
     const page = dto.page || 1
     const perPage = dto.perPage || 10
-    const start = (page - 1) * perPage
-    const end = start + perPage
+    const total = produtos.length
 
-    return buildPaginatedResult(produtos, page, perPage, produtos.length)
+    return buildPaginatedResult({
+      data: produtos,
+      total,
+      page,
+      perPage,
+    })
   }
 
   /**
@@ -188,7 +192,7 @@ export class Tgfpro2Service {
       ORDER BY E.ESTOQUE DESC
     `
 
-    const result = await this.sankhyaApiService.executarQuery(query, [
+    const result = await this.sankhyaApiService.executeQuery(query, [
       { name: 'codprod', value: produto.codprod },
     ])
 
