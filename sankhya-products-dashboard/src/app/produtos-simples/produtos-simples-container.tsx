@@ -91,7 +91,11 @@ export function ProdutosSimplesContainer() {
 
   const SortIcon = ({ col }: { col: SortColumn }) => {
     if (sortCol !== col) return <ArrowUpDown className="h-3 w-3 ml-1 opacity-50" />;
-    return sortDir === 'asc' ? <ArrowUp className="h-3 w-3 ml-1" /> : <ArrowDown className="h-3 w-3 ml-1" />;
+    return sortDir === 'asc' ? (
+      <ArrowUp className="h-3 w-3 ml-1" />
+    ) : (
+      <ArrowDown className="h-3 w-3 ml-1" />
+    );
   };
 
   const clearFilters = () => {
@@ -116,24 +120,60 @@ export function ProdutosSimplesContainer() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-20 cursor-pointer hover:bg-muted/50" onClick={() => handleSort('codprod')}>
-              <div className="flex items-center">Código<SortIcon col="codprod" /></div>
+            <TableHead
+              className="w-20 cursor-pointer hover:bg-muted/50"
+              onClick={() => handleSort('codprod')}
+            >
+              <div className="flex items-center">
+                Código
+                <SortIcon col="codprod" />
+              </div>
             </TableHead>
-            <TableHead className="min-w-[200px] cursor-pointer hover:bg-muted/50" onClick={() => handleSort('descrprod')}>
-              <div className="flex items-center">Descrição<SortIcon col="descrprod" /></div>
+            <TableHead
+              className="min-w-[200px] cursor-pointer hover:bg-muted/50"
+              onClick={() => handleSort('descrprod')}
+            >
+              <div className="flex items-center">
+                Descrição
+                <SortIcon col="descrprod" />
+              </div>
             </TableHead>
-            <TableHead className="w-28 cursor-pointer hover:bg-muted/50" onClick={() => handleSort('grupo')}>
-              <div className="flex items-center">Grupo<SortIcon col="grupo" /></div>
+            <TableHead
+              className="w-28 cursor-pointer hover:bg-muted/50"
+              onClick={() => handleSort('grupo')}
+            >
+              <div className="flex items-center">
+                Grupo
+                <SortIcon col="grupo" />
+              </div>
             </TableHead>
-            <TableHead className="w-24 cursor-pointer hover:bg-muted/50" onClick={() => handleSort('localizacao')}>
-              <div className="flex items-center">Local<SortIcon col="localizacao" /></div>
+            <TableHead
+              className="w-24 cursor-pointer hover:bg-muted/50"
+              onClick={() => handleSort('localizacao')}
+            >
+              <div className="flex items-center">
+                Local
+                <SortIcon col="localizacao" />
+              </div>
             </TableHead>
-            <TableHead className="w-24 cursor-pointer hover:bg-muted/50" onClick={() => handleSort('tipcontest')}>
-              <div className="flex items-center">Controle<SortIcon col="tipcontest" /></div>
+            <TableHead
+              className="w-24 cursor-pointer hover:bg-muted/50"
+              onClick={() => handleSort('tipcontest')}
+            >
+              <div className="flex items-center">
+                Controle
+                <SortIcon col="tipcontest" />
+              </div>
             </TableHead>
             <TableHead className="w-20 text-center">Estoque</TableHead>
-            <TableHead className="w-16 text-center cursor-pointer hover:bg-muted/50" onClick={() => handleSort('ativo')}>
-              <div className="flex items-center justify-center">Ativo<SortIcon col="ativo" /></div>
+            <TableHead
+              className="w-16 text-center cursor-pointer hover:bg-muted/50"
+              onClick={() => handleSort('ativo')}
+            >
+              <div className="flex items-center justify-center">
+                Ativo
+                <SortIcon col="ativo" />
+              </div>
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -141,13 +181,27 @@ export function ProdutosSimplesContainer() {
           {isLoading ? (
             Array.from({ length: 10 }).map((_, i) => (
               <TableRow key={i}>
-                <TableCell><Skeleton className="h-4 w-14" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-full" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                <TableCell><Skeleton className="h-4 w-12" /></TableCell>
-                <TableCell className="text-center"><Skeleton className="h-5 w-8 mx-auto" /></TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-14" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-full" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-20" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-16" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-16" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-12" />
+                </TableCell>
+                <TableCell className="text-center">
+                  <Skeleton className="h-5 w-8 mx-auto" />
+                </TableCell>
               </TableRow>
             ))
           ) : data?.data?.length === 0 ? (
@@ -158,35 +212,56 @@ export function ProdutosSimplesContainer() {
             </TableRow>
           ) : (
             data?.data?.map((product, idx) => {
-              const estoqueStatus = product.estoque != null && product.estmin != null
-                ? product.estoque <= product.estmin ? 'low' : product.estoque >= (product.estmax || Infinity) ? 'high' : 'ok'
-                : null;
+              const estoqueStatus =
+                product.estoque != null && product.estmin != null
+                  ? product.estoque <= product.estmin
+                    ? 'low'
+                    : product.estoque >= (product.estmax || Infinity)
+                      ? 'high'
+                      : 'ok'
+                  : null;
               return (
                 <TableRow key={`${product.codprod}-${idx}`}>
                   <TableCell className="font-mono text-xs">{product.codprod}</TableCell>
-                  <TableCell className="max-w-[300px] truncate text-sm" title={product.descrprod}>{product.descrprod}</TableCell>
-                  <TableCell className="text-xs text-muted-foreground" title={product.descrgrupoprod || ''}>
+                  <TableCell className="max-w-[300px] truncate text-sm" title={product.descrprod}>
+                    {product.descrprod}
+                  </TableCell>
+                  <TableCell
+                    className="text-xs text-muted-foreground"
+                    title={product.descrgrupoprod || ''}
+                  >
                     {product.descrgrupoprod || '-'}
                   </TableCell>
                   <TableCell className="text-xs font-mono">{product.localizacao || '-'}</TableCell>
                   <TableCell className="text-xs">
                     {product.tipcontest ? (
-                      <Badge variant="outline" className="text-xs">{product.tipcontest}</Badge>
-                    ) : '-'}
+                      <Badge variant="outline" className="text-xs">
+                        {product.tipcontest}
+                      </Badge>
+                    ) : (
+                      '-'
+                    )}
                   </TableCell>
                   <TableCell className="text-center text-xs">
                     {product.estoque != null ? (
-                      <span className={cn(
-                        'font-mono',
-                        estoqueStatus === 'low' && 'text-destructive font-semibold',
-                        estoqueStatus === 'high' && 'text-green-600'
-                      )}>
+                      <span
+                        className={cn(
+                          'font-mono',
+                          estoqueStatus === 'low' && 'text-destructive font-semibold',
+                          estoqueStatus === 'high' && 'text-green-600'
+                        )}
+                      >
                         {product.estoque}
                       </span>
-                    ) : '-'}
+                    ) : (
+                      '-'
+                    )}
                   </TableCell>
                   <TableCell className="text-center">
-                    <Badge variant={product.ativo === 'S' ? 'default' : 'secondary'} className="text-xs">
+                    <Badge
+                      variant={product.ativo === 'S' ? 'default' : 'secondary'}
+                      className="text-xs"
+                    >
                       {product.ativo === 'S' ? 'S' : 'N'}
                     </Badge>
                   </TableCell>
@@ -203,7 +278,9 @@ export function ProdutosSimplesContainer() {
     <div className="flex items-center justify-between px-2">
       <div className="text-sm text-muted-foreground">
         {total > 0 && (
-          <>Mostrando {(page - 1) * perPage + 1} a {Math.min(page * perPage, total)} de {total}</>
+          <>
+            Mostrando {(page - 1) * perPage + 1} a {Math.min(page * perPage, total)} de {total}
+          </>
         )}
       </div>
       <div className="flex items-center gap-4">
@@ -215,23 +292,51 @@ export function ProdutosSimplesContainer() {
             </SelectTrigger>
             <SelectContent>
               {[20, 30, 50, 100].map((size) => (
-                <SelectItem key={size} value={String(size)}>{size}</SelectItem>
+                <SelectItem key={size} value={String(size)}>
+                  {size}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
         <div className="flex items-center gap-1">
-          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateParam('page', '1')} disabled={page === 1}>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => updateParam('page', '1')}
+            disabled={page === 1}
+          >
             <ChevronsLeft className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateParam('page', String(page - 1))} disabled={page === 1}>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => updateParam('page', String(page - 1))}
+            disabled={page === 1}
+          >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <span className="text-sm min-w-[80px] text-center">{page} / {totalPages}</span>
-          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateParam('page', String(page + 1))} disabled={page >= totalPages}>
+          <span className="text-sm min-w-[80px] text-center">
+            {page} / {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => updateParam('page', String(page + 1))}
+            disabled={page >= totalPages}
+          >
             <ChevronRight className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => updateParam('page', String(totalPages))} disabled={page >= totalPages}>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => updateParam('page', String(totalPages))}
+            disabled={page >= totalPages}
+          >
             <ChevronsRight className="h-4 w-4" />
           </Button>
         </div>

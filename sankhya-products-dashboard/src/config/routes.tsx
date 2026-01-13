@@ -14,6 +14,19 @@ const BemVindo = lazy(() => import(/* webpackChunkName: "dashboard" */ '@/app/be
 
 // Main application features
 const Produtos = lazy(() => import(/* webpackChunkName: "produtos" */ '@/app/produtos/page'));
+const ProdutosV2 = lazy(() => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v2/page'));
+const ProdutosV2Listagem = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v2/listagem/page')
+);
+const ProdutosV2Grupo = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v2/grupo/[codgrupoprod]/page')
+);
+const ProdutosV2Local = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v2/local/[codlocal]/page')
+);
+const ProdutosV2Detalhe = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v2/[codprod]/page')
+);
 const ProdutoDetalhes = lazy(
   () => import(/* webpackChunkName: "produtos" */ '@/app/produtos/[codprod]/page')
 );
@@ -182,6 +195,46 @@ export const routes: RouteConfig[] = [
     element: (
       <ProtectedRoute>
         <Produtos />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/produtos-v2',
+    element: (
+      <ProtectedRoute>
+        <ProdutosV2 />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/produtos-v2/listagem',
+    element: (
+      <ProtectedRoute>
+        <ProdutosV2Listagem />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/produtos-v2/grupo/:codgrupoprod',
+    element: (
+      <ProtectedRoute>
+        <ProdutosV2Grupo />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/produtos-v2/local/:codlocal',
+    element: (
+      <ProtectedRoute>
+        <ProdutosV2Local />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/produtos-v2/:codprod',
+    element: (
+      <ProtectedRoute>
+        <ProdutosV2Detalhe />
       </ProtectedRoute>
     ),
   },

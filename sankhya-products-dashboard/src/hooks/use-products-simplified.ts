@@ -45,10 +45,38 @@ export interface UseProductsSimplifiedParams {
 }
 
 export function useProductsSimplified(params: UseProductsSimplifiedParams = {}) {
-  const { search, page = 1, perPage = 20, ativo, codgrupoprod, localizacao, tipcontest, sort, comLocal, semLocal, expandControle } = params;
+  const {
+    search,
+    page = 1,
+    perPage = 20,
+    ativo,
+    codgrupoprod,
+    localizacao,
+    tipcontest,
+    sort,
+    comLocal,
+    semLocal,
+    expandControle,
+  } = params;
 
   return useQuery({
-    queryKey: ['products', 'simplified', { search, page, perPage, ativo, codgrupoprod, localizacao, tipcontest, sort, comLocal, semLocal, expandControle }],
+    queryKey: [
+      'products',
+      'simplified',
+      {
+        search,
+        page,
+        perPage,
+        ativo,
+        codgrupoprod,
+        localizacao,
+        tipcontest,
+        sort,
+        comLocal,
+        semLocal,
+        expandControle,
+      },
+    ],
     queryFn: async () => {
       const response = await apiClient.get<SimplifiedProductsResponse>('/tgfpro/simplified', {
         params: {

@@ -87,14 +87,13 @@ export default defineConfig(({ mode }) => {
 
               // Animation libraries
               if (id.includes('framer-motion')) {
-                return 'animation-vendor'
+                return 'animation-vendor';
               }
 
               // PDF/Excel export libraries
               if (id.includes('jspdf') || id.includes('xlsx')) {
-                return 'export-vendor'
+                return 'export-vendor';
               }
-
 
               // Other vendor libraries
               return 'vendor';
@@ -211,6 +210,6 @@ export default defineConfig(({ mode }) => {
       ],
       exclude: ['@tanstack/react-query-devtools'],
     },
-  assetsInclude: ['**/*.glb', '**/*.gltf', '**/*.hdr'],
+    assetsInclude: ['**/*.glb', '**/*.gltf', '**/*.hdr'],
   };
 });

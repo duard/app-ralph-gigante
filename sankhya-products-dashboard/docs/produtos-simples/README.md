@@ -14,23 +14,23 @@ Página leve e rápida para listagem de produtos com foco em organização por l
 
 ### Abas (Tabs)
 
-| Aba | Descrição |
-|-----|-----------|
+| Aba           | Descrição                                   |
+| ------------- | ------------------------------------------- |
 | **Com Local** | Produtos com localização definida (default) |
-| **Sem Local** | Produtos sem localização cadastrada |
-| **Todos** | Todos os produtos |
+| **Sem Local** | Produtos sem localização cadastrada         |
+| **Todos**     | Todos os produtos                           |
 
 ### Colunas da Tabela
 
-| Coluna | Ordenável | Descrição |
-|--------|-----------|-----------|
-| Código | ✅ | CODPROD - clique para ordenar |
-| Descrição | ✅ | DESCRPROD - texto truncado com tooltip |
-| Grupo | ✅ | DESCRGRUPOPROD do TGFGRU |
-| Local | ✅ | LOCALIZACAO física do produto |
-| Controle | ✅ | TIPCONTEST com badge |
-| Estoque | ❌ | Quantidade atual com indicadores de cor |
-| Ativo | ✅ | Status S/N com badge |
+| Coluna    | Ordenável | Descrição                               |
+| --------- | --------- | --------------------------------------- |
+| Código    | ✅        | CODPROD - clique para ordenar           |
+| Descrição | ✅        | DESCRPROD - texto truncado com tooltip  |
+| Grupo     | ✅        | DESCRGRUPOPROD do TGFGRU                |
+| Local     | ✅        | LOCALIZACAO física do produto           |
+| Controle  | ✅        | TIPCONTEST com badge                    |
+| Estoque   | ❌        | Quantidade atual com indicadores de cor |
+| Ativo     | ✅        | Status S/N com badge                    |
 
 ### Indicadores de Estoque
 
@@ -53,14 +53,14 @@ Página leve e rápida para listagem de produtos com foco em organização por l
 
 Todos os parâmetros são persistidos na URL para compartilhamento e navegação:
 
-| Parâmetro | Valores | Default |
-|-----------|---------|---------|
-| `tab` | `com-local`, `sem-local`, `todos` | `com-local` |
-| `search` | string | - |
-| `sortCol` | `codprod`, `descrprod`, `grupo`, `localizacao`, `tipcontest`, `ativo` | `codprod` |
-| `sortDir` | `asc`, `desc` | `desc` |
-| `page` | number | 1 |
-| `perPage` | number | 30 |
+| Parâmetro | Valores                                                               | Default     |
+| --------- | --------------------------------------------------------------------- | ----------- |
+| `tab`     | `com-local`, `sem-local`, `todos`                                     | `com-local` |
+| `search`  | string                                                                | -           |
+| `sortCol` | `codprod`, `descrprod`, `grupo`, `localizacao`, `tipcontest`, `ativo` | `codprod`   |
+| `sortDir` | `asc`, `desc`                                                         | `desc`      |
+| `page`    | number                                                                | 1           |
+| `perPage` | number                                                                | 30          |
 
 ### Exemplo de URL
 
@@ -111,6 +111,7 @@ GET /tgfpro/simplified
 ```
 
 Parâmetros enviados:
+
 - `search` - termo de busca
 - `page`, `perPage` - paginação
 - `sort` - ordenação (ex: `codprod desc`)
@@ -119,6 +120,7 @@ Parâmetros enviados:
 ## Menu Sidebar
 
 Acessível via menu lateral:
+
 - **Produtos > Produtos (Rápido)** - ícone ⚡ (Zap)
 
 ## Próximos Passos (TODO)
