@@ -17,6 +17,7 @@ import {
   Building,
   Database,
   Zap,
+  Activity,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -59,6 +60,11 @@ const data = {
           title: 'Dashboard 2',
           url: '/dashboard-2',
           icon: BarChart3,
+        },
+        {
+          title: 'Dashboard 3',
+          url: '/dashboard-3',
+          icon: Activity,
         },
       ],
     },

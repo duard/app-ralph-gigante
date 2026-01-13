@@ -10,6 +10,7 @@ import { ProtectedRoute } from '@/components/auth/protected-route';
 const Landing = lazy(() => import(/* webpackChunkName: "landing" */ '@/app/landing/page'));
 const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ '@/app/dashboard/page'));
 const Dashboard2 = lazy(() => import(/* webpackChunkName: "dashboard" */ '@/app/dashboard-2/page'));
+const Dashboard3 = lazy(() => import(/* webpackChunkName: "dashboard" */ '@/app/dashboard-3/page'));
 const BemVindo = lazy(() => import(/* webpackChunkName: "dashboard" */ '@/app/bem-vindo/page'));
 
 // Main application features
@@ -153,6 +154,14 @@ export const routes: RouteConfig[] = [
     element: (
       <ProtectedRoute>
         <Dashboard2 />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/dashboard-3',
+    element: (
+      <ProtectedRoute>
+        <Dashboard3 />
       </ProtectedRoute>
     ),
   },

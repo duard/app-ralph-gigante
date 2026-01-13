@@ -3,7 +3,10 @@
 import * as React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ProductListComplete } from '@/components/products/product-list-complete';
+import { StockSummaryCards } from '@/components/stock/stock-summary-cards';
+import { StockFilters } from '@/components/stock/stock-filters';
 import { useLocations, useGroups } from '@/hooks/use-products-complete';
+import { useStockMetrics } from '@/hooks/use-stock-metrics';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api/axios-instance';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -34,6 +37,9 @@ export function ProdutosPageContainer() {
     priceMax: searchParams.get('priceMax') ? Number(searchParams.get('priceMax')) : undefined,
     stockMin: searchParams.get('stockMin') ? Number(searchParams.get('stockMin')) : undefined,
     stockMax: searchParams.get('stockMax') ? Number(searchParams.get('stockMax')) : undefined,
+    statusEstoque: searchParams.get('statusEstoque') as any,
+    comMovimento: searchParams.get('comMovimento') === 'true',
+    semMovimento: searchParams.get('semMovimento') === 'true',
   };
 
   // ===== HELPERS PARA ATUALIZAR URL =====
@@ -148,6 +154,7 @@ export function ProdutosPageContainer() {
 
   const { data: locations = [] } = useLocations();
   const { data: groups = [] } = useGroups();
+  const { data: stockMetrics } = useStockMetrics(filters);
 
   // ===== HANDLERS QUE ATUALIZAM URL =====
   const handleFilterChange = React.useCallback(
@@ -161,7 +168,6 @@ export function ProdutosPageContainer() {
   );
 
   const handleClearFilters = React.useCallback(() => {
-    // Manter apenas aba e status padrão
     setSearchParams(
       new URLSearchParams({
         aba: activeTab,
@@ -266,53 +272,62 @@ export function ProdutosPageContainer() {
   }
 
   return (
-    <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
-      <TabsList className="grid w-full max-w-md grid-cols-2">
-        <TabsTrigger value="com-estoque" className="gap-2">
-          <Package className="h-4 w-4" />
-          Com Estoque
-        </TabsTrigger>
-        <TabsTrigger value="sem-estoque" className="gap-2">
-          <PackageX className="h-4 w-4" />
-          Sem Estoque
-        </TabsTrigger>
-      </TabsList>
+    <div className="space-y-6">
+      {stockMetrics && <StockSummaryCards metrics={stockMetrics} />}
+      <StockFilters
+        activeFilters={filters}
+        onFilterChange={handleFilterChange}
+        onClearFilters={handleClearFilters}
+      />
 
-      <TabsContent value="com-estoque" className="space-y-4">
-        <ProductListComplete
-          data={productsData?.data || []}
-          isLoading={isLoadingProducts}
-          pagination={pagination}
-          onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}
-          onViewHistory={handleViewHistory}
-          onViewLocations={handleViewLocations}
-          onViewDetails={handleViewDetails}
-          filters={filters}
-          onFilterChange={handleFilterChange}
-          onClearFilters={handleClearFilters}
-          locations={locations}
-          groups={groups}
-        />
-      </TabsContent>
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
+        <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsTrigger value="com-estoque" className="gap-2">
+            <Package className="h-4 w-4" />
+            Com Estoque
+          </TabsTrigger>
+          <TabsTrigger value="sem-estoque" className="gap-2">
+            <PackageX className="h-4 w-4" />
+            Sem Estoque
+          </TabsTrigger>
+        </TabsList>
 
-      <TabsContent value="sem-estoque" className="space-y-4">
-        <ProductListComplete
-          data={productsData?.data || []}
-          isLoading={isLoadingProducts}
-          pagination={pagination}
-          onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}
-          onViewHistory={handleViewHistory}
-          onViewLocations={handleViewLocations}
-          onViewDetails={handleViewDetails}
-          filters={filters}
-          onFilterChange={handleFilterChange}
-          onClearFilters={handleClearFilters}
-          locations={locations}
-          groups={groups}
-        />
-      </TabsContent>
-    </Tabs>
+        <TabsContent value="com-estoque" className="space-y-4">
+          <ProductListComplete
+            data={productsData?.data || []}
+            isLoading={isLoadingProducts}
+            pagination={pagination}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+            onViewHistory={handleViewHistory}
+            onViewLocations={handleViewLocations}
+            onViewDetails={handleViewDetails}
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onClearFilters={handleClearFilters}
+            locations={locations}
+            groups={groups}
+          />
+        </TabsContent>
+
+        <TabsContent value="sem-estoque" className="space-y-4">
+          <ProductListComplete
+            data={productsData?.data || []}
+            isLoading={isLoadingProducts}
+            pagination={pagination}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+            onViewHistory={handleViewHistory}
+            onViewLocations={handleViewLocations}
+            onViewDetails={handleViewDetails}
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onClearFilters={handleClearFilters}
+            locations={locations}
+            groups={groups}
+          />
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }

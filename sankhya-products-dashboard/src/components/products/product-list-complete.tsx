@@ -42,6 +42,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProductFiltersToolbar } from './product-filters-toolbar';
+import { StockIndicator, usePriorityStockStatus } from '@/components/stock/stock-indicator';
+import { StockSummaryCards } from '@/components/stock/stock-summary-cards';
 import { DataTablePagination } from '@/components/ui/data-table-pagination';
 import { cn } from '@/lib/utils';
 
@@ -220,92 +222,87 @@ export function ProductListComplete({
           produto.estoqueTotal || locais.reduce((sum, loc) => sum + loc.estoque, 0);
         const locaisCount = locais.length;
 
-        // Se não tem estoque
-        if (!estoqueTotal || estoqueTotal === 0) {
-          return (
-            <div className="text-muted-foreground text-sm">
-              <PackageX className="h-4 w-4 inline mr-1" />
-              Sem estoque
-            </div>
-          );
-        }
+        const priorityStatus = usePriorityStockStatus(
+          locais.length > 0
+            ? locais
+            : [
+                {
+                  estoque: estoqueTotal,
+                  estmin: produto.estmin,
+                  estmax: produto.estmax,
+                  ultimaMovimentacao: produto.ultimaMovimentacao,
+                },
+              ]
+        );
 
-        // Se tem estoque mas não tem detalhes de locais
-        if (locais.length === 0 && estoqueTotal > 0) {
-          return (
-            <div className="space-y-1">
-              <div className="font-medium text-sm">{estoqueTotal} unidades</div>
-              {locaisCount > 0 && (
-                <div className="text-xs text-muted-foreground">{locaisCount} local(is)</div>
-              )}
-            </div>
-          );
-        }
-
-        // Exibir hierarquicamente: primeiro local principal, depois hierarquia
         return (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <div
-                  className="cursor-pointer space-y-1 min-w-[160px]"
+                  className="cursor-pointer min-w-[120px]"
                   onClick={(e) => {
                     e.stopPropagation();
                     onViewLocations?.(produto.codprod);
                   }}
                 >
-                  {/* Primeiro local (principal) */}
-                  <div className="flex items-start gap-2">
-                    <MapPin className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                    <div className="flex-1">
-                      <div className="font-medium text-sm truncate">{locais[0].descrlocal}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {locais[0].estoque} un
-                        {locais[0].controle && (
-                          <span className="ml-1 font-mono">({locais[0].controle})</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  <StockIndicator
+                    estoque={estoqueTotal}
+                    estmin={produto.estmin}
+                    estmax={produto.estmax}
+                    ultimaMovimentacao={produto.ultimaMovimentacao}
+                    size="sm"
+                    showBadge={false}
+                  />
 
-                  {/* Outros locais resumidos */}
-                  {locais.length > 1 && (
-                    <div className="pl-6 text-xs text-muted-foreground">
-                      + {locais.length - 1} local(is) | Total: {estoqueTotal} un
+                  {locaisCount > 0 && (
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {locaisCount} local(is)
                     </div>
                   )}
                 </div>
               </TooltipTrigger>
               <TooltipContent className="max-w-sm" side="left">
                 <div className="space-y-2">
-                  <div className="font-semibold text-sm mb-2">Hierarquia de Locais</div>
-                  {locais.map((loc, idx) => (
-                    <div
-                      key={idx}
-                      className={cn(
-                        'flex items-start justify-between gap-4 text-xs py-1',
-                        idx === 0 && 'border-b pb-2'
-                      )}
-                    >
-                      <div className="flex-1">
-                        <div className="font-medium">{loc.descrlocal}</div>
-                        {loc.controle && (
-                          <div className="text-muted-foreground font-mono text-[10px]">
-                            {loc.controle}
+                  <div className="font-semibold text-sm mb-2">Status: {priorityStatus.text}</div>
+
+                  {}
+                  {locais.length > 0 && (
+                    <>
+                      <div className="font-semibold text-sm mb-2">Distribuição por Local</div>
+                      {locais.map((loc, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-start justify-between gap-4 text-xs py-1"
+                        >
+                          <div className="flex-1">
+                            <div className="font-medium">{loc.descrlocal}</div>
+                            <StockIndicator
+                              estoque={loc.estoque}
+                              estmin={loc.estmin}
+                              estmax={loc.estmax}
+                              size="sm"
+                              showBadge={false}
+                            />
                           </div>
-                        )}
-                      </div>
-                      <div className="text-right">
-                        <div className="font-semibold">{loc.estoque} un</div>
-                        {(loc.estmin || loc.estmax) && (
-                          <div className="text-muted-foreground text-[10px]">
-                            Min: {loc.estmin || 0} | Max: {loc.estmax || 0}
+                          <div className="text-right">
+                            {(loc.estmin || loc.estmax) && (
+                              <div className="text-muted-foreground text-[10px]">
+                                Min: {loc.estmin || 0} | Max: {loc.estmax || 0}
+                              </div>
+                            )}
+                            {loc.controle && (
+                              <div className="text-muted-foreground font-mono text-[10px]">
+                                Controle: {loc.controle}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                  <div className="border-t pt-2 flex justify-between font-semibold">
+                        </div>
+                      ))}
+                    </>
+                  )}
+
+                  <div className="border-t pt-2 flex justify-between font-semibold text-sm">
                     <span>Total Geral:</span>
                     <span>{estoqueTotal} un</span>
                   </div>
