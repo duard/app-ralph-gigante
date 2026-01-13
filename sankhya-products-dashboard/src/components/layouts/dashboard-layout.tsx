@@ -1,11 +1,10 @@
 'use client';
 
-import * as React from 'react';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SiteHeader } from '@/components/site-header';
-import { SiteFooter } from '@/components/site-footer';
-import { useSidebarConfig } from '@/hooks/use-sidebar-config';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { useSidebarConfig } from '@/hooks/use-sidebar-config';
+import * as React from 'react';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -55,7 +54,7 @@ export function DashboardLayout({ children, title, description }: DashboardLayou
                 </div>
               </div>
             </div>
-            <SiteFooter />
+            {/* Footer removed as requested */}
           </SidebarInset>
         </>
       ) : (
@@ -81,7 +80,7 @@ export function DashboardLayout({ children, title, description }: DashboardLayou
                 </div>
               </div>
             </div>
-            <SiteFooter />
+            {/* Footer removed as requested */}
           </SidebarInset>
           <AppSidebar
             variant={config.variant}

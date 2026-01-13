@@ -287,23 +287,32 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
               <div className="space-y-2">
                 <Label htmlFor="sidebar-category">Categoria</Label>
                 <Select
-                  value={filters?.category ? (filters.category === '' ? 'null' : filters.category) : 'all'}
+                  value={
+                    filters?.category
+                      ? filters.category === ''
+                        ? 'null'
+                        : filters.category
+                      : 'all'
+                  }
                   onValueChange={(value) => handleCategoryChange(value)}
                 >
-                                  <SelectTrigger id="sidebar-category">
-                                    <SelectValue placeholder="Todas as categorias" />
-                                  </SelectTrigger>
-                                                    <SelectContent>
-                                                      <SelectItem value="all">Todas as categorias</SelectItem>
-                                                      <SelectItem value="null">Sem categoria</SelectItem>
-                                                      {categories
-                                                        .filter(category => category !== null && category !== undefined && category !== '')
-                                                        .map((category) => (
-                                                          <SelectItem key={category} value={category}>
-                                                            {category}
-                                                          </SelectItem>
-                                                        ))}
-                                                    </SelectContent>                </Select>
+                  <SelectTrigger id="sidebar-category">
+                    <SelectValue placeholder="Todas as categorias" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas as categorias</SelectItem>
+                    <SelectItem value="null">Sem categoria</SelectItem>
+                    {categories
+                      .filter(
+                        (category) => category !== null && category !== undefined && category !== ''
+                      )
+                      .map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>{' '}
+                </Select>
               </div>
             )}
 
@@ -322,7 +331,7 @@ export function ProductFiltersSidebar({ className, children }: ProductFiltersSid
                     <SelectItem value="all">Todas as unidades</SelectItem>
                     <SelectItem value="null">Sem unidade</SelectItem>
                     {units
-                      .filter(unit => unit !== null && unit !== undefined && unit !== '')
+                      .filter((unit) => unit !== null && unit !== undefined && unit !== '')
                       .map((unit) => (
                         <SelectItem key={unit} value={unit}>
                           {unit}

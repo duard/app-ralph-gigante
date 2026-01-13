@@ -1,14 +1,14 @@
 'use client';
 
+import { Logo } from '@/components/logo';
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Github, Heart, Linkedin, Twitter, Youtube } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { Logo } from '@/components/logo';
-import { Github, Twitter, Linkedin, Youtube, Heart } from 'lucide-react';
 
 const newsletterSchema = z.object({
   email: z.string().email({
@@ -119,8 +119,8 @@ export function LandingFooter() {
               </a>
             </div>
             <p className="text-muted-foreground mb-6 max-lg:text-center max-lg:flex max-lg:justify-center">
-              Accelerating web development with curated blocks, templates, landing pages, and admin
-              dashboards designed for modern developers.
+              Building beautiful, accessible blocks, templates and dashboards for modern web
+              applications.
             </p>
             <div className="flex space-x-4 max-lg:justify-center">
               {socialLinks.map((social) => (

@@ -150,7 +150,16 @@ export function ProductFilters() {
             {categories.length > 0 && (
               <div className="space-y-2">
                 <Label htmlFor="category-filter">Categoria</Label>
-                <Select value={filters?.category ? (filters.category === '' ? 'null' : filters.category) : 'all'} onValueChange={handleCategoryChange}>
+                <Select
+                  value={
+                    filters?.category
+                      ? filters.category === ''
+                        ? 'null'
+                        : filters.category
+                      : 'all'
+                  }
+                  onValueChange={handleCategoryChange}
+                >
                   <SelectTrigger id="category-filter">
                     <SelectValue placeholder="Todas as categorias" />
                   </SelectTrigger>
@@ -158,7 +167,9 @@ export function ProductFilters() {
                     <SelectItem value="all">Todas as categorias</SelectItem>
                     <SelectItem value="null">Sem categoria</SelectItem>
                     {categories
-                      .filter(category => category !== null && category !== undefined && category !== '')
+                      .filter(
+                        (category) => category !== null && category !== undefined && category !== ''
+                      )
                       .map((category) => (
                         <SelectItem key={category} value={category}>
                           {category}

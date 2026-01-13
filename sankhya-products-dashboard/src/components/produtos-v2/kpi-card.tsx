@@ -3,17 +3,42 @@ import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { ProductDataPreloader } from '@/lib/product-data-preloader';
 import { useEffect, useRef } from 'react';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 
 interface KpiCardProps {
   title: string;
   value: string | number;
   icon?: React.ReactNode;
   href?: string;
+  onClick?: () => void;
   loading?: boolean;
   className?: string;
+  trend?: {
+    value: number; // Percentual de variação
+    isPositive: boolean;
+  };
+  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
 }
 
-export function KpiCard({ title, value, icon, href, loading = false, className }: KpiCardProps) {
+const variantStyles = {
+  default: 'border-border',
+  success: 'border-l-4 border-l-green-500',
+  warning: 'border-l-4 border-l-yellow-500',
+  danger: 'border-l-4 border-l-red-500',
+  info: 'border-l-4 border-l-blue-500',
+};
+
+export function KpiCard({
+  title,
+  value,
+  icon,
+  href,
+  onClick,
+  loading = false,
+  className,
+  trend,
+  variant = 'default',
+}: KpiCardProps) {
   const linkRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
@@ -45,17 +70,40 @@ export function KpiCard({ title, value, icon, href, loading = false, className }
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{loading ? '—' : value}</div>
+        {trend && !loading && (
+          <div className="flex items-center gap-1 text-xs mt-1">
+            {trend.isPositive ? (
+              <ArrowUp className="h-3 w-3 text-green-600" />
+            ) : (
+              <ArrowDown className="h-3 w-3 text-red-600" />
+            )}
+            <span className={cn(trend.isPositive ? 'text-green-600' : 'text-red-600')}>
+              {Math.abs(trend.value)}%
+            </span>
+            <span className="text-muted-foreground">vs período anterior</span>
+          </div>
+        )}
       </CardContent>
     </>
   );
 
+  const cardClasses = cn('hover:shadow-md transition-shadow', variantStyles[variant], className);
+
   if (href) {
     return (
       <Link to={href} ref={linkRef}>
-        <Card className={cn('hover:shadow-md transition-shadow', className)}>{cardContent}</Card>
+        <Card className={cardClasses}>{cardContent}</Card>
       </Link>
     );
   }
 
-  return <Card className={className}>{cardContent}</Card>;
+  if (onClick) {
+    return (
+      <Card className={cn(cardClasses, 'cursor-pointer')} onClick={onClick}>
+        {cardContent}
+      </Card>
+    );
+  }
+
+  return <Card className={cardClasses}>{cardContent}</Card>;
 }

@@ -63,11 +63,13 @@ export function ProdutosPageContainer() {
   } = useQuery({
     queryKey: ['products', 'ultra-search', activeTab, filters, page, pageSize],
     queryFn: async ({ signal }) => {
+      console.log('[ProductsQuery] Fetching with tab:', activeTab, 'page:', page);
+
       const response = await apiClient.get('/tgfpro/ultra-search', {
         signal,
         params: {
-          page,
-          perPage: pageSize * 3, // Buscar mais para compensar filtro client-side
+          page: 1, // Sempre buscar da página 1 para ter dados suficientes
+          perPage: 1000, // Buscar muitos para compensar filtro client-side
           ...(filters.search && { search: filters.search }),
           ...(filters.status === 'active' && { ativo: 'S' }),
           ...(filters.status === 'inactive' && { ativo: 'N' }),
@@ -79,21 +81,65 @@ export function ProdutosPageContainer() {
         },
       });
 
+      console.log('[ProductsQuery] Response total:', response.data.data?.length);
+
       // Filtrar baseado na aba ativa
       let data = response.data.data || [];
-      if (activeTab === 'com-estoque') {
-        data = data.filter((p: any) => p.estoque && p.estoque.estoqueTotal > 0);
-      } else {
-        data = data.filter((p: any) => !p.estoque || p.estoque.estoqueTotal === 0);
+
+      // Debug: mostrar estrutura de estoque
+      if (data.length > 0) {
+        console.log('[ProductsQuery] Sample product:', {
+          codprod: data[0]?.codprod,
+          descrprod: data[0]?.descrprod,
+          estoque: data[0]?.estoque,
+        });
       }
 
-      // Limitar ao pageSize
-      data = data.slice(0, pageSize);
+      const beforeFilter = data.length;
+      if (activeTab === 'com-estoque') {
+        data = data.filter((p: any) => {
+          const hasStock = p.estoque && p.estoque.estoqueTotal > 0;
+          return hasStock;
+        });
+      } else {
+        data = data.filter((p: any) => {
+          const noStock =
+            !p.estoque || p.estoque.estoqueTotal === 0 || p.estoque.estoqueTotal === null;
+          return noStock;
+        });
+      }
+
+      console.log(
+        '[ProductsQuery] After filter:',
+        data.length,
+        'from',
+        beforeFilter,
+        'for tab:',
+        activeTab
+      );
+
+      // Implementar paginação client-side
+      const startIndex = (page - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      const paginatedData = data.slice(startIndex, endIndex);
+
+      console.log(
+        '[ProductsQuery] Paginated:',
+        paginatedData.length,
+        'items (page',
+        page,
+        'of',
+        Math.ceil(data.length / pageSize),
+        ')'
+      );
 
       return {
-        ...response.data,
-        data,
+        data: paginatedData,
         total: data.length,
+        page,
+        perPage: pageSize,
+        lastPage: Math.ceil(data.length / pageSize),
+        hasMore: endIndex < data.length,
       };
     },
     staleTime: 5 * 60 * 1000,

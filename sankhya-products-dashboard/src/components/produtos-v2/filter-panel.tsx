@@ -1,247 +1,222 @@
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { MultiSelect } from '@/components/ui/multi-select';
-import { type FiltroOpcao } from '@/hooks/produtos-v2/use-produtos-v2-filtros';
-import { FilterX } from 'lucide-react';
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import { Filter, X } from 'lucide-react';
+import { MultiSelectFilter } from './multi-select-filter';
+import { PeriodoToggle } from './periodo-toggle';
+import { DateRangePicker } from './date-range-picker';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { useDashboardFiltersStore } from '@/stores/dashboard-filters-store';
+import type { Grupo, Local } from '@/types/dashboard';
+import { useMemo } from 'react';
 
 interface FilterPanelProps {
-  search: string;
-  setSearch: (value: string) => void;
-  grupos: string[];
-  setGrupos: (value: string[]) => void;
-  locais: string[];
-  setLocais: (value: string[]) => void;
-  controles: string[];
-  setControles: (value: string[]) => void;
-  marcas: string[];
-  setMarcas: (value: string[]) => void;
-  ativo: string;
-  setAtivo: (value: string) => void;
-  comEstoque: boolean;
-  setComEstoque: (value: boolean) => void;
-  semEstoque: boolean;
-  setSemEstoque: (value: boolean) => void;
-  critico: boolean;
-  setCritico: (value: boolean) => void;
-  estoqueMin: string;
-  setEstoqueMin: (value: string) => void;
-  estoqueMax: string;
-  setEstoqueMax: (value: string) => void;
-  gruposOptions: FiltroOpcao[];
-  locaisOptions: FiltroOpcao[];
-  controlesOptions: FiltroOpcao[];
-  marcasOptions: FiltroOpcao[];
-  isLoading: boolean;
-  onClearFilters: () => void;
+  grupos: Grupo[];
+  locais: Local[];
+  isLoadingGrupos?: boolean;
+  isLoadingLocais?: boolean;
 }
 
 export function FilterPanel({
-  search,
-  setSearch,
   grupos,
-  setGrupos,
   locais,
-  setLocais,
-  controles,
-  setControles,
-  marcas,
-  setMarcas,
-  ativo,
-  setAtivo,
-  comEstoque,
-  setComEstoque,
-  semEstoque,
-  setSemEstoque,
-  critico,
-  setCritico,
-  estoqueMin,
-  setEstoqueMin,
-  estoqueMax,
-  setEstoqueMax,
-  gruposOptions,
-  locaisOptions,
-  controlesOptions,
-  marcasOptions,
-  isLoading,
-  onClearFilters,
+  isLoadingGrupos = false,
+  isLoadingLocais = false,
 }: FilterPanelProps) {
-  const activeFiltersCount =
-    [search, ...grupos, ...locais, ...controles, ...marcas, ativo, estoqueMin, estoqueMax].filter(
-      Boolean
-    ).length +
-    (comEstoque ? 1 : 0) +
-    (semEstoque ? 1 : 0) +
-    (critico ? 1 : 0);
+  const {
+    grupos: selectedGrupos,
+    locais: selectedLocais,
+    periodoPreset,
+    startDate,
+    endDate,
+    status,
+    estoqueStatus,
+    search,
+    setGrupos,
+    setLocais,
+    setPeriodoPreset,
+    setDateRange,
+    setStatus,
+    setEstoqueStatus,
+    setSearch,
+    clearFilters,
+    getActiveFiltersCount,
+  } = useDashboardFiltersStore();
+
+  const activeFiltersCount = getActiveFiltersCount();
+
+  // Preparar opções para MultiSelect
+  const grupoOptions = useMemo(
+    () =>
+      grupos.map((g) => ({
+        value: g.codgrupoprod,
+        label: g.descgrupoprod,
+      })),
+    [grupos]
+  );
+
+  const localOptions = useMemo(
+    () =>
+      locais.map((l) => ({
+        value: l.codlocal,
+        label: l.descrlocal,
+      })),
+    [locais]
+  );
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium">Filtros</h3>
-        {activeFiltersCount > 0 && (
-          <div className="flex items-center gap-2">
-            <Badge variant="secondary" className="rounded-full">
-              {activeFiltersCount} {activeFiltersCount === 1 ? 'filtro' : 'filtros'} ativo
-              {activeFiltersCount === 1 ? '' : 's'}
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="outline" className="gap-2">
+          <Filter className="h-4 w-4" />
+          Filtros
+          {activeFiltersCount > 0 && (
+            <Badge variant="secondary" className="ml-1 h-5 px-1.5">
+              {activeFiltersCount}
             </Badge>
-            <Button variant="ghost" size="sm" onClick={onClearFilters} disabled={isLoading}>
-              <FilterX className="mr-2 h-4 w-4" />
-              Limpar
-            </Button>
+          )}
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
+        <SheetHeader>
+          <SheetTitle>Filtros Avançados</SheetTitle>
+          <SheetDescription>
+            Configure os filtros para refinar a visualização dos dados
+          </SheetDescription>
+        </SheetHeader>
+
+        <div className="space-y-6 py-6">
+          {/* Busca Textual */}
+          <div className="space-y-2">
+            <Label htmlFor="search">Busca</Label>
+            <Input
+              id="search"
+              placeholder="Buscar por nome, código ou referência..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {search && (
+              <p className="text-xs text-muted-foreground">
+                Buscando em: nome do produto, código e referência
+              </p>
+            )}
           </div>
-        )}
-      </div>
 
-      <Separator />
-
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <div className="space-y-2">
-          <Label htmlFor="search">Busca</Label>
-          <Input
-            id="search"
-            placeholder="Buscar por descrição, referência, marca..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            disabled={isLoading}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="grupos">Grupos</Label>
-          <MultiSelect
-            options={gruposOptions.map((opt) => ({
-              value: opt.codigo.toString(),
-              label: `${opt.descricao} (${opt.contagem})`,
-            }))}
-            value={grupos}
+          {/* Filtro de Grupos */}
+          <MultiSelectFilter
+            label="Grupos de Produtos"
+            placeholder="Selecionar grupos..."
+            options={grupoOptions}
+            value={selectedGrupos}
             onChange={setGrupos}
-            placeholder="Selecione grupos..."
-            disabled={isLoading}
+            isLoading={isLoadingGrupos}
           />
-        </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="locais">Locais</Label>
-          <MultiSelect
-            options={locaisOptions.map((opt) => ({
-              value: opt.codigo.toString(),
-              label: `${opt.descricao} (${opt.contagem})`,
-            }))}
-            value={locais}
+          {/* Filtro de Locais */}
+          <MultiSelectFilter
+            label="Locais de Estoque"
+            placeholder="Selecionar locais..."
+            options={localOptions}
+            value={selectedLocais}
             onChange={setLocais}
-            placeholder="Selecione locais..."
-            disabled={isLoading}
+            isLoading={isLoadingLocais}
           />
+
+          {/* Período */}
+          <div className="space-y-4">
+            <PeriodoToggle value={periodoPreset} onChange={setPeriodoPreset} />
+
+            {/* Date Range (apenas se custom) */}
+            {periodoPreset === 'custom' && (
+              <DateRangePicker
+                startDate={startDate}
+                endDate={endDate}
+                onStartDateChange={(date) => setDateRange(date, endDate)}
+                onEndDateChange={(date) => setDateRange(startDate, date)}
+              />
+            )}
+
+            {/* Mostrar período selecionado */}
+            <p className="text-xs text-muted-foreground">
+              Período: {new Date(startDate).toLocaleDateString('pt-BR')} até{' '}
+              {new Date(endDate).toLocaleDateString('pt-BR')}
+            </p>
+          </div>
+
+          {/* Status do Produto */}
+          <div className="space-y-2">
+            <Label>Status do Produto</Label>
+            <RadioGroup value={status} onValueChange={(val) => setStatus(val as any)}>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="all" id="status-all" />
+                <Label htmlFor="status-all" className="font-normal cursor-pointer">
+                  Todos
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="active" id="status-active" />
+                <Label htmlFor="status-active" className="font-normal cursor-pointer">
+                  Apenas Ativos
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="inactive" id="status-inactive" />
+                <Label htmlFor="status-inactive" className="font-normal cursor-pointer">
+                  Apenas Inativos
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          {/* Situação do Estoque */}
+          <div className="space-y-2">
+            <Label>Situação do Estoque</Label>
+            <RadioGroup value={estoqueStatus} onValueChange={(val) => setEstoqueStatus(val as any)}>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="all" id="estoque-all" />
+                <Label htmlFor="estoque-all" className="font-normal cursor-pointer">
+                  Todos
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="com" id="estoque-com" />
+                <Label htmlFor="estoque-com" className="font-normal cursor-pointer">
+                  Com Estoque
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="sem" id="estoque-sem" />
+                <Label htmlFor="estoque-sem" className="font-normal cursor-pointer">
+                  Sem Estoque
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="critico" id="estoque-critico" />
+                <Label htmlFor="estoque-critico" className="font-normal cursor-pointer">
+                  Críticos (abaixo do mínimo)
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="controles">Tipos de Controle</Label>
-          <MultiSelect
-            options={controlesOptions.map((opt) => ({
-              value: opt.codigo.toString(),
-              label: `${opt.descricao} (${opt.contagem})`,
-            }))}
-            value={controles}
-            onChange={setControles}
-            placeholder="Selecione controles..."
-            disabled={isLoading}
-          />
+        {/* Botões de ação */}
+        <div className="flex gap-2 pt-4 border-t">
+          <Button variant="outline" onClick={clearFilters} className="flex-1">
+            <X className="mr-2 h-4 w-4" />
+            Limpar Filtros
+          </Button>
         </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="marcas">Marcas</Label>
-          <MultiSelect
-            options={marcasOptions.map((opt) => ({
-              value: opt.codigo.toString(),
-              label: `${opt.descricao} (${opt.contagem})`,
-            }))}
-            value={marcas}
-            onChange={setMarcas}
-            placeholder="Selecione marcas..."
-            disabled={isLoading}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="ativo">Status</Label>
-          <Select value={ativo} onValueChange={setAtivo} disabled={isLoading}>
-            <SelectTrigger>
-              <SelectValue placeholder="Todos" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="S">Ativo</SelectItem>
-              <SelectItem value="N">Inativo</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="estoqueMin">Estoque Mínimo</Label>
-          <Input
-            id="estoqueMin"
-            type="number"
-            placeholder="Mínimo"
-            value={estoqueMin}
-            onChange={(e) => setEstoqueMin(e.target.value)}
-            disabled={isLoading}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="estoqueMax">Estoque Máximo</Label>
-          <Input
-            id="estoqueMax"
-            type="number"
-            placeholder="Máximo"
-            value={estoqueMax}
-            onChange={(e) => setEstoqueMax(e.target.value)}
-            disabled={isLoading}
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-wrap gap-4 pt-2">
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="comEstoque"
-            checked={comEstoque}
-            onCheckedChange={(checked) => setComEstoque(!!checked)}
-            disabled={isLoading}
-          />
-          <Label htmlFor="comEstoque">Com estoque</Label>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="semEstoque"
-            checked={semEstoque}
-            onCheckedChange={(checked) => setSemEstoque(!!checked)}
-            disabled={isLoading}
-          />
-          <Label htmlFor="semEstoque">Sem estoque</Label>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="critico"
-            checked={critico}
-            onCheckedChange={(checked) => setCritico(!!checked)}
-            disabled={isLoading}
-          />
-          <Label htmlFor="critico">Estoque crítico</Label>
-        </div>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   );
 }

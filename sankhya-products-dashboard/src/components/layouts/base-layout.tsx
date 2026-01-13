@@ -1,14 +1,13 @@
 'use client';
 
-import * as React from 'react';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SiteHeader } from '@/components/site-header';
-import { SiteFooter } from '@/components/site-footer';
 import { ThemeCustomizer, ThemeCustomizerTrigger } from '@/components/theme-customizer';
+import * as React from 'react';
 
 import { BreadcrumbNav } from '@/components/breadcrumb-nav';
-import { useSidebarConfig } from '@/hooks/use-sidebar-config';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { useSidebarConfig } from '@/hooks/use-sidebar-config';
 
 interface BaseLayoutProps {
   children: React.ReactNode;
@@ -58,7 +57,7 @@ export function BaseLayout({ children, title, description }: BaseLayoutProps) {
                 </div>
               </div>
             </div>
-            <SiteFooter />
+            {/* Footer removed as requested */}
           </SidebarInset>
         </>
       ) : (
@@ -83,7 +82,7 @@ export function BaseLayout({ children, title, description }: BaseLayoutProps) {
                 </div>
               </div>
             </div>
-            <SiteFooter />
+            {/* Footer removed as requested */}
           </SidebarInset>
           <AppSidebar
             variant={config.variant}
