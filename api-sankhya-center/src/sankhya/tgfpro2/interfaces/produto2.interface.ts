@@ -15,6 +15,9 @@ export interface Produto2 {
   /** Complemento da descrição (opcional) */
   compldesc?: string
 
+  /** Características detalhadas do produto */
+  caracteristicas?: string
+
   /** Referência/código alternativo */
   referencia?: string
 
@@ -34,9 +37,20 @@ export interface Produto2 {
   /** Status ativo (S/N) */
   ativo: string
 
+  // ========== Características Físicas ==========
+  /** Peso bruto do produto (em kg) */
+  pesobruto?: number
+
+  /** Peso líquido do produto (em kg) */
+  pesoliq?: number
+
   // ========== Localização física ==========
   /** Localização física no depósito (ex: "Prateleira A12") */
   localizacao?: string
+
+  // ========== Financeiro/Gestão ==========
+  /** Código do centro de custo */
+  codcencus?: number
 
   // ========== Controle (lote/série) ==========
   /** Tipo de controle de estoque */

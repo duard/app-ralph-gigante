@@ -53,13 +53,17 @@ export class Tgfpro2Service {
         P.CODPROD,
         P.DESCRPROD,
         P.COMPLDESC,
+        P.CARACTERISTICAS,
         P.REFERENCIA,
         P.MARCA,
         P.CODGRUPOPROD,
         P.CODVOL,
         P.NCM,
         P.ATIVO,
+        P.PESOBRUTO,
+        P.PESOLIQ,
         P.LOCALIZACAO,
+        P.CODCENCUS,
         P.TIPCONTEST,
         P.LISCONTEST,
         P.USOPROD,
@@ -165,13 +169,17 @@ export class Tgfpro2Service {
       codprod: Number(item.CODPROD),
       descrprod: item.DESCRPROD,
       compldesc: item.COMPLDESC,
+      caracteristicas: item.CARACTERISTICAS,
       referencia: item.REFERENCIA,
       marca: item.MARCA,
       codgrupoprod: Number(item.CODGRUPOPROD || 0),
       codvol: item.CODVOL,
       ncm: item.NCM,
       ativo: item.ATIVO,
+      pesobruto: item.PESOBRUTO ? Number(item.PESOBRUTO) : undefined,
+      pesoliq: item.PESOLIQ ? Number(item.PESOLIQ) : undefined,
       localizacao: item.LOCALIZACAO,
+      codcencus: item.CODCENCUS ? Number(item.CODCENCUS) : undefined,
       tipcontest: item.TIPCONTEST,
       liscontest: item.LISCONTEST,
       usoprod: item.USOPROD,
@@ -193,6 +201,113 @@ export class Tgfpro2Service {
     }
 
     return produto
+  }
+
+  /**
+   * Busca um produto específico por código
+   */
+  async findOne(
+    codprod: number,
+    includeEstoque = false,
+    includeEstoqueLocais = false,
+  ): Promise<Produto2 | null> {
+    this.logger.log(`Finding product with codprod: ${codprod}`)
+
+    const query = `
+      SELECT
+        P.CODPROD,
+        P.DESCRPROD,
+        P.COMPLDESC,
+        P.CARACTERISTICAS,
+        P.REFERENCIA,
+        P.MARCA,
+        P.CODGRUPOPROD,
+        P.CODVOL,
+        P.NCM,
+        P.ATIVO,
+        P.PESOBRUTO,
+        P.PESOLIQ,
+        P.LOCALIZACAO,
+        P.CODCENCUS,
+        P.TIPCONTEST,
+        P.LISCONTEST,
+        P.USOPROD,
+        P.ORIGPROD,
+        G.DESCRGRUPOPROD,
+        V.DESCRVOL
+      FROM TGFPRO P WITH (NOLOCK)
+      LEFT JOIN TGFGRU G WITH (NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
+      LEFT JOIN TGFVOL V WITH (NOLOCK) ON V.CODVOL = P.CODVOL
+      WHERE P.CODPROD = @codprod
+    `
+
+    const result = await this.sankhyaApiService.executeQuery(query, [
+      { name: 'codprod', value: codprod },
+    ])
+
+    if (!result || result.length === 0) {
+      return null
+    }
+
+    const produto = this.mapToProduto2(result[0])
+
+    // Enriquecer com estoque se solicitado
+    if (includeEstoque || includeEstoqueLocais) {
+      await this.enrichWithEstoque(produto, includeEstoqueLocais)
+    }
+
+    return produto
+  }
+
+  /**
+   * Busca estoque por local de um produto específico
+   */
+  async findEstoqueLocais(codprod: number): Promise<EstoqueLocal[]> {
+    this.logger.log(`Finding stock locations for product: ${codprod}`)
+
+    const query = `
+      SELECT
+        E.CODLOCAL,
+        L.DESCRLOCAL,
+        E.CONTROLE,
+        E.ESTOQUE AS quantidade,
+        E.ESTMIN,
+        E.ESTMAX
+      FROM TGFEST E WITH (NOLOCK)
+      LEFT JOIN TGFLOC L WITH (NOLOCK) ON L.CODLOCAL = E.CODLOCAL
+      WHERE E.CODPROD = @codprod
+        AND E.CODPARC = 0
+        AND E.ATIVO = 'S'
+      ORDER BY E.ESTOQUE DESC
+    `
+
+    const result = await this.sankhyaApiService.executeQuery(query, [
+      { name: 'codprod', value: codprod },
+    ])
+
+    return result.map((item) => {
+      const quantidade = Number(item.quantidade || 0)
+      const estmin = Number(item.ESTMIN || 0)
+      const estmax = Number(item.ESTMAX || 0)
+
+      let statusLocal: 'NORMAL' | 'BAIXO' | 'CRITICO' | 'EXCESSO' = 'NORMAL'
+      if (quantidade <= estmin * 0.5) statusLocal = 'CRITICO'
+      else if (quantidade <= estmin) statusLocal = 'BAIXO'
+      else if (quantidade > estmax) statusLocal = 'EXCESSO'
+
+      const percOcupacao = estmax > 0 ? (quantidade / estmax) * 100 : 0
+
+      return {
+        codlocal: Number(item.CODLOCAL),
+        descrlocal: item.DESCRLOCAL || '',
+        controle: item.CONTROLE || null,
+        quantidade,
+        estmin,
+        estmax,
+        statusLocal,
+        percOcupacao: Number(percOcupacao.toFixed(2)),
+      }
+    })
   }
 
   /**

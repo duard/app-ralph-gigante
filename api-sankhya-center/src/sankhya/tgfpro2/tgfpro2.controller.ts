@@ -1,14 +1,24 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Query,
+  UseGuards,
+  Param,
+  ParseIntPipe,
+  NotFoundException,
+} from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
+  ApiParam,
+  ApiQuery,
 } from '@nestjs/swagger'
 import { PaginatedResult } from '../../common/pagination/pagination.types'
 import { TokenAuthGuard } from '../auth/token-auth.guard'
 import { ProdutoFindAllDto } from './dtos'
-import { Produto2 } from './interfaces'
+import { Produto2, EstoqueLocal } from './interfaces'
 import { Tgfpro2Service } from './tgfpro2.service'
 
 /**
@@ -86,5 +96,126 @@ export class Tgfpro2Controller {
     @Query() dto: ProdutoFindAllDto,
   ): Promise<PaginatedResult<Produto2>> {
     return this.tgfpro2Service.findAll(dto)
+  }
+
+  @Get('produtos/:codprod')
+  @ApiOperation({
+    summary: 'Buscar produto por código',
+    description:
+      'Retorna detalhes completos de um produto específico, com opção de incluir informações de estoque',
+  })
+  @ApiParam({
+    name: 'codprod',
+    description: 'Código do produto',
+    example: 3680,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'includeEstoque',
+    required: false,
+    description: 'Incluir resumo de estoque agregado',
+    type: Boolean,
+    example: false,
+  })
+  @ApiQuery({
+    name: 'includeEstoqueLocais',
+    required: false,
+    description: 'Incluir estoque detalhado por local',
+    type: Boolean,
+    example: false,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Produto encontrado com sucesso',
+    schema: {
+      example: {
+        codprod: 3680,
+        descrprod: 'PARAFUSO CABECA CHATA',
+        referencia: 'REF123',
+        marca: 'BOSCH',
+        codgrupoprod: 1000,
+        codvol: 'UN',
+        ativo: 'S',
+        tgfgru: {
+          codgrupoprod: 1000,
+          descrgrupoprod: 'FERRAGENS',
+        },
+        tgfvol: {
+          codvol: 'UN',
+          descrvol: 'UNIDADE',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Produto não encontrado',
+  })
+  async findOne(
+    @Param('codprod', ParseIntPipe) codprod: number,
+    @Query('includeEstoque') includeEstoque?: boolean,
+    @Query('includeEstoqueLocais') includeEstoqueLocais?: boolean,
+  ): Promise<Produto2> {
+    const produto = await this.tgfpro2Service.findOne(
+      codprod,
+      includeEstoque,
+      includeEstoqueLocais,
+    )
+
+    if (!produto) {
+      throw new NotFoundException(`Produto com código ${codprod} não encontrado`)
+    }
+
+    return produto
+  }
+
+  @Get('produtos/:codprod/locais')
+  @ApiOperation({
+    summary: 'Buscar estoque por local de um produto',
+    description:
+      'Retorna lista de todos os locais onde o produto possui estoque, com quantidades e status',
+  })
+  @ApiParam({
+    name: 'codprod',
+    description: 'Código do produto',
+    example: 3680,
+    type: Number,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Estoque por local retornado com sucesso',
+    schema: {
+      example: [
+        {
+          codlocal: 101001,
+          descrlocal: 'ALMOX PECAS',
+          controle: null,
+          quantidade: 100,
+          estmin: 30,
+          estmax: 150,
+          statusLocal: 'NORMAL',
+          percOcupacao: 66.67,
+        },
+        {
+          codlocal: 101002,
+          descrlocal: 'ALMOX FERRAMENTAS',
+          controle: null,
+          quantidade: 50,
+          estmin: 20,
+          estmax: 100,
+          statusLocal: 'NORMAL',
+          percOcupacao: 50.0,
+        },
+      ],
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Produto não encontrado ou sem estoque',
+  })
+  async findEstoqueLocais(
+    @Param('codprod', ParseIntPipe) codprod: number,
+  ): Promise<EstoqueLocal[]> {
+    return this.tgfpro2Service.findEstoqueLocais(codprod)
   }
 }
