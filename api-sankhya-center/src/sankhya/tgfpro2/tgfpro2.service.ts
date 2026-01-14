@@ -1145,7 +1145,25 @@ export class Tgfpro2Service {
         LEFT JOIN TSIUSU USUALT WITH (NOLOCK) ON USUALT.CODUSU = P.CODUSUALT
         WHERE (P.NCM IS NULL OR P.NCM = '' OR LEN(LTRIM(RTRIM(P.NCM))) = 0)
       )
-      SELECT *
+      SELECT
+        CODPROD,
+        DESCRPROD,
+        COMPLDESC,
+        REFERENCIA,
+        MARCA,
+        CODGRUPOPROD,
+        CODVOL,
+        ATIVO,
+        NCM,
+        DESCRGRUPOPROD,
+        DESCRVOL,
+        CODUSUINC,
+        DTALTER,
+        DTCAD,
+        CODUSUALT,
+        NOMEUSU_INC,
+        NOMEUSU_ALT,
+        ESTOQUE_TOTAL
       FROM ProdutosSemNCM
       ORDER BY
         CASE
