@@ -17,7 +17,13 @@ import {
 } from '@nestjs/swagger'
 import { PaginatedResult } from '../../common/pagination/pagination.types'
 import { TokenAuthGuard } from '../auth/token-auth.guard'
-import { ProdutoFindAllDto, ConsumoFindAllDto } from './dtos'
+import {
+  ProdutoFindAllDto,
+  ConsumoFindAllDto,
+  ProdutosSemNcmDto,
+  ProdutoConsumoAnaliseQueryDto,
+  ProdutoConsumoAnaliseResponseDto,
+} from './dtos'
 import {
   Produto2,
   EstoqueLocal,
@@ -223,6 +229,65 @@ export class Tgfpro2Controller {
     @Param('codprod', ParseIntPipe) codprod: number,
   ): Promise<EstoqueLocal[]> {
     return this.tgfpro2Service.findEstoqueLocais(codprod)
+  }
+
+  @Get('produtos/:codprod/consumo/analise')
+  @ApiOperation({
+    summary: 'Análise completa de consumo de produto',
+    description:
+      'Retorna análise detalhada do consumo de um produto por período com múltiplas visões de agrupamento (usuário, grupo, parceiro, mês, tipo de operação)',
+  })
+  @ApiParam({
+    name: 'codprod',
+    description: 'Código do produto',
+    example: 3680,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'dataInicio',
+    description: 'Data inicial do período (YYYY-MM-DD)',
+    example: '2025-12-01',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'dataFim',
+    description: 'Data final do período (YYYY-MM-DD)',
+    example: '2025-12-31',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'groupBy',
+    description: 'Tipo de agrupamento',
+    example: 'usuario',
+    required: false,
+    enum: ['usuario', 'grupo', 'parceiro', 'mes', 'tipooper', 'none'],
+  })
+  @ApiQuery({
+    name: 'page',
+    description: 'Número da página',
+    example: 1,
+    required: false,
+  })
+  @ApiQuery({
+    name: 'perPage',
+    description: 'Itens por página',
+    example: 20,
+    required: false,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Análise de consumo retornada com sucesso',
+    type: ProdutoConsumoAnaliseResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Produto não encontrado',
+  })
+  async findProdutoConsumoAnalise(
+    @Param('codprod', ParseIntPipe) codprod: number,
+    @Query() query: ProdutoConsumoAnaliseQueryDto,
+  ): Promise<ProdutoConsumoAnaliseResponseDto> {
+    return this.tgfpro2Service.findProdutoConsumoAnalise(codprod, query)
   }
 
   @Get('grupos')
@@ -605,13 +670,73 @@ export class Tgfpro2Controller {
       },
     },
   })
-  async findProdutosSemNCM(): Promise<{
-    produtos: Produto2[]
+  async findProdutosSemNCM(@Query() dto: ProdutosSemNcmDto): Promise<{
+    produtos: any[]
     total: number
+    page: number
+    perPage: number
+    lastPage: number
+    hasMore: boolean
     totalAtivos: number
-    totalComEstoque: number
     totalCriticos: number
   }> {
-    return this.tgfpro2Service.findProdutosSemNCM()
+    return this.tgfpro2Service.findProdutosSemNCM(dto)
+  }
+
+  @Get('qualidade/sem-ncm/stats')
+  @ApiOperation({
+    summary: 'Obtém estatísticas globais de produtos sem NCM',
+    description:
+      'Retorna contadores gerais (não afetados por filtros) para os KPI cards',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Estatísticas retornadas com sucesso',
+    schema: {
+      example: {
+        total: 2643,
+        totalAtivos: 2618,
+        totalInativos: 25,
+        totalCriticosAlta: 0,
+      },
+    },
+  })
+  async getStatsSemNCM(): Promise<{
+    total: number
+    totalAtivos: number
+    totalInativos: number
+    totalCriticosAlta: number
+  }> {
+    return this.tgfpro2Service.getStatsProdutosSemNCM()
+  }
+
+  @Get('grupos')
+  @ApiOperation({
+    summary: 'Lista grupos de produtos ativos',
+    description: 'Retorna lista de grupos para uso em filtros',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de grupos retornada com sucesso',
+  })
+  async getGruposProdutos(): Promise<
+    { codgrupoprod: number; descrgrupoprod: string }[]
+  > {
+    return this.tgfpro2Service.getGruposProdutos()
+  }
+
+  @Get('locais')
+  @ApiOperation({
+    summary: 'Lista locais de estoque ativos',
+    description: 'Retorna lista de locais analíticos para uso em filtros',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de locais retornada com sucesso',
+  })
+  async getLocaisEstoque(): Promise<
+    { codlocal: number; descrlocal: string }[]
+  > {
+    return this.tgfpro2Service.getLocaisEstoque()
   }
 }

@@ -35,10 +35,13 @@ export interface Produto2 {
   usoprod?: string;
   origprod?: string;
   // Tracking/Auditoria
+  codusu?: number;
   codusuinc?: number;
   dtcad?: string;
   codusualt?: number;
   dtalter?: string;
+  nomeusu?: string;
+  dtlimacesso?: string;
   nomeusuInc?: string;
   nomeusuAlt?: string;
   // Relacionamentos
@@ -49,6 +52,10 @@ export interface Produto2 {
   tgfvol?: {
     codvol: string;
     descrvol: string;
+  };
+  tgfloc?: {
+    codlocal?: number;
+    descrlocal: string;
   };
   estoqueLocais?: any[];
   estoque?: {

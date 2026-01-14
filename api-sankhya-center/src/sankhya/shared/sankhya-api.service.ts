@@ -74,6 +74,124 @@ export class SankhyaApiService {
   }
 
   /**
+   * Extrai informações detalhadas de erro da API externa Sankhya
+   * Retorna mensagens estruturadas para usuário e desenvolvedor
+   */
+  private extractDetailedErrorInfo(
+    error: any,
+    query?: string,
+  ): {
+    userMessage: string
+    developerInfo: string
+    query: string
+    fullMessage: string
+  } {
+    let userMessage = 'Erro ao executar operação'
+    let developerInfo = ''
+    const querySnippet = query ? query.substring(0, 200) : 'N/A'
+
+    // Extrai informações do erro HTTP
+    if (error.response) {
+      const status = error.response.status
+      const data = error.response.data
+
+      // Mensagem amigável para o usuário
+      if (status === 401) {
+        userMessage = 'Credenciais inválidas - verifique usuário e senha'
+      } else if (status === 403) {
+        userMessage = 'Acesso proibido - usuário sem permissões'
+      } else if (status === 429) {
+        userMessage = 'Muitas tentativas - aguarde antes de tentar novamente'
+      } else if (status >= 500) {
+        userMessage = 'Erro interno do servidor Sankhya'
+      } else if (status >= 400) {
+        userMessage = data?.message || data?.error || 'Requisição inválida'
+      }
+
+      // Informações detalhadas para desenvolvedor
+      const devDetails: string[] = []
+
+      devDetails.push(`HTTP ${status}`)
+
+      if (data?.message) {
+        devDetails.push(`Message: ${data.message}`)
+      }
+
+      if (data?.error) {
+        devDetails.push(`Error: ${data.error}`)
+      }
+
+      // Detalhes específicos de erro SQL
+      if (data?.sqlMessage) {
+        devDetails.push(`SQL: ${data.sqlMessage}`)
+      }
+
+      if (data?.number) {
+        devDetails.push(`ErrorNumber: ${data.number}`)
+      }
+
+      if (data?.lineNumber) {
+        devDetails.push(`Line: ${data.lineNumber}`)
+      }
+
+      if (data?.procName) {
+        devDetails.push(`Procedure: ${data.procName}`)
+      }
+
+      if (data?.class) {
+        devDetails.push(`Class: ${data.class}`)
+      }
+
+      if (data?.state) {
+        devDetails.push(`State: ${data.state}`)
+      }
+
+      // Se temos o stack trace completo
+      if (data?.stack) {
+        devDetails.push(`Stack: ${data.stack.substring(0, 500)}`)
+      }
+
+      // Se temos originalError
+      if (data?.originalError) {
+        const origErr = data.originalError
+        if (origErr.message) {
+          devDetails.push(`OriginalError: ${origErr.message}`)
+        }
+        if (origErr.code) {
+          devDetails.push(`Code: ${origErr.code}`)
+        }
+      }
+
+      developerInfo = devDetails.join(' | ')
+    } else if (error.code) {
+      // Erros de rede
+      if (error.code === 'ECONNREFUSED') {
+        userMessage = 'Não foi possível conectar à API Sankhya'
+        developerInfo = 'Connection refused'
+      } else if (error.code === 'ETIMEDOUT') {
+        userMessage = 'Timeout na conexão com API Sankhya'
+        developerInfo = 'Connection timeout'
+      } else {
+        userMessage = 'Erro de conexão'
+        developerInfo = `Code: ${error.code}`
+      }
+    } else if (error.message) {
+      userMessage = 'Erro interno'
+      developerInfo = error.message
+    }
+
+    // Mensagem completa com contexto
+    const fullMessage = `${userMessage} | DEV: ${developerInfo} | QUERY: ${querySnippet}`
+
+    return {
+      userMessage,
+      developerInfo,
+      query: querySnippet,
+      fullMessage,
+    }
+  }
+
+  /**
    * Faz login na API Sankhya externa com credenciais do usuário
    * @param username - Nome de usuário Sankhya
    * @param password - Senha Sankhya
@@ -261,37 +379,16 @@ export class SankhyaApiService {
 
       return processedData
     } catch (error) {
-      this.logger.log(JSON.stringify(error))
-      // Tenta extrair detalhes do erro SQL se disponíveis
-      let sqlErrorDetails = ''
-      if (error.response && error.response.data) {
-        const errData = error.response.data
-        if (errData.message && typeof errData.message === 'string') {
-          sqlErrorDetails += ` | message: ${errData.message}`
-        }
-        if (errData.error && typeof errData.error === 'string') {
-          sqlErrorDetails += ` | error: ${errData.error}`
-        }
-        if (errData.sqlMessage) {
-          sqlErrorDetails += ` | sqlMessage: ${errData.sqlMessage}`
-        }
-        if (errData.number) {
-          sqlErrorDetails += ` | number: ${errData.number}`
-        }
-        if (errData.lineNumber) {
-          sqlErrorDetails += ` | lineNumber: ${errData.lineNumber}`
-        }
-        if (errData.procName) {
-          sqlErrorDetails += ` | procName: ${errData.procName}`
-        }
-      }
-      const errorMessage = this.extractErrorMessage(error, 'execução de query')
-      this.logger.error(
-        '❌ Falha na execução de query:',
-        errorMessage,
-        sqlErrorDetails,
-      )
-      throw new Error(`Query falhou: ${errorMessage}${sqlErrorDetails}`)
+      // Extrai informações detalhadas do erro da API externa Sankhya
+      const errorDetails = this.extractDetailedErrorInfo(error, query)
+
+      this.logger.error('❌ Falha na execução de query:', {
+        message: errorDetails.userMessage,
+        devInfo: errorDetails.developerInfo,
+        query: errorDetails.query,
+      })
+
+      throw new Error(errorDetails.fullMessage)
     }
   }
 

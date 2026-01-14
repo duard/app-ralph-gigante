@@ -6,6 +6,26 @@
 
 ## Important Notes
 
+### Sankhya API Restrictions
+
+**CRITICAL**: The external Sankhya API has restrictions:
+
+1. **CODDEP (Department Code) - BLOCKED at External API**: Any query selecting or filtering by `CODDEP` from `TGFCAB` table returns HTTP 500 from the **external** Sankhya API (not our backend validation).
+   - Example: `SELECT CODDEP FROM TGFCAB` → HTTP 500
+   - Our backend validation allows CODDEP (it's not a SQL keyword), but the external API blocks it
+   - Workaround: Skip department-related queries entirely
+
+2. **ALTER fields NOW WORK** (as of 2026-01-14):
+   - Our backend was modified to allow DHALTER, DTALTER, CODUSUALT, CODDEP in validation
+   - These are NOT SQL keywords, just field names
+   - Backend validation uses word boundaries (\b) to detect only real DDL/DML commands like `ALTER TABLE`, `UPDATE table SET`, etc.
+   - However, CODDEP is still blocked at the external Sankhya API level
+
+3. **Query Length Limit**: Queries longer than ~200-250 characters may fail with HTTP 500
+   - Solution: Split into multiple queries using Promise.all()
+   - Use short aliases: `TM` not `TOTAL_MOVIMENTACOES`
+   - Remove spaces: `WITH(NOLOCK)` not `WITH (NOLOCK)`
+
 ### Usuarios Module Bug
 
 The `usuarios` model in Prisma schema does NOT have an `email` field. The existing UsuariosService code references `email` in the create method (for uniqueness check) and in select statements, which causes TypeScript errors. This is a pre-existing bug that should be fixed separately. The model only has: `usuario`, `nome`, `senha`, `ultimo`, `nivel`, `created_at`, `updated_at`, `deleted_at`, `created_by`, `updated_by`.

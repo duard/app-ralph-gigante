@@ -1,220 +1,260 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ShoppingCart, TrendingUp, Users, Package, Loader2, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  getMovimentacoesConsumo,
-  getConsumoAnalise,
-  getPeriodoPadrao,
-  formatarValor,
-} from '@/lib/api/consumo-service';
+import { Loader2, AlertTriangle, Calendar, Download, RefreshCcw, Filter, FileText } from 'lucide-react';
+import { getMovimentacoesConsumo, getConsumoAnalise } from '@/lib/api/consumo-service';
 import type { ConsumoAnalise, MovimentacaoConsumo, PaginatedResponse } from '@/types/consumo';
+import { ConsumoKpiCards } from './components/consumo-kpi-cards';
+import { ConsumoTopRankings } from './components/consumo-top-rankings';
+import { ConsumoFilters } from './components/consumo-filters';
+import { ConsumoTable } from './components/consumo-table';
+import { ConsumoPagination } from './components/consumo-pagination';
+import { ConsumoQuickLinks } from './components/consumo-quick-links';
 
 export default function ConsumoPage() {
+  const [searchParams] = useSearchParams();
+
+  // Estados
   const [analiseData, setAnaliseData] = useState<ConsumoAnalise | null>(null);
   const [movimentacoesData, setMovimentacoesData] = useState<PaginatedResponse<MovimentacaoConsumo> | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadingTable, setLoadingTable] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Filtros
+  const [dataInicio, setDataInicio] = useState<string>(
+    searchParams.get('dataInicio') || getDefaultDateInicio()
+  );
+  const [dataFim, setDataFim] = useState<string>(
+    searchParams.get('dataFim') || getDefaultDateFim()
+  );
+  const [atualizaEstoque, setAtualizaEstoque] = useState<string>(
+    searchParams.get('atualizaEstoque') || 'all'
+  );
+  const [searchTerm, setSearchTerm] = useState<string>(searchParams.get('search') || '');
+  const [page, setPage] = useState<number>(Number(searchParams.get('page')) || 1);
+  const [perPage] = useState<number>(20);
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Funções auxiliares
+  function getDefaultDateInicio(): string {
+    const date = new Date();
+    date.setDate(date.getDate() - 30);
+    return date.toISOString().split('T')[0];
+  }
+
+  function getDefaultDateFim(): string {
+    return new Date().toISOString().split('T')[0];
+  }
+
+  function formatDate(dateString?: string): string {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  }
+
+  // Carregar dados
   useEffect(() => {
-    loadData();
+    loadAnaliseData();
   }, []);
 
-  async function loadData() {
+  useEffect(() => {
+    loadMovimentacoes();
+  }, [dataInicio, dataFim, atualizaEstoque, searchTerm, page]);
+
+  async function loadAnaliseData() {
     try {
       setLoading(true);
       setError(null);
-      const { dataInicio, dataFim } = getPeriodoPadrao(30);
-
-      const [analise, movimentacoes] = await Promise.all([
-        getConsumoAnalise(dataInicio, dataFim, 3),
-        getMovimentacoesConsumo({ dataInicio, dataFim, page: 1, perPage: 5, atualizaEstoque: 'B' }),
-      ]);
-
+      const analise = await getConsumoAnalise(dataInicio, dataFim, 5);
       setAnaliseData(analise);
-      setMovimentacoesData(movimentacoes);
     } catch (err) {
-      console.error('Erro ao carregar dados de consumo:', err);
-      setError('Erro ao carregar dados. Tente novamente.');
+      console.error('Erro ao carregar análise de consumo:', err);
+      setError('Erro ao carregar análise. Tente novamente.');
     } finally {
       setLoading(false);
     }
   }
 
+  async function loadMovimentacoes() {
+    try {
+      setLoadingTable(true);
+      const filtros: any = {
+        dataInicio,
+        dataFim,
+        page,
+        perPage,
+      };
+
+      if (atualizaEstoque !== 'all') {
+        filtros.atualizaEstoque = atualizaEstoque;
+      }
+
+      if (searchTerm) {
+        filtros.search = searchTerm;
+      }
+
+      const movimentacoes = await getMovimentacoesConsumo(filtros);
+      setMovimentacoesData(movimentacoes);
+    } catch (err) {
+      console.error('Erro ao carregar movimentações:', err);
+    } finally {
+      setLoadingTable(false);
+    }
+  }
+
+  function handleApplyFilters() {
+    setPage(1);
+    loadAnaliseData();
+    loadMovimentacoes();
+  }
+
+  function handleResetFilters() {
+    setDataInicio(getDefaultDateInicio());
+    setDataFim(getDefaultDateFim());
+    setAtualizaEstoque('all');
+    setSearchTerm('');
+    setPage(1);
+  }
+
+  function handlePageChange(newPage: number) {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Loading inicial
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-muted-foreground">Carregando dados de consumo...</p>
+        </div>
       </div>
     );
   }
 
+  // Erro
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <AlertTriangle className="h-12 w-12 text-destructive" />
         <p className="text-lg text-muted-foreground">{error}</p>
-        <Button onClick={loadData}>Tentar Novamente</Button>
+        <Button onClick={loadAnaliseData}>Tentar Novamente</Button>
       </div>
     );
   }
 
-  if (!analiseData || !movimentacoesData) return null;
+  if (!analiseData) return null;
 
   return (
-    <div className="flex flex-col gap-4 p-4 md:p-6">
+    <div className="flex flex-col gap-6 p-4 md:p-6 max-w-[1600px] mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Consumo de Produtos</h1>
-          <p className="text-muted-foreground mt-2">
-            Análise completa de movimentações e consumo interno de produtos
-          </p>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold tracking-tight">Consumo de Produtos</h1>
+            <p className="text-muted-foreground">
+              Análise completa de movimentações e consumo interno de produtos
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => window.print()}>
+              <Download className="h-4 w-4 mr-2" />
+              Exportar
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleApplyFilters}>
+              <RefreshCcw className="h-4 w-4 mr-2" />
+              Atualizar
+            </Button>
+          </div>
+        </div>
+
+        {/* Período Info */}
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Calendar className="h-4 w-4" />
+          <span>
+            Período: {formatDate(analiseData.periodo.inicio)} até {formatDate(analiseData.periodo.fim)}
+          </span>
+          <span className="text-xs">({analiseData.periodo.dias} dias)</span>
         </div>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total de Movimentações</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{analiseData.totais.movimentacoes.toLocaleString('pt-BR')}</div>
-            <p className="text-xs text-muted-foreground">Últimos 30 dias</p>
-          </CardContent>
-        </Card>
+      <ConsumoKpiCards analiseData={analiseData} />
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Produtos Consumidos</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{analiseData.totais.produtos}</div>
-            <p className="text-xs text-muted-foreground">Produtos distintos</p>
-          </CardContent>
-        </Card>
+      {/* Top Rankings */}
+      <ConsumoTopRankings analiseData={analiseData} />
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Departamentos</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{analiseData.totais.departamentos}</div>
-            <p className="text-xs text-muted-foreground">Ativos no período</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Valor Total</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatarValor(analiseData.totais.valorTotal)}</div>
-            <p className="text-xs text-muted-foreground">Últimos 30 dias</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Main Content */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Movimentações Recentes</CardTitle>
-            <CardDescription>Últimas requisições de produtos</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {movimentacoesData.data.map((mov) => (
-                <div key={`${mov.nunota}-${mov.sequencia}`} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <Link
-                      to={`/produtos-v2/${mov.codprod}`}
-                      className="font-medium hover:underline"
-                    >
-                      {mov.descrprod}
-                    </Link>
-                    <p className="text-sm text-muted-foreground">
-                      {mov.descrDep || 'Sem depto'} • {mov.nomeusu}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-medium">{mov.qtdneg?.toLocaleString('pt-BR')} un</p>
-                    <p className="text-sm text-muted-foreground">{formatarValor(mov.vlrtot || 0)}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Top Departamentos</CardTitle>
-            <CardDescription>Maiores consumidores do período</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {analiseData.topDepartamentos.slice(0, 5).map((dep, idx) => (
-                <div key={dep.coddep || idx} className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium">{dep.descrDep}</span>
-                    <span className="text-muted-foreground">{dep.percentual.toFixed(1)}%</span>
-                  </div>
-                  <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                    <div className="h-full bg-primary" style={{ width: `${dep.percentual}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Quick Actions */}
+      {/* Filtros e Tabela */}
       <Card>
         <CardHeader>
-          <CardTitle>Análises Detalhadas</CardTitle>
-          <CardDescription>Acesse relatórios e análises específicas</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-3">
-            <Link
-              to="/produtos-v2/consumo/analise"
-              className="flex flex-col items-center justify-center p-6 border rounded-lg hover:bg-accent transition-colors cursor-pointer"
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Movimentações Detalhadas
+              </CardTitle>
+              <CardDescription>
+                {movimentacoesData?.total.toLocaleString('pt-BR')} movimentações encontradas
+              </CardDescription>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowFilters(!showFilters)}
             >
-              <TrendingUp className="h-8 w-8 mb-2 text-primary" />
-              <p className="font-medium">Análise por Período</p>
-              <p className="text-xs text-muted-foreground text-center mt-1">
-                Top produtos e tendências
-              </p>
-            </Link>
-
-            <div className="flex flex-col items-center justify-center p-6 border rounded-lg opacity-50">
-              <Users className="h-8 w-8 mb-2 text-primary" />
-              <p className="font-medium">Por Departamento</p>
-              <p className="text-xs text-muted-foreground text-center mt-1">
-                Em breve
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center justify-center p-6 border rounded-lg opacity-50">
-              <Users className="h-8 w-8 mb-2 text-primary" />
-              <p className="font-medium">Por Usuário</p>
-              <p className="text-xs text-muted-foreground text-center mt-1">
-                Em breve
-              </p>
-            </div>
+              <Filter className="h-4 w-4 mr-2" />
+              {showFilters ? 'Ocultar' : 'Mostrar'} Filtros
+            </Button>
           </div>
+        </CardHeader>
+
+        {/* Filtros */}
+        {showFilters && (
+          <div className="px-6 pb-4">
+            <ConsumoFilters
+              dataInicio={dataInicio}
+              dataFim={dataFim}
+              atualizaEstoque={atualizaEstoque}
+              searchTerm={searchTerm}
+              onDataInicioChange={setDataInicio}
+              onDataFimChange={setDataFim}
+              onAtualizaEstoqueChange={setAtualizaEstoque}
+              onSearchTermChange={setSearchTerm}
+              onApplyFilters={handleApplyFilters}
+              onResetFilters={handleResetFilters}
+            />
+          </div>
+        )}
+
+        <CardContent>
+          <ConsumoTable
+            movimentacoes={movimentacoesData?.data || []}
+            loading={loadingTable}
+          />
+
+          {movimentacoesData && (
+            <ConsumoPagination
+              page={page}
+              perPage={perPage}
+              total={movimentacoesData.total}
+              lastPage={movimentacoesData.lastPage}
+              onPageChange={handlePageChange}
+            />
+          )}
         </CardContent>
       </Card>
+
+      {/* Links Rápidos */}
+      <ConsumoQuickLinks />
     </div>
   );
 }

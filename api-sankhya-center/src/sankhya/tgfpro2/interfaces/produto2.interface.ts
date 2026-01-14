@@ -94,6 +94,9 @@ export interface Produto2 {
   origprod?: string
 
   // ========== Tracking/Auditoria ==========
+  /** Código do usuário responsável pelo produto (último manipulador) */
+  codusu?: number
+
   /** Código do usuário que incluiu o produto */
   codusuinc?: number
 
@@ -105,6 +108,12 @@ export interface Produto2 {
 
   /** Data da última alteração do produto */
   dtalter?: string
+
+  /** Nome do usuário responsável (via JOIN TSIUSU ON P.CODUSU) */
+  nomeusu?: string
+
+  /** Data limite de acesso do usuário (se preenchido, usuário está desativado) */
+  dtlimacesso?: string
 
   /** Nome do usuário que incluiu (via JOIN TSIUSU) */
   nomeusuInc?: string
@@ -123,6 +132,12 @@ export interface Produto2 {
   tgfvol?: {
     codvol: string
     descrvol: string
+  }
+
+  /** Informações do local de estoque */
+  tgfloc?: {
+    codlocal?: number
+    descrlocal: string
   }
 
   // ========== NOVO: Estoque agregado por local ==========

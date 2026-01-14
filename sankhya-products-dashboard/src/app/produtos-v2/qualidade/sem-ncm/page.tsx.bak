@@ -179,6 +179,8 @@ export default function SemNCMPage() {
     );
   }
 
+  const percentualCriticos = stats ? calcularPercentual(stats.totalCriticosAlta, stats.totalAtivos) : 0;
+
   return (
     <BaseLayout>
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
@@ -194,17 +196,58 @@ export default function SemNCMPage() {
 
         {/* KPI Cards - Clicáveis para filtrar */}
         {stats && (
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-4">
+            {/* Card: Criticidade ALTA - Clicável */}
+            <Card
+              className={`border-2 cursor-pointer transition-all hover:shadow-lg ${
+                criticidade === 'ALTA' && ativo === 'all' ? 'ring-2 ring-orange-500 border-orange-500' : ''
+              }`}
+              onClick={() => {
+                if (criticidade === 'ALTA' && ativo === 'all') {
+                  setCriticidade('all');
+                } else {
+                  setCriticidade('ALTA');
+                  setAtivo('all');
+                  setPage(1);
+                }
+              }}
+            >
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Criticidade ALTA</CardTitle>
+                <AlertTriangle className="h-4 w-4 text-orange-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-orange-500">
+                  {stats.totalCriticosAlta.toLocaleString('pt-BR')}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Ativos sem NCM ({percentualCriticos.toFixed(1)}%)
+                </p>
+                <div className="mt-2 flex items-center gap-2">
+                  <div className="flex-1 h-2 bg-secondary rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-orange-500"
+                      style={{ width: `${percentualCriticos}%` }}
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  {criticidade === 'ALTA' ? '✓ Filtro ativo' : 'Clique para filtrar'}
+                </p>
+              </CardContent>
+            </Card>
+
             {/* Card: Ativos - Clicável */}
             <Card
               className={`border-2 cursor-pointer transition-all hover:shadow-lg ${
-                ativo === 'S' ? 'ring-2 ring-blue-500 border-blue-500' : ''
+                ativo === 'S' && criticidade === 'all' ? 'ring-2 ring-blue-500 border-blue-500' : ''
               }`}
               onClick={() => {
-                if (ativo === 'S') {
+                if (ativo === 'S' && criticidade === 'all') {
                   setAtivo('all');
                 } else {
                   setAtivo('S');
+                  setCriticidade('all');
                   setPage(1);
                 }
               }}
@@ -237,13 +280,14 @@ export default function SemNCMPage() {
             {/* Card: Inativos - Clicável */}
             <Card
               className={`border-2 cursor-pointer transition-all hover:shadow-lg ${
-                ativo === 'N' ? 'ring-2 ring-gray-500 border-gray-500' : ''
+                ativo === 'N' && criticidade === 'all' ? 'ring-2 ring-gray-500 border-gray-500' : ''
               }`}
               onClick={() => {
-                if (ativo === 'N') {
+                if (ativo === 'N' && criticidade === 'all') {
                   setAtivo('all');
                 } else {
                   setAtivo('N');
+                  setCriticidade('all');
                   setPage(1);
                 }
               }}
@@ -445,6 +489,7 @@ export default function SemNCMPage() {
                         <TableHead>Localização</TableHead>
                         <TableHead>Usa Local</TableHead>
                         <TableHead>Status</TableHead>
+                        <TableHead>Criticidade</TableHead>
                         <TableHead className="min-w-[150px]">Usuário</TableHead>
                         <TableHead className="text-right w-[120px]">Ações</TableHead>
                       </TableRow>
@@ -512,6 +557,19 @@ export default function SemNCMPage() {
                           <TableCell>
                             <Badge variant={produto.ativo === 'S' ? 'default' : 'secondary'}>
                               {produto.ativo === 'S' ? 'Ativo' : 'Inativo'}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                produto.criticidade === 'ALTA'
+                                  ? 'destructive'
+                                  : produto.criticidade === 'MEDIA'
+                                    ? 'default'
+                                    : 'secondary'
+                              }
+                            >
+                              {produto.criticidade}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-sm">
