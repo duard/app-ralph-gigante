@@ -218,4 +218,139 @@ export class Tgfpro2Controller {
   ): Promise<EstoqueLocal[]> {
     return this.tgfpro2Service.findEstoqueLocais(codprod)
   }
+
+  @Get('grupos')
+  @ApiOperation({
+    summary: 'Listar todos os grupos de produtos',
+    description:
+      'Retorna lista de grupos de produtos com contagem total de produtos ativos em cada grupo',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de grupos retornada com sucesso',
+    schema: {
+      example: [
+        {
+          codgrupoprod: 20303,
+          descrgrupoprod: 'MATERIAL ESCRITORIO',
+          totalProdutos: 45,
+        },
+        {
+          codgrupoprod: 20102,
+          descrgrupoprod: 'MECANICA',
+          totalProdutos: 128,
+        },
+      ],
+    },
+  })
+  async findAllGrupos(): Promise<
+    Array<{ codgrupoprod: number; descrgrupoprod: string; totalProdutos: number }>
+  > {
+    return this.tgfpro2Service.findAllGrupos()
+  }
+
+  @Get('grupos/:codgrupoprod/produtos')
+  @ApiOperation({
+    summary: 'Listar produtos de um grupo específico',
+    description: 'Retorna lista paginada de produtos ativos de um grupo específico',
+  })
+  @ApiParam({
+    name: 'codgrupoprod',
+    description: 'Código do grupo de produtos',
+    example: 20303,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Número da página',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'perPage',
+    required: false,
+    description: 'Itens por página',
+    example: 10,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de produtos do grupo retornada com sucesso',
+  })
+  async findByGrupo(
+    @Param('codgrupoprod', ParseIntPipe) codgrupoprod: number,
+    @Query('page') page?: number,
+    @Query('perPage') perPage?: number,
+  ): Promise<PaginatedResult<Produto2>> {
+    return this.tgfpro2Service.findByGrupo(
+      codgrupoprod,
+      page || 1,
+      perPage || 10,
+    )
+  }
+
+  @Get('locais')
+  @ApiOperation({
+    summary: 'Listar todos os locais de estoque',
+    description:
+      'Retorna lista de locais de estoque com contagem de produtos com estoque em cada local',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de locais retornada com sucesso',
+    schema: {
+      example: [
+        {
+          codlocal: 105002,
+          descrlocal: 'MATERIAL ESCRITORIO',
+          totalProdutos: 35,
+        },
+        {
+          codlocal: 101001,
+          descrlocal: 'ALMOX PECAS',
+          totalProdutos: 254,
+        },
+      ],
+    },
+  })
+  async findAllLocais(): Promise<
+    Array<{ codlocal: number; descrlocal: string; totalProdutos: number }>
+  > {
+    return this.tgfpro2Service.findAllLocais()
+  }
+
+  @Get('locais/:codlocal/produtos')
+  @ApiOperation({
+    summary: 'Listar produtos em um local específico',
+    description:
+      'Retorna lista paginada de produtos ativos com estoque em um local específico',
+  })
+  @ApiParam({
+    name: 'codlocal',
+    description: 'Código do local de estoque',
+    example: 105002,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Número da página',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'perPage',
+    required: false,
+    description: 'Itens por página',
+    example: 10,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de produtos do local retornada com sucesso',
+  })
+  async findByLocal(
+    @Param('codlocal', ParseIntPipe) codlocal: number,
+    @Query('page') page?: number,
+    @Query('perPage') perPage?: number,
+  ): Promise<PaginatedResult<Produto2>> {
+    return this.tgfpro2Service.findByLocal(codlocal, page || 1, perPage || 10)
+  }
 }
