@@ -18,6 +18,14 @@ import {
   Database,
   Zap,
   Activity,
+  PackageOpen,
+  Layers,
+  MapPin,
+  PieChart,
+  ShoppingCart,
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -77,55 +85,125 @@ const data = {
           icon: Package,
         },
         {
-          title: 'Produtos V2 (Novo)',
-          url: '/produtos-v2',
-          icon: Package,
-        },
-        {
           title: 'Produto Simples V2',
           url: '/produtos-simples',
           icon: Zap,
         },
+      ],
+    },
+    {
+      label: 'Produtos V2',
+      items: [
         {
-          title: 'Análise de Produtos',
-          url: '/dashboard',
-          icon: TrendingUp,
+          title: 'Dashboard V2',
+          url: '/produtos-v2',
+          icon: LayoutDashboard,
         },
         {
-          title: 'Filtros Avançados',
+          title: 'Listagem Completa',
+          url: '/produtos-v2/listagem',
+          icon: PackageOpen,
+        },
+        {
+          title: 'Por Grupo',
           url: '#',
-          icon: Filter,
+          icon: Layers,
           items: [
             {
-              title: 'Por Categoria',
-              url: '/produtos?view=category',
+              title: 'Ver Todos Grupos',
+              url: '/produtos-v2/grupos',
             },
             {
-              title: 'Por Preço',
-              url: '/produtos?view=price',
+              title: 'MATERIAL ESCRITORIO',
+              url: '/produtos-v2/grupo/20303',
             },
             {
-              title: 'Por Status',
-              url: '/produtos?view=status',
+              title: 'MECANICA',
+              url: '/produtos-v2/grupo/20102',
             },
           ],
         },
         {
-          title: 'Exportação',
+          title: 'Por Local',
           url: '#',
-          icon: Download,
+          icon: MapPin,
           items: [
             {
-              title: 'Exportar CSV',
-              url: '#',
+              title: 'Ver Todos Locais',
+              url: '/produtos-v2/locais',
             },
             {
-              title: 'Exportar Excel',
-              url: '#',
+              title: 'ALMOX PECAS',
+              url: '/produtos-v2/local/101001',
             },
             {
-              title: 'Exportar PDF',
-              url: '#',
+              title: 'MATERIAL ESCRITORIO',
+              url: '/produtos-v2/local/105002',
+            },
+          ],
+        },
+        {
+          title: 'Análise de Estoque',
+          url: '#',
+          icon: TrendingUp,
+          items: [
+            {
+              title: 'Status Geral',
+              url: '/produtos-v2/estoque/status',
+            },
+            {
+              title: 'Crítico',
+              url: '/produtos-v2/estoque/critico',
+            },
+            {
+              title: 'Sem Estoque',
+              url: '/produtos-v2/estoque/sem-estoque',
+            },
+            {
+              title: 'Excesso',
+              url: '/produtos-v2/estoque/excesso',
+            },
+          ],
+        },
+        {
+          title: 'Consumo de Produtos',
+          url: '#',
+          icon: ShoppingCart,
+          items: [
+            {
+              title: 'Todas Movimentações',
+              url: '/produtos-v2/consumo',
+            },
+            {
+              title: 'Análise por Período',
+              url: '/produtos-v2/consumo/analise',
+            },
+            {
+              title: 'Por Departamento',
+              url: '/produtos-v2/consumo/departamentos',
+            },
+            {
+              title: 'Por Usuário',
+              url: '/produtos-v2/consumo/usuarios',
+            },
+          ],
+        },
+        {
+          title: 'Qualidade de Dados',
+          url: '#',
+          icon: AlertTriangle,
+          items: [
+            {
+              title: 'Produtos Sem NCM',
+              url: '/produtos-v2/qualidade/sem-ncm',
+            },
+            {
+              title: 'Campos Incompletos',
+              url: '/produtos-v2/qualidade/incompletos',
+            },
+            {
+              title: 'Inativos com Estoque',
+              url: '/produtos-v2/qualidade/inativos-estoque',
             },
           ],
         },
