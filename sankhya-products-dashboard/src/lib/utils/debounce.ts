@@ -22,7 +22,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
   const maxTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastCallTimeRef = useRef<number>(0);
   const lastInvokeTimeRef = useRef<number>(0);
-  const lastArgsRef = useRef<Parameters<T> | undefined>();
+  const lastArgsRef = useRef<Parameters<T> | undefined>(undefined);
   const { leading = false, trailing = true, maxWait } = options;
 
   const shouldInvoke = useCallback(
@@ -52,7 +52,7 @@ export function useDebounce<T extends (...args: any[]) => any>(
   const timerExpired = useCallback(() => {
     const time = Date.now();
     if (shouldInvoke(time)) {
-      return invokeFunc(time);
+      return invokeFunc(time, lastArgsRef.current);
     }
     if (!timeoutRef.current) return;
 
@@ -268,7 +268,7 @@ export function debounce<T extends (...args: any[]) => any>(
       clearTimeout(maxTimeout);
       maxTimeout = null;
     }
-    return invokeFunc(Date.now());
+    return invokeFunc(Date.now(), lastArgs);
   };
 
   const pending = () => !!timeout;
