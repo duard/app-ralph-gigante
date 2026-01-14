@@ -29,7 +29,7 @@ export class Tgfpro2Service {
     const perPage = dto.perPage || 10
 
     // Construir WHERE clause
-    const { whereClause, params } = this.buildWhereClause(dto)
+    const { whereClause } = this.buildWhereClause(dto)
 
     // 1. Contar total de registros (sem paginação)
     const countQuery = `
@@ -38,10 +38,7 @@ export class Tgfpro2Service {
       WHERE 1=1 ${whereClause}
     `
 
-    const countResult = await this.sankhyaApiService.executeQuery(
-      countQuery,
-      params,
-    )
+    const countResult = await this.sankhyaApiService.executeQuery(countQuery, [])
     const total = Number(countResult[0]?.total || 0)
 
     // 2. Buscar apenas a página solicitada
@@ -80,7 +77,7 @@ export class Tgfpro2Service {
     `
 
     // Executar query paginada
-    const result = await this.sankhyaApiService.executeQuery(query, params)
+    const result = await this.sankhyaApiService.executeQuery(query, [])
 
     // Mapear resultados (apenas a página atual)
     const produtos = result.map((item) => this.mapToProduto2(item))
@@ -105,60 +102,58 @@ export class Tgfpro2Service {
 
   /**
    * Constrói a cláusula WHERE baseada nos filtros
+   * Usa concatenação de strings com escape de aspas para segurança
    */
   private buildWhereClause(dto: ProdutoFindAllDto): {
     whereClause: string
     params: any[]
   } {
-    const params: any[] = []
     let whereClause = ''
 
     if (dto.search) {
-      whereClause += ` AND (P.DESCRPROD LIKE @search OR P.REFERENCIA LIKE @search OR P.MARCA LIKE @search)`
-      params.push({ name: 'search', value: `%${dto.search}%` })
+      const searchEscaped = dto.search.trim().replace(/'/g, "''")
+      whereClause += ` AND (P.DESCRPROD LIKE '%${searchEscaped}%' OR P.REFERENCIA LIKE '%${searchEscaped}%' OR P.MARCA LIKE '%${searchEscaped}%')`
     }
 
     if (dto.descrprod) {
-      whereClause += ` AND P.DESCRPROD LIKE @descrprod`
-      params.push({ name: 'descrprod', value: `%${dto.descrprod}%` })
+      const descrprodEscaped = dto.descrprod.trim().replace(/'/g, "''")
+      whereClause += ` AND P.DESCRPROD LIKE '%${descrprodEscaped}%'`
     }
 
     if (dto.referencia) {
-      whereClause += ` AND P.REFERENCIA LIKE @referencia`
-      params.push({ name: 'referencia', value: `%${dto.referencia}%` })
+      const referenciaEscaped = dto.referencia.trim().replace(/'/g, "''")
+      whereClause += ` AND P.REFERENCIA LIKE '%${referenciaEscaped}%'`
     }
 
     if (dto.marca) {
-      whereClause += ` AND P.MARCA LIKE @marca`
-      params.push({ name: 'marca', value: `%${dto.marca}%` })
+      const marcaEscaped = dto.marca.trim().replace(/'/g, "''")
+      whereClause += ` AND P.MARCA LIKE '%${marcaEscaped}%'`
     }
 
     if (dto.codgrupoprod) {
-      whereClause += ` AND P.CODGRUPOPROD = @codgrupoprod`
-      params.push({ name: 'codgrupoprod', value: dto.codgrupoprod })
+      whereClause += ` AND P.CODGRUPOPROD = ${dto.codgrupoprod}`
     }
 
     if (dto.ativo) {
-      whereClause += ` AND P.ATIVO = @ativo`
-      params.push({ name: 'ativo', value: dto.ativo })
+      whereClause += ` AND P.ATIVO = '${dto.ativo}'`
     }
 
     if (dto.localizacao) {
-      whereClause += ` AND P.LOCALIZACAO LIKE @localizacao`
-      params.push({ name: 'localizacao', value: `%${dto.localizacao}%` })
+      const localizacaoEscaped = dto.localizacao.trim().replace(/'/g, "''")
+      whereClause += ` AND P.LOCALIZACAO LIKE '%${localizacaoEscaped}%'`
     }
 
     if (dto.tipcontest) {
-      whereClause += ` AND P.TIPCONTEST LIKE @tipcontest`
-      params.push({ name: 'tipcontest', value: `%${dto.tipcontest}%` })
+      const tipcontestEscaped = dto.tipcontest.trim().replace(/'/g, "''")
+      whereClause += ` AND P.TIPCONTEST LIKE '%${tipcontestEscaped}%'`
     }
 
     if (dto.ncm) {
-      whereClause += ` AND P.NCM LIKE @ncm`
-      params.push({ name: 'ncm', value: `%${dto.ncm}%` })
+      const ncmEscaped = dto.ncm.trim().replace(/'/g, "''")
+      whereClause += ` AND P.NCM LIKE '%${ncmEscaped}%'`
     }
 
-    return { whereClause, params }
+    return { whereClause, params: [] }
   }
 
   /**
@@ -238,12 +233,10 @@ export class Tgfpro2Service {
       FROM TGFPRO P WITH (NOLOCK)
       LEFT JOIN TGFGRU G WITH (NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
       LEFT JOIN TGFVOL V WITH (NOLOCK) ON V.CODVOL = P.CODVOL
-      WHERE P.CODPROD = @codprod
+      WHERE P.CODPROD = ?
     `
 
-    const result = await this.sankhyaApiService.executeQuery(query, [
-      { name: 'codprod', value: codprod },
-    ])
+    const result = await this.sankhyaApiService.executeQuery(query, [codprod])
 
     if (!result || result.length === 0) {
       return null
@@ -275,15 +268,13 @@ export class Tgfpro2Service {
         E.ESTMAX
       FROM TGFEST E WITH (NOLOCK)
       LEFT JOIN TGFLOC L WITH (NOLOCK) ON L.CODLOCAL = E.CODLOCAL
-      WHERE E.CODPROD = @codprod
+      WHERE E.CODPROD = ?
         AND E.CODPARC = 0
         AND E.ATIVO = 'S'
       ORDER BY E.ESTOQUE DESC
     `
 
-    const result = await this.sankhyaApiService.executeQuery(query, [
-      { name: 'codprod', value: codprod },
-    ])
+    const result = await this.sankhyaApiService.executeQuery(query, [codprod])
 
     return result.map((item) => {
       const quantidade = Number(item.quantidade || 0)
@@ -327,14 +318,14 @@ export class Tgfpro2Service {
         E.ESTMAX
       FROM TGFEST E WITH (NOLOCK)
       LEFT JOIN TGFLOC L WITH (NOLOCK) ON L.CODLOCAL = E.CODLOCAL
-      WHERE E.CODPROD = @codprod
+      WHERE E.CODPROD = ?
         AND E.CODPARC = 0
         AND E.ATIVO = 'S'
       ORDER BY E.ESTOQUE DESC
     `
 
     const result = await this.sankhyaApiService.executeQuery(query, [
-      { name: 'codprod', value: produto.codprod },
+      produto.codprod,
     ])
 
     if (result.length > 0) {
