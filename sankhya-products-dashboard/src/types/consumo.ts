@@ -4,6 +4,55 @@
  */
 
 /**
+ * Interface Produto2 - Produto com informações de estoque por local
+ */
+export interface Produto2 {
+  codprod: number;
+  descrprod: string;
+  compldesc?: string;
+  caracteristicas?: string;
+  referencia?: string;
+  refforn?: string;
+  marca?: string;
+  codgrupoprod: number;
+  codvol: string;
+  codvolcompra?: string;
+  ncm?: string;
+  ativo: string;
+  pesobruto?: number;
+  pesoliq?: number;
+  localizacao?: string;
+  codlocalpadrao?: number;
+  usalocal?: string;
+  codcencus?: number;
+  tipcontest?: string;
+  liscontest?: string;
+  estmin?: number;
+  estmax?: number;
+  alertaestmin?: string;
+  prazoval?: number;
+  usanrofogo?: string;
+  usoprod?: string;
+  origprod?: string;
+  tgfgru?: {
+    codgrupoprod: number;
+    descrgrupoprod: string;
+  };
+  tgfvol?: {
+    codvol: string;
+    descrvol: string;
+  };
+  estoqueLocais?: any[];
+  estoque?: {
+    totalGeral: number;
+    totalMin: number;
+    totalMax: number;
+    qtdeLocais: number;
+    statusGeral: 'NORMAL' | 'BAIXO' | 'CRITICO' | 'EXCESSO';
+  };
+}
+
+/**
  * Movimentação de consumo de produtos
  */
 export interface MovimentacaoConsumo {
