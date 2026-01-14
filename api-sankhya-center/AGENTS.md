@@ -181,11 +181,13 @@ Before committing, verify:
 2. **SankhyaApiService**:
    - Método correto: `executeQuery(query, params)`
    - NÃO usar: `executarQuery` (nomenclatura antiga)
-   - **IMPORTANTE**: Usar placeholders posicionais `?` ao invés de nomeados `@nome`
-   - Params como array simples: `[valor1, valor2]`
-   - Para strings com LIKE: usar concatenação direta com escape de aspas: `str.replace(/'/g, "''")`
-   - **Exemplo correto**: `WHERE CODPROD = ?` com `executeQuery(query, [codprod])`
-   - **Exemplo ERRADO**: `WHERE CODPROD = @codprod` com `executeQuery(query, [{ name: 'codprod', value: codprod }])`
+   - **IMPORTANTE**: A API Sankhya externa NÃO processa placeholders (`?` ou `@nome`)
+   - Usar concatenação direta de valores na query SQL
+   - Para strings com LIKE: usar concatenação com escape de aspas: `str.replace(/'/g, "''")`
+   - Para números: concatenar diretamente sem aspas
+   - **Exemplo correto**: `WHERE CODPROD = ${codprod}` com `executeQuery(query, [])`
+   - **Exemplo correto (string)**: `WHERE DESCRPROD LIKE '%${search.replace(/'/g, "''")}%'` com `executeQuery(query, [])`
+   - **Exemplo ERRADO**: `WHERE CODPROD = ?` com `executeQuery(query, [codprod])` - API Sankhya não processa placeholders
 
 3. **Estrutura de Módulos Sankhya**:
    ```

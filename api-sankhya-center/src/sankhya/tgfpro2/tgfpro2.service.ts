@@ -233,10 +233,10 @@ export class Tgfpro2Service {
       FROM TGFPRO P WITH (NOLOCK)
       LEFT JOIN TGFGRU G WITH (NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
       LEFT JOIN TGFVOL V WITH (NOLOCK) ON V.CODVOL = P.CODVOL
-      WHERE P.CODPROD = ?
+      WHERE P.CODPROD = ${codprod}
     `
 
-    const result = await this.sankhyaApiService.executeQuery(query, [codprod])
+    const result = await this.sankhyaApiService.executeQuery(query, [])
 
     if (!result || result.length === 0) {
       return null
@@ -268,13 +268,13 @@ export class Tgfpro2Service {
         E.ESTMAX
       FROM TGFEST E WITH (NOLOCK)
       LEFT JOIN TGFLOC L WITH (NOLOCK) ON L.CODLOCAL = E.CODLOCAL
-      WHERE E.CODPROD = ?
+      WHERE E.CODPROD = ${codprod}
         AND E.CODPARC = 0
         AND E.ATIVO = 'S'
       ORDER BY E.ESTOQUE DESC
     `
 
-    const result = await this.sankhyaApiService.executeQuery(query, [codprod])
+    const result = await this.sankhyaApiService.executeQuery(query, [])
 
     return result.map((item) => {
       const quantidade = Number(item.quantidade || 0)
@@ -318,15 +318,13 @@ export class Tgfpro2Service {
         E.ESTMAX
       FROM TGFEST E WITH (NOLOCK)
       LEFT JOIN TGFLOC L WITH (NOLOCK) ON L.CODLOCAL = E.CODLOCAL
-      WHERE E.CODPROD = ?
+      WHERE E.CODPROD = ${produto.codprod}
         AND E.CODPARC = 0
         AND E.ATIVO = 'S'
       ORDER BY E.ESTOQUE DESC
     `
 
-    const result = await this.sankhyaApiService.executeQuery(query, [
-      produto.codprod,
-    ])
+    const result = await this.sankhyaApiService.executeQuery(query, [])
 
     if (result.length > 0) {
       const locais: EstoqueLocal[] = result.map((item) => {
