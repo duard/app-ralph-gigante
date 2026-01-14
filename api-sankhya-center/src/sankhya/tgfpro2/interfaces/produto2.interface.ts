@@ -21,6 +21,9 @@ export interface Produto2 {
   /** Referência/código alternativo */
   referencia?: string
 
+  /** Referência do fornecedor */
+  refforn?: string
+
   // ========== Classificação ==========
   /** Marca do produto */
   marca?: string
@@ -28,8 +31,11 @@ export interface Produto2 {
   /** Código do grupo de produtos */
   codgrupoprod: number
 
-  /** Código da unidade de medida */
+  /** Código da unidade de medida (venda) */
   codvol: string
+
+  /** Código da unidade de medida (compra) */
+  codvolcompra?: string
 
   /** Código NCM (Nomenclatura Comum do Mercosul) */
   ncm?: string
@@ -48,16 +54,37 @@ export interface Produto2 {
   /** Localização física no depósito (ex: "Prateleira A12") */
   localizacao?: string
 
+  /** Código do local padrão de estoque */
+  codlocalpadrao?: number
+
+  /** Usa controle de local (S/N) */
+  usalocal?: string
+
   // ========== Financeiro/Gestão ==========
   /** Código do centro de custo */
   codcencus?: number
 
-  // ========== Controle (lote/série) ==========
+  // ========== Controle de Estoque ==========
   /** Tipo de controle de estoque */
   tipcontest?: string
 
   /** Lista de controles (lotes, séries, etc) */
   liscontest?: string
+
+  /** Estoque mínimo padrão */
+  estmin?: number
+
+  /** Estoque máximo padrão */
+  estmax?: number
+
+  /** Alerta de estoque mínimo (S/N) */
+  alertaestmin?: string
+
+  /** Prazo de validade (em dias) */
+  prazoval?: number
+
+  /** Usa número de fogo (S/N) */
+  usanrofogo?: string
 
   // ========== Uso ==========
   /** Uso do produto: C (Consumo), R (Revenda) */
