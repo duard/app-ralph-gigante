@@ -1110,68 +1110,43 @@ export class Tgfpro2Service {
     this.logger.log('Finding products without NCM')
 
     // Query para buscar produtos sem NCM
-    // Usando CTE para permitir referência ao campo calculado ESTOQUE_TOTAL
+    // Simplificada sem CTE - API Sankhya pode não suportar CTEs
     const query = `
-      WITH ProdutosSemNCM AS (
-        SELECT
-          P.CODPROD,
-          P.DESCRPROD,
-          P.COMPLDESC,
-          P.REFERENCIA,
-          P.MARCA,
-          P.CODGRUPOPROD,
-          P.CODVOL,
-          P.ATIVO,
-          P.NCM,
-          G.DESCRGRUPOPROD,
-          V.DESCRVOL,
-          -- Campos de tracking/auditoria
-          P.CODUSUINC,
-          P.DTALTER,
-          P.DTCAD,
-          P.CODUSUALT,
-          USUINC.NOMEUSU AS NOMEUSU_INC,
-          USUALT.NOMEUSU AS NOMEUSU_ALT,
-          -- Calcular estoque total
-          ISNULL((
-            SELECT SUM(LOC.ESTOQUE)
-            FROM TGFLOC LOC WITH (NOLOCK)
-            WHERE LOC.CODPROD = P.CODPROD
-          ), 0) AS ESTOQUE_TOTAL
-        FROM TGFPRO P WITH (NOLOCK)
-        LEFT JOIN TGFGRU G WITH (NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
-        LEFT JOIN TGFVOL V WITH (NOLOCK) ON V.CODVOL = P.CODVOL
-        LEFT JOIN TSIUSU USUINC WITH (NOLOCK) ON USUINC.CODUSU = P.CODUSUINC
-        LEFT JOIN TSIUSU USUALT WITH (NOLOCK) ON USUALT.CODUSU = P.CODUSUALT
-        WHERE (P.NCM IS NULL OR P.NCM = '' OR LEN(LTRIM(RTRIM(P.NCM))) = 0)
-      )
-      SELECT
-        CODPROD,
-        DESCRPROD,
-        COMPLDESC,
-        REFERENCIA,
-        MARCA,
-        CODGRUPOPROD,
-        CODVOL,
-        ATIVO,
-        NCM,
-        DESCRGRUPOPROD,
-        DESCRVOL,
-        CODUSUINC,
-        DTALTER,
-        DTCAD,
-        CODUSUALT,
-        NOMEUSU_INC,
-        NOMEUSU_ALT,
-        ESTOQUE_TOTAL
-      FROM ProdutosSemNCM
+      SELECT TOP 100
+        P.CODPROD,
+        P.DESCRPROD,
+        P.COMPLDESC,
+        P.REFERENCIA,
+        P.MARCA,
+        P.CODGRUPOPROD,
+        P.CODVOL,
+        P.ATIVO,
+        P.NCM,
+        G.DESCRGRUPOPROD,
+        V.DESCRVOL,
+        P.CODUSUINC,
+        P.DTALTER,
+        P.DTCAD,
+        P.CODUSUALT,
+        USUINC.NOMEUSU AS NOMEUSU_INC,
+        USUALT.NOMEUSU AS NOMEUSU_ALT,
+        ISNULL((
+          SELECT SUM(LOC.ESTOQUE)
+          FROM TGFLOC LOC WITH (NOLOCK)
+          WHERE LOC.CODPROD = P.CODPROD
+        ), 0) AS ESTOQUE_TOTAL
+      FROM TGFPRO P WITH (NOLOCK)
+      LEFT JOIN TGFGRU G WITH (NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
+      LEFT JOIN TGFVOL V WITH (NOLOCK) ON V.CODVOL = P.CODVOL
+      LEFT JOIN TSIUSU USUINC WITH (NOLOCK) ON USUINC.CODUSU = P.CODUSUINC
+      LEFT JOIN TSIUSU USUALT WITH (NOLOCK) ON USUALT.CODUSU = P.CODUSUALT
+      WHERE (P.NCM IS NULL OR P.NCM = '' OR LEN(LTRIM(RTRIM(P.NCM))) = 0)
       ORDER BY
         CASE
-          WHEN ATIVO = 'S' AND ESTOQUE_TOTAL > 0 THEN 1  -- Críticos: ativos com estoque
-          WHEN ATIVO = 'S' AND ESTOQUE_TOTAL = 0 THEN 2  -- Médios: ativos sem estoque
-          ELSE 3  -- Baixos: inativos
+          WHEN P.ATIVO = 'S' THEN 1
+          ELSE 2
         END,
-        DESCRPROD
+        P.DESCRPROD
     `
 
     const result = await this.sankhyaApiService.executeQuery(query, [])
