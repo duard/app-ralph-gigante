@@ -43,6 +43,20 @@ const ProdutoConsumoV3 = lazy(
 const ProdutosSimples = lazy(
   () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-simples/page')
 );
+
+// Produtos V2 - Consumo pages
+const ProdutosV2Consumo = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v2/consumo/page')
+);
+const ProdutosV2ConsumoAnalise = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v2/consumo/analise/page')
+);
+
+// Produtos V2 - Qualidade pages
+const ProdutosV2QualidadeSemNCM = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v2/qualidade/sem-ncm/page')
+);
+
 const Mail = lazy(() => import(/* webpackChunkName: "communication" */ '@/app/mail/page'));
 const Chat = lazy(() => import(/* webpackChunkName: "communication" */ '@/app/chat/page'));
 const Calendar = lazy(() => import(/* webpackChunkName: "communication" */ '@/app/calendar/page'));
@@ -284,6 +298,34 @@ export const routes: RouteConfig[] = [
     element: (
       <ProtectedRoute>
         <ProdutosSimples />
+      </ProtectedRoute>
+    ),
+  },
+
+  // Produtos V2 - Consumo Routes
+  {
+    path: '/produtos-v2/consumo',
+    element: (
+      <ProtectedRoute>
+        <ProdutosV2Consumo />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/produtos-v2/consumo/analise',
+    element: (
+      <ProtectedRoute>
+        <ProdutosV2ConsumoAnalise />
+      </ProtectedRoute>
+    ),
+  },
+
+  // Produtos V2 - Qualidade Routes
+  {
+    path: '/produtos-v2/qualidade/sem-ncm',
+    element: (
+      <ProtectedRoute>
+        <ProdutosV2QualidadeSemNCM />
       </ProtectedRoute>
     ),
   },
