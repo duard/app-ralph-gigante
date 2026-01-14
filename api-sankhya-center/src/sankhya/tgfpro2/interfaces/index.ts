@@ -4,3 +4,4 @@
 export * from './estoque-local.interface'
 export * from './produto2.interface'
 export * from './produto-kpi.interface'
+export * from './consumo.interface'

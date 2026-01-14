@@ -4,8 +4,14 @@ import {
   buildPaginatedResult,
 } from '../../common/pagination/pagination.types'
 import { SankhyaApiService } from '../shared/sankhya-api.service'
-import { ProdutoFindAllDto } from './dtos'
-import { Produto2, EstoqueLocal } from './interfaces'
+import { ProdutoFindAllDto, ConsumoFindAllDto } from './dtos'
+import {
+  Produto2,
+  EstoqueLocal,
+  MovimentacaoConsumo,
+  ConsumoProduto,
+  ConsumoAnalise,
+} from './interfaces'
 
 /**
  * Service para gerenciar produtos com informações de estoque por local
@@ -566,5 +572,514 @@ export class Tgfpro2Service {
     const produtos = result.map((item) => this.mapToProduto2(item))
 
     return buildPaginatedResult({ data: produtos, total, page, perPage })
+  }
+
+  /**
+   * ===========================================================================
+   * MÉTODOS DE CONSUMO DE PRODUTOS
+   * ===========================================================================
+   */
+
+  /**
+   * Lista movimentações de consumo de produtos
+   * Baseado em TGFVAR + TGFCAB + TGFITE com filtros avançados
+   */
+  async findConsumo(
+    dto: ConsumoFindAllDto,
+  ): Promise<PaginatedResult<MovimentacaoConsumo>> {
+    this.logger.log(`Finding consumption movements with filters: ${JSON.stringify(dto)}`)
+
+    const page = dto.page || 1
+    const perPage = dto.perPage || 10
+
+    // Construir WHERE clause
+    let whereClause = ' WHERE 1=1'
+
+    if (dto.codprod) {
+      whereClause += ` AND ITE.CODPROD = ${dto.codprod}`
+    }
+
+    if (dto.coddep) {
+      whereClause += ` AND CAB.CODDEP = ${dto.coddep}`
+    }
+
+    if (dto.codusuinc) {
+      whereClause += ` AND CAB.CODUSUINC = ${dto.codusuinc}`
+    }
+
+    if (dto.dataInicio) {
+      whereClause += ` AND CAB.DTNEG >= '${dto.dataInicio}'`
+    }
+
+    if (dto.dataFim) {
+      whereClause += ` AND CAB.DTNEG <= '${dto.dataFim}'`
+    }
+
+    if (dto.atualizaEstoque) {
+      whereClause += ` AND TOPV.ATUALEST = '${dto.atualizaEstoque}'`
+    }
+
+    if (dto.codtipoper) {
+      whereClause += ` AND CAB.CODTIPOPER = ${dto.codtipoper}`
+    }
+
+    if (dto.search) {
+      const searchEscaped = dto.search.trim().replace(/'/g, "''")
+      whereClause += ` AND (P.DESCRPROD LIKE '%${searchEscaped}%' OR TOPV.DESCROPER LIKE '%${searchEscaped}%')`
+    }
+
+    // Filtrar apenas movimentações que afetam estoque (baixa)
+    // whereClause += ` AND TOPV.ATUALEST = 'B'`  // Comentado para permitir filtro manual
+
+    // Contar total
+    const countQuery = `
+      SELECT COUNT(*) AS total
+      FROM TGFITE ITE WITH (NOLOCK)
+      INNER JOIN TGFCAB CAB WITH (NOLOCK) ON CAB.NUNOTA = ITE.NUNOTA
+      LEFT JOIN TGFTOP TOPV WITH (NOLOCK) ON TOPV.CODTIPOPER = CAB.CODTIPOPER
+        AND TOPV.DHALTER = (
+          SELECT MAX(TOP2.DHALTER)
+          FROM TGFTOP TOP2 WITH (NOLOCK)
+          WHERE TOP2.CODTIPOPER = CAB.CODTIPOPER
+            AND TOP2.DHALTER <= CAB.DTNEG
+        )
+      LEFT JOIN TGFPRO P WITH (NOLOCK) ON P.CODPROD = ITE.CODPROD
+      ${whereClause}
+        AND CAB.STATUSNOTA != 'C'
+    `
+
+    const countResult = await this.sankhyaApiService.executeQuery(countQuery, [])
+    const total = Number(countResult[0]?.total || 0)
+
+    // Buscar movimentações
+    const offset = (page - 1) * perPage
+    const query = `
+      SELECT
+        ITE.NUNOTA,
+        ITE.SEQUENCIA,
+        ITE.CODPROD,
+        ITE.QTDNEG,
+        ITE.VLRUNIT,
+        ITE.VLRTOT,
+        ITE.CODLOCALORIG AS CODLOCAL,
+        CAB.NUMNOTA,
+        CAB.CODEMP,
+        CAB.CODPARC,
+        CAB.DTNEG,
+        CONVERT(VARCHAR(10), CAB.DTMOV, 120) + ' ' + CONVERT(VARCHAR(8), CAB.HRMOV, 108) AS DTMOV,
+        CAB.STATUSNOTA,
+        CASE CAB.STATUSNOTA
+          WHEN 'A' THEN 'Atendimento'
+          WHEN 'L' THEN 'Liberada'
+          WHEN 'P' THEN 'Pendente'
+          ELSE 'Outro'
+        END AS STATUSNOTA_DESCR,
+        CAB.CODTIPOPER,
+        CAB.CODDEP,
+        CAB.CODUSUINC,
+        TOPV.DESCROPER AS DESCRTIPOPER,
+        TOPV.ATUALEST AS ATUALIZA_ESTOQUE,
+        CASE TOPV.ATUALEST
+          WHEN 'B' THEN 'Baixar estoque'
+          WHEN 'E' THEN 'Entrar no estoque'
+          WHEN 'N' THEN 'Não movimenta estoque'
+          WHEN 'R' THEN 'Reservar estoque'
+          ELSE 'Indefinido'
+        END AS ATUALIZA_ESTOQUE_DESCR,
+        USU.NOMEUSU,
+        P.DESCRPROD,
+        DEP.DESCRDEP,
+        LOC.DESCRLOCAL,
+        PAR.NOMEPARC
+      FROM TGFITE ITE WITH (NOLOCK)
+      INNER JOIN TGFCAB CAB WITH (NOLOCK) ON CAB.NUNOTA = ITE.NUNOTA
+      LEFT JOIN TGFTOP TOPV WITH (NOLOCK) ON TOPV.CODTIPOPER = CAB.CODTIPOPER
+        AND TOPV.DHALTER = (
+          SELECT MAX(TOP2.DHALTER)
+          FROM TGFTOP TOP2 WITH (NOLOCK)
+          WHERE TOP2.CODTIPOPER = CAB.CODTIPOPER
+            AND TOP2.DHALTER <= CAB.DTNEG
+        )
+      LEFT JOIN TSIUSU USU WITH (NOLOCK) ON USU.CODUSU = CAB.CODUSUINC
+      LEFT JOIN TGFPRO P WITH (NOLOCK) ON P.CODPROD = ITE.CODPROD
+      LEFT JOIN TGFDEP DEP WITH (NOLOCK) ON DEP.CODDEP = CAB.CODDEP
+      LEFT JOIN TGFLOC LOC WITH (NOLOCK) ON LOC.CODLOCAL = ITE.CODLOCALORIG
+      LEFT JOIN TGFPAR PAR WITH (NOLOCK) ON PAR.CODPARC = CAB.CODPARC
+      ${whereClause}
+        AND CAB.STATUSNOTA != 'C'
+      ORDER BY CAB.DTNEG DESC, ITE.NUNOTA DESC
+      OFFSET ${offset} ROWS
+      FETCH NEXT ${perPage} ROWS ONLY
+    `
+
+    const result = await this.sankhyaApiService.executeQuery(query, [])
+    const movimentacoes = result.map((item) => this.mapToMovimentacaoConsumo(item))
+
+    return buildPaginatedResult({
+      data: movimentacoes,
+      total,
+      page,
+      perPage,
+    })
+  }
+
+  /**
+   * Analisa consumo de um produto específico
+   */
+  async findConsumoProduto(
+    codprod: number,
+    dataInicio?: string,
+    dataFim?: string,
+  ): Promise<ConsumoProduto> {
+    this.logger.log(
+      `Analyzing consumption for product ${codprod} from ${dataInicio} to ${dataFim}`,
+    )
+
+    let whereClause = `
+      WHERE ITE.CODPROD = ${codprod}
+        AND CAB.STATUSNOTA != 'C'
+        AND TOPV.ATUALEST = 'B'
+    `
+
+    if (dataInicio) {
+      whereClause += ` AND CAB.DTNEG >= '${dataInicio}'`
+    }
+
+    if (dataFim) {
+      whereClause += ` AND CAB.DTNEG <= '${dataFim}'`
+    }
+
+    // Query para dados gerais do produto e totais
+    const queryGeral = `
+      SELECT
+        P.CODPROD,
+        P.DESCRPROD,
+        P.REFERENCIA,
+        P.MARCA,
+        COUNT(DISTINCT ITE.NUNOTA) AS TOTAL_MOVIMENTACOES,
+        SUM(ITE.QTDNEG) AS QUANTIDADE_TOTAL,
+        AVG(ITE.VLRUNIT) AS VALOR_MEDIO,
+        SUM(ITE.VLRTOT) AS VALOR_TOTAL,
+        MIN(CAB.DTNEG) AS PRIMEIRA_MOV,
+        MAX(CAB.DTNEG) AS ULTIMA_MOV
+      FROM TGFITE ITE WITH (NOLOCK)
+      INNER JOIN TGFCAB CAB WITH (NOLOCK) ON CAB.NUNOTA = ITE.NUNOTA
+      LEFT JOIN TGFTOP TOPV WITH (NOLOCK) ON TOPV.CODTIPOPER = CAB.CODTIPOPER
+        AND TOPV.DHALTER = (
+          SELECT MAX(TOP2.DHALTER)
+          FROM TGFTOP TOP2 WITH (NOLOCK)
+          WHERE TOP2.CODTIPOPER = CAB.CODTIPOPER
+            AND TOP2.DHALTER <= CAB.DTNEG
+        )
+      INNER JOIN TGFPRO P WITH (NOLOCK) ON P.CODPROD = ITE.CODPROD
+      ${whereClause}
+      GROUP BY P.CODPROD, P.DESCRPROD, P.REFERENCIA, P.MARCA
+    `
+
+    const resultGeral = await this.sankhyaApiService.executeQuery(queryGeral, [])
+
+    if (!resultGeral.length) {
+      return {
+        codprod,
+        descrprod: 'Produto não encontrado ou sem consumo',
+        totalMovimentacoes: 0,
+        quantidadeTotal: 0,
+        valorMedio: 0,
+        valorTotal: 0,
+        departamentos: [],
+        usuarios: [],
+      }
+    }
+
+    const geral = resultGeral[0]
+
+    // Query para consumo por departamento
+    const queryDepartamentos = `
+      SELECT
+        CAB.CODDEP,
+        DEP.DESCRDEP,
+        SUM(ITE.QTDNEG) AS QUANTIDADE
+      FROM TGFITE ITE WITH (NOLOCK)
+      INNER JOIN TGFCAB CAB WITH (NOLOCK) ON CAB.NUNOTA = ITE.NUNOTA
+      LEFT JOIN TGFTOP TOPV WITH (NOLOCK) ON TOPV.CODTIPOPER = CAB.CODTIPOPER
+        AND TOPV.DHALTER = (
+          SELECT MAX(TOP2.DHALTER)
+          FROM TGFTOP TOP2 WITH (NOLOCK)
+          WHERE TOP2.CODTIPOPER = CAB.CODTIPOPER
+            AND TOP2.DHALTER <= CAB.DTNEG
+        )
+      LEFT JOIN TGFDEP DEP WITH (NOLOCK) ON DEP.CODDEP = CAB.CODDEP
+      ${whereClause}
+      GROUP BY CAB.CODDEP, DEP.DESCRDEP
+      ORDER BY QUANTIDADE DESC
+    `
+
+    const resultDepartamentos = await this.sankhyaApiService.executeQuery(
+      queryDepartamentos,
+      [],
+    )
+
+    const quantidadeTotal = Number(geral.QUANTIDADE_TOTAL || 0)
+
+    const departamentos = resultDepartamentos.map((item) => ({
+      coddep: item.CODDEP ? Number(item.CODDEP) : undefined,
+      descrDep: item.DESCRDEP || 'Sem departamento',
+      quantidade: Number(item.QUANTIDADE || 0),
+      percentual: quantidadeTotal > 0 ? (Number(item.QUANTIDADE || 0) / quantidadeTotal) * 100 : 0,
+    }))
+
+    // Query para consumo por usuário
+    const queryUsuarios = `
+      SELECT
+        CAB.CODUSUINC,
+        USU.NOMEUSU,
+        SUM(ITE.QTDNEG) AS QUANTIDADE
+      FROM TGFITE ITE WITH (NOLOCK)
+      INNER JOIN TGFCAB CAB WITH (NOLOCK) ON CAB.NUNOTA = ITE.NUNOTA
+      LEFT JOIN TGFTOP TOPV WITH (NOLOCK) ON TOPV.CODTIPOPER = CAB.CODTIPOPER
+        AND TOPV.DHALTER = (
+          SELECT MAX(TOP2.DHALTER)
+          FROM TGFTOP TOP2 WITH (NOLOCK)
+          WHERE TOP2.CODTIPOPER = CAB.CODTIPOPER
+            AND TOP2.DHALTER <= CAB.DTNEG
+        )
+      LEFT JOIN TSIUSU USU WITH (NOLOCK) ON USU.CODUSU = CAB.CODUSUINC
+      ${whereClause}
+      GROUP BY CAB.CODUSUINC, USU.NOMEUSU
+      ORDER BY QUANTIDADE DESC
+    `
+
+    const resultUsuarios = await this.sankhyaApiService.executeQuery(queryUsuarios, [])
+
+    const usuarios = resultUsuarios.map((item) => ({
+      codusuinc: Number(item.CODUSUINC || 0),
+      nomeusu: item.NOMEUSU || 'Usuário desconhecido',
+      quantidade: Number(item.QUANTIDADE || 0),
+      percentual: quantidadeTotal > 0 ? (Number(item.QUANTIDADE || 0) / quantidadeTotal) * 100 : 0,
+    }))
+
+    return {
+      codprod: Number(geral.CODPROD),
+      descrprod: geral.DESCRPROD,
+      referencia: geral.REFERENCIA,
+      marca: geral.MARCA,
+      totalMovimentacoes: Number(geral.TOTAL_MOVIMENTACOES || 0),
+      quantidadeTotal: Number(geral.QUANTIDADE_TOTAL || 0),
+      valorMedio: Number(geral.VALOR_MEDIO || 0),
+      valorTotal: Number(geral.VALOR_TOTAL || 0),
+      primeiraMov: geral.PRIMEIRA_MOV,
+      ultimaMov: geral.ULTIMA_MOV,
+      departamentos,
+      usuarios,
+    }
+  }
+
+  /**
+   * Análise completa de consumo por período
+   */
+  async findConsumoAnalise(
+    dataInicio: string,
+    dataFim: string,
+    top: number = 10,
+  ): Promise<ConsumoAnalise> {
+    this.logger.log(`Analyzing consumption from ${dataInicio} to ${dataFim}`)
+
+    const whereBase = `
+      WHERE CAB.DTNEG >= '${dataInicio}'
+        AND CAB.DTNEG <= '${dataFim}'
+        AND CAB.STATUSNOTA != 'C'
+        AND TOPV.ATUALEST = 'B'
+    `
+
+    // Totais gerais
+    const queryTotais = `
+      SELECT
+        COUNT(DISTINCT ITE.NUNOTA) AS TOTAL_MOVIMENTACOES,
+        COUNT(DISTINCT ITE.CODPROD) AS TOTAL_PRODUTOS,
+        COUNT(DISTINCT CAB.CODDEP) AS TOTAL_DEPARTAMENTOS,
+        COUNT(DISTINCT CAB.CODUSUINC) AS TOTAL_USUARIOS,
+        SUM(ITE.QTDNEG) AS QUANTIDADE_TOTAL,
+        SUM(ITE.VLRTOT) AS VALOR_TOTAL
+      FROM TGFITE ITE WITH (NOLOCK)
+      INNER JOIN TGFCAB CAB WITH (NOLOCK) ON CAB.NUNOTA = ITE.NUNOTA
+      LEFT JOIN TGFTOP TOPV WITH (NOLOCK) ON TOPV.CODTIPOPER = CAB.CODTIPOPER
+        AND TOPV.DHALTER = (
+          SELECT MAX(TOP2.DHALTER)
+          FROM TGFTOP TOP2 WITH (NOLOCK)
+          WHERE TOP2.CODTIPOPER = CAB.CODTIPOPER
+            AND TOP2.DHALTER <= CAB.DTNEG
+        )
+      ${whereBase}
+    `
+
+    const resultTotais = await this.sankhyaApiService.executeQuery(queryTotais, [])
+    const totais = resultTotais[0]
+
+    const quantidadeTotal = Number(totais.QUANTIDADE_TOTAL || 0)
+    const valorTotal = Number(totais.VALOR_TOTAL || 0)
+
+    // Top produtos
+    const queryTopProdutos = `
+      SELECT TOP ${top}
+        ITE.CODPROD,
+        P.DESCRPROD,
+        SUM(ITE.QTDNEG) AS QUANTIDADE,
+        SUM(ITE.VLRTOT) AS VALOR
+      FROM TGFITE ITE WITH (NOLOCK)
+      INNER JOIN TGFCAB CAB WITH (NOLOCK) ON CAB.NUNOTA = ITE.NUNOTA
+      LEFT JOIN TGFTOP TOPV WITH (NOLOCK) ON TOPV.CODTIPOPER = CAB.CODTIPOPER
+        AND TOPV.DHALTER = (
+          SELECT MAX(TOP2.DHALTER)
+          FROM TGFTOP TOP2 WITH (NOLOCK)
+          WHERE TOP2.CODTIPOPER = CAB.CODTIPOPER
+            AND TOP2.DHALTER <= CAB.DTNEG
+        )
+      LEFT JOIN TGFPRO P WITH (NOLOCK) ON P.CODPROD = ITE.CODPROD
+      ${whereBase}
+      GROUP BY ITE.CODPROD, P.DESCRPROD
+      ORDER BY QUANTIDADE DESC
+    `
+
+    const resultTopProdutos = await this.sankhyaApiService.executeQuery(
+      queryTopProdutos,
+      [],
+    )
+
+    const topProdutos = resultTopProdutos.map((item) => ({
+      codprod: Number(item.CODPROD),
+      descrprod: item.DESCRPROD,
+      quantidade: Number(item.QUANTIDADE || 0),
+      valor: Number(item.VALOR || 0),
+      percentual: quantidadeTotal > 0 ? (Number(item.QUANTIDADE || 0) / quantidadeTotal) * 100 : 0,
+    }))
+
+    // Top departamentos
+    const queryTopDepartamentos = `
+      SELECT TOP ${top}
+        CAB.CODDEP,
+        DEP.DESCRDEP,
+        SUM(ITE.QTDNEG) AS QUANTIDADE,
+        SUM(ITE.VLRTOT) AS VALOR
+      FROM TGFITE ITE WITH (NOLOCK)
+      INNER JOIN TGFCAB CAB WITH (NOLOCK) ON CAB.NUNOTA = ITE.NUNOTA
+      LEFT JOIN TGFTOP TOPV WITH (NOLOCK) ON TOPV.CODTIPOPER = CAB.CODTIPOPER
+        AND TOPV.DHALTER = (
+          SELECT MAX(TOP2.DHALTER)
+          FROM TGFTOP TOP2 WITH (NOLOCK)
+          WHERE TOP2.CODTIPOPER = CAB.CODTIPOPER
+            AND TOP2.DHALTER <= CAB.DTNEG
+        )
+      LEFT JOIN TGFDEP DEP WITH (NOLOCK) ON DEP.CODDEP = CAB.CODDEP
+      ${whereBase}
+      GROUP BY CAB.CODDEP, DEP.DESCRDEP
+      ORDER BY QUANTIDADE DESC
+    `
+
+    const resultTopDepartamentos = await this.sankhyaApiService.executeQuery(
+      queryTopDepartamentos,
+      [],
+    )
+
+    const topDepartamentos = resultTopDepartamentos.map((item) => ({
+      coddep: item.CODDEP ? Number(item.CODDEP) : undefined,
+      descrDep: item.DESCRDEP || 'Sem departamento',
+      quantidade: Number(item.QUANTIDADE || 0),
+      valor: Number(item.VALOR || 0),
+      percentual: quantidadeTotal > 0 ? (Number(item.QUANTIDADE || 0) / quantidadeTotal) * 100 : 0,
+    }))
+
+    // Top usuários
+    const queryTopUsuarios = `
+      SELECT TOP ${top}
+        CAB.CODUSUINC,
+        USU.NOMEUSU,
+        SUM(ITE.QTDNEG) AS QUANTIDADE,
+        SUM(ITE.VLRTOT) AS VALOR
+      FROM TGFITE ITE WITH (NOLOCK)
+      INNER JOIN TGFCAB CAB WITH (NOLOCK) ON CAB.NUNOTA = ITE.NUNOTA
+      LEFT JOIN TGFTOP TOPV WITH (NOLOCK) ON TOPV.CODTIPOPER = CAB.CODTIPOPER
+        AND TOPV.DHALTER = (
+          SELECT MAX(TOP2.DHALTER)
+          FROM TGFTOP TOP2 WITH (NOLOCK)
+          WHERE TOP2.CODTIPOPER = CAB.CODTIPOPER
+            AND TOP2.DHALTER <= CAB.DTNEG
+        )
+      LEFT JOIN TSIUSU USU WITH (NOLOCK) ON USU.CODUSU = CAB.CODUSUINC
+      ${whereBase}
+      GROUP BY CAB.CODUSUINC, USU.NOMEUSU
+      ORDER BY QUANTIDADE DESC
+    `
+
+    const resultTopUsuarios = await this.sankhyaApiService.executeQuery(
+      queryTopUsuarios,
+      [],
+    )
+
+    const topUsuarios = resultTopUsuarios.map((item) => ({
+      codusuinc: Number(item.CODUSUINC || 0),
+      nomeusu: item.NOMEUSU || 'Usuário desconhecido',
+      quantidade: Number(item.QUANTIDADE || 0),
+      valor: Number(item.VALOR || 0),
+      percentual: quantidadeTotal > 0 ? (Number(item.QUANTIDADE || 0) / quantidadeTotal) * 100 : 0,
+    }))
+
+    // Calcular dias
+    const inicio = new Date(dataInicio)
+    const fim = new Date(dataFim)
+    const dias = Math.ceil((fim.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24)) + 1
+
+    return {
+      periodo: {
+        inicio: dataInicio,
+        fim: dataFim,
+        dias,
+      },
+      totais: {
+        movimentacoes: Number(totais.TOTAL_MOVIMENTACOES || 0),
+        produtos: Number(totais.TOTAL_PRODUTOS || 0),
+        departamentos: Number(totais.TOTAL_DEPARTAMENTOS || 0),
+        usuarios: Number(totais.TOTAL_USUARIOS || 0),
+        quantidadeTotal,
+        valorTotal,
+      },
+      topProdutos,
+      topDepartamentos,
+      topUsuarios,
+    }
+  }
+
+  /**
+   * Mapeia resultado SQL para MovimentacaoConsumo
+   */
+  private mapToMovimentacaoConsumo(item: any): MovimentacaoConsumo {
+    return {
+      nunota: Number(item.NUNOTA),
+      sequencia: item.SEQUENCIA ? Number(item.SEQUENCIA) : undefined,
+      nunotaOrig: item.NUNOTA_ORIGEM ? Number(item.NUNOTA_ORIGEM) : undefined,
+      sequenciaOrig: item.SEQUENCIA_ORIGEM ? Number(item.SEQUENCIA_ORIGEM) : undefined,
+      numnota: item.NUMNOTA,
+      codemp: item.CODEMP ? Number(item.CODEMP) : undefined,
+      codparc: item.CODPARC ? Number(item.CODPARC) : undefined,
+      nomeparc: item.NOMEPARC,
+      dtneg: item.DTNEG,
+      dtmov: item.DTMOV,
+      statusnota: item.STATUSNOTA,
+      statusnotaDescr: item.STATUSNOTA_DESCR,
+      codtipoper: item.CODTIPOPER ? Number(item.CODTIPOPER) : undefined,
+      descrtipoper: item.DESCRTIPOPER,
+      atualizaEstoque: item.ATUALIZA_ESTOQUE,
+      atualizaEstoqueDescr: item.ATUALIZA_ESTOQUE_DESCR,
+      codusuinc: item.CODUSUINC ? Number(item.CODUSUINC) : undefined,
+      nomeusu: item.NOMEUSU,
+      coddep: item.CODDEP ? Number(item.CODDEP) : undefined,
+      descrDep: item.DESCRDEP,
+      codprod: item.CODPROD ? Number(item.CODPROD) : undefined,
+      descrprod: item.DESCRPROD,
+      qtdneg: item.QTDNEG ? Number(item.QTDNEG) : undefined,
+      vlrunit: item.VLRUNIT ? Number(item.VLRUNIT) : undefined,
+      vlrtot: item.VLRTOT ? Number(item.VLRTOT) : undefined,
+      codlocal: item.CODLOCAL ? Number(item.CODLOCAL) : undefined,
+      descrlocal: item.DESCRLOCAL,
+    }
   }
 }

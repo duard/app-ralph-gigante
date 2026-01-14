@@ -17,8 +17,14 @@ import {
 } from '@nestjs/swagger'
 import { PaginatedResult } from '../../common/pagination/pagination.types'
 import { TokenAuthGuard } from '../auth/token-auth.guard'
-import { ProdutoFindAllDto } from './dtos'
-import { Produto2, EstoqueLocal } from './interfaces'
+import { ProdutoFindAllDto, ConsumoFindAllDto } from './dtos'
+import {
+  Produto2,
+  EstoqueLocal,
+  MovimentacaoConsumo,
+  ConsumoProduto,
+  ConsumoAnalise,
+} from './interfaces'
 import { Tgfpro2Service } from './tgfpro2.service'
 
 /**
@@ -352,5 +358,217 @@ export class Tgfpro2Controller {
     @Query('perPage') perPage?: number,
   ): Promise<PaginatedResult<Produto2>> {
     return this.tgfpro2Service.findByLocal(codlocal, page || 1, perPage || 10)
+  }
+
+  /**
+   * ===========================================================================
+   * ENDPOINTS DE CONSUMO DE PRODUTOS
+   * ===========================================================================
+   */
+
+  @Get('consumo')
+  @ApiOperation({
+    summary: 'Listar movimentações de consumo de produtos',
+    description:
+      'Lista movimentações de consumo com filtros por produto, departamento, usuário, período, etc. Útil para rastrear consumo interno de produtos.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de movimentações retornada com sucesso',
+    schema: {
+      example: {
+        data: [
+          {
+            nunota: 123456,
+            codprod: 3680,
+            descrprod: 'FOLHAS A4 SULFITE 75G 210X297MM',
+            qtdneg: 10,
+            vlrunit: 25.5,
+            vlrtot: 255.0,
+            dtneg: '2026-01-10',
+            coddep: 1,
+            descrDep: 'TI',
+            codusuinc: 311,
+            nomeusu: 'CONVIDADE',
+            codtipoper: 400,
+            descrtipoper: 'REQUISIÇÃO INTERNA',
+            atualizaEstoque: 'B',
+            atualizaEstoqueDescr: 'Baixar estoque',
+          },
+        ],
+        total: 150,
+        page: 1,
+        perPage: 10,
+        lastPage: 15,
+        hasMore: true,
+      },
+    },
+  })
+  async findConsumo(
+    @Query() dto: ConsumoFindAllDto,
+  ): Promise<PaginatedResult<MovimentacaoConsumo>> {
+    return this.tgfpro2Service.findConsumo(dto)
+  }
+
+  @Get('consumo/produto/:codprod')
+  @ApiOperation({
+    summary: 'Análise de consumo de um produto específico',
+    description:
+      'Retorna análise detalhada do consumo de um produto, incluindo consumo por departamento e por usuário, com percentuais',
+  })
+  @ApiParam({
+    name: 'codprod',
+    description: 'Código do produto',
+    example: 3680,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'dataInicio',
+    required: false,
+    description: 'Data inicial (YYYY-MM-DD)',
+    example: '2025-01-01',
+  })
+  @ApiQuery({
+    name: 'dataFim',
+    required: false,
+    description: 'Data final (YYYY-MM-DD)',
+    example: '2026-01-13',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Análise de consumo retornada com sucesso',
+    schema: {
+      example: {
+        codprod: 3680,
+        descrprod: 'FOLHAS A4 SULFITE 75G 210X297MM',
+        referencia: 'A4-75G',
+        marca: 'PAPEL SUL',
+        totalMovimentacoes: 45,
+        quantidadeTotal: 1200,
+        valorMedio: 25.5,
+        valorTotal: 30600.0,
+        primeiraMov: '2025-01-01',
+        ultimaMov: '2026-01-10',
+        departamentos: [
+          {
+            coddep: 1,
+            descrDep: 'TI',
+            quantidade: 600,
+            percentual: 50.0,
+          },
+          {
+            coddep: 2,
+            descrDep: 'Financeiro',
+            quantidade: 400,
+            percentual: 33.33,
+          },
+          {
+            coddep: 3,
+            descrDep: 'RH',
+            quantidade: 200,
+            percentual: 16.67,
+          },
+        ],
+        usuarios: [
+          {
+            codusuinc: 311,
+            nomeusu: 'CONVIDADE',
+            quantidade: 800,
+            percentual: 66.67,
+          },
+        ],
+      },
+    },
+  })
+  async findConsumoProduto(
+    @Param('codprod', ParseIntPipe) codprod: number,
+    @Query('dataInicio') dataInicio?: string,
+    @Query('dataFim') dataFim?: string,
+  ): Promise<ConsumoProduto> {
+    return this.tgfpro2Service.findConsumoProduto(codprod, dataInicio, dataFim)
+  }
+
+  @Get('consumo/analise')
+  @ApiOperation({
+    summary: 'Análise completa de consumo por período',
+    description:
+      'Retorna análise completa de consumo em um período, incluindo top produtos, departamentos e usuários',
+  })
+  @ApiQuery({
+    name: 'dataInicio',
+    required: true,
+    description: 'Data inicial (YYYY-MM-DD)',
+    example: '2025-01-01',
+  })
+  @ApiQuery({
+    name: 'dataFim',
+    required: true,
+    description: 'Data final (YYYY-MM-DD)',
+    example: '2026-01-13',
+  })
+  @ApiQuery({
+    name: 'top',
+    required: false,
+    description: 'Quantidade de itens no top (default: 10)',
+    example: 10,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Análise completa retornada com sucesso',
+    schema: {
+      example: {
+        periodo: {
+          inicio: '2025-01-01',
+          fim: '2026-01-13',
+          dias: 378,
+        },
+        totais: {
+          movimentacoes: 450,
+          produtos: 85,
+          departamentos: 8,
+          usuarios: 12,
+          quantidadeTotal: 15000,
+          valorTotal: 125000.0,
+        },
+        topProdutos: [
+          {
+            codprod: 3680,
+            descrprod: 'FOLHAS A4',
+            quantidade: 5000,
+            valor: 45000.0,
+            percentual: 33.33,
+          },
+        ],
+        topDepartamentos: [
+          {
+            coddep: 1,
+            descrDep: 'TI',
+            quantidade: 7500,
+            valor: 62500.0,
+            percentual: 50.0,
+          },
+        ],
+        topUsuarios: [
+          {
+            codusuinc: 311,
+            nomeusu: 'CONVIDADE',
+            quantidade: 10000,
+            valor: 83333.33,
+            percentual: 66.67,
+          },
+        ],
+      },
+    },
+  })
+  async findConsumoAnalise(
+    @Query('dataInicio') dataInicio: string,
+    @Query('dataFim') dataFim: string,
+    @Query('top') top?: number,
+  ): Promise<ConsumoAnalise> {
+    return this.tgfpro2Service.findConsumoAnalise(
+      dataInicio,
+      dataFim,
+      top ? Number(top) : 10,
+    )
   }
 }
