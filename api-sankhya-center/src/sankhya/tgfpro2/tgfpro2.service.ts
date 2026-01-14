@@ -203,6 +203,13 @@ export class Tgfpro2Service {
       usanrofogo: item.USANROFOGO,
       usoprod: item.USOPROD,
       origprod: item.ORIGPROD,
+      // Campos de tracking/auditoria
+      codusuinc: item.CODUSUINC ? Number(item.CODUSUINC) : undefined,
+      dtcad: item.DTCAD,
+      codusualt: item.CODUSUALT ? Number(item.CODUSUALT) : undefined,
+      dtalter: item.DTALTER,
+      nomeusuInc: item.NOMEUSU_INC,
+      nomeusuAlt: item.NOMEUSU_ALT,
     }
 
     if (item.DESCRGRUPOPROD) {
@@ -1118,6 +1125,13 @@ export class Tgfpro2Service {
           P.NCM,
           G.DESCRGRUPOPROD,
           V.DESCRVOL,
+          -- Campos de tracking/auditoria
+          P.CODUSUINC,
+          P.DTALTER,
+          P.DTCAD,
+          P.CODUSUALT,
+          USUINC.NOMEUSU AS NOMEUSU_INC,
+          USUALT.NOMEUSU AS NOMEUSU_ALT,
           -- Calcular estoque total
           ISNULL((
             SELECT SUM(LOC.ESTOQUE)
@@ -1127,6 +1141,8 @@ export class Tgfpro2Service {
         FROM TGFPRO P WITH (NOLOCK)
         LEFT JOIN TGFGRU G WITH (NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
         LEFT JOIN TGFVOL V WITH (NOLOCK) ON V.CODVOL = P.CODVOL
+        LEFT JOIN TSIUSU USUINC WITH (NOLOCK) ON USUINC.CODUSU = P.CODUSUINC
+        LEFT JOIN TSIUSU USUALT WITH (NOLOCK) ON USUALT.CODUSU = P.CODUSUALT
         WHERE (P.NCM IS NULL OR P.NCM = '' OR LEN(LTRIM(RTRIM(P.NCM))) = 0)
       )
       SELECT *

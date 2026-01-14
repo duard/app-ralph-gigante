@@ -34,6 +34,14 @@ export interface Produto2 {
   usanrofogo?: string;
   usoprod?: string;
   origprod?: string;
+  // Tracking/Auditoria
+  codusuinc?: number;
+  dtcad?: string;
+  codusualt?: number;
+  dtalter?: string;
+  nomeusuInc?: string;
+  nomeusuAlt?: string;
+  // Relacionamentos
   tgfgru?: {
     codgrupoprod: number;
     descrgrupoprod: string;

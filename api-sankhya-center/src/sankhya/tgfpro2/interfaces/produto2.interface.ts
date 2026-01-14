@@ -93,6 +93,25 @@ export interface Produto2 {
   /** Origem do produto */
   origprod?: string
 
+  // ========== Tracking/Auditoria ==========
+  /** Código do usuário que incluiu o produto */
+  codusuinc?: number
+
+  /** Data de cadastro do produto */
+  dtcad?: string
+
+  /** Código do usuário que alterou o produto */
+  codusualt?: number
+
+  /** Data da última alteração do produto */
+  dtalter?: string
+
+  /** Nome do usuário que incluiu (via JOIN TSIUSU) */
+  nomeusuInc?: string
+
+  /** Nome do usuário que alterou (via JOIN TSIUSU) */
+  nomeusuAlt?: string
+
   // ========== Relacionamentos (opcionais via JOIN) ==========
   /** Informações do grupo de produtos */
   tgfgru?: {
