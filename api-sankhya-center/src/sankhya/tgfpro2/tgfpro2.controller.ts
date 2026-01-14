@@ -571,4 +571,47 @@ export class Tgfpro2Controller {
       top ? Number(top) : 10,
     )
   }
+
+  /**
+   * ===========================================================================
+   * ENDPOINTS DE QUALIDADE DE DADOS
+   * ===========================================================================
+   */
+
+  @Get('qualidade/sem-ncm')
+  @ApiOperation({
+    summary: 'Listar produtos sem NCM',
+    description:
+      'Retorna produtos sem NCM cadastrado, classificados por criticidade (ativos com estoque são críticos)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de produtos sem NCM retornada com sucesso',
+    schema: {
+      example: {
+        produtos: [
+          {
+            codprod: 1234,
+            descrprod: 'PRODUTO TESTE A',
+            ativo: 'S',
+            estoqueTotal: 100,
+            criticidade: 'ALTA',
+          },
+        ],
+        total: 45,
+        totalAtivos: 35,
+        totalComEstoque: 23,
+        totalCriticos: 23,
+      },
+    },
+  })
+  async findProdutosSemNCM(): Promise<{
+    produtos: Produto2[]
+    total: number
+    totalAtivos: number
+    totalComEstoque: number
+    totalCriticos: number
+  }> {
+    return this.tgfpro2Service.findProdutosSemNCM()
+  }
 }

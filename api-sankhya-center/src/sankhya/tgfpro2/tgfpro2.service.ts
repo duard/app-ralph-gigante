@@ -1082,4 +1082,99 @@ export class Tgfpro2Service {
       descrlocal: item.DESCRLOCAL,
     }
   }
+
+  /**
+   * ===========================================================================
+   * ENDPOINTS DE QUALIDADE DE DADOS
+   * ===========================================================================
+   */
+
+  /**
+   * Busca produtos sem NCM cadastrado
+   * Endpoint de qualidade de dados para compliance fiscal
+   */
+  async findProdutosSemNCM(): Promise<{
+    produtos: Produto2[]
+    total: number
+    totalAtivos: number
+    totalComEstoque: number
+    totalCriticos: number
+  }> {
+    this.logger.log('Finding products without NCM')
+
+    // Query para buscar produtos sem NCM
+    // Usando CTE para permitir referência ao campo calculado ESTOQUE_TOTAL
+    const query = `
+      WITH ProdutosSemNCM AS (
+        SELECT
+          P.CODPROD,
+          P.DESCRPROD,
+          P.COMPLDESC,
+          P.REFERENCIA,
+          P.MARCA,
+          P.CODGRUPOPROD,
+          P.CODVOL,
+          P.ATIVO,
+          P.NCM,
+          G.DESCRGRUPOPROD,
+          V.DESCRVOL,
+          -- Calcular estoque total
+          ISNULL((
+            SELECT SUM(LOC.ESTOQUE)
+            FROM TGFLOC LOC WITH (NOLOCK)
+            WHERE LOC.CODPROD = P.CODPROD
+          ), 0) AS ESTOQUE_TOTAL
+        FROM TGFPRO P WITH (NOLOCK)
+        LEFT JOIN TGFGRU G WITH (NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
+        LEFT JOIN TGFVOL V WITH (NOLOCK) ON V.CODVOL = P.CODVOL
+        WHERE (P.NCM IS NULL OR P.NCM = '' OR LEN(LTRIM(RTRIM(P.NCM))) = 0)
+      )
+      SELECT *
+      FROM ProdutosSemNCM
+      ORDER BY
+        CASE
+          WHEN ATIVO = 'S' AND ESTOQUE_TOTAL > 0 THEN 1  -- Críticos: ativos com estoque
+          WHEN ATIVO = 'S' AND ESTOQUE_TOTAL = 0 THEN 2  -- Médios: ativos sem estoque
+          ELSE 3  -- Baixos: inativos
+        END,
+        DESCRPROD
+    `
+
+    const result = await this.sankhyaApiService.executeQuery(query, [])
+
+    // Mapear resultados com criticidade
+    const produtos = result.map((item) => {
+      const estoqueTotal = Number(item.ESTOQUE_TOTAL || 0)
+      const ativo = item.ATIVO === 'S'
+
+      let criticidade: 'ALTA' | 'MEDIA' | 'BAIXA'
+      if (ativo && estoqueTotal > 0) {
+        criticidade = 'ALTA' // Ativo com estoque - impede vendas
+      } else if (ativo) {
+        criticidade = 'MEDIA' // Ativo sem estoque - pode ser reativado
+      } else {
+        criticidade = 'BAIXA' // Inativo - baixa prioridade
+      }
+
+      return {
+        ...this.mapToProduto2(item),
+        estoqueTotal,
+        criticidade,
+      }
+    })
+
+    // Estatísticas
+    const total = produtos.length
+    const totalAtivos = produtos.filter(p => p.ativo === 'S').length
+    const totalComEstoque = produtos.filter(p => p['estoqueTotal'] > 0).length
+    const totalCriticos = produtos.filter(p => p['criticidade'] === 'ALTA').length
+
+    return {
+      produtos,
+      total,
+      totalAtivos,
+      totalComEstoque,
+      totalCriticos,
+    }
+  }
 }
