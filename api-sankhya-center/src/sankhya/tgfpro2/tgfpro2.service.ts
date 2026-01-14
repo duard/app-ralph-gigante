@@ -29,6 +29,64 @@ import {
 } from './interfaces'
 
 /**
+ * Traduz código TIPMOV para descrição em português
+ * @param tipmov - Código do tipo de movimento
+ * @returns Descrição do tipo de movimento
+ */
+function traduzirTipmov(tipmov: string | null | undefined): string {
+  if (!tipmov) return 'Não identificado'
+
+  const traducoes: Record<string, string> = {
+    'C': 'Compra',
+    'O': 'Ordem/Pedido',
+    'Q': 'Requisição',
+    'V': 'Venda',
+    'D': 'Devolução',
+    'T': 'Transferência',
+    'J': 'Requisição Interna',
+    'L': 'Lançamento',
+    'P': 'Pedido de Venda',
+  }
+
+  return traducoes[tipmov.toUpperCase()] || `Desconhecido (${tipmov})`
+}
+
+/**
+ * Determina o tipo de movimento baseado em TIPMOV e ATUALEST
+ * @param tipmov - Tipo de movimento
+ * @param atualest - Atualização de estoque (B=Baixar, E=Entrar, N=Nenhuma, R=Reservar)
+ * @param atualestoque - Fallback: valor numérico de atualização de estoque
+ * @returns CONSUMO, ENTRADA ou NEUTRO
+ */
+function determinarTipoMovimento(
+  tipmov: string | null | undefined,
+  atualest: string | null | undefined,
+  atualestoque: number
+): string {
+  // Se temos ATUALEST, usar ele
+  if (atualest) {
+    const atualestUpper = atualest.toUpperCase()
+    if (atualestUpper === 'B') return 'CONSUMO'  // Baixar
+    if (atualestUpper === 'E') return 'ENTRADA'  // Entrar
+    if (atualestUpper === 'R') return 'CONSUMO'  // Reservar (também é consumo)
+    if (atualestUpper === 'N') return 'NEUTRO'   // Nenhuma
+  }
+
+  // Se temos TIPMOV, inferir
+  if (tipmov) {
+    const tipmovUpper = tipmov.toUpperCase()
+    if (['V', 'D', 'Q', 'J'].includes(tipmovUpper)) return 'CONSUMO'  // Venda, Devolução, Requisição
+    if (['C', 'O', 'P'].includes(tipmovUpper)) return 'ENTRADA'       // Compra, Ordem, Pedido
+    if (['T', 'L'].includes(tipmovUpper)) return 'NEUTRO'             // Transferência, Lançamento
+  }
+
+  // Fallback: usar ATUALESTOQUE numérico
+  if (atualestoque < 0) return 'CONSUMO'
+  if (atualestoque > 0) return 'ENTRADA'
+  return 'NEUTRO'
+}
+
+/**
  * Service para gerenciar produtos com informações de estoque por local
  * Baseado no TGFPRO2-IMPLEMENTATION-GUIDE.md
  */
@@ -1374,32 +1432,57 @@ export class Tgfpro2Service {
     )
     const total = Number(countResult[0]?.T || 0)
 
-    // 2. Buscar página
+    // 2. Buscar movimentações (sem TGFTOP - API não permite JOIN)
     const offset = (page - 1) * perPage
     const query = `SELECT CAB.DTNEG,CAB.NUNOTA,CAB.NUMNOTA,CAB.CODTIPOPER,CAB.CODUSUINC,CAB.CODPARC,ITE.ATUALESTOQUE,ITE.QTDNEG,ITE.VLRUNIT,ITE.VLRTOT,USU.NOMEUSU,PAR.NOMEPARC FROM TGFITE ITE WITH(NOLOCK)JOIN TGFCAB CAB WITH(NOLOCK)ON CAB.NUNOTA=ITE.NUNOTA LEFT JOIN TSIUSU USU WITH(NOLOCK)ON USU.CODUSU=CAB.CODUSUINC LEFT JOIN TGFPAR PAR WITH(NOLOCK)ON PAR.CODPARC=CAB.CODPARC WHERE ITE.CODPROD=${codprod} AND CAB.DTNEG>='${dataInicio}'AND CAB.DTNEG<='${dataFim}'AND CAB.STATUSNOTA='L'ORDER BY CAB.DTNEG DESC OFFSET ${offset} ROWS FETCH NEXT ${perPage} ROWS ONLY`
 
     const result = await this.sankhyaApiService.executeQuery(query, [])
 
-    const data: MovimentacaoDetalhadaDto[] = result.map((item) => ({
-      data: item.DTNEG,
-      nunota: Number(item.NUNOTA),
-      numnota: item.NUMNOTA ? Number(item.NUMNOTA) : undefined,
-      codtipoper: Number(item.CODTIPOPER || 0),
-      atualestoque: Number(item.ATUALESTOQUE || 0),
-      tipoMovimento:
-        Number(item.ATUALESTOQUE || 0) < 0
-          ? 'CONSUMO'
-          : Number(item.ATUALESTOQUE || 0) > 0
-            ? 'ENTRADA'
-            : 'NEUTRO',
-      codusuinc: item.CODUSUINC ? Number(item.CODUSUINC) : undefined,
-      nomeusuinc: item.NOMEUSU,
-      codparc: item.CODPARC ? Number(item.CODPARC) : undefined,
-      nomeparc: item.NOMEPARC,
-      quantidade: Number(item.QTDNEG || 0),
-      valorUnitario: Number(item.VLRUNIT || 0),
-      valorTotal: Number(item.VLRTOT || 0),
-    }))
+    // 3. Buscar TGFTOP separadamente para mapear CODTIPOPER → TIPMOV/ATUALEST
+    const codtipopers = [...new Set(result.map(r => r.CODTIPOPER))].filter(c => c != null)
+    let tgftopMap = new Map<number, { TIPMOV: string, ATUALEST: string }>()
+
+    if (codtipopers.length > 0) {
+      try {
+        const tgftopQuery = `SELECT CODTIPOPER,TIPMOV,ATUALEST FROM TGFTOP WHERE CODTIPOPER IN(${codtipopers.join(',')})`
+        const tgftopResult = await this.sankhyaApiService.executeQuery(tgftopQuery, [])
+        tgftopMap = new Map(tgftopResult.map(t => [
+          Number(t.CODTIPOPER),
+          { TIPMOV: t.TIPMOV, ATUALEST: t.ATUALEST }
+        ]))
+      } catch (err) {
+        this.logger.warn('Não foi possível carregar TGFTOP, usando fallback')
+      }
+    }
+
+    const data: MovimentacaoDetalhadaDto[] = result.map((item) => {
+      const atualestoque = Number(item.ATUALESTOQUE || 0)
+      const codtipoper = Number(item.CODTIPOPER || 0)
+
+      // Buscar TIPMOV e ATUALEST do map (in-memory join)
+      const tgftopData = tgftopMap.get(codtipoper)
+      const tipmov = tgftopData?.TIPMOV
+      const atualest = tgftopData?.ATUALEST
+
+      return {
+        data: item.DTNEG,
+        nunota: Number(item.NUNOTA),
+        numnota: item.NUMNOTA ? Number(item.NUMNOTA) : undefined,
+        codtipoper,
+        atualestoque,
+        tipmov,
+        atualest,
+        tipoMovimento: determinarTipoMovimento(tipmov, atualest, atualestoque),
+        tipoMovimentoDescricao: traduzirTipmov(tipmov),
+        codusuinc: item.CODUSUINC ? Number(item.CODUSUINC) : undefined,
+        nomeusuinc: item.NOMEUSU,
+        codparc: item.CODPARC ? Number(item.CODPARC) : undefined,
+        nomeparc: item.NOMEPARC,
+        quantidade: Number(item.QTDNEG || 0),
+        valorUnitario: Number(item.VLRUNIT || 0),
+        valorTotal: Number(item.VLRTOT || 0),
+      }
+    })
 
     const lastPage = Math.ceil(total / perPage)
 

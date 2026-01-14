@@ -51,10 +51,18 @@ const ProdutosV2Consumo = lazy(
 const ProdutosV2ConsumoAnalise = lazy(
   () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v2/consumo/analise/page')
 );
+const ProdutosV2ConsumoConsultaProduto = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v2/consumo/consulta-produto/page')
+);
 
 // Produtos V2 - Qualidade pages
 const ProdutosV2QualidadeSemNCM = lazy(
   () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v2/qualidade/sem-ncm/page')
+);
+
+// Segurança pages
+const SegurancaPermissoes = lazy(
+  () => import(/* webpackChunkName: "seguranca" */ '@/app/seguranca/permissoes/page')
 );
 
 const Mail = lazy(() => import(/* webpackChunkName: "communication" */ '@/app/mail/page'));
@@ -319,6 +327,14 @@ export const routes: RouteConfig[] = [
       </ProtectedRoute>
     ),
   },
+  {
+    path: '/produtos-v2/consumo/consulta-produto',
+    element: (
+      <ProtectedRoute>
+        <ProdutosV2ConsumoConsultaProduto />
+      </ProtectedRoute>
+    ),
+  },
 
   // Produtos V2 - Qualidade Routes
   {
@@ -326,6 +342,16 @@ export const routes: RouteConfig[] = [
     element: (
       <ProtectedRoute>
         <ProdutosV2QualidadeSemNCM />
+      </ProtectedRoute>
+    ),
+  },
+
+  // Segurança Routes
+  {
+    path: '/seguranca/permissoes',
+    element: (
+      <ProtectedRoute>
+        <SegurancaPermissoes />
       </ProtectedRoute>
     ),
   },

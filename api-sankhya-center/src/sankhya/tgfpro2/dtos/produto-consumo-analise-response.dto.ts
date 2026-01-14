@@ -131,8 +131,17 @@ export class MovimentacaoDetalhadaDto {
   @ApiProperty({ example: -1, description: 'Atualização de estoque' })
   atualestoque: number
 
+  @ApiProperty({ example: 'V', description: 'Tipo de movimento (C/O/Q/V/D/T/J/L/P)' })
+  tipmov?: string
+
+  @ApiProperty({ example: 'B', description: 'Atualização de estoque (B/E/N/R)' })
+  atualest?: string
+
   @ApiProperty({ example: 'CONSUMO' })
   tipoMovimento: string
+
+  @ApiProperty({ example: 'Venda', description: 'Tipo de movimento traduzido' })
+  tipoMovimentoDescricao?: string
 
   @ApiProperty({ example: 311 })
   codusuinc?: number

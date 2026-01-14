@@ -26,6 +26,7 @@ import {
   AlertTriangle,
   CheckCircle,
   XCircle,
+  Shield,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -171,6 +172,10 @@ const data = {
           icon: ShoppingCart,
           items: [
             {
+              title: 'Consulta por Produto',
+              url: '/produtos-v2/consumo/consulta-produto',
+            },
+            {
               title: 'Todas Movimentações',
               url: '/produtos-v2/consumo',
             },
@@ -221,6 +226,17 @@ const data = {
           title: 'Usuários',
           url: '/users',
           icon: Users,
+        },
+        {
+          title: 'Segurança',
+          url: '#',
+          icon: Shield,
+          items: [
+            {
+              title: 'Permissões',
+              url: '/seguranca/permissoes',
+            },
+          ],
         },
         {
           title: 'Configurações',
