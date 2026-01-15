@@ -1,1 +1,120 @@
-{"statusCode":500,"timestamp":"2026-01-15T18:56:16.494Z","path":"/relatorios/tgfpro/consumo/3680?dataInicio=2025-01-01&dataFim=2025-12-31&tipo=resumo","error":"Credenciais invÃ¡lidas - verifique usuÃ¡rio e senha | DEV: HTTP 401 | Message: Unauthorized | QUERY: \n      SELECT\n        YEAR(COALESCE(c.DTENTSAI, c.DTNEG)) AS ano,\n        MONTH(COALESCE(c.DTENTSAI, c.DTNEG)) AS mes,\n        SUM(CASE WHEN i.ATUALESTOQUE < 0 THEN ABS(i.QTDNEG) ELSE 0 END) AS qtd_co"}
+%PDF-1.3
+%ÿÿÿÿ
+7 0 obj
+<<
+/Type /Page
+/Parent 1 0 R
+/MediaBox [0 0 595.28 841.89]
+/Contents 5 0 R
+/Resources 6 0 R
+>>
+endobj
+6 0 obj
+<<
+/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
+/Font <<
+/F2 8 0 R
+/F1 9 0 R
+>>
+/ColorSpace <<
+>>
+>>
+endobj
+5 0 obj
+<<
+/Length 1753
+/Filter /FlateDecode
+>>
+stream
+xœİ[Ën+Gİë+êRá›U€áE ‹&×» CVr˜H~Ànµ¤nWÛ’¯ÛŠ²²»e³Xä9,’Ea‚é+LŠ`.5m?o(ıµHIQ3•¤~ßm¾şn÷ç¯ÛİO?|“¾ı´^„‘T*`µ™Çß‡Ï$AF7qĞRˆ•ª §Oßş{óiº€Ìäoÿøùlÿ»éŞUÚÿ6Ø²Ó7û÷˜¤$wË”>o¾ş%´ôĞm~¾S2µ­¡KÇNV­#01%¶ÎvÎ®ödİ}‚_ÒÃ›ï6ÿy¦<ª#…Z€k¨j“-Q‚<ÿ«K´7Êƒò˜å™Ù¸0T%P¸OHîDeK ¬*[1©*{BV†ø'1éd+EPùÅı­ìñLàÉ½f¡2z¨öˆÔ12QÇÄÀ[ 'f†Ù'úâ6ä î°•Y&cI&¦gî"¨’Ü,£Øè©râ(í‘U}jmTKBÓ•™9ÙœÏ½öõ™òåL„Úz5°³Aã•…úÀîÅS«„_›ï†P1Wôüÿ?şLG«ÒhUaéd×cüI:
+ø¤;•ûˆ]wÒ?ã¹ö´í‹øXCq„\í 8x–WÀº‚2VK›ª²ûPMP8ƒzÀÊÊ+‘<#íX¹²Ò–™}¢%áÆç°§<çşÈ‘}LÆ Ïìİ„>ç¯8œ¿§¦éMaÓ§q38;!¬Ó^}ÀóCÄã–^ Ü“‚ÒëGÆG*»@²ş˜ûÛhùFö­®"cÉ¨`æ¯ÑiÇ•…¶\'js…ŒÅBÊYtœSŞÓqL‚ua¦t<ÅwH‡?6#â€Ê°µ6•ã0‰SOp8ŞTTï£xı û8í˜‰¬|Í”óDÅ·Òrİ”¸–Lı‰ı!¹?©?_Î&VV’™64ÖPòdÏ†6E(é)Z³¨U!fG©nI1+•T2jÖ¹_ªÒ_¯ºB¸Z¹@õš$s.æ±£=ìîÖkĞ^3š%CÍZh¤ú^9y¼OQ5»Î1Ùç©–°èè1ÖUrÎJ·‡
+4Î-™ÁÑìGLDÅî×DEè'…—`æ³¶QÉ•ƒÉ’+¹òÉšÁIløqñ²·RÌlA ›Jli†~%“_]AÈX}+Ê¦.Ó|¥Ââ…G§IVSB_+/{{XaöL2`ÅcKÏ"ËUã
+³fÛq¥ó9V [NŠåHp—â•VÁÊÅËŞV„8#V03CléY\‘«¶ö	3:.ae'jºs›"¦XÖ>§äìÂÕpteR5WAÌ¥ËŞbjS¸—ÿ1W.
+“Y1õÇë–‚Z¥Õ²€¡oS¹… 8É÷éµ›«³Ë,÷:Ü`Cú¼¡hşHÿğÛM·zD’zÉå˜ñøiNÖšØáŒT(kÅ%±èbr©H¥lXDÒË­‡µ#¨$5:ª…GŠŠÓî>‚wC·lè©D[¨ï¢éŞjâæÂÑ)å‹½6š¸-2P553dŞ¢È	!Š4Ñ¸ü(Ó®rÿê¼ë½ğ§”–?IÊ[ıÔÈeÉ/ğR[ 1,z©–/ÕòğKÃı¬A\oÎ{Ğx«)8æŞê­¶@ä²ä-F:z+nß[-N°<½ÕOM‘¬³›¡üÔOK~";ñÙ?ÀO`-V“¢ût©ŸÛÁ8Ñ”¤ÊÅ=Ø\ìY†{Ûç<;&s*CkER±›¿µœ•şº“«Ã1íÕHzu‡ÃZÃZ{éCú«Úß‘Ü~úËP{›½o
+,æÙù]S`EÏ®Ïx4b3u|çĞq0m;Oæ‹SßƒiÛ"kX¨şGBôéïHˆ›OG_¶S`‘úVµ3Vœ]Ã_à­¶@n†úÑWÇp/+\ZÖÃ5²|À0Èªs¥R’xmûiW‡yRê¤ÿyÍ¶OIb3H‡Y!F[¦YPøpjóÚf>ä=€ĞJ.”X=}><_ı¤]ÕèûX€Ò~,™@ö½7GW»æHÉ¨ï¨®;ì=j×„UsÈ{€UÏ&{h·­î&KĞ:´scúg±^ş6ÅúYzhÛÖ~´Š˜û¨U®±QÏ&Ä¢rˆ:ÂÕv6Å¨"€²,¶Üøpë€–ØÇàNFÎÂ4×Û¨éB‹	>gàÒOğÍS§«Øt)¢E¡zşÙ°ªª„%Ç7›€“p³[â¦Q3bÔÛ8*oñ•!d¥¡ÿJÑğ•!£íğYÙù‘…ƒY0^Tõå“I•ñk%}ñ4ÙşÿeğÎ6
+endstream
+endobj
+11 0 obj
+(PDFKit)
+endobj
+12 0 obj
+(PDFKit)
+endobj
+13 0 obj
+(D:20260115185742Z)
+endobj
+10 0 obj
+<<
+/Producer 11 0 R
+/Creator 12 0 R
+/CreationDate 13 0 R
+>>
+endobj
+9 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+>>
+endobj
+8 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+>>
+endobj
+4 0 obj
+<<
+>>
+endobj
+3 0 obj
+<<
+/Type /Catalog
+/Pages 1 0 R
+/Names 2 0 R
+>>
+endobj
+1 0 obj
+<<
+/Type /Pages
+/Count 1
+/Kids [7 0 R]
+>>
+endobj
+2 0 obj
+<<
+/Dests <<
+  /Names [
+]
+>>
+>>
+endobj
+xref
+0 14
+0000000000 65535 f 
+0000002512 00000 n 
+0000002569 00000 n 
+0000002450 00000 n 
+0000002429 00000 n 
+0000000242 00000 n 
+0000000125 00000 n 
+0000000015 00000 n 
+0000002327 00000 n 
+0000002230 00000 n 
+0000002154 00000 n 
+0000002068 00000 n 
+0000002093 00000 n 
+0000002118 00000 n 
+trailer
+<<
+/Size 14
+/Root 3 0 R
+/Info 10 0 R
+/ID [<078a57873ac3c72e3eb92a405ccb0385> <078a57873ac3c72e3eb92a405ccb0385>]
+>>
+startxref
+2616
+%%EOF
