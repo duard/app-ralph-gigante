@@ -23,19 +23,21 @@ export class PdfGeneratorUtils {
   // Mapeamento dos tipos de movimento Sankhya (usa função utilitária)
   private tiposMovimento: Record<string, string> = getMapaTiposMovimento()
 
-  // Cores do tema - paleta profissional
+  // Cores do tema - Verde escuro corporativo + Tailwind
   private colors = {
-    primary: '#1e3a5f',       // Azul escuro profissional
-    secondary: '#34495e',     // Cinza azulado
-    accent: '#2980b9',        // Azul médio
-    success: '#27ae60',       // Verde
-    danger: '#c0392b',        // Vermelho
-    warning: '#f39c12',       // Amarelo/laranja
-    light: '#f8f9fa',         // Cinza claro
-    border: '#dee2e6',        // Cinza borda
-    text: '#212529',          // Preto suave
-    textLight: '#6c757d',     // Cinza texto
+    primary: '#14532d',       // green-900 - verde escuro corporativo
+    secondary: '#166534',     // green-800
+    accent: '#22c55e',        // green-500
+    success: '#10b981',       // emerald-500
+    danger: '#dc2626',        // red-600
+    warning: '#f59e0b',       // amber-500
+    light: '#f0fdf4',         // green-50
+    border: '#bbf7d0',        // green-200
+    text: '#14532d',          // green-900
+    textLight: '#4b5563',     // gray-600
     white: '#ffffff',
+    indigo: '#15803d',        // green-700
+    violet: '#16a34a',        // green-600
   }
 
   constructor() {
@@ -115,8 +117,10 @@ export class PdfGeneratorUtils {
             break
         }
 
-        // Adicionar rodapé em todas as páginas
-        this.adicionarRodapeTodasPaginas()
+        // Adicionar rodapé em todas as páginas (exceto resumo que já tem rodapé inline)
+        if (tipo !== 'resumo') {
+          this.adicionarRodapeTodasPaginas()
+        }
 
         this.doc.end()
       } catch (error) {
@@ -126,146 +130,205 @@ export class PdfGeneratorUtils {
   }
 
   /**
-   * Relatório RESUMO - Uma única página A4 com todos os dados essenciais
+   * Relatório RESUMO - Design moderno Tailwind em 1 página A4
    */
   private gerarRelatorioResumo(dados: DadosRelatorio): void {
-    // Layout otimizado para caber em 1 página A4
-    // Cabeçalho compacto
-    this.doc
-      .rect(this.margin, this.currentY, this.contentWidth, 45)
-      .fill(this.colors.primary)
-
-    this.doc.font('Helvetica-Bold').fontSize(12).fillColor('#ffffff')
-      .text('RELATÓRIO DE CONSUMO', this.margin + 10, this.currentY + 8)
-
-    this.doc.font('Helvetica').fontSize(9)
-      .text(`${dados.produto.codprod} - ${dados.produto.descrprod}`, this.margin + 10, this.currentY + 22)
-
-    this.doc.fontSize(8)
-      .text(`Período: ${this.formatarData(dados.periodo.dataInicio)} a ${this.formatarData(dados.periodo.dataFim)} | ${dados.periodo.totalDias} dias | Gerado: ${this.formatarDataHora(dados.geradoEm)}`, this.margin + 10, this.currentY + 34)
-
-    this.currentY += 52
-
-    // Resumo em 5 colunas
     const resumo = dados.resumo
-    const colWidth = this.contentWidth / 5
+    const p = 8 // padding padrão
 
-    this.doc.rect(this.margin, this.currentY, this.contentWidth, 50).fill(this.colors.light).stroke(this.colors.border)
+    // ═══════════════════════════════════════════════════════════════════
+    // CABEÇALHO - Gradiente moderno
+    // ═══════════════════════════════════════════════════════════════════
+    this.doc.rect(this.margin, this.currentY, this.contentWidth, 50).fill(this.colors.primary)
 
-    const colunas = [
-      { label: 'Saldo Inicial', qtd: resumo.saldoInicialQtd, valor: resumo.saldoInicialValor, color: this.colors.text },
-      { label: 'Compras', qtd: resumo.totalComprasQtd, valor: resumo.totalComprasValor, color: this.colors.success, prefix: '+' },
-      { label: 'Consumo', qtd: resumo.totalConsumoQtd, valor: resumo.totalConsumoValor, color: this.colors.danger, prefix: '-' },
-      { label: 'Saldo Período', qtd: resumo.saldoFinalQtd, valor: resumo.saldoFinalValor, color: this.colors.text },
-      { label: 'SALDO ATUAL', qtd: resumo.saldoAtualQtd, valor: resumo.saldoAtualValor, color: this.colors.primary },
-    ]
+    // Linha decorativa accent
+    this.doc.rect(this.margin, this.currentY + 50, this.contentWidth, 3).fill(this.colors.accent)
 
-    colunas.forEach((col, i) => {
-      const x = this.margin + colWidth * i + 5
-      this.doc.font('Helvetica').fontSize(6).fillColor(this.colors.textLight).text(col.label, x, this.currentY + 4)
-      const qtdText = col.prefix ? `${col.prefix}${this.formatarNumero(col.qtd)}` : this.formatarNumero(col.qtd)
-      this.doc.font('Helvetica-Bold').fontSize(11).fillColor(col.color).text(qtdText, x, this.currentY + 14)
-      this.doc.font('Helvetica').fontSize(6).fillColor(this.colors.textLight).text(dados.produto.unidade, x, this.currentY + 27)
-      this.doc.font('Helvetica-Bold').fontSize(8).fillColor(col.color).text(this.formatarMoeda(col.valor), x, this.currentY + 37)
-    })
+    this.doc.font('Helvetica-Bold').fontSize(16).fillColor(this.colors.white)
+      .text('Relatório de Consumo', this.margin + p, this.currentY + 10)
 
-    this.currentY += 56
+    this.doc.font('Helvetica').fontSize(10).fillColor('#94a3b8')
+      .text(`${dados.produto.codprod} • ${dados.produto.descrprod}`, this.margin + p, this.currentY + 28)
 
-    // Gráfico de barras compacto (se houver dados)
+    // Período no canto direito
+    this.doc.font('Helvetica').fontSize(8).fillColor('#94a3b8')
+      .text(`${this.formatarData(dados.periodo.dataInicio)} - ${this.formatarData(dados.periodo.dataFim)}`, this.margin + this.contentWidth - 130, this.currentY + 12, { width: 120, align: 'right' })
+    this.doc.text(`${dados.periodo.totalDias} dias`, this.margin + this.contentWidth - 130, this.currentY + 24, { width: 120, align: 'right' })
+
+    this.currentY += 60
+
+    // ═══════════════════════════════════════════════════════════════════
+    // CARDS DE RESUMO - 3 cards principais
+    // ═══════════════════════════════════════════════════════════════════
+    const cardW = (this.contentWidth - 20) / 3
+    const cardH = 65
+
+    // Card CONSUMO (vermelho)
+    this.desenharCard(this.margin, this.currentY, cardW, cardH, this.colors.danger,
+      'CONSUMO TOTAL', resumo.totalConsumoQtd, dados.produto.unidade, resumo.totalConsumoValor)
+
+    // Card COMPRAS (verde)
+    this.desenharCard(this.margin + cardW + 10, this.currentY, cardW, cardH, this.colors.success,
+      'COMPRAS', resumo.totalComprasQtd, dados.produto.unidade, resumo.totalComprasValor)
+
+    // Card SALDO (azul)
+    this.desenharCard(this.margin + (cardW + 10) * 2, this.currentY, cardW, cardH, this.colors.accent,
+      'SALDO ATUAL', resumo.saldoAtualQtd, dados.produto.unidade, resumo.saldoAtualValor)
+
+    this.currentY += cardH + 15
+
+    // ═══════════════════════════════════════════════════════════════════
+    // GRÁFICO DE BARRAS - Consumo mensal
+    // ═══════════════════════════════════════════════════════════════════
     if (dados.consumoMensal.length > 0) {
-      this.doc.font('Helvetica-Bold').fontSize(8).fillColor(this.colors.primary).text('CONSUMO MENSAL', this.margin, this.currentY)
-      this.currentY += 10
+      this.doc.font('Helvetica-Bold').fontSize(9).fillColor(this.colors.text)
+        .text('Consumo Mensal', this.margin, this.currentY)
+      this.currentY += 14
 
-      const chartX = this.margin + 25
-      const chartWidth = this.contentWidth - 30
-      const chartHeight = 50
-      const maxConsumo = Math.max(...dados.consumoMensal.map(m => m.qtdConsumo), 1)
+      const chartH = 55
+      const chartW = this.contentWidth
+      const maxVal = Math.max(...dados.consumoMensal.map(m => m.qtdConsumo), 1)
+      const barSpacing = chartW / dados.consumoMensal.length
+      const barW = barSpacing * 0.6
 
-      this.doc.moveTo(chartX, this.currentY + chartHeight).lineTo(chartX + chartWidth, this.currentY + chartHeight).stroke(this.colors.border)
-
-      const barSpacing = chartWidth / dados.consumoMensal.length
-      const barWidth = barSpacing * 0.7
+      // Fundo do gráfico
+      this.doc.rect(this.margin, this.currentY, chartW, chartH).fill(this.colors.light)
 
       dados.consumoMensal.forEach((mes, i) => {
-        const barHeight = (mes.qtdConsumo / maxConsumo) * chartHeight
-        const x = chartX + i * barSpacing + (barSpacing - barWidth) / 2
-        const y = this.currentY + chartHeight - barHeight
+        const barH = Math.max(2, (mes.qtdConsumo / maxVal) * (chartH - 15))
+        const x = this.margin + i * barSpacing + (barSpacing - barW) / 2
+        const y = this.currentY + chartH - barH - 12
 
-        this.doc.rect(x, y, barWidth, barHeight).fill(this.colors.accent)
+        // Barra com cor gradiente baseada no valor
+        const intensity = mes.qtdConsumo / maxVal
+        const barColor = intensity > 0.7 ? this.colors.danger : intensity > 0.4 ? this.colors.warning : this.colors.accent
+        this.doc.roundedRect(x, y, barW, barH, 2).fill(barColor)
+
+        // Valor acima da barra
         if (mes.qtdConsumo > 0) {
-          this.doc.fontSize(5).fillColor(this.colors.text).text(this.formatarNumero(mes.qtdConsumo), x, y - 7, { width: barWidth, align: 'center' })
+          this.doc.font('Helvetica-Bold').fontSize(6).fillColor(this.colors.text)
+            .text(this.formatarNumero(mes.qtdConsumo), x - 2, y - 8, { width: barW + 4, align: 'center' })
         }
-        this.doc.fontSize(5).fillColor(this.colors.textLight).text(mes.mesNome, x, this.currentY + chartHeight + 2, { width: barWidth, align: 'center' })
+
+        // Mês abaixo
+        this.doc.font('Helvetica').fontSize(6).fillColor(this.colors.textLight)
+          .text(mes.mesNome, x - 2, this.currentY + chartH - 10, { width: barW + 4, align: 'center' })
       })
 
-      this.currentY += chartHeight + 18
+      this.currentY += chartH + 12
     }
 
-    // Duas tabelas lado a lado
-    const tableWidth = (this.contentWidth - 10) / 2
-    const rowH = 13
-    const headerH = 14
+    // ═══════════════════════════════════════════════════════════════════
+    // TABELAS LADO A LADO - Centro de Custo e Grupo
+    // ═══════════════════════════════════════════════════════════════════
+    const tblW = (this.contentWidth - 15) / 2
+    const rowH = 14
+    const hdrH = 16
     const maxRows = 5
-    const tableStartY = this.currentY
+    const tblY = this.currentY
 
-    // Tabela Centro de Custo
-    this.doc.font('Helvetica-Bold').fontSize(7).fillColor(this.colors.primary).text('POR CENTRO DE CUSTO', this.margin, tableStartY - 10)
-    this.doc.rect(this.margin, tableStartY, tableWidth, headerH).fill(this.colors.primary)
-    this.doc.font('Helvetica-Bold').fontSize(6).fillColor(this.colors.white)
-    this.doc.text('SETOR', this.margin + 3, tableStartY + 4)
-    this.doc.text('QTD', this.margin + tableWidth * 0.6, tableStartY + 4)
-    this.doc.text('%', this.margin + tableWidth * 0.8, tableStartY + 4)
+    // Tabela 1 - Centro de Custo
+    this.criarTabelaModerna(this.margin, tblY, tblW, 'Por Centro de Custo',
+      dados.consumoPorCentroCusto.slice(0, maxRows), hdrH, rowH, this.colors.indigo)
 
-    let rowY = tableStartY + headerH
-    dados.consumoPorCentroCusto.slice(0, maxRows).forEach((dep, i) => {
-      this.doc.rect(this.margin, rowY, tableWidth, rowH).fill(i % 2 === 0 ? this.colors.white : this.colors.light)
-      this.doc.font('Helvetica').fontSize(6).fillColor(this.colors.text)
-      this.doc.text(dep.departamento.substring(0, 16), this.margin + 3, rowY + 3)
-      this.doc.text(this.formatarNumero(dep.qtdConsumo), this.margin + tableWidth * 0.6, rowY + 3)
-      this.doc.text(`${Math.round(dep.percentual)}%`, this.margin + tableWidth * 0.8, rowY + 3)
-      rowY += rowH
-    })
-    this.doc.lineWidth(0.5).rect(this.margin, tableStartY, tableWidth, headerH + dados.consumoPorCentroCusto.slice(0, maxRows).length * rowH).stroke(this.colors.border)
+    // Tabela 2 - Grupo de Usuário
+    this.criarTabelaModerna(this.margin + tblW + 15, tblY, tblW, 'Por Grupo de Usuário',
+      dados.consumoPorGrupoUsuario.slice(0, maxRows), hdrH, rowH, this.colors.violet)
 
-    // Tabela Grupo de Usuário
-    const table2X = this.margin + tableWidth + 10
-    this.doc.font('Helvetica-Bold').fontSize(7).fillColor(this.colors.primary).text('POR GRUPO DE USUÁRIO', table2X, tableStartY - 10)
-    this.doc.rect(table2X, tableStartY, tableWidth, headerH).fill(this.colors.primary)
-    this.doc.font('Helvetica-Bold').fontSize(6).fillColor(this.colors.white)
-    this.doc.text('GRUPO', table2X + 3, tableStartY + 4)
-    this.doc.text('QTD', table2X + tableWidth * 0.6, tableStartY + 4)
-    this.doc.text('%', table2X + tableWidth * 0.8, tableStartY + 4)
+    const maxTblRows = Math.max(dados.consumoPorCentroCusto.slice(0, maxRows).length, dados.consumoPorGrupoUsuario.slice(0, maxRows).length)
+    this.currentY = tblY + hdrH + 12 + maxTblRows * rowH + 15
 
-    rowY = tableStartY + headerH
-    dados.consumoPorGrupoUsuario.slice(0, maxRows).forEach((grp, i) => {
-      this.doc.rect(table2X, rowY, tableWidth, rowH).fill(i % 2 === 0 ? this.colors.white : this.colors.light)
-      this.doc.font('Helvetica').fontSize(6).fillColor(this.colors.text)
-      this.doc.text(grp.departamento.substring(0, 16), table2X + 3, rowY + 3)
-      this.doc.text(this.formatarNumero(grp.qtdConsumo), table2X + tableWidth * 0.6, rowY + 3)
-      this.doc.text(`${Math.round(grp.percentual)}%`, table2X + tableWidth * 0.8, rowY + 3)
-      rowY += rowH
-    })
-    this.doc.lineWidth(0.5).rect(table2X, tableStartY, tableWidth, headerH + dados.consumoPorGrupoUsuario.slice(0, maxRows).length * rowH).stroke(this.colors.border)
+    // ═══════════════════════════════════════════════════════════════════
+    // INDICADORES - Métricas chave
+    // ═══════════════════════════════════════════════════════════════════
+    const indW = this.contentWidth / 4
+    const indH = 42
 
-    const maxTableRows = Math.max(dados.consumoPorCentroCusto.slice(0, maxRows).length, dados.consumoPorGrupoUsuario.slice(0, maxRows).length)
-    this.currentY = tableStartY + headerH + maxTableRows * rowH + 12
+    this.doc.roundedRect(this.margin, this.currentY, this.contentWidth, indH, 4).fill(this.colors.light)
 
-    // Indicadores finais
-    this.doc.rect(this.margin, this.currentY, this.contentWidth, 38).fill(this.colors.light).stroke(this.colors.border)
-
-    const indWidth = this.contentWidth / 4
-    const inds = [
-      { label: 'Média/Dia', valor: `${this.formatarNumero(resumo.mediaConsumoDia)} ${dados.produto.unidade}` },
-      { label: 'Dias Estoque', valor: `${Math.round(resumo.diasEstoqueDisponivel)} dias`, color: resumo.diasEstoqueDisponivel < 7 ? this.colors.danger : resumo.diasEstoqueDisponivel < 15 ? this.colors.warning : this.colors.success },
-      { label: 'Custo Unit. Médio', valor: this.formatarMoeda(resumo.valorMedioUnitario) },
-      { label: '% Consumido', valor: `${this.formatarNumero(resumo.percentualConsumo)}%` },
+    const indicadores = [
+      { icon: '📊', label: 'Média/Dia', valor: `${this.formatarNumero(resumo.mediaConsumoDia)}`, sub: dados.produto.unidade },
+      { icon: '📦', label: 'Dias Estoque', valor: `${Math.round(resumo.diasEstoqueDisponivel)}`, sub: 'dias', color: resumo.diasEstoqueDisponivel < 7 ? this.colors.danger : resumo.diasEstoqueDisponivel < 15 ? this.colors.warning : this.colors.success },
+      { icon: '💰', label: 'Custo Médio', valor: this.formatarMoeda(resumo.valorMedioUnitario), sub: 'por unidade' },
+      { icon: '📉', label: 'Consumido', valor: `${this.formatarNumero(resumo.percentualConsumo)}%`, sub: 'do estoque' },
     ]
 
-    inds.forEach((ind, i) => {
-      const x = this.margin + indWidth * i + 8
-      this.doc.font('Helvetica').fontSize(6).fillColor(this.colors.textLight).text(ind.label, x, this.currentY + 6)
-      this.doc.font('Helvetica-Bold').fontSize(10).fillColor(ind.color || this.colors.primary).text(ind.valor, x, this.currentY + 18)
+    indicadores.forEach((ind, i) => {
+      const x = this.margin + indW * i + 10
+      this.doc.font('Helvetica').fontSize(7).fillColor(this.colors.textLight).text(ind.label, x, this.currentY + 6)
+      this.doc.font('Helvetica-Bold').fontSize(12).fillColor(ind.color || this.colors.primary).text(ind.valor, x, this.currentY + 17)
+      this.doc.font('Helvetica').fontSize(6).fillColor(this.colors.textLight).text(ind.sub, x, this.currentY + 31)
     })
+
+    this.currentY += indH + 10
+
+    // ═══════════════════════════════════════════════════════════════════
+    // RODAPÉ
+    // ═══════════════════════════════════════════════════════════════════
+    this.doc.font('Helvetica').fontSize(7).fillColor(this.colors.textLight)
+      .text(`Gerado em ${this.formatarDataHora(dados.geradoEm)} por ${dados.geradoPor}`, this.margin, this.currentY, { width: this.contentWidth, align: 'center' })
+  }
+
+  /**
+   * Desenha um card moderno com estatísticas
+   */
+  private desenharCard(x: number, y: number, w: number, h: number, color: string, label: string, qtd: number, unidade: string, valor: number): void {
+    // Fundo com cor
+    this.doc.roundedRect(x, y, w, h, 6).fill(color)
+
+    // Label
+    this.doc.font('Helvetica').fontSize(8).fillColor('#ffffff').opacity(0.8)
+      .text(label, x + 10, y + 8)
+
+    // Quantidade grande
+    this.doc.opacity(1).font('Helvetica-Bold').fontSize(18).fillColor('#ffffff')
+      .text(this.formatarNumero(qtd), x + 10, y + 22)
+
+    // Unidade
+    this.doc.font('Helvetica').fontSize(8).fillColor('#ffffff').opacity(0.8)
+      .text(unidade, x + 10, y + 42)
+
+    // Valor no canto inferior direito
+    this.doc.opacity(1).font('Helvetica-Bold').fontSize(9).fillColor('#ffffff')
+      .text(this.formatarMoeda(valor), x + w - 80, y + h - 18, { width: 70, align: 'right' })
+  }
+
+  /**
+   * Cria tabela com design moderno
+   */
+  private criarTabelaModerna(x: number, y: number, w: number, titulo: string, dados: ConsumoPorDepartamento[], hdrH: number, rowH: number, headerColor: string): void {
+    // Título
+    this.doc.font('Helvetica-Bold').fontSize(8).fillColor(this.colors.text).text(titulo, x, y)
+
+    const tblY = y + 12
+
+    // Cabeçalho
+    this.doc.roundedRect(x, tblY, w, hdrH, 3).fill(headerColor)
+    this.doc.font('Helvetica-Bold').fontSize(7).fillColor(this.colors.white)
+    this.doc.text('Setor', x + 6, tblY + 4)
+    this.doc.text('Qtd', x + w * 0.65, tblY + 4)
+    this.doc.text('%', x + w * 0.85, tblY + 4)
+
+    let rowY = tblY + hdrH
+    dados.forEach((dep, i) => {
+      const bg = i % 2 === 0 ? this.colors.white : this.colors.light
+      this.doc.rect(x, rowY, w, rowH).fill(bg)
+
+      this.doc.font('Helvetica').fontSize(7).fillColor(this.colors.text)
+        .text(dep.departamento.substring(0, 18), x + 6, rowY + 4)
+      this.doc.text(this.formatarNumero(dep.qtdConsumo), x + w * 0.65, rowY + 4)
+
+      // Barra de progresso mini
+      const barW = w * 0.12
+      const progW = (dep.percentual / 100) * barW
+      this.doc.rect(x + w * 0.82, rowY + 4, barW, 6).fill(this.colors.border)
+      this.doc.rect(x + w * 0.82, rowY + 4, progW, 6).fill(headerColor)
+
+      rowY += rowH
+    })
+
+    // Borda externa
+    this.doc.lineWidth(0.5).roundedRect(x, tblY, w, hdrH + dados.length * rowH, 3).stroke(this.colors.border)
   }
 
   /**
