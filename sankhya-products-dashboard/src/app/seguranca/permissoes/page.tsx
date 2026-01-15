@@ -180,7 +180,7 @@ export default function PermissoesPage() {
       setLoading(true);
       setError(null);
 
-      const response = await fetch('http://localhost:3100/permissions/users', {
+      const response = await fetch('/permissions/users', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -201,7 +201,7 @@ export default function PermissoesPage() {
 
   const loadResources = async () => {
     try {
-      const response = await fetch('http://localhost:3100/permissions/resources', {
+      const response = await fetch('/permissions/resources', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -220,7 +220,7 @@ export default function PermissoesPage() {
 
   const loadGroups = async () => {
     try {
-      const response = await fetch('http://localhost:3100/permissions/groups', {
+      const response = await fetch('/permissions/groups', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -244,7 +244,7 @@ export default function PermissoesPage() {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`http://localhost:3100/permissions/user/${codUsu}`, {
+      const response = await fetch(`/permissions/user/${codUsu}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -28,10 +28,22 @@ export default defineConfig(({ mode }) => {
       },
       proxy: {
         '/api': {
-          target: env.VITE_SANKHYA_API_URL || 'http://localhost:3000',
+          target: env.VITE_SANKHYA_API_URL || 'http://localhost:3100',
           changeOrigin: true,
           secure: false,
           rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+        '/tgfpro2': {
+          target: env.VITE_SANKHYA_API_URL || 'http://localhost:3100',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path,
+        },
+        '/permissions': {
+          target: env.VITE_SANKHYA_API_URL || 'http://localhost:3100',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path,
         },
         '/ws': {
           target: env.VITE_SANKHYA_WS_URL || 'ws://localhost:3000/ws',

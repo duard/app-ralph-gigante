@@ -179,9 +179,9 @@ export default function ConsultaProdutoConsumo() {
         sort: 'DESCRPROD ASC',
       });
 
-      console.log('Buscando produtos:', `http://localhost:3100/tgfpro2/produtos?${params}`);
+      console.log('Buscando produtos:', `/tgfpro2/produtos?${params}`);
 
-      const response = await fetch(`http://localhost:3100/tgfpro2/produtos?${params}`, {
+      const response = await fetch(`/tgfpro2/produtos?${params}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -279,7 +279,7 @@ export default function ConsultaProdutoConsumo() {
       });
 
       const response = await fetch(
-        `http://localhost:3100/tgfpro2/produtos/${productCode}/consumo/analise?${params}`,
+        `/tgfpro2/produtos/${productCode}/consumo/analise?${params}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
