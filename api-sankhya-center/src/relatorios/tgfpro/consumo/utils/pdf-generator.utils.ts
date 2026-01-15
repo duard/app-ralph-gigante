@@ -1,4 +1,5 @@
 import * as PDFDocument from 'pdfkit'
+import * as path from 'path'
 import {
   DadosRelatorio,
   ConsumoDiario,
@@ -8,6 +9,9 @@ import {
 } from '../interfaces/consumo-relatorio.interface'
 import { TipoRelatorio } from '../dto/consumo-relatorio-query.dto'
 import { getMapaTiposMovimento } from '../../../../sankhya/shared/sankhya-tipmov.util'
+
+// Caminho das fontes JetBrains Mono
+const FONTS_DIR = path.join(__dirname, '..', 'fonts')
 
 export class PdfGeneratorUtils {
   private doc: PDFKit.PDFDocument
@@ -23,21 +27,25 @@ export class PdfGeneratorUtils {
   // Mapeamento dos tipos de movimento Sankhya (usa função utilitária)
   private tiposMovimento: Record<string, string> = getMapaTiposMovimento()
 
-  // Cores do tema - Verde escuro corporativo + Tailwind
+  // Cores do tema - Econômico em toner (fundos claros, bordas fortes)
   private colors = {
-    primary: '#14532d',       // green-900 - verde escuro corporativo
+    primary: '#14532d',       // green-900 - verde escuro (apenas textos/bordas)
     secondary: '#166534',     // green-800
-    accent: '#22c55e',        // green-500
-    success: '#10b981',       // emerald-500
-    danger: '#dc2626',        // red-600
-    warning: '#f59e0b',       // amber-500
-    light: '#f0fdf4',         // green-50
-    border: '#bbf7d0',        // green-200
-    text: '#14532d',          // green-900
-    textLight: '#4b5563',     // gray-600
+    accent: '#dcfce7',        // green-100 - fundo claro
+    success: '#d1fae5',       // emerald-100 - fundo claro
+    danger: '#fee2e2',        // red-100 - fundo claro
+    warning: '#fef3c7',       // amber-100 - fundo claro
+    light: '#f9fafb',         // gray-50 - quase branco
+    border: '#14532d',        // verde escuro - bordas fortes
+    text: '#1f2937',          // gray-800
+    textLight: '#6b7280',     // gray-500
     white: '#ffffff',
-    indigo: '#15803d',        // green-700
-    violet: '#16a34a',        // green-600
+    indigo: '#14532d',        // verde escuro para headers
+    violet: '#166534',        // verde médio para headers
+    // Cores de texto para cards (mais escuras para contraste)
+    successText: '#065f46',   // emerald-800
+    dangerText: '#991b1b',    // red-800
+    accentText: '#14532d',    // green-900
   }
 
   constructor() {
@@ -88,6 +96,11 @@ export class PdfGeneratorUtils {
           bufferPages: true,
         })
 
+        // Registrar fontes JetBrains Mono
+        this.doc.registerFont('JetBrains', path.join(FONTS_DIR, 'JetBrainsMono-Regular.ttf'))
+        this.doc.registerFont('JetBrains-Bold', path.join(FONTS_DIR, 'JetBrainsMono-Bold.ttf'))
+        this.doc.registerFont('JetBrains-Light', path.join(FONTS_DIR, 'JetBrainsMono-Light.ttf'))
+
         this.pageWidth = this.doc.page.width
         this.pageHeight = this.doc.page.height
         this.contentWidth = this.pageWidth - 2 * this.margin
@@ -130,96 +143,96 @@ export class PdfGeneratorUtils {
   }
 
   /**
-   * Relatório RESUMO - Design moderno Tailwind em 1 página A4
+   * Relatório RESUMO - Design econômico em toner (fundos claros, bordas fortes)
    */
   private gerarRelatorioResumo(dados: DadosRelatorio): void {
     const resumo = dados.resumo
-    const p = 8 // padding padrão
+    const p = 8
 
     // ═══════════════════════════════════════════════════════════════════
-    // CABEÇALHO - Gradiente moderno
+    // CABEÇALHO - Fundo branco com borda verde forte
     // ═══════════════════════════════════════════════════════════════════
-    this.doc.rect(this.margin, this.currentY, this.contentWidth, 50).fill(this.colors.primary)
+    this.doc.lineWidth(2).rect(this.margin, this.currentY, this.contentWidth, 50).stroke(this.colors.primary)
 
-    // Linha decorativa accent
-    this.doc.rect(this.margin, this.currentY + 50, this.contentWidth, 3).fill(this.colors.accent)
+    // Linha verde no topo
+    this.doc.rect(this.margin, this.currentY, this.contentWidth, 4).fill(this.colors.primary)
 
-    this.doc.font('Helvetica-Bold').fontSize(16).fillColor(this.colors.white)
-      .text('Relatório de Consumo', this.margin + p, this.currentY + 10)
+    this.doc.font('JetBrains-Bold').fontSize(16).fillColor(this.colors.primary)
+      .text('Relatório de Consumo', this.margin + p, this.currentY + 14)
 
-    this.doc.font('Helvetica').fontSize(10).fillColor('#94a3b8')
-      .text(`${dados.produto.codprod} • ${dados.produto.descrprod}`, this.margin + p, this.currentY + 28)
+    this.doc.font('JetBrains').fontSize(10).fillColor(this.colors.text)
+      .text(`${dados.produto.codprod} • ${dados.produto.descrprod}`, this.margin + p, this.currentY + 32)
 
     // Período no canto direito
-    this.doc.font('Helvetica').fontSize(8).fillColor('#94a3b8')
-      .text(`${this.formatarData(dados.periodo.dataInicio)} - ${this.formatarData(dados.periodo.dataFim)}`, this.margin + this.contentWidth - 130, this.currentY + 12, { width: 120, align: 'right' })
-    this.doc.text(`${dados.periodo.totalDias} dias`, this.margin + this.contentWidth - 130, this.currentY + 24, { width: 120, align: 'right' })
+    this.doc.font('JetBrains-Bold').fontSize(9).fillColor(this.colors.primary)
+      .text(`${this.formatarData(dados.periodo.dataInicio)} - ${this.formatarData(dados.periodo.dataFim)}`, this.margin + this.contentWidth - 140, this.currentY + 16, { width: 130, align: 'right' })
+    this.doc.font('JetBrains').fontSize(8).fillColor(this.colors.textLight)
+      .text(`${dados.periodo.totalDias} dias`, this.margin + this.contentWidth - 140, this.currentY + 30, { width: 130, align: 'right' })
 
-    this.currentY += 60
+    this.currentY += 58
 
     // ═══════════════════════════════════════════════════════════════════
-    // CARDS DE RESUMO - 3 cards principais
+    // CARDS DE RESUMO - Fundos claros, bordas fortes
     // ═══════════════════════════════════════════════════════════════════
     const cardW = (this.contentWidth - 20) / 3
-    const cardH = 65
+    const cardH = 60
 
-    // Card CONSUMO (vermelho)
-    this.desenharCard(this.margin, this.currentY, cardW, cardH, this.colors.danger,
-      'CONSUMO TOTAL', resumo.totalConsumoQtd, dados.produto.unidade, resumo.totalConsumoValor)
+    // Card CONSUMO (fundo rosa claro, borda e texto vermelho)
+    this.desenharCardEconomico(this.margin, this.currentY, cardW, cardH,
+      this.colors.danger, '#991b1b', 'CONSUMO TOTAL', resumo.totalConsumoQtd, dados.produto.unidade, resumo.totalConsumoValor)
 
-    // Card COMPRAS (verde)
-    this.desenharCard(this.margin + cardW + 10, this.currentY, cardW, cardH, this.colors.success,
-      'COMPRAS', resumo.totalComprasQtd, dados.produto.unidade, resumo.totalComprasValor)
+    // Card COMPRAS (fundo verde claro, borda e texto verde)
+    this.desenharCardEconomico(this.margin + cardW + 10, this.currentY, cardW, cardH,
+      this.colors.success, '#065f46', 'COMPRAS', resumo.totalComprasQtd, dados.produto.unidade, resumo.totalComprasValor)
 
-    // Card SALDO (azul)
-    this.desenharCard(this.margin + (cardW + 10) * 2, this.currentY, cardW, cardH, this.colors.accent,
-      'SALDO ATUAL', resumo.saldoAtualQtd, dados.produto.unidade, resumo.saldoAtualValor)
+    // Card SALDO (fundo verde bem claro, borda verde escuro)
+    this.desenharCardEconomico(this.margin + (cardW + 10) * 2, this.currentY, cardW, cardH,
+      this.colors.accent, this.colors.primary, 'SALDO ATUAL', resumo.saldoAtualQtd, dados.produto.unidade, resumo.saldoAtualValor)
 
-    this.currentY += cardH + 15
+    this.currentY += cardH + 12
 
     // ═══════════════════════════════════════════════════════════════════
-    // GRÁFICO DE BARRAS - Consumo mensal
+    // GRÁFICO DE BARRAS - Barras com contorno
     // ═══════════════════════════════════════════════════════════════════
     if (dados.consumoMensal.length > 0) {
-      this.doc.font('Helvetica-Bold').fontSize(9).fillColor(this.colors.text)
+      this.doc.font('JetBrains-Bold').fontSize(9).fillColor(this.colors.primary)
         .text('Consumo Mensal', this.margin, this.currentY)
-      this.currentY += 14
+      this.currentY += 12
 
-      const chartH = 55
+      const chartH = 50
       const chartW = this.contentWidth
       const maxVal = Math.max(...dados.consumoMensal.map(m => m.qtdConsumo), 1)
       const barSpacing = chartW / dados.consumoMensal.length
       const barW = barSpacing * 0.6
 
-      // Fundo do gráfico
-      this.doc.rect(this.margin, this.currentY, chartW, chartH).fill(this.colors.light)
+      // Borda do gráfico
+      this.doc.lineWidth(1).rect(this.margin, this.currentY, chartW, chartH).stroke(this.colors.border)
 
       dados.consumoMensal.forEach((mes, i) => {
         const barH = Math.max(2, (mes.qtdConsumo / maxVal) * (chartH - 15))
         const x = this.margin + i * barSpacing + (barSpacing - barW) / 2
         const y = this.currentY + chartH - barH - 12
 
-        // Barra com cor gradiente baseada no valor
-        const intensity = mes.qtdConsumo / maxVal
-        const barColor = intensity > 0.7 ? this.colors.danger : intensity > 0.4 ? this.colors.warning : this.colors.accent
-        this.doc.roundedRect(x, y, barW, barH, 2).fill(barColor)
+        // Barra com fundo claro e borda escura
+        this.doc.rect(x, y, barW, barH).fill(this.colors.accent)
+        this.doc.lineWidth(1).rect(x, y, barW, barH).stroke(this.colors.primary)
 
         // Valor acima da barra
         if (mes.qtdConsumo > 0) {
-          this.doc.font('Helvetica-Bold').fontSize(6).fillColor(this.colors.text)
+          this.doc.font('JetBrains-Bold').fontSize(6).fillColor(this.colors.text)
             .text(this.formatarNumero(mes.qtdConsumo), x - 2, y - 8, { width: barW + 4, align: 'center' })
         }
 
         // Mês abaixo
-        this.doc.font('Helvetica').fontSize(6).fillColor(this.colors.textLight)
+        this.doc.font('JetBrains').fontSize(6).fillColor(this.colors.text)
           .text(mes.mesNome, x - 2, this.currentY + chartH - 10, { width: barW + 4, align: 'center' })
       })
 
-      this.currentY += chartH + 12
+      this.currentY += chartH + 10
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    // TABELAS LADO A LADO - Centro de Custo e Grupo
+    // TABELAS LADO A LADO - Bordas fortes
     // ═══════════════════════════════════════════════════════════════════
     const tblW = (this.contentWidth - 15) / 2
     const rowH = 14
@@ -228,107 +241,110 @@ export class PdfGeneratorUtils {
     const tblY = this.currentY
 
     // Tabela 1 - Centro de Custo
-    this.criarTabelaModerna(this.margin, tblY, tblW, 'Por Centro de Custo',
-      dados.consumoPorCentroCusto.slice(0, maxRows), hdrH, rowH, this.colors.indigo)
+    this.criarTabelaEconomica(this.margin, tblY, tblW, 'Por Centro de Custo',
+      dados.consumoPorCentroCusto.slice(0, maxRows), hdrH, rowH)
 
     // Tabela 2 - Grupo de Usuário
-    this.criarTabelaModerna(this.margin + tblW + 15, tblY, tblW, 'Por Grupo de Usuário',
-      dados.consumoPorGrupoUsuario.slice(0, maxRows), hdrH, rowH, this.colors.violet)
+    this.criarTabelaEconomica(this.margin + tblW + 15, tblY, tblW, 'Por Grupo de Usuário',
+      dados.consumoPorGrupoUsuario.slice(0, maxRows), hdrH, rowH)
 
     const maxTblRows = Math.max(dados.consumoPorCentroCusto.slice(0, maxRows).length, dados.consumoPorGrupoUsuario.slice(0, maxRows).length)
-    this.currentY = tblY + hdrH + 12 + maxTblRows * rowH + 15
+    this.currentY = tblY + hdrH + 12 + maxTblRows * rowH + 12
 
     // ═══════════════════════════════════════════════════════════════════
     // INDICADORES - Métricas chave
     // ═══════════════════════════════════════════════════════════════════
     const indW = this.contentWidth / 4
-    const indH = 42
+    const indH = 40
 
-    this.doc.roundedRect(this.margin, this.currentY, this.contentWidth, indH, 4).fill(this.colors.light)
+    this.doc.lineWidth(1.5).rect(this.margin, this.currentY, this.contentWidth, indH).stroke(this.colors.border)
 
     const indicadores = [
-      { icon: '📊', label: 'Média/Dia', valor: `${this.formatarNumero(resumo.mediaConsumoDia)}`, sub: dados.produto.unidade },
-      { icon: '📦', label: 'Dias Estoque', valor: `${Math.round(resumo.diasEstoqueDisponivel)}`, sub: 'dias', color: resumo.diasEstoqueDisponivel < 7 ? this.colors.danger : resumo.diasEstoqueDisponivel < 15 ? this.colors.warning : this.colors.success },
-      { icon: '💰', label: 'Custo Médio', valor: this.formatarMoeda(resumo.valorMedioUnitario), sub: 'por unidade' },
-      { icon: '📉', label: 'Consumido', valor: `${this.formatarNumero(resumo.percentualConsumo)}%`, sub: 'do estoque' },
+      { label: 'Média/Dia', valor: `${this.formatarNumero(resumo.mediaConsumoDia)}`, sub: dados.produto.unidade },
+      { label: 'Dias Estoque', valor: `${Math.round(resumo.diasEstoqueDisponivel)}`, sub: 'dias' },
+      { label: 'Custo Médio', valor: this.formatarMoeda(resumo.valorMedioUnitario), sub: 'por unidade' },
+      { label: 'Consumido', valor: `${this.formatarNumero(resumo.percentualConsumo)}%`, sub: 'do estoque' },
     ]
 
     indicadores.forEach((ind, i) => {
-      const x = this.margin + indW * i + 10
-      this.doc.font('Helvetica').fontSize(7).fillColor(this.colors.textLight).text(ind.label, x, this.currentY + 6)
-      this.doc.font('Helvetica-Bold').fontSize(12).fillColor(ind.color || this.colors.primary).text(ind.valor, x, this.currentY + 17)
-      this.doc.font('Helvetica').fontSize(6).fillColor(this.colors.textLight).text(ind.sub, x, this.currentY + 31)
+      const x = this.margin + indW * i + 8
+      // Linha divisória entre indicadores
+      if (i > 0) {
+        this.doc.lineWidth(0.5).moveTo(this.margin + indW * i, this.currentY + 5).lineTo(this.margin + indW * i, this.currentY + indH - 5).stroke(this.colors.border)
+      }
+      this.doc.font('JetBrains').fontSize(7).fillColor(this.colors.textLight).text(ind.label, x, this.currentY + 5)
+      this.doc.font('JetBrains-Bold').fontSize(12).fillColor(this.colors.primary).text(ind.valor, x, this.currentY + 16)
+      this.doc.font('JetBrains').fontSize(6).fillColor(this.colors.textLight).text(ind.sub, x, this.currentY + 30)
     })
 
-    this.currentY += indH + 10
+    this.currentY += indH + 8
 
     // ═══════════════════════════════════════════════════════════════════
     // RODAPÉ
     // ═══════════════════════════════════════════════════════════════════
-    this.doc.font('Helvetica').fontSize(7).fillColor(this.colors.textLight)
+    this.doc.font('JetBrains').fontSize(7).fillColor(this.colors.textLight)
       .text(`Gerado em ${this.formatarDataHora(dados.geradoEm)} por ${dados.geradoPor}`, this.margin, this.currentY, { width: this.contentWidth, align: 'center' })
   }
 
   /**
-   * Desenha um card moderno com estatísticas
+   * Desenha card econômico - fundo claro, borda e texto escuros
    */
-  private desenharCard(x: number, y: number, w: number, h: number, color: string, label: string, qtd: number, unidade: string, valor: number): void {
-    // Fundo com cor
-    this.doc.roundedRect(x, y, w, h, 6).fill(color)
+  private desenharCardEconomico(x: number, y: number, w: number, h: number, bgColor: string, textColor: string, label: string, qtd: number, unidade: string, valor: number): void {
+    // Fundo claro
+    this.doc.rect(x, y, w, h).fill(bgColor)
+    // Borda forte
+    this.doc.lineWidth(1.5).rect(x, y, w, h).stroke(textColor)
 
     // Label
-    this.doc.font('Helvetica').fontSize(8).fillColor('#ffffff').opacity(0.8)
-      .text(label, x + 10, y + 8)
+    this.doc.font('JetBrains-Bold').fontSize(8).fillColor(textColor)
+      .text(label, x + 8, y + 6)
 
     // Quantidade grande
-    this.doc.opacity(1).font('Helvetica-Bold').fontSize(18).fillColor('#ffffff')
-      .text(this.formatarNumero(qtd), x + 10, y + 22)
+    this.doc.font('JetBrains-Bold').fontSize(18).fillColor(textColor)
+      .text(this.formatarNumero(qtd), x + 8, y + 20)
 
     // Unidade
-    this.doc.font('Helvetica').fontSize(8).fillColor('#ffffff').opacity(0.8)
-      .text(unidade, x + 10, y + 42)
+    this.doc.font('JetBrains').fontSize(8).fillColor(textColor)
+      .text(unidade, x + 8, y + 40)
 
     // Valor no canto inferior direito
-    this.doc.opacity(1).font('Helvetica-Bold').fontSize(9).fillColor('#ffffff')
-      .text(this.formatarMoeda(valor), x + w - 80, y + h - 18, { width: 70, align: 'right' })
+    this.doc.font('JetBrains-Bold').fontSize(9).fillColor(textColor)
+      .text(this.formatarMoeda(valor), x + w - 75, y + h - 16, { width: 67, align: 'right' })
   }
 
   /**
-   * Cria tabela com design moderno
+   * Cria tabela econômica - sem preenchimento de header, apenas bordas
    */
-  private criarTabelaModerna(x: number, y: number, w: number, titulo: string, dados: ConsumoPorDepartamento[], hdrH: number, rowH: number, headerColor: string): void {
+  private criarTabelaEconomica(x: number, y: number, w: number, titulo: string, dados: ConsumoPorDepartamento[], hdrH: number, rowH: number): void {
     // Título
-    this.doc.font('Helvetica-Bold').fontSize(8).fillColor(this.colors.text).text(titulo, x, y)
+    this.doc.font('JetBrains-Bold').fontSize(8).fillColor(this.colors.primary).text(titulo, x, y)
 
     const tblY = y + 12
 
-    // Cabeçalho
-    this.doc.roundedRect(x, tblY, w, hdrH, 3).fill(headerColor)
-    this.doc.font('Helvetica-Bold').fontSize(7).fillColor(this.colors.white)
-    this.doc.text('Setor', x + 6, tblY + 4)
+    // Cabeçalho - apenas borda inferior forte
+    this.doc.lineWidth(1.5).moveTo(x, tblY + hdrH).lineTo(x + w, tblY + hdrH).stroke(this.colors.border)
+    this.doc.font('JetBrains-Bold').fontSize(7).fillColor(this.colors.primary)
+    this.doc.text('Setor', x + 4, tblY + 4)
     this.doc.text('Qtd', x + w * 0.65, tblY + 4)
     this.doc.text('%', x + w * 0.85, tblY + 4)
 
     let rowY = tblY + hdrH
     dados.forEach((dep, i) => {
-      const bg = i % 2 === 0 ? this.colors.white : this.colors.light
-      this.doc.rect(x, rowY, w, rowH).fill(bg)
+      // Linha divisória sutil entre linhas
+      if (i > 0) {
+        this.doc.lineWidth(0.3).moveTo(x, rowY).lineTo(x + w, rowY).stroke('#d1d5db')
+      }
 
-      this.doc.font('Helvetica').fontSize(7).fillColor(this.colors.text)
-        .text(dep.departamento.substring(0, 18), x + 6, rowY + 4)
+      this.doc.font('JetBrains').fontSize(7).fillColor(this.colors.text)
+        .text(dep.departamento.substring(0, 18), x + 4, rowY + 4)
       this.doc.text(this.formatarNumero(dep.qtdConsumo), x + w * 0.65, rowY + 4)
-
-      // Barra de progresso mini
-      const barW = w * 0.12
-      const progW = (dep.percentual / 100) * barW
-      this.doc.rect(x + w * 0.82, rowY + 4, barW, 6).fill(this.colors.border)
-      this.doc.rect(x + w * 0.82, rowY + 4, progW, 6).fill(headerColor)
+      this.doc.text(`${Math.round(dep.percentual)}%`, x + w * 0.85, rowY + 4)
 
       rowY += rowH
     })
 
-    // Borda externa
-    this.doc.lineWidth(0.5).roundedRect(x, tblY, w, hdrH + dados.length * rowH, 3).stroke(this.colors.border)
+    // Borda externa forte
+    this.doc.lineWidth(1.5).rect(x, tblY, w, hdrH + dados.length * rowH).stroke(this.colors.border)
   }
 
   /**
@@ -392,7 +408,7 @@ export class PdfGeneratorUtils {
 
     // Título
     this.doc
-      .font('Helvetica-Bold')
+      .font('JetBrains-Bold')
       .fontSize(18)
       .fillColor('#ffffff')
       .text('RELATÓRIO DE CONSUMO DE PRODUTO', this.margin + 15, this.currentY + 15, {
@@ -401,7 +417,7 @@ export class PdfGeneratorUtils {
 
     // Subtítulo
     this.doc
-      .font('Helvetica')
+      .font('JetBrains')
       .fontSize(10)
       .fillColor('#ffffff')
       .text(
@@ -441,28 +457,28 @@ export class PdfGeneratorUtils {
     const col1X = this.margin + 15
     const col2X = this.margin + this.contentWidth / 2
 
-    this.doc.fillColor(this.colors.text).font('Helvetica').fontSize(9)
+    this.doc.fillColor(this.colors.text).font('JetBrains').fontSize(9)
 
     // Coluna 1
     this.doc
-      .font('Helvetica-Bold')
+      .font('JetBrains-Bold')
       .text('Código:', col1X, boxY + 12)
-      .font('Helvetica')
+      .font('JetBrains')
       .text(String(produto.codprod), col1X + 50, boxY + 12)
 
     this.doc
-      .font('Helvetica-Bold')
+      .font('JetBrains-Bold')
       .text('Descrição:', col1X, boxY + 27)
-      .font('Helvetica')
+      .font('JetBrains')
       .text(produto.descrprod, col1X + 60, boxY + 27, {
         width: this.contentWidth / 2 - 80,
       })
 
     if (produto.complemento) {
       this.doc
-        .font('Helvetica-Bold')
+        .font('JetBrains-Bold')
         .text('Complemento:', col1X, boxY + 42)
-        .font('Helvetica')
+        .font('JetBrains')
         .text(produto.complemento, col1X + 75, boxY + 42, {
           width: this.contentWidth / 2 - 90,
         })
@@ -470,24 +486,24 @@ export class PdfGeneratorUtils {
 
     // Coluna 2
     this.doc
-      .font('Helvetica-Bold')
+      .font('JetBrains-Bold')
       .text('Unidade:', col2X, boxY + 12)
-      .font('Helvetica')
+      .font('JetBrains')
       .text(produto.unidade, col2X + 55, boxY + 12)
 
     this.doc
-      .font('Helvetica-Bold')
+      .font('JetBrains-Bold')
       .text('Status:', col2X, boxY + 27)
-      .font('Helvetica')
+      .font('JetBrains')
       .fillColor(produto.ativo === 'S' ? this.colors.success : this.colors.danger)
       .text(produto.ativo === 'S' ? 'ATIVO' : 'INATIVO', col2X + 45, boxY + 27)
 
     if (produto.tipcontest) {
       this.doc
         .fillColor(this.colors.text)
-        .font('Helvetica-Bold')
+        .font('JetBrains-Bold')
         .text('Controle:', col2X, boxY + 42)
-        .font('Helvetica')
+        .font('JetBrains')
         .text(produto.tipcontest, col2X + 55, boxY + 42)
     }
 
@@ -521,7 +537,7 @@ export class PdfGeneratorUtils {
     ]
 
     // Linha 1 - Labels
-    this.doc.font('Helvetica').fontSize(8).fillColor(this.colors.textLight)
+    this.doc.font('JetBrains').fontSize(8).fillColor(this.colors.textLight)
 
     this.doc.text('Saldo Inicial', cols[0], boxY + 8)
     this.doc.text('Compras', cols[1], boxY + 8)
@@ -530,7 +546,7 @@ export class PdfGeneratorUtils {
     this.doc.text('SALDO ATUAL', cols[4], boxY + 8)
 
     // Linha 2 - Quantidades
-    this.doc.font('Helvetica-Bold').fontSize(10).fillColor(this.colors.text)
+    this.doc.font('JetBrains-Bold').fontSize(10).fillColor(this.colors.text)
 
     this.doc.text(`${this.formatarNumero(resumo.saldoInicialQtd)}`, cols[0], boxY + 20)
     this.doc.fillColor(this.colors.success).text(`+${this.formatarNumero(resumo.totalComprasQtd)}`, cols[1], boxY + 20)
@@ -539,7 +555,7 @@ export class PdfGeneratorUtils {
     this.doc.fillColor(this.colors.primary).fontSize(11).text(`${this.formatarNumero(resumo.saldoAtualQtd)}`, cols[4], boxY + 20)
 
     // Linha 3 - Unidade
-    this.doc.font('Helvetica').fontSize(7).fillColor(this.colors.textLight)
+    this.doc.font('JetBrains').fontSize(7).fillColor(this.colors.textLight)
     this.doc.text(dados.produto.unidade, cols[0], boxY + 33)
     this.doc.text(dados.produto.unidade, cols[1], boxY + 33)
     this.doc.text(dados.produto.unidade, cols[2], boxY + 33)
@@ -547,7 +563,7 @@ export class PdfGeneratorUtils {
     this.doc.text(dados.produto.unidade, cols[4], boxY + 33)
 
     // Linha 4 - Valores em R$
-    this.doc.font('Helvetica-Bold').fontSize(9).fillColor(this.colors.text)
+    this.doc.font('JetBrains-Bold').fontSize(9).fillColor(this.colors.text)
 
     this.doc.text(this.formatarMoeda(resumo.saldoInicialValor), cols[0], boxY + 45)
     this.doc.fillColor(this.colors.success).text(this.formatarMoeda(resumo.totalComprasValor), cols[1], boxY + 45)
@@ -562,7 +578,7 @@ export class PdfGeneratorUtils {
       .stroke(this.colors.border)
 
     // Linha 5 - Labels das Métricas
-    this.doc.font('Helvetica').fontSize(8).fillColor(this.colors.textLight)
+    this.doc.font('JetBrains').fontSize(8).fillColor(this.colors.textLight)
 
     this.doc.text('Média/Dia', cols[0], boxY + 72)
     this.doc.text('Dias Estoque', cols[1], boxY + 72)
@@ -570,7 +586,7 @@ export class PdfGeneratorUtils {
     this.doc.text('Custo Unit. Médio', cols[3], boxY + 72)
 
     // Linha 6 - Valores das Métricas
-    this.doc.font('Helvetica-Bold').fontSize(10).fillColor(this.colors.text)
+    this.doc.font('JetBrains-Bold').fontSize(10).fillColor(this.colors.text)
 
     this.doc.text(`${this.formatarNumero(resumo.mediaConsumoDia)} ${dados.produto.unidade}`, cols[0], boxY + 84)
 
@@ -767,7 +783,7 @@ export class PdfGeneratorUtils {
 
     if (departamentos.length === 0) {
       this.doc
-        .font('Helvetica')
+        .font('JetBrains')
         .fontSize(10)
         .fillColor(this.colors.textLight)
         .text('Nenhum consumo registrado no período', this.margin, this.currentY, {
@@ -790,7 +806,7 @@ export class PdfGeneratorUtils {
     const tableStartY = this.currentY
     this.doc.rect(this.margin, this.currentY, this.contentWidth, headerHeight).fill(this.colors.primary)
 
-    this.doc.font('Helvetica-Bold').fontSize(9).fillColor(this.colors.white)
+    this.doc.font('JetBrains-Bold').fontSize(9).fillColor(this.colors.white)
     cols.forEach((col) => {
       this.doc.text(col.label, col.x + 6, this.currentY + 7, { width: col.width - 12 })
     })
@@ -811,7 +827,7 @@ export class PdfGeneratorUtils {
 
         // Redesenhar cabeçalho na nova página
         this.doc.rect(this.margin, this.currentY, this.contentWidth, headerHeight).fill(this.colors.primary)
-        this.doc.font('Helvetica-Bold').fontSize(9).fillColor(this.colors.white)
+        this.doc.font('JetBrains-Bold').fontSize(9).fillColor(this.colors.white)
         cols.forEach((col) => {
           this.doc.text(col.label, col.x + 6, this.currentY + 7, { width: col.width - 12 })
         })
@@ -822,7 +838,7 @@ export class PdfGeneratorUtils {
 
       this.doc.rect(this.margin, this.currentY, this.contentWidth, rowHeight).fill(bgColor)
 
-      this.doc.font('Helvetica').fontSize(9).fillColor(this.colors.text)
+      this.doc.font('JetBrains').fontSize(9).fillColor(this.colors.text)
 
       this.doc.text(dep.departamento, cols[0].x + 6, this.currentY + 6, { width: cols[0].width - 12 })
       this.doc.text(this.formatarNumero(dep.qtdConsumo), cols[1].x + 6, this.currentY + 6, { width: cols[1].width - 12 })
@@ -837,7 +853,7 @@ export class PdfGeneratorUtils {
         .fill(this.colors.accent)
 
       this.doc
-        .font('Helvetica-Bold')
+        .font('JetBrains-Bold')
         .fontSize(8)
         .fillColor(this.colors.text)
         .text(`${this.formatarNumero(dep.percentual)}%`, cols[4].x + maxBarWidth + 10, this.currentY + 7)
@@ -865,7 +881,7 @@ export class PdfGeneratorUtils {
 
     if (movimentacoes.length === 0) {
       this.doc
-        .font('Helvetica')
+        .font('JetBrains')
         .fontSize(10)
         .fillColor(this.colors.textLight)
         .text('Nenhuma movimentação no período', this.margin, this.currentY, {
@@ -896,7 +912,7 @@ export class PdfGeneratorUtils {
         .rect(this.margin, this.currentY, this.contentWidth, headerHeight)
         .fill(this.colors.primary)
 
-      this.doc.font('Helvetica-Bold').fontSize(7).fillColor(this.colors.white)
+      this.doc.font('JetBrains-Bold').fontSize(7).fillColor(this.colors.white)
       cols.forEach((col) => {
         this.doc.text(col.label, col.x + 3, this.currentY + 6, { width: col.width - 6 })
       })
@@ -928,7 +944,7 @@ export class PdfGeneratorUtils {
       this.doc.rect(this.margin, this.currentY, this.contentWidth, rowHeight).fill(bgColor)
 
       // Fonte padrão
-      this.doc.font('Helvetica').fontSize(7).fillColor(this.colors.text)
+      this.doc.font('JetBrains').fontSize(7).fillColor(this.colors.text)
 
       // Data
       this.doc.text(mov.dataFormatada, cols[0].x + 3, this.currentY + 5, { width: cols[0].width - 6 })
@@ -941,14 +957,14 @@ export class PdfGeneratorUtils {
         mov.tipo === 'COMPRA' ? this.colors.success :
         mov.tipo === 'CONSUMO' ? this.colors.danger : this.colors.warning
       this.doc
-        .font('Helvetica-Bold')
+        .font('JetBrains-Bold')
         .fontSize(7)
         .fillColor(tipoColor)
         .text(mov.tipo, cols[2].x + 3, this.currentY + 5, { width: cols[2].width - 6 })
 
       // Parceiro
       this.doc
-        .font('Helvetica')
+        .font('JetBrains')
         .fontSize(7)
         .fillColor(this.colors.text)
         .text(mov.parceiro.substring(0, 15), cols[3].x + 3, this.currentY + 5, { width: cols[3].width - 6 })
@@ -960,13 +976,13 @@ export class PdfGeneratorUtils {
       const qtdColor = mov.qtdMov > 0 ? this.colors.success : this.colors.danger
       const qtdText = mov.qtdMov > 0 ? `+${this.formatarNumero(mov.qtdMov)}` : this.formatarNumero(mov.qtdMov)
       this.doc
-        .font('Helvetica-Bold')
+        .font('JetBrains-Bold')
         .fillColor(qtdColor)
         .text(qtdText, cols[5].x + 3, this.currentY + 5, { width: cols[5].width - 6 })
 
       // Valor
       this.doc
-        .font('Helvetica')
+        .font('JetBrains')
         .fillColor(this.colors.text)
         .text(this.formatarMoeda(mov.valorMov), cols[6].x + 3, this.currentY + 5, { width: cols[6].width - 6 })
 
@@ -983,7 +999,7 @@ export class PdfGeneratorUtils {
     if (movimentacoes.length > 60) {
       this.currentY += 5
       this.doc
-        .font('Helvetica')
+        .font('JetBrains')
         .fontSize(8)
         .fillColor(this.colors.textLight)
         .text(
@@ -1012,13 +1028,13 @@ export class PdfGeneratorUtils {
         .stroke(this.colors.border)
 
       this.doc
-        .font('Helvetica')
+        .font('JetBrains')
         .fontSize(8)
         .fillColor(this.colors.textLight)
         .text(`Página ${i + 1} de ${pages.count}`, this.margin, footerY + 10)
 
       this.doc
-        .font('Helvetica')
+        .font('JetBrains')
         .fontSize(8)
         .fillColor(this.colors.textLight)
         .text(
@@ -1035,7 +1051,7 @@ export class PdfGeneratorUtils {
    */
   private criarTituloSecao(titulo: string): void {
     this.doc
-      .font('Helvetica-Bold')
+      .font('JetBrains-Bold')
       .fontSize(12)
       .fillColor(this.colors.primary)
       .text(titulo, this.margin, this.currentY)
@@ -1104,7 +1120,7 @@ export class PdfGeneratorUtils {
 
     // Título maior
     this.doc
-      .font('Helvetica-Bold')
+      .font('JetBrains-Bold')
       .fontSize(22)
       .fillColor('#ffffff')
       .text('RELATÓRIO EXECUTIVO', this.margin + 15, this.currentY + 15, {
@@ -1113,7 +1129,7 @@ export class PdfGeneratorUtils {
 
     // Subtítulo - Consumo de Produto
     this.doc
-      .font('Helvetica')
+      .font('JetBrains')
       .fontSize(14)
       .fillColor('#ffffff')
       .text('Análise de Consumo de Produto', this.margin + 15, this.currentY + 42)
@@ -1156,7 +1172,7 @@ export class PdfGeneratorUtils {
       .fill(this.colors.danger)
 
     this.doc
-      .font('Helvetica-Bold')
+      .font('JetBrains-Bold')
       .fontSize(9)
       .fillColor('#ffffff')
       .text('CONSUMO TOTAL', this.margin + 10, startY + 10)
@@ -1166,7 +1182,7 @@ export class PdfGeneratorUtils {
       .text(`${this.formatarNumero(resumo.totalConsumoQtd)}`, this.margin + 10, startY + 28)
 
     this.doc
-      .font('Helvetica')
+      .font('JetBrains')
       .fontSize(9)
       .text(dados.produto.unidade, this.margin + 10, startY + 52)
 
@@ -1180,7 +1196,7 @@ export class PdfGeneratorUtils {
       .fill(this.colors.success)
 
     this.doc
-      .font('Helvetica-Bold')
+      .font('JetBrains-Bold')
       .fontSize(9)
       .fillColor('#ffffff')
       .text('COMPRAS', this.margin + cardWidth + 25, startY + 10)
@@ -1190,7 +1206,7 @@ export class PdfGeneratorUtils {
       .text(`${this.formatarNumero(resumo.totalComprasQtd)}`, this.margin + cardWidth + 25, startY + 28)
 
     this.doc
-      .font('Helvetica')
+      .font('JetBrains')
       .fontSize(9)
       .text(dados.produto.unidade, this.margin + cardWidth + 25, startY + 52)
 
@@ -1205,7 +1221,7 @@ export class PdfGeneratorUtils {
       .fill(saldoColor)
 
     this.doc
-      .font('Helvetica-Bold')
+      .font('JetBrains-Bold')
       .fontSize(9)
       .fillColor('#ffffff')
       .text('SALDO FINAL', this.margin + (cardWidth + 15) * 2 + 10, startY + 10)
@@ -1215,7 +1231,7 @@ export class PdfGeneratorUtils {
       .text(`${this.formatarNumero(resumo.saldoFinalQtd)}`, this.margin + (cardWidth + 15) * 2 + 10, startY + 28)
 
     this.doc
-      .font('Helvetica')
+      .font('JetBrains')
       .fontSize(9)
       .text(dados.produto.unidade, this.margin + (cardWidth + 15) * 2 + 10, startY + 52)
 
@@ -1251,7 +1267,7 @@ export class PdfGeneratorUtils {
     ]
 
     // Labels
-    this.doc.fontSize(9).fillColor(this.colors.textLight).font('Helvetica')
+    this.doc.fontSize(9).fillColor(this.colors.textLight).font('JetBrains')
 
     this.doc.text('Média/Dia', cols[0], boxY + 12)
     this.doc.text('Dias de Estoque', cols[1], boxY + 12)
@@ -1259,7 +1275,7 @@ export class PdfGeneratorUtils {
     this.doc.text('% do Estoque', cols[3], boxY + 12)
 
     // Valores
-    this.doc.font('Helvetica-Bold').fontSize(16).fillColor(this.colors.primary)
+    this.doc.font('JetBrains-Bold').fontSize(16).fillColor(this.colors.primary)
 
     this.doc.text(`${this.formatarNumero(resumo.mediaConsumoDia)}`, cols[0], boxY + 30)
 
@@ -1272,7 +1288,7 @@ export class PdfGeneratorUtils {
     this.doc.text(`${this.formatarNumero(resumo.percentualConsumo)}%`, cols[3], boxY + 30)
 
     // Subtexto
-    this.doc.font('Helvetica').fontSize(8).fillColor(this.colors.textLight)
+    this.doc.font('JetBrains').fontSize(8).fillColor(this.colors.textLight)
 
     this.doc.text(dados.produto.unidade, cols[0], boxY + 50)
     this.doc.text('até acabar', cols[1], boxY + 50)
@@ -1317,20 +1333,20 @@ export class PdfGeneratorUtils {
 
       // Número do ranking
       this.doc
-        .font('Helvetica-Bold')
+        .font('JetBrains-Bold')
         .fontSize(14)
         .fillColor(rankColor)
         .text(`${index + 1}º`, this.margin, currentRowY + 8)
 
       // Nome
       this.doc
-        .font('Helvetica-Bold')
+        .font('JetBrains-Bold')
         .fontSize(10)
         .fillColor(this.colors.text)
         .text(consumidor.departamento, this.margin + 30, currentRowY + 5, { width: 140 })
 
       this.doc
-        .font('Helvetica')
+        .font('JetBrains')
         .fontSize(8)
         .fillColor(this.colors.textLight)
         .text(consumidor.origem, this.margin + 30, currentRowY + 18)
@@ -1342,7 +1358,7 @@ export class PdfGeneratorUtils {
 
       // Valor na barra
       this.doc
-        .font('Helvetica-Bold')
+        .font('JetBrains-Bold')
         .fontSize(9)
         .fillColor('#ffffff')
         .text(
@@ -1428,7 +1444,7 @@ export class PdfGeneratorUtils {
     // Função para desenhar cabeçalho
     const desenharCabecalho = () => {
       this.doc.rect(this.margin, this.currentY, this.contentWidth, headerHeight).fill(this.colors.primary)
-      this.doc.font('Helvetica-Bold').fontSize(7).fillColor(this.colors.white)
+      this.doc.font('JetBrains-Bold').fontSize(7).fillColor(this.colors.white)
       cols.forEach((col) => {
         this.doc.text(col.label, col.x + 3, this.currentY + 6, { width: col.width - 6 })
       })
@@ -1455,7 +1471,7 @@ export class PdfGeneratorUtils {
       const bgColor = index % 2 === 0 ? this.colors.white : this.colors.light
       this.doc.rect(this.margin, this.currentY, this.contentWidth, rowHeight).fill(bgColor)
 
-      this.doc.font('Helvetica').fontSize(7).fillColor(this.colors.text)
+      this.doc.font('JetBrains').fontSize(7).fillColor(this.colors.text)
 
       // Data
       this.doc.text(mov.dataFormatada, cols[0].x + 3, this.currentY + 5, { width: cols[0].width - 6 })
@@ -1465,16 +1481,16 @@ export class PdfGeneratorUtils {
 
       // Destaque (Centro Custo ou Grupo Usuario)
       const destaqueTexto = destaque === 'setor' ? mov.setor : mov.grupoUsuario
-      this.doc.font('Helvetica-Bold').text(destaqueTexto.substring(0, 14), cols[2].x + 3, this.currentY + 5, { width: cols[2].width - 6 })
+      this.doc.font('JetBrains-Bold').text(destaqueTexto.substring(0, 14), cols[2].x + 3, this.currentY + 5, { width: cols[2].width - 6 })
 
       // Parceiro
-      this.doc.font('Helvetica').text(mov.parceiro.substring(0, 14), cols[3].x + 3, this.currentY + 5, { width: cols[3].width - 6 })
+      this.doc.font('JetBrains').text(mov.parceiro.substring(0, 14), cols[3].x + 3, this.currentY + 5, { width: cols[3].width - 6 })
 
       // Quantidade
-      this.doc.font('Helvetica-Bold').fillColor(this.colors.danger).text(this.formatarNumero(Math.abs(mov.qtdMov)), cols[4].x + 3, this.currentY + 5, { width: cols[4].width - 6 })
+      this.doc.font('JetBrains-Bold').fillColor(this.colors.danger).text(this.formatarNumero(Math.abs(mov.qtdMov)), cols[4].x + 3, this.currentY + 5, { width: cols[4].width - 6 })
 
       // Valor
-      this.doc.font('Helvetica').fillColor(this.colors.text).text(this.formatarMoeda(Math.abs(mov.valorMov)), cols[5].x + 3, this.currentY + 5, { width: cols[5].width - 6 })
+      this.doc.font('JetBrains').fillColor(this.colors.text).text(this.formatarMoeda(Math.abs(mov.valorMov)), cols[5].x + 3, this.currentY + 5, { width: cols[5].width - 6 })
 
       this.currentY += rowHeight
     })
