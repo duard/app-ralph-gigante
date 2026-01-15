@@ -1,0 +1,323 @@
+{
+  "author": "Claude Code",
+  "title": "Sankhya - Produtos e Relacionamentos",
+  "date": "2026-01-15",
+  "tables": [
+    {
+      "id": "tgfpro",
+      "name": "TGFPRO",
+      "comment": "Produtos (Master) - Tabela principal de cadastro de produtos",
+      "color": "#3498db",
+      "fields": [
+        {"name": "CODPROD", "type": "INT", "pk": true, "comment": "Código do produto (PK)"},
+        {"name": "DESCRPROD", "type": "VARCHAR(255)", "comment": "Descrição do produto"},
+        {"name": "COMPLDESC", "type": "VARCHAR(255)", "comment": "Descrição complementar"},
+        {"name": "CARACTERISTICAS", "type": "TEXT", "comment": "Características detalhadas"},
+        {"name": "REFERENCIA", "type": "VARCHAR(60)", "comment": "Referência interna"},
+        {"name": "REFFORN", "type": "VARCHAR(60)", "comment": "Referência do fornecedor"},
+        {"name": "MARCA", "type": "VARCHAR(60)", "comment": "Marca do produto"},
+        {"name": "CODGRUPOPROD", "type": "INT", "fk": "tgfgru.CODGRUPOPROD", "comment": "FK → TGFGRU"},
+        {"name": "CODVOL", "type": "VARCHAR(3)", "fk": "tgfvol.CODVOL", "comment": "FK → TGFVOL (unidade)"},
+        {"name": "CODVOLCOMPRA", "type": "VARCHAR(3)", "comment": "Unidade de compra"},
+        {"name": "NCM", "type": "VARCHAR(10)", "comment": "NCM fiscal"},
+        {"name": "ATIVO", "type": "CHAR(1)", "comment": "S=Ativo, N=Inativo"},
+        {"name": "CODLOCALPADRAO", "type": "INT", "fk": "tgfloc.CODLOCAL", "comment": "FK → TGFLOC"},
+        {"name": "USALOCAL", "type": "CHAR(1)", "comment": "Usa controle por local?"},
+        {"name": "TIPCONTEST", "type": "CHAR(1)", "comment": "⭐ N/S/E/L/P - Tipo de controle"},
+        {"name": "LISCONTEST", "type": "VARCHAR(60)", "comment": "Lista de controles possíveis"},
+        {"name": "ESTMIN", "type": "DECIMAL(15,3)", "comment": "Estoque mínimo"},
+        {"name": "ESTMAX", "type": "DECIMAL(15,3)", "comment": "Estoque máximo"},
+        {"name": "ALERTAESTMIN", "type": "CHAR(1)", "comment": "Alerta estoque mínimo?"},
+        {"name": "USOPROD", "type": "CHAR(1)", "comment": "C=Consumo, R=Revenda"},
+        {"name": "ORIGPROD", "type": "CHAR(1)", "comment": "Origem (0=Nacional)"}
+      ]
+    },
+    {
+      "id": "tgfgru",
+      "name": "TGFGRU",
+      "comment": "Grupos de Produtos - Categorização hierárquica",
+      "color": "#9b59b6",
+      "fields": [
+        {"name": "CODGRUPOPROD", "type": "INT", "pk": true, "comment": "Código do grupo (PK)"},
+        {"name": "DESCRGRUPOPROD", "type": "VARCHAR(60)", "comment": "Descrição do grupo"},
+        {"name": "ATIVO", "type": "CHAR(1)", "comment": "S=Ativo, N=Inativo"}
+      ]
+    },
+    {
+      "id": "tgfvol",
+      "name": "TGFVOL",
+      "comment": "Unidades de Medida - Volume/quantidade",
+      "color": "#1abc9c",
+      "fields": [
+        {"name": "CODVOL", "type": "VARCHAR(3)", "pk": true, "comment": "Código da unidade (PK)"},
+        {"name": "DESCRVOL", "type": "VARCHAR(20)", "comment": "Descrição (UN, KG, MT, etc)"},
+        {"name": "ATIVO", "type": "CHAR(1)", "comment": "S=Ativo, N=Inativo"}
+      ]
+    },
+    {
+      "id": "tgfloc",
+      "name": "TGFLOC",
+      "comment": "Locais de Estoque - Armazéns, almoxarifados",
+      "color": "#e67e22",
+      "fields": [
+        {"name": "CODLOCAL", "type": "INT", "pk": true, "comment": "Código do local (PK)"},
+        {"name": "DESCRLOCAL", "type": "VARCHAR(60)", "comment": "Descrição do local"},
+        {"name": "ATIVO", "type": "CHAR(1)", "comment": "S=Ativo, N=Inativo"},
+        {"name": "ANALITICO", "type": "CHAR(1)", "comment": "Local analítico?"}
+      ]
+    },
+    {
+      "id": "tgfest",
+      "name": "TGFEST",
+      "comment": "⭐ Estoque - Saldo por produto/local/controle",
+      "color": "#e74c3c",
+      "fields": [
+        {"name": "CODEMP", "type": "INT", "pk": true, "comment": "Empresa (PK)"},
+        {"name": "CODPROD", "type": "INT", "pk": true, "fk": "tgfpro.CODPROD", "comment": "FK → TGFPRO (PK)"},
+        {"name": "CODLOCAL", "type": "INT", "pk": true, "fk": "tgfloc.CODLOCAL", "comment": "FK → TGFLOC (PK)"},
+        {"name": "CONTROLE", "type": "VARCHAR(60)", "pk": true, "comment": "⭐ Controle (lote/série) (PK)"},
+        {"name": "CODPARC", "type": "INT", "pk": true, "comment": "Parceiro (PK)"},
+        {"name": "TIPO", "type": "CHAR(1)", "pk": true, "comment": "Tipo (PK)"},
+        {"name": "ESTOQUE", "type": "DECIMAL(15,3)", "comment": "Quantidade em estoque"},
+        {"name": "ESTMIN", "type": "DECIMAL(15,3)", "comment": "Mínimo neste local"},
+        {"name": "ESTMAX", "type": "DECIMAL(15,3)", "comment": "Máximo neste local"},
+        {"name": "ATIVO", "type": "CHAR(1)", "comment": "S=Ativo, N=Inativo"}
+      ]
+    },
+    {
+      "id": "tgfcab",
+      "name": "TGFCAB",
+      "comment": "Cabeçalho de Notas - Compras, vendas, movimentações",
+      "color": "#f39c12",
+      "fields": [
+        {"name": "NUNOTA", "type": "INT", "pk": true, "comment": "Número único da nota (PK)"},
+        {"name": "NUMNOTA", "type": "INT", "comment": "Número da nota fiscal"},
+        {"name": "DTNEG", "type": "DATE", "comment": "⭐ Data de negociação"},
+        {"name": "DTMOV", "type": "DATE", "comment": "Data de movimento"},
+        {"name": "HRMOV", "type": "TIME", "comment": "Hora de movimento"},
+        {"name": "STATUSNOTA", "type": "CHAR(1)", "comment": "L=Liberada, P=Pendente, C=Cancelada"},
+        {"name": "CODTIPOPER", "type": "INT", "fk": "tgftop.CODTIPOPER", "comment": "FK → TGFTOP"},
+        {"name": "TIPMOV", "type": "CHAR(1)", "comment": "⭐ C=Compra, V=Venda, Q=Requisição"},
+        {"name": "CODPARC", "type": "INT", "fk": "tgfpar.CODPARC", "comment": "FK → TGFPAR (parceiro)"},
+        {"name": "CODUSUINC", "type": "INT", "fk": "tsiusu.CODUSU", "comment": "FK → TSIUSU (usuário)"}
+      ]
+    },
+    {
+      "id": "tgfite",
+      "name": "TGFITE",
+      "comment": "⭐ Itens de Nota - Produtos nas transações",
+      "color": "#e74c3c",
+      "fields": [
+        {"name": "NUNOTA", "type": "INT", "pk": true, "fk": "tgfcab.NUNOTA", "comment": "FK → TGFCAB (PK)"},
+        {"name": "SEQUENCIA", "type": "INT", "pk": true, "comment": "Sequência do item (PK)"},
+        {"name": "CODPROD", "type": "INT", "fk": "tgfpro.CODPROD", "comment": "FK → TGFPRO"},
+        {"name": "CONTROLE", "type": "VARCHAR(60)", "comment": "⭐ Controle (lote/série/tamanho)"},
+        {"name": "QTDNEG", "type": "DECIMAL(15,3)", "comment": "Quantidade negociada"},
+        {"name": "VLRUNIT", "type": "DECIMAL(15,2)", "comment": "⭐ Valor unitário (PREÇO!)"},
+        {"name": "VLRTOT", "type": "DECIMAL(15,2)", "comment": "Valor total"},
+        {"name": "ATUALESTOQUE", "type": "INT", "comment": "⭐ -1=Consumo, +1=Entrada, 0=Neutro"},
+        {"name": "RESERVA", "type": "CHAR(1)", "comment": "S=Reservado, N=Normal"},
+        {"name": "CODLOCALORIG", "type": "INT", "fk": "tgfloc.CODLOCAL", "comment": "Local de origem"}
+      ]
+    },
+    {
+      "id": "tgftop",
+      "name": "TGFTOP",
+      "comment": "Tipos de Operação - Define comportamento das notas",
+      "color": "#34495e",
+      "fields": [
+        {"name": "CODTIPOPER", "type": "INT", "pk": true, "comment": "Código tipo operação (PK)"},
+        {"name": "DHALTER", "type": "DATETIME", "pk": true, "comment": "Data alteração (PK - histórico)"},
+        {"name": "DESCROPER", "type": "VARCHAR(60)", "comment": "Descrição da operação"},
+        {"name": "TIPMOV", "type": "CHAR(1)", "comment": "C/V/Q/O/D/T/J/L/P"},
+        {"name": "ATUALEST", "type": "CHAR(1)", "comment": "B=Baixar, E=Entrar, N=Nenhuma"}
+      ]
+    },
+    {
+      "id": "tgfpar",
+      "name": "TGFPAR",
+      "comment": "Parceiros - Fornecedores, clientes, usuários",
+      "color": "#16a085",
+      "fields": [
+        {"name": "CODPARC", "type": "INT", "pk": true, "comment": "Código do parceiro (PK)"},
+        {"name": "NOMEPARC", "type": "VARCHAR(60)", "comment": "Nome do parceiro"},
+        {"name": "CGC_CPF", "type": "VARCHAR(20)", "comment": "CNPJ/CPF"},
+        {"name": "ATIVO", "type": "CHAR(1)", "comment": "S=Ativo, N=Inativo"}
+      ]
+    },
+    {
+      "id": "tsiusu",
+      "name": "TSIUSU",
+      "comment": "Usuários do Sistema - Pessoas que fazem requisições",
+      "color": "#8e44ad",
+      "fields": [
+        {"name": "CODUSU", "type": "INT", "pk": true, "comment": "Código do usuário (PK)"},
+        {"name": "NOMEUSU", "type": "VARCHAR(60)", "comment": "Nome do usuário"},
+        {"name": "CODPARC", "type": "INT", "fk": "tgfpar.CODPARC", "comment": "FK → TGFPAR"},
+        {"name": "CODGRUPO", "type": "INT", "comment": "Código do grupo"},
+        {"name": "CODFUNC", "type": "INT", "comment": "Código funcionário"},
+        {"name": "CODEMP", "type": "INT", "comment": "Código empresa"},
+        {"name": "ATIVO", "type": "CHAR(1)", "comment": "S=Ativo, N=Inativo"}
+      ]
+    },
+    {
+      "id": "tfpfun",
+      "name": "TFPFUN",
+      "comment": "Funcionários - Dados de RH",
+      "color": "#2980b9",
+      "fields": [
+        {"name": "CODFUNC", "type": "INT", "pk": true, "comment": "Código funcionário (PK)"},
+        {"name": "CODEMP", "type": "INT", "pk": true, "comment": "Código empresa (PK)"},
+        {"name": "NOMEFUNC", "type": "VARCHAR(60)", "comment": "Nome do funcionário"},
+        {"name": "CODDEP", "type": "INT", "fk": "tfpdep.CODDEP", "comment": "FK → TFPDEP (departamento)"},
+        {"name": "ATIVO", "type": "CHAR(1)", "comment": "S=Ativo, N=Inativo"}
+      ]
+    },
+    {
+      "id": "tfpdep",
+      "name": "TFPDEP",
+      "comment": "Departamentos - Organização interna",
+      "color": "#27ae60",
+      "fields": [
+        {"name": "CODDEP", "type": "INT", "pk": true, "comment": "Código departamento (PK)"},
+        {"name": "DESCRDEP", "type": "VARCHAR(60)", "comment": "Descrição do departamento"},
+        {"name": "CODDEPTO", "type": "INT", "comment": "Departamento pai (hierarquia)"},
+        {"name": "ATIVO", "type": "CHAR(1)", "comment": "S=Ativo, N=Inativo"}
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "from": "tgfpro",
+      "to": "tgfgru",
+      "type": "n:1",
+      "fromField": "CODGRUPOPROD",
+      "toField": "CODGRUPOPROD",
+      "comment": "Produto pertence a um Grupo"
+    },
+    {
+      "from": "tgfpro",
+      "to": "tgfvol",
+      "type": "n:1",
+      "fromField": "CODVOL",
+      "toField": "CODVOL",
+      "comment": "Produto tem uma Unidade de Medida"
+    },
+    {
+      "from": "tgfpro",
+      "to": "tgfloc",
+      "type": "n:1",
+      "fromField": "CODLOCALPADRAO",
+      "toField": "CODLOCAL",
+      "comment": "Produto tem Local Padrão"
+    },
+    {
+      "from": "tgfest",
+      "to": "tgfpro",
+      "type": "n:1",
+      "fromField": "CODPROD",
+      "toField": "CODPROD",
+      "comment": "⭐ Estoque de um Produto"
+    },
+    {
+      "from": "tgfest",
+      "to": "tgfloc",
+      "type": "n:1",
+      "fromField": "CODLOCAL",
+      "toField": "CODLOCAL",
+      "comment": "Estoque em um Local"
+    },
+    {
+      "from": "tgfite",
+      "to": "tgfcab",
+      "type": "n:1",
+      "fromField": "NUNOTA",
+      "toField": "NUNOTA",
+      "comment": "Item pertence a uma Nota"
+    },
+    {
+      "from": "tgfite",
+      "to": "tgfpro",
+      "type": "n:1",
+      "fromField": "CODPROD",
+      "toField": "CODPROD",
+      "comment": "⭐ Item é um Produto"
+    },
+    {
+      "from": "tgfcab",
+      "to": "tgftop",
+      "type": "n:1",
+      "fromField": "CODTIPOPER",
+      "toField": "CODTIPOPER",
+      "comment": "Nota tem um Tipo de Operação"
+    },
+    {
+      "from": "tgfcab",
+      "to": "tgfpar",
+      "type": "n:1",
+      "fromField": "CODPARC",
+      "toField": "CODPARC",
+      "comment": "Nota tem um Parceiro"
+    },
+    {
+      "from": "tgfcab",
+      "to": "tsiusu",
+      "type": "n:1",
+      "fromField": "CODUSUINC",
+      "toField": "CODUSU",
+      "comment": "Nota criada por Usuário"
+    },
+    {
+      "from": "tsiusu",
+      "to": "tgfpar",
+      "type": "n:1",
+      "fromField": "CODPARC",
+      "toField": "CODPARC",
+      "comment": "Usuário é um Parceiro"
+    },
+    {
+      "from": "tsiusu",
+      "to": "tfpfun",
+      "type": "n:1",
+      "fromField": "CODFUNC,CODEMP",
+      "toField": "CODFUNC,CODEMP",
+      "comment": "⭐ Usuário é Funcionário (chave composta!)"
+    },
+    {
+      "from": "tfpfun",
+      "to": "tfpdep",
+      "type": "n:1",
+      "fromField": "CODDEP",
+      "toField": "CODDEP",
+      "comment": "Funcionário pertence a Departamento"
+    }
+  ],
+  "notes": [
+    {
+      "title": "⭐ CAMPO CONTROLE - CRÍTICO!",
+      "content": "TGFEST.CONTROLE e TGFITE.CONTROLE armazenam variações do produto:\n\n- Lote (L): LOTE2024-01, LOTE2024-02\n- Série (E): SN123456, SN123457\n- Tamanhos (S): XG (11), GG (10), M (8)\n\nMESMO CODPROD pode ter MÚLTIPLOS CONTROLES com:\n- Estoques diferentes\n- Preços diferentes\n- Movimentações separadas\n\nIMPORTANTE: Análises de preço e consumo devem considerar CONTROLE para produtos com TIPCONTEST ∈ {S,E,L,P}",
+      "color": "#e74c3c"
+    },
+    {
+      "title": "Fluxo de Movimentação",
+      "content": "1. COMPRA (TIPMOV='C', ATUALESTOQUE=+1):\n   TGFCAB → TGFITE → TGFEST (aumenta)\n\n2. CONSUMO (TIPMOV='Q', ATUALESTOQUE=-1):\n   TGFCAB → TGFITE → TGFEST (diminui)\n\n3. PREÇO: Vem do TGFITE.VLRUNIT de cada compra\n\n4. USUÁRIO: TGFCAB.CODUSUINC → TSIUSU → TFPFUN → TFPDEP",
+      "color": "#3498db"
+    },
+    {
+      "title": "Estatísticas do Sistema",
+      "content": "Total Produtos Ativos: 13.281\n- Sem controle (N): 10.874 (82%)\n- Com controle (S/E/L/P): 2.407 (18%)\n\nEstoque:\n- Com estoque: 4.928 (37%)\n- Sem estoque: 8.353 (63%)\n\nTop Marcas:\n- GENERICO: 4.790\n- MERCEDES B: 377\n- VOLKSWAGEN: 303\n\nTop Grupos:\n- MECANICA: 7.261\n- ELETRICA: 1.903",
+      "color": "#16a085"
+    },
+    {
+      "title": "Análise de Preço - Implementado",
+      "content": "✅ IMPLEMENTADO:\n- Preço médio ponderado\n- Preço última compra\n- Preço mínimo/máximo\n- Variação percentual\n- Tendência (AUMENTO/QUEDA/ESTAVEL)\n- Histórico de preços\n\n⚠️ PENDENTE:\n- Análise por CONTROLE para produtos S/E/L/P\n- Separar preços por variação (tamanho/lote/série)",
+      "color": "#f39c12"
+    }
+  ],
+  "metadata": {
+    "database": "Sankhya ERP",
+    "version": "1.0",
+    "description": "Diagrama completo do modelo de dados de Produtos e relacionamentos",
+    "focus": "TGFPRO (produtos) + TGFEST (estoque) + TGFITE (movimentações) + CONTROLE"
+  }
+}

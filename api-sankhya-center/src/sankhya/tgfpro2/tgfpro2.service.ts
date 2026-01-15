@@ -15,6 +15,7 @@ import {
   ProdutoInfoDto,
   PeriodoInfoDto,
   ResumoConsumoDto,
+  HistoricoPrecoDto,
   AgrupamentoDto,
   AgrupamentoItemDto,
   MovimentacoesDto,
@@ -1205,16 +1206,148 @@ export class Tgfpro2Service {
     const valorConsumo = Number(data.VC || 0)
     const totalMovimentacoes = Number(data.TM || 0)
 
+    // Calcular saldo inicial (antes do período)
+    const saldoInicialQtd = await this.calcularSaldoAnterior(codprod, dataInicio)
+    const valorUnitarioReferencia = await this.buscarValorUnitarioReferencia(codprod, dataInicio)
+    const saldoInicialVal = saldoInicialQtd * valorUnitarioReferencia
+
+    // Calcular saldo final (saldo inicial + entradas - consumo)
+    const quantidadeEntrada = Number(data.QE || 0)
+    const saldoFinalQtd = saldoInicialQtd + quantidadeEntrada - quantidadeConsumo
+    const saldoFinalVal = saldoInicialVal + Number(data.VE || 0) - valorConsumo
+
+    // Buscar análise de preços ao longo do período
+    const analisePrecos = await this.buscarAnalisePrecos(codprod, dataInicio, dataFim)
+
     return {
       totalMovimentacoes,
       totalLinhas: Number(data.TL || 0),
       quantidadeConsumo,
       valorConsumo,
-      quantidadeEntrada: Number(data.QE || 0),
+      quantidadeEntrada,
       valorEntrada: Number(data.VE || 0),
       mediaDiariaConsumo: dias > 0 ? quantidadeConsumo / dias : 0,
       mediaPorMovimentacao:
         totalMovimentacoes > 0 ? quantidadeConsumo / totalMovimentacoes : 0,
+      saldoInicialQuantidade: saldoInicialQtd,
+      saldoInicialValor: saldoInicialVal,
+      saldoFinalQuantidade: saldoFinalQtd,
+      saldoFinalValor: saldoFinalVal,
+      // Análise de preço ao longo do tempo
+      precoMedioPonderado: analisePrecos.precoMedioPonderado,
+      precoUltimaCompra: analisePrecos.precoUltimaCompra,
+      precoMinimo: analisePrecos.precoMinimo,
+      precoMaximo: analisePrecos.precoMaximo,
+      variacaoPrecoPercentual: analisePrecos.variacaoPercentual,
+      tendenciaPreco: analisePrecos.tendencia,
+      historicoPrecos: analisePrecos.historicoPrecos,
+    }
+  }
+
+  /**
+   * Calcula o saldo anterior (acumulado até a data início, exclusive)
+   */
+  private async calcularSaldoAnterior(codprod: number, dataInicio: string): Promise<number> {
+    const query = `SELECT COALESCE(SUM(CASE WHEN ITE.ATUALESTOQUE<0 THEN -ITE.QTDNEG ELSE ITE.QTDNEG END),0)AS SALDO FROM TGFITE ITE WITH(NOLOCK)JOIN TGFCAB CAB WITH(NOLOCK)ON CAB.NUNOTA=ITE.NUNOTA WHERE ITE.CODPROD=${codprod} AND CAB.DTNEG<'${dataInicio}'AND CAB.STATUSNOTA='L'AND ITE.ATUALESTOQUE<>0 AND ITE.RESERVA='N'`
+
+    const result = await this.sankhyaApiService.executeQuery(query, [])
+    return Number(result[0]?.SALDO || 0)
+  }
+
+  /**
+   * Busca o valor unitário de referência (última compra antes do período)
+   */
+  private async buscarValorUnitarioReferencia(codprod: number, dataInicio: string): Promise<number> {
+    const query = `SELECT TOP 1 ITE.VLRUNIT FROM TGFITE ITE WITH(NOLOCK)JOIN TGFCAB CAB WITH(NOLOCK)ON CAB.NUNOTA=ITE.NUNOTA WHERE ITE.CODPROD=${codprod} AND CAB.TIPMOV='C'AND CAB.STATUSNOTA='L'AND ITE.ATUALESTOQUE>0 AND CAB.DTNEG<'${dataInicio}'ORDER BY CAB.DTNEG DESC,CAB.NUNOTA DESC`
+
+    const result = await this.sankhyaApiService.executeQuery(query, [])
+    return Number(result[0]?.VLRUNIT || 0)
+  }
+
+  /**
+   * Busca análise de preços do produto ao longo do período
+   * Retorna histórico de compras, preços min/max, média ponderada, variação e tendência
+   */
+  private async buscarAnalisePrecos(
+    codprod: number,
+    dataInicio: string,
+    dataFim: string,
+  ): Promise<{
+    precoMedioPonderado: number
+    precoUltimaCompra: number
+    precoMinimo: number
+    precoMaximo: number
+    variacaoPercentual: number
+    tendencia: 'AUMENTO' | 'QUEDA' | 'ESTAVEL'
+    historicoPrecos: HistoricoPrecoDto[]
+  }> {
+    // Query para buscar todas as compras no período (TIPMOV='C', ATUALESTOQUE>0)
+    const query = `SELECT CAB.DTNEG,ITE.NUNOTA,ITE.VLRUNIT,ITE.QTDNEG,ITE.VLRTOT FROM TGFITE ITE WITH(NOLOCK)JOIN TGFCAB CAB WITH(NOLOCK)ON CAB.NUNOTA=ITE.NUNOTA WHERE ITE.CODPROD=${codprod} AND CAB.DTNEG>='${dataInicio}'AND CAB.DTNEG<='${dataFim}'AND CAB.STATUSNOTA='L'AND CAB.TIPMOV='C'AND ITE.ATUALESTOQUE>0 ORDER BY CAB.DTNEG ASC`
+
+    const result = await this.sankhyaApiService.executeQuery(query, [])
+
+    // Se não houver compras no período, retornar valores vazios
+    if (!result || result.length === 0) {
+      return {
+        precoMedioPonderado: 0,
+        precoUltimaCompra: 0,
+        precoMinimo: 0,
+        precoMaximo: 0,
+        variacaoPercentual: 0,
+        tendencia: 'ESTAVEL',
+        historicoPrecos: [],
+      }
+    }
+
+    // Mapear histórico de preços
+    const historicoPrecos: HistoricoPrecoDto[] = result.map((item) => ({
+      data: item.DTNEG,
+      nunota: Number(item.NUNOTA),
+      precoUnitario: Number(item.VLRUNIT),
+      quantidadeComprada: Number(item.QTDNEG),
+      valorTotal: Number(item.VLRTOT),
+    }))
+
+    // Calcular agregados
+    const precos = historicoPrecos.map((h) => h.precoUnitario)
+    const precoMinimo = Math.min(...precos)
+    const precoMaximo = Math.max(...precos)
+    const precoUltimaCompra = historicoPrecos[historicoPrecos.length - 1].precoUnitario
+    const primeiroPreco = historicoPrecos[0].precoUnitario
+
+    // Preço médio ponderado por quantidade (total gasto / total comprado)
+    const totalValor = historicoPrecos.reduce((sum, h) => sum + h.valorTotal, 0)
+    const totalQuantidade = historicoPrecos.reduce(
+      (sum, h) => sum + h.quantidadeComprada,
+      0,
+    )
+    const precoMedioPonderado =
+      totalQuantidade > 0 ? totalValor / totalQuantidade : 0
+
+    // Variação percentual (primeira compra vs última compra)
+    const variacaoPercentual =
+      primeiroPreco > 0
+        ? ((precoUltimaCompra - primeiroPreco) / primeiroPreco) * 100
+        : 0
+
+    // Determinar tendência (considera variação < 2% como estável)
+    let tendencia: 'AUMENTO' | 'QUEDA' | 'ESTAVEL'
+    if (Math.abs(variacaoPercentual) < 2) {
+      tendencia = 'ESTAVEL'
+    } else if (variacaoPercentual > 0) {
+      tendencia = 'AUMENTO'
+    } else {
+      tendencia = 'QUEDA'
+    }
+
+    return {
+      precoMedioPonderado,
+      precoUltimaCompra,
+      precoMinimo,
+      precoMaximo,
+      variacaoPercentual,
+      tendencia,
+      historicoPrecos,
     }
   }
 

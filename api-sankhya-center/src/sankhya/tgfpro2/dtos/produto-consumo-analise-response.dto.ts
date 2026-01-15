@@ -22,6 +22,23 @@ export class PeriodoInfoDto {
   dias: number
 }
 
+export class HistoricoPrecoDto {
+  @ApiProperty({ example: '2025-12-15', description: 'Data da compra' })
+  data: string
+
+  @ApiProperty({ example: 123456, description: 'Número único da nota' })
+  nunota: number
+
+  @ApiProperty({ example: 25.00, description: 'Preço unitário nesta compra' })
+  precoUnitario: number
+
+  @ApiProperty({ example: 100, description: 'Quantidade comprada' })
+  quantidadeComprada: number
+
+  @ApiProperty({ example: 2500.00, description: 'Valor total da compra' })
+  valorTotal: number
+}
+
 export class ResumoConsumoDto {
   @ApiProperty({ example: 22, description: 'Total de notas fiscais' })
   totalMovimentacoes: number
@@ -52,6 +69,75 @@ export class ResumoConsumoDto {
     description: 'Consumo por movimentação',
   })
   mediaPorMovimentacao?: number
+
+  @ApiProperty({
+    example: 100,
+    description: 'Saldo inicial (quantidade) no início do período',
+  })
+  saldoInicialQuantidade?: number
+
+  @ApiProperty({
+    example: 2500.00,
+    description: 'Saldo inicial (valor) no início do período',
+  })
+  saldoInicialValor?: number
+
+  @ApiProperty({
+    example: 405,
+    description: 'Saldo final (quantidade) ao final do período',
+  })
+  saldoFinalQuantidade?: number
+
+  @ApiProperty({
+    example: 9377.69,
+    description: 'Saldo final (valor) ao final do período',
+  })
+  saldoFinalValor?: number
+
+  // ========== ANÁLISE DE PREÇO AO LONGO DO TEMPO ==========
+
+  @ApiProperty({
+    example: 23.50,
+    description: 'Preço médio ponderado das compras no período (por quantidade)',
+  })
+  precoMedioPonderado?: number
+
+  @ApiProperty({
+    example: 25.00,
+    description: 'Preço da última compra DENTRO do período',
+  })
+  precoUltimaCompra?: number
+
+  @ApiProperty({
+    example: 20.00,
+    description: 'Menor preço de compra no período',
+  })
+  precoMinimo?: number
+
+  @ApiProperty({
+    example: 25.00,
+    description: 'Maior preço de compra no período',
+  })
+  precoMaximo?: number
+
+  @ApiProperty({
+    example: 25.0,
+    description: 'Variação percentual do preço (%) entre primeira e última compra',
+  })
+  variacaoPrecoPercentual?: number
+
+  @ApiProperty({
+    example: 'AUMENTO',
+    description: 'Tendência de preço: AUMENTO, QUEDA, ESTAVEL',
+    enum: ['AUMENTO', 'QUEDA', 'ESTAVEL'],
+  })
+  tendenciaPreco?: 'AUMENTO' | 'QUEDA' | 'ESTAVEL'
+
+  @ApiProperty({
+    type: [HistoricoPrecoDto],
+    description: 'Histórico cronológico de preços de compra no período',
+  })
+  historicoPrecos?: HistoricoPrecoDto[]
 }
 
 export class AgrupamentoItemDto {
