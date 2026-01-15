@@ -11,6 +11,7 @@ import { SankhyaTokenInterceptor } from './common/interceptors/sankhya-token.int
 import { SharedModule } from './sankhya/shared/shared.module'
 import { HealthModule } from './health/health.module'
 import { DicionarioModule } from './dicionario/dicionario.module'
+import { RelatoriosModule } from './relatorios/relatorios.module'
 
 import { AppGateway } from './app.gateway'
 
@@ -35,6 +36,7 @@ import { AppGateway } from './app.gateway'
     SankhyaModule,
     HealthModule,
     DicionarioModule,
+    RelatoriosModule,
   ],
   providers: [
     AppGateway,
