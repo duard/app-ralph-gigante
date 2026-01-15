@@ -5,7 +5,9 @@ import {
   UseGuards,
   Param,
   ParseIntPipe,
+  ParseBoolPipe,
   NotFoundException,
+  Optional,
 } from '@nestjs/common'
 import {
   ApiBearerAuth,
@@ -24,6 +26,7 @@ import {
   ProdutoConsumoAnaliseQueryDto,
   ProdutoConsumoAnaliseResponseDto,
 } from './dtos'
+import { ProdutosDetalhadosResponseDto } from './dtos/produto-detalhado-response.dto'
 import {
   Produto2,
   EstoqueLocal,
@@ -108,6 +111,114 @@ export class Tgfpro2Controller {
     @Query() dto: ProdutoFindAllDto,
   ): Promise<PaginatedResult<Produto2>> {
     return this.tgfpro2Service.findAll(dto)
+  }
+
+  @Get('produtos/detalhados')
+  @ApiOperation({
+    summary: 'Lista produtos com dados detalhados agregados',
+    description:
+      'Retorna produtos com informações completas incluindo estoque total, análise de preços (últimos 6 meses), indicadores de consumo e variações CONTROLE. Suporta filtros avançados, paginação e ordenação.',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Número da página (começa em 1)',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'pageSize',
+    required: false,
+    type: Number,
+    description: 'Itens por página (máximo 100)',
+    example: 50,
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Busca em descrição do produto e marca',
+    example: 'LUVA',
+  })
+  @ApiQuery({
+    name: 'ativo',
+    required: false,
+    enum: ['S', 'N'],
+    description: 'Filtrar por status do produto',
+  })
+  @ApiQuery({
+    name: 'tipcontest',
+    required: false,
+    type: String,
+    description:
+      'Filtrar por tipo de controle (N=Simples, S=Lista, E=Série, L=Lote, P=Parceiro)',
+    example: 'N',
+  })
+  @ApiQuery({
+    name: 'marca',
+    required: false,
+    type: String,
+    description: 'Filtrar por marca (busca parcial)',
+    example: 'VOLK',
+  })
+  @ApiQuery({
+    name: 'codgrupoprod',
+    required: false,
+    type: Number,
+    description: 'Filtrar por código do grupo do produto',
+    example: 3010000,
+  })
+  @ApiQuery({
+    name: 'temEstoque',
+    required: false,
+    type: Boolean,
+    description: 'Filtrar produtos com estoque (true) ou sem estoque (false)',
+  })
+  @ApiQuery({
+    name: 'sortBy',
+    required: false,
+    type: String,
+    description: 'Campo para ordenação (DESCRPROD, CODPROD, MARCA)',
+    example: 'DESCRPROD',
+  })
+  @ApiQuery({
+    name: 'sortOrder',
+    required: false,
+    enum: ['asc', 'desc'],
+    description: 'Direção da ordenação',
+    example: 'asc',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de produtos detalhados retornada com sucesso',
+    type: ProdutosDetalhadosResponseDto,
+  })
+  async getProdutosDetalhados(
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('pageSize', new ParseIntPipe({ optional: true })) pageSize?: number,
+    @Query('search') search?: string,
+    @Query('ativo') ativo?: 'S' | 'N',
+    @Query('tipcontest') tipcontest?: string,
+    @Query('marca') marca?: string,
+    @Query('codgrupoprod', new ParseIntPipe({ optional: true }))
+    codgrupoprod?: number,
+    @Query('temEstoque', new ParseBoolPipe({ optional: true }))
+    temEstoque?: boolean,
+    @Query('sortBy') sortBy?: string,
+    @Query('sortOrder') sortOrder?: 'asc' | 'desc',
+  ): Promise<ProdutosDetalhadosResponseDto> {
+    return this.tgfpro2Service.getProdutosDetalhados({
+      page: page || 1,
+      pageSize: Math.min(pageSize || 50, 100), // Max 100 items per page
+      search,
+      ativo,
+      tipcontest,
+      marca,
+      codgrupoprod,
+      temEstoque,
+      sortBy,
+      sortOrder,
+    })
   }
 
   @Get('produtos/:codprod')

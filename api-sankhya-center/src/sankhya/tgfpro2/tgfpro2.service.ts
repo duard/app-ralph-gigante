@@ -1992,4 +1992,278 @@ export class Tgfpro2Service {
       descrlocal: item.DESCRLOCAL,
     }))
   }
+
+  /**
+   * GET /produtos/detalhados
+   * Lista produtos com dados detalhados agregados incluindo estoque, preços e consumo
+   * @param params - Parâmetros de filtro, paginação e ordenação
+   * @returns Lista paginada de produtos detalhados com meta e stats
+   */
+  async getProdutosDetalhados(params: {
+    page: number
+    pageSize: number
+    search?: string
+    ativo?: 'S' | 'N'
+    tipcontest?: string
+    marca?: string
+    codgrupoprod?: number
+    temEstoque?: boolean
+    sortBy?: string
+    sortOrder?: 'asc' | 'desc'
+  }) {
+    const {
+      page,
+      pageSize,
+      search,
+      ativo,
+      tipcontest,
+      marca,
+      codgrupoprod,
+      temEstoque,
+      sortBy = 'DESCRPROD',
+      sortOrder = 'asc',
+    } = params
+
+    // Calculate offset for pagination
+    const offset = (page - 1) * pageSize
+
+    // Build WHERE clauses dynamically
+    const whereConditions: string[] = ['1=1']
+    if (ativo) whereConditions.push(`P.ATIVO = '${ativo}'`)
+    if (tipcontest) whereConditions.push(`P.TIPCONTEST = '${tipcontest}'`)
+    if (marca) whereConditions.push(`P.MARCA LIKE '%${marca}%'`)
+    if (codgrupoprod) whereConditions.push(`P.CODGRUPOPROD = ${codgrupoprod}`)
+    if (search) {
+      whereConditions.push(
+        `(P.DESCRPROD LIKE '%${search}%' OR P.MARCA LIKE '%${search}%')`,
+      )
+    }
+
+    const whereClause = whereConditions.join(' AND ')
+
+    // Main query with CTEs for performance
+    const query = `
+      WITH EstoquePorProduto AS (
+        SELECT
+          E.CODPROD,
+          SUM(E.ESTOQUE) AS ESTOQUE_TOTAL
+        FROM TGFEST E WITH(NOLOCK)
+        WHERE E.ATIVO = 'S'
+        GROUP BY E.CODPROD
+      ),
+      ComprasRecentes AS (
+        SELECT
+          ITE.CODPROD,
+          COUNT(DISTINCT ITE.NUNOTA) AS QTD_COMPRAS,
+          MIN(ITE.VLRUNIT) AS PRECO_MIN,
+          MAX(ITE.VLRUNIT) AS PRECO_MAX,
+          SUM(ITE.VLRTOT) AS TOTAL_GASTO,
+          SUM(ITE.QTDNEG) AS TOTAL_QTD
+        FROM TGFITE ITE WITH(NOLOCK)
+        JOIN TGFCAB CAB WITH(NOLOCK) ON CAB.NUNOTA = ITE.NUNOTA
+        WHERE CAB.TIPMOV = 'C'
+          AND CAB.STATUSNOTA = 'L'
+          AND ITE.ATUALESTOQUE > 0
+          AND CAB.DTNEG >= DATEADD(MONTH, -6, GETDATE())
+        GROUP BY ITE.CODPROD
+      ),
+      PrimeiraUltimaCompra AS (
+        SELECT DISTINCT
+          ITE.CODPROD,
+          FIRST_VALUE(ITE.VLRUNIT) OVER (PARTITION BY ITE.CODPROD ORDER BY CAB.DTNEG ASC) AS PRECO_PRIMEIRA,
+          FIRST_VALUE(ITE.VLRUNIT) OVER (PARTITION BY ITE.CODPROD ORDER BY CAB.DTNEG DESC) AS PRECO_ULTIMA
+        FROM TGFITE ITE WITH(NOLOCK)
+        JOIN TGFCAB CAB WITH(NOLOCK) ON CAB.NUNOTA = ITE.NUNOTA
+        WHERE CAB.TIPMOV = 'C'
+          AND CAB.STATUSNOTA = 'L'
+          AND ITE.ATUALESTOQUE > 0
+          AND CAB.DTNEG >= DATEADD(MONTH, -6, GETDATE())
+      )
+      SELECT
+        -- Basic Info
+        P.CODPROD,
+        P.DESCRPROD,
+        P.MARCA,
+        P.CODGRUPOPROD,
+        G.DESCRGRUPOPROD,
+        P.ATIVO,
+
+        -- Control System
+        P.TIPCONTEST,
+        P.LISCONTEST,
+        CASE WHEN P.TIPCONTEST <> 'N' THEN 1 ELSE 0 END AS HAS_CONTROLE,
+        CASE
+          WHEN P.TIPCONTEST = 'N' THEN 0
+          WHEN P.LISCONTEST IS NOT NULL AND LEN(P.LISCONTEST) > 0
+          THEN LEN(P.LISCONTEST) - LEN(REPLACE(P.LISCONTEST, ';', '')) + 1
+          ELSE 1
+        END AS CONTROLE_COUNT,
+
+        -- Stock Data
+        ISNULL(E.ESTOQUE_TOTAL, 0) AS ESTOQUE_TOTAL,
+        CASE WHEN ISNULL(E.ESTOQUE_TOTAL, 0) > 0 THEN 1 ELSE 0 END AS TEM_ESTOQUE,
+
+        -- Price Analysis
+        CASE
+          WHEN CR.TOTAL_QTD > 0 THEN CR.TOTAL_GASTO / CR.TOTAL_QTD
+          ELSE NULL
+        END AS PRECO_MEDIO_PONDERADO,
+        PU.PRECO_ULTIMA AS PRECO_ULTIMA_COMPRA,
+        CR.PRECO_MIN AS PRECO_MINIMO,
+        CR.PRECO_MAX AS PRECO_MAXIMO,
+
+        -- Price variation calculation
+        CASE
+          WHEN PU.PRECO_PRIMEIRA > 0 AND PU.PRECO_ULTIMA IS NOT NULL
+          THEN ((PU.PRECO_ULTIMA - PU.PRECO_PRIMEIRA) / PU.PRECO_PRIMEIRA) * 100
+          ELSE NULL
+        END AS VARIACAO_PRECO_PERCENTUAL,
+
+        -- Price trend
+        CASE
+          WHEN PU.PRECO_PRIMEIRA IS NULL OR PU.PRECO_ULTIMA IS NULL THEN NULL
+          WHEN ABS(((PU.PRECO_ULTIMA - PU.PRECO_PRIMEIRA) / NULLIF(PU.PRECO_PRIMEIRA, 0)) * 100) < 2 THEN 'ESTAVEL'
+          WHEN PU.PRECO_ULTIMA > PU.PRECO_PRIMEIRA THEN 'AUMENTO'
+          ELSE 'QUEDA'
+        END AS TENDENCIA_PRECO,
+
+        -- Consumption Indicators
+        ISNULL(CR.QTD_COMPRAS, 0) AS QTD_COMPRAS_6M,
+        ISNULL(CR.TOTAL_GASTO, 0) AS TOTAL_GASTO_6M,
+
+        -- Metadata
+        P.DTALTER,
+        USUALT.NOMEUSU AS NOMEUSU_ALT
+
+      FROM TGFPRO P WITH(NOLOCK)
+      LEFT JOIN TGFGRU G WITH(NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
+      LEFT JOIN EstoquePorProduto E ON E.CODPROD = P.CODPROD
+      LEFT JOIN ComprasRecentes CR ON CR.CODPROD = P.CODPROD
+      LEFT JOIN PrimeiraUltimaCompra PU ON PU.CODPROD = P.CODPROD
+      LEFT JOIN TSIUSU USUALT WITH(NOLOCK) ON USUALT.CODUSU = P.CODUSUALT
+
+      WHERE ${whereClause}
+        ${temEstoque !== undefined ? `AND ${temEstoque ? 'ISNULL(E.ESTOQUE_TOTAL, 0) > 0' : 'ISNULL(E.ESTOQUE_TOTAL, 0) = 0'}` : ''}
+
+      ORDER BY
+        CASE WHEN '${sortBy}' = 'DESCRPROD' AND '${sortOrder}' = 'asc' THEN P.DESCRPROD END ASC,
+        CASE WHEN '${sortBy}' = 'DESCRPROD' AND '${sortOrder}' = 'desc' THEN P.DESCRPROD END DESC,
+        CASE WHEN '${sortBy}' = 'CODPROD' AND '${sortOrder}' = 'asc' THEN P.CODPROD END ASC,
+        CASE WHEN '${sortBy}' = 'CODPROD' AND '${sortOrder}' = 'desc' THEN P.CODPROD END DESC,
+        CASE WHEN '${sortBy}' = 'MARCA' AND '${sortOrder}' = 'asc' THEN P.MARCA END ASC,
+        CASE WHEN '${sortBy}' = 'MARCA' AND '${sortOrder}' = 'desc' THEN P.MARCA END DESC,
+        P.DESCRPROD ASC
+
+      OFFSET ${offset} ROWS
+      FETCH NEXT ${pageSize} ROWS ONLY
+    `
+
+    // Execute main query
+    const result = await this.sankhyaApiService.executeQuery(query, [])
+
+    // Count total for pagination (using same filters)
+    const countQuery = `
+      SELECT COUNT(*) AS TOTAL
+      FROM TGFPRO P WITH(NOLOCK)
+      LEFT JOIN (
+        SELECT CODPROD, SUM(ESTOQUE) AS ESTOQUE_TOTAL
+        FROM TGFEST WITH(NOLOCK)
+        WHERE ATIVO = 'S'
+        GROUP BY CODPROD
+      ) E ON E.CODPROD = P.CODPROD
+      WHERE ${whereClause}
+        ${temEstoque !== undefined ? `AND ${temEstoque ? 'ISNULL(E.ESTOQUE_TOTAL, 0) > 0' : 'ISNULL(E.ESTOQUE_TOTAL, 0) = 0'}` : ''}
+    `
+
+    const countResult = await this.sankhyaApiService.executeQuery(
+      countQuery,
+      [],
+    )
+    const total = Number(countResult[0]?.TOTAL || 0)
+    const totalPages = Math.ceil(total / pageSize)
+
+    // Calculate stats (applies same filters)
+    const statsQuery = `
+      SELECT
+        COUNT(*) AS TOTAL_PRODUTOS,
+        SUM(CASE WHEN ESTOQUE > 0 THEN 1 ELSE 0 END) AS COM_ESTOQUE,
+        SUM(CASE WHEN ESTOQUE = 0 OR ESTOQUE IS NULL THEN 1 ELSE 0 END) AS SEM_ESTOQUE,
+        SUM(CASE WHEN TIPCONTEST <> 'N' THEN 1 ELSE 0 END) AS COM_CONTROLE,
+        SUM(CASE WHEN ATIVO = 'S' THEN 1 ELSE 0 END) AS ATIVOS,
+        SUM(CASE WHEN ATIVO = 'N' THEN 1 ELSE 0 END) AS INATIVOS
+      FROM (
+        SELECT
+          P.ATIVO,
+          P.TIPCONTEST,
+          ISNULL((SELECT SUM(E.ESTOQUE) FROM TGFEST E WITH(NOLOCK) WHERE E.CODPROD = P.CODPROD AND E.ATIVO = 'S'), 0) AS ESTOQUE
+        FROM TGFPRO P WITH(NOLOCK)
+        WHERE ${whereClause}
+      ) AS Stats
+    `
+
+    const statsResult = await this.sankhyaApiService.executeQuery(
+      statsQuery,
+      [],
+    )
+    const stats = statsResult[0] || {}
+
+    // Map result to DTO
+    const data = result.map((item) => ({
+      codprod: Number(item.CODPROD),
+      descrprod: item.DESCRPROD || '',
+      marca: item.MARCA || null,
+      codgrupoprod: item.CODGRUPOPROD ? Number(item.CODGRUPOPROD) : null,
+      descrgrupoprod: item.DESCRGRUPOPROD || null,
+      ativo: item.ATIVO as 'S' | 'N',
+
+      tipcontest: item.TIPCONTEST as 'N' | 'S' | 'E' | 'L' | 'P',
+      liscontest: item.LISCONTEST || null,
+      hasControle: Boolean(item.HAS_CONTROLE),
+      controleCount: Number(item.CONTROLE_COUNT || 0),
+
+      estoqueTotal: Number(item.ESTOQUE_TOTAL || 0),
+      temEstoque: Boolean(item.TEM_ESTOQUE),
+
+      precoMedioPonderado: item.PRECO_MEDIO_PONDERADO
+        ? Number(item.PRECO_MEDIO_PONDERADO)
+        : null,
+      precoUltimaCompra: item.PRECO_ULTIMA_COMPRA
+        ? Number(item.PRECO_ULTIMA_COMPRA)
+        : null,
+      precoMinimo: item.PRECO_MINIMO ? Number(item.PRECO_MINIMO) : null,
+      precoMaximo: item.PRECO_MAXIMO ? Number(item.PRECO_MAXIMO) : null,
+      variacaoPrecoPercentual: item.VARIACAO_PRECO_PERCENTUAL
+        ? Number(item.VARIACAO_PRECO_PERCENTUAL)
+        : null,
+      tendenciaPreco: (item.TENDENCIA_PRECO as
+        | 'AUMENTO'
+        | 'QUEDA'
+        | 'ESTAVEL'
+        | null) || null,
+
+      qtdComprasUltimos6Meses: Number(item.QTD_COMPRAS_6M || 0),
+      totalGastoUltimos6Meses: Number(item.TOTAL_GASTO_6M || 0),
+
+      dtalter: item.DTALTER || null,
+      nomeusualt: item.NOMEUSU_ALT || null,
+    }))
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        pageSize,
+        totalPages,
+      },
+      stats: {
+        totalProdutos: Number(stats.TOTAL_PRODUTOS || 0),
+        comEstoque: Number(stats.COM_ESTOQUE || 0),
+        semEstoque: Number(stats.SEM_ESTOQUE || 0),
+        comControle: Number(stats.COM_CONTROLE || 0),
+        ativos: Number(stats.ATIVOS || 0),
+        inativos: Number(stats.INATIVOS || 0),
+      },
+    }
+  }
 }
