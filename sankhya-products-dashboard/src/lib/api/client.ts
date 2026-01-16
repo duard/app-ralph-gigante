@@ -107,13 +107,11 @@ sankhyaClient.interceptors.response.use(
 
       switch (status) {
         case 401:
-          toast.error('Token da API Sankhya expirado. Faça login novamente.');
+        case 403:
+          toast.error('Sessão expirada. Faça login novamente.');
           // Clear tokens and redirect to login
           authService.clearTokens();
           window.location.href = '/auth/entrar';
-          break;
-        case 403:
-          toast.error('Acesso negado à API Sankhya. Verifique suas permissões.');
           break;
         case 404:
           toast.error('Recurso não encontrado na API Sankhya.');
