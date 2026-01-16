@@ -414,6 +414,110 @@ export class TgfproController {
     )
   }
 
+  @Get('estatisticas/geral')
+  @ApiOperation({
+    summary: 'Estatísticas gerais de produtos e estoque',
+    description:
+      'Retorna métricas agregadas: total de produtos, valor do estoque, produtos críticos, inativos, sem estoque, etc.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Estatísticas gerais',
+    schema: {
+      example: {
+        totalProdutos: 1500,
+        produtosAtivos: 1350,
+        produtosInativos: 150,
+        totalEstoque: 45000,
+        valorEstoque: 2500000.5,
+        produtosSemEstoque: 450,
+        produtosCriticos: 120,
+        produtosAbaixoMinimo: 85,
+        produtosAcimaMaximo: 35,
+        grupos: { total: 45, comProdutos: 42 },
+        marcas: { total: 150, topMarcas: ['GENERICO', 'VONDER', 'TRAMONTINA'] },
+      },
+    },
+  })
+  async getEstatisticasGerais() {
+    return this.tgfproService.getEstatisticasGerais()
+  }
+
+  @Get('estatisticas/criticos')
+  @ApiOperation({
+    summary: 'Lista produtos com estoque crítico',
+    description:
+      'Retorna produtos com estoque abaixo do mínimo, zerados ou acima do máximo',
+  })
+  @ApiQuery({
+    name: 'tipo',
+    required: false,
+    description:
+      'Tipo de criticidade (abaixo_minimo, zerado, acima_maximo, todos)',
+    enum: ['abaixo_minimo', 'zerado', 'acima_maximo', 'todos'],
+  })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'perPage', required: false, type: Number })
+  @ApiResponse({
+    status: 200,
+    description: 'Produtos com estoque crítico',
+  })
+  async getProdutosCriticos(
+    @Query('tipo') tipo?: string,
+    @Query('page') page?: number,
+    @Query('perPage') perPage?: number,
+  ) {
+    return this.tgfproService.getProdutosCriticos(
+      tipo || 'todos',
+      Number(page) || 1,
+      Number(perPage) || 50,
+    )
+  }
+
+  @Get('estatisticas/abc')
+  @ApiOperation({
+    summary: 'Análise ABC de produtos',
+    description:
+      'Classifica produtos em A (alto valor), B (médio valor) e C (baixo valor) baseado no valor do estoque',
+  })
+  @ApiQuery({
+    name: 'classe',
+    required: false,
+    description: 'Filtrar por classe ABC',
+    enum: ['A', 'B', 'C', 'todos'],
+  })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'perPage', required: false, type: Number })
+  @ApiResponse({
+    status: 200,
+    description: 'Classificação ABC dos produtos',
+  })
+  async getAnaliseABC(
+    @Query('classe') classe?: string,
+    @Query('page') page?: number,
+    @Query('perPage') perPage?: number,
+  ) {
+    return this.tgfproService.getAnaliseABC(
+      classe || 'todos',
+      Number(page) || 1,
+      Number(perPage) || 50,
+    )
+  }
+
+  @Get('estatisticas/por-grupo')
+  @ApiOperation({
+    summary: 'Estatísticas agregadas por grupo de produtos',
+    description:
+      'Retorna métricas de estoque, quantidade e valor agrupados por categoria',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Estatísticas por grupo',
+  })
+  async getEstatisticasPorGrupo() {
+    return this.tgfproService.getEstatisticasPorGrupo()
+  }
+
   @Get('admin/test')
   async test() {
     return { message: 'Teste TGFPRO', timestamp: new Date().toISOString() }

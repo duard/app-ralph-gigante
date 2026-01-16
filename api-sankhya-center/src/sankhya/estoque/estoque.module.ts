@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common'
 import { SharedModule } from '../shared/shared.module'
 import { EstoqueDashboardController } from './controllers/estoque-dashboard.controller'
 import { ProdutosController } from './controllers/produtos.controller'
+import { EstoqueController } from './estoque.controller'
+import { EstoqueService } from './estoque.service'
 
 /**
  * Módulo Ultra Completo de Gestão de Estoque
@@ -10,8 +12,8 @@ import { ProdutosController } from './controllers/produtos.controller'
  */
 @Module({
   imports: [SharedModule],
-  controllers: [EstoqueDashboardController, ProdutosController],
-  providers: [],
-  exports: [],
+  controllers: [EstoqueDashboardController, ProdutosController, EstoqueController],
+  providers: [EstoqueService],
+  exports: [EstoqueService],
 })
 export class EstoqueModule {}

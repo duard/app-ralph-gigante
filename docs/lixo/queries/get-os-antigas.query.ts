@@ -1,0 +1,55 @@
+export const getOSAntigasQuery = `
+-- Manutenções antigas (> 30 dias)
+SELECT
+    'MANUTENCAO_ANTIGA' AS TipoProblema,
+    v.CODVEICULO,
+    v.PLACA,
+    LTRIM(RTRIM(v.MARCAMODELO)) AS Equipamento,
+    m.NUOS AS NumOS,
+    m.DATAINI,
+    DATEDIFF(DAY, m.DATAINI, GETDATE()) AS DiasAberta,
+    CASE
+        WHEN DATEDIFF(DAY, m.DATAINI, GETDATE()) > 90 THEN 'CRITICO'
+        WHEN DATEDIFF(DAY, m.DATAINI, GETDATE()) > 60 THEN 'ALTO'
+        ELSE 'ATENCAO'
+    END AS Severidade,
+    CASE
+        WHEN m.MANUTENCAO = 'C' THEN 'Corretiva'
+        WHEN m.MANUTENCAO = 'P' THEN 'Preventiva'
+        ELSE 'Outros'
+    END AS TipoManutencao
+
+FROM SANKHYA.TCFOSCAB m
+INNER JOIN SANKHYA.TGFVEI v ON v.CODVEICULO = m.CODVEICULO
+WHERE m.STATUS IN ('A', 'E')
+  AND m.DATAFIN IS NULL
+  AND DATEDIFF(DAY, m.DATAINI, GETDATE()) > 30
+  AND (v.AD_EXIBEDASH = 'S' OR (v.AD_EXIBEDASH IS NULL AND v.ATIVO = 'S'))
+
+UNION ALL
+
+-- Comerciais muito antigas (> 180 dias)
+SELECT
+    'COMERCIAL_ANTIGA' AS TipoProblema,
+    v.CODVEICULO,
+    v.PLACA,
+    LTRIM(RTRIM(v.MARCAMODELO)) AS Equipamento,
+    o.NUMOS AS NumOS,
+    o.DHCHAMADA AS DATAINI,
+    DATEDIFF(DAY, o.DHCHAMADA, GETDATE()) AS DiasAberta,
+    CASE
+        WHEN DATEDIFF(DAY, o.DHCHAMADA, GETDATE()) > 730 THEN 'CRITICO'
+        ELSE 'ALTO'
+    END AS Severidade,
+    'OS Comercial' AS TipoManutencao
+
+FROM SANKHYA.TCSOSE o
+INNER JOIN SANKHYA.TCSITE i ON i.NUMOS = o.NUMOS
+INNER JOIN SANKHYA.TGFVEI v ON v.CODVEICULO = i.AD_CODVEICULO
+WHERE o.SITUACAO = 'P'
+  AND o.DTFECHAMENTO IS NULL
+  AND DATEDIFF(DAY, o.DHCHAMADA, GETDATE()) > 180
+  AND (v.AD_EXIBEDASH = 'S' OR (v.AD_EXIBEDASH IS NULL AND v.ATIVO = 'S'))
+
+ORDER BY Severidade DESC, DiasAberta DESC
+`;

@@ -65,6 +65,22 @@ const ProdutosV6 = lazy(
   () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v6/page')
 );
 
+// Produtos V7 - Gestão Completa (Nova Interface)
+const ProdutosV7 = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v7/page')
+);
+
+// Ordens de Serviço - Manutenção
+const OrdensServico = lazy(
+  () => import(/* webpackChunkName: "ordens-servico" */ '@/app/ordens-servico/page')
+);
+const OrdensServicoListagem = lazy(
+  () => import(/* webpackChunkName: "ordens-servico" */ '@/app/ordens-servico/listagem/page')
+);
+const OrdemServicoDetalhes = lazy(
+  () => import(/* webpackChunkName: "ordens-servico" */ '@/app/ordens-servico/[nuos]/page')
+);
+
 // Segurança pages
 const SegurancaPermissoes = lazy(
   () => import(/* webpackChunkName: "seguranca" */ '@/app/seguranca/permissoes/page')
@@ -357,6 +373,42 @@ export const routes: RouteConfig[] = [
     element: (
       <ProtectedRoute>
         <ProdutosV6 />
+      </ProtectedRoute>
+    ),
+  },
+
+  // Produtos V7 - Gestão Completa (Nova Interface)
+  {
+    path: '/produtos-v7',
+    element: (
+      <ProtectedRoute>
+        <ProdutosV7 />
+      </ProtectedRoute>
+    ),
+  },
+
+  // Ordens de Serviço - Manutenção Routes
+  {
+    path: '/ordens-servico',
+    element: (
+      <ProtectedRoute>
+        <OrdensServico />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/ordens-servico/listagem',
+    element: (
+      <ProtectedRoute>
+        <OrdensServicoListagem />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/ordens-servico/:nuos',
+    element: (
+      <ProtectedRoute>
+        <OrdemServicoDetalhes />
       </ProtectedRoute>
     ),
   },

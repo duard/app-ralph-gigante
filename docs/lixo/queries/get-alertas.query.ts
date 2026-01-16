@@ -1,0 +1,35 @@
+export const getAlertasQuery = `
+SELECT
+    'CRITICO' AS Tipo,
+    'Manutenção atrasada' AS Mensagem,
+    v.CODVEICULO,
+    LTRIM(RTRIM(v.MARCAMODELO)) AS Equipamento,
+    v.PLACA,
+    m.NUOS AS NumOS,
+    m.PREVISAO AS DataPrevista,
+    DATEDIFF(DAY, m.PREVISAO, GETDATE()) AS DiasAtraso
+FROM SANKHYA.TCFOSCAB m
+INNER JOIN SANKHYA.TGFVEI v ON v.CODVEICULO = m.CODVEICULO
+WHERE m.DATAFIN IS NULL
+AND m.PREVISAO < GETDATE()
+AND m.STATUS IN ('A', 'E')
+
+UNION ALL
+
+SELECT
+    'ATENCAO' AS Tipo,
+    'Manutenção próxima do vencimento' AS Mensagem,
+    v.CODVEICULO,
+    LTRIM(RTRIM(v.MARCAMODELO)) AS Equipamento,
+    v.PLACA,
+    m.NUOS AS NumOS,
+    m.PREVISAO AS DataPrevista,
+    DATEDIFF(DAY, GETDATE(), m.PREVISAO) AS DiasRestantes
+FROM SANKHYA.TCFOSCAB m
+INNER JOIN SANKHYA.TGFVEI v ON v.CODVEICULO = m.CODVEICULO
+WHERE m.DATAFIN IS NULL
+AND m.PREVISAO BETWEEN GETDATE() AND DATEADD(DAY, 7, GETDATE())
+AND m.STATUS IN ('A', 'E')
+
+ORDER BY Tipo, DataPrevista
+`;

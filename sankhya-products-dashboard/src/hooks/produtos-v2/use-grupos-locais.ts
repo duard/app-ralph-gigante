@@ -23,7 +23,7 @@ export function useLocais() {
   return useQuery<Local[], Error>({
     queryKey: ['locais'],
     queryFn: async () => {
-      const response = await sankhyaClient.get<PaginatedResponse<Local>>('/tgfloc', {
+      const response = await sankhyaClient.get<PaginatedResponse<Local>>('/sankhya/tgfloc', {
         params: {
           perPage: 1000,
           page: 1,

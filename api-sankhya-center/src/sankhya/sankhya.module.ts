@@ -28,6 +28,8 @@ import { ProdutosSimplesV2Module } from './produtos-simples-v2/produtos-simples-
 import { Products2Module } from './products2/products2.module'
 import { Tgfpro2Module } from './tgfpro2/tgfpro2.module'
 import { PermissionsModule } from './permissions/permissions.module'
+import { TcfoscabModule } from './tcfoscab/tcfoscab.module'
+import { TgflocModule } from './tgfloc/tgfloc.module'
 
 /**
  * Módulo principal do Sankhya, que agrupa todos os módulos relacionados ao ERP Sankhya.
@@ -64,6 +66,8 @@ import { PermissionsModule } from './permissions/permissions.module'
     Products2Module,
     Tgfpro2Module,
     PermissionsModule,
+    TcfoscabModule,
+    TgflocModule,
   ],
   exports: [AuthModule], // Export AuthModule to make JwtService available
 })

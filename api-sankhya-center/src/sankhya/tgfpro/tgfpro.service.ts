@@ -595,4 +595,307 @@ export class TgfproService {
       )
     }
   }
+
+  async getEstatisticasGerais(): Promise<any> {
+    const query = `
+      SELECT
+        COUNT(DISTINCT P.CODPROD) AS TOTAL_PRODUTOS,
+        SUM(CASE WHEN P.ATIVO = 'S' THEN 1 ELSE 0 END) AS PRODUTOS_ATIVOS,
+        SUM(CASE WHEN P.ATIVO = 'N' THEN 1 ELSE 0 END) AS PRODUTOS_INATIVOS,
+        COUNT(DISTINCT P.CODGRUPOPROD) AS TOTAL_GRUPOS,
+        COUNT(DISTINCT P.MARCA) AS TOTAL_MARCAS,
+        ISNULL(SUM(E.ESTOQUE), 0) AS TOTAL_ESTOQUE,
+        COUNT(DISTINCT CASE WHEN E.ESTOQUE IS NULL OR E.ESTOQUE = 0 THEN P.CODPROD END) AS PRODUTOS_SEM_ESTOQUE,
+        COUNT(DISTINCT CASE WHEN E.ESTOQUE > 0 AND E.ESTOQUE < E.ESTMIN THEN P.CODPROD END) AS PRODUTOS_ABAIXO_MINIMO,
+        COUNT(DISTINCT CASE WHEN E.ESTOQUE > E.ESTMAX AND E.ESTMAX > 0 THEN P.CODPROD END) AS PRODUTOS_ACIMA_MAXIMO
+      FROM TGFPRO P WITH (NOLOCK)
+      LEFT JOIN (
+        SELECT CODPROD, SUM(ESTOQUE) AS ESTOQUE, SUM(ESTMIN) AS ESTMIN, SUM(ESTMAX) AS ESTMAX
+        FROM TGFEST WITH (NOLOCK)
+        WHERE ATIVO = 'S'
+        GROUP BY CODPROD
+      ) E ON P.CODPROD = E.CODPROD
+    `
+
+    const marcasQuery = `
+      SELECT TOP 10 MARCA, COUNT(*) AS QTD
+      FROM TGFPRO WITH (NOLOCK)
+      WHERE MARCA IS NOT NULL AND MARCA != ''
+      GROUP BY MARCA
+      ORDER BY QTD DESC
+    `
+
+    try {
+      const [stats] = await this.sankhyaApiService.executeQuery(query, [])
+      const marcas = await this.sankhyaApiService.executeQuery(marcasQuery, [])
+
+      return {
+        totalProdutos: Number(stats.TOTAL_PRODUTOS),
+        produtosAtivos: Number(stats.PRODUTOS_ATIVOS),
+        produtosInativos: Number(stats.PRODUTOS_INATIVOS),
+        totalEstoque: Number(stats.TOTAL_ESTOQUE),
+        produtosSemEstoque: Number(stats.PRODUTOS_SEM_ESTOQUE),
+        produtosCriticos:
+          Number(stats.PRODUTOS_ABAIXO_MINIMO) +
+          Number(stats.PRODUTOS_ACIMA_MAXIMO),
+        produtosAbaixoMinimo: Number(stats.PRODUTOS_ABAIXO_MINIMO),
+        produtosAcimaMaximo: Number(stats.PRODUTOS_ACIMA_MAXIMO),
+        grupos: {
+          total: Number(stats.TOTAL_GRUPOS),
+        },
+        marcas: {
+          total: Number(stats.TOTAL_MARCAS),
+          topMarcas: marcas.map((m: any) => ({
+            marca: m.MARCA,
+            quantidade: Number(m.QTD),
+          })),
+        },
+      }
+    } catch (error) {
+      this.logger.error(
+        'Erro em getEstatisticasGerais:',
+        (error as any)?.message || error,
+      )
+      throw new InternalServerErrorException(
+        'Erro ao buscar estatísticas gerais',
+      )
+    }
+  }
+
+  async getProdutosCriticos(
+    tipo: string,
+    page: number,
+    perPage: number,
+  ): Promise<PaginatedResult<any>> {
+    const offset = (page - 1) * perPage
+
+    let whereClause = ''
+    switch (tipo) {
+      case 'abaixo_minimo':
+        whereClause =
+          'WHERE E.ESTOQUE > 0 AND E.ESTOQUE < E.ESTMIN AND E.ESTMIN > 0'
+        break
+      case 'zerado':
+        whereClause = 'WHERE E.ESTOQUE IS NULL OR E.ESTOQUE = 0'
+        break
+      case 'acima_maximo':
+        whereClause = 'WHERE E.ESTOQUE > E.ESTMAX AND E.ESTMAX > 0'
+        break
+      default:
+        whereClause = `WHERE (
+          (E.ESTOQUE > 0 AND E.ESTOQUE < E.ESTMIN AND E.ESTMIN > 0) OR
+          (E.ESTOQUE IS NULL OR E.ESTOQUE = 0) OR
+          (E.ESTOQUE > E.ESTMAX AND E.ESTMAX > 0)
+        )`
+    }
+
+    const query = `
+      SELECT TOP ${perPage + offset}
+        P.CODPROD,
+        P.DESCRPROD,
+        P.REFERENCIA,
+        P.MARCA,
+        P.ATIVO,
+        G.DESCRGRUPOPROD,
+        ISNULL(E.ESTOQUE, 0) AS ESTOQUE,
+        ISNULL(E.ESTMIN, 0) AS ESTMIN,
+        ISNULL(E.ESTMAX, 0) AS ESTMAX,
+        CASE
+          WHEN E.ESTOQUE IS NULL OR E.ESTOQUE = 0 THEN 'ZERADO'
+          WHEN E.ESTOQUE > 0 AND E.ESTOQUE < E.ESTMIN AND E.ESTMIN > 0 THEN 'ABAIXO_MINIMO'
+          WHEN E.ESTOQUE > E.ESTMAX AND E.ESTMAX > 0 THEN 'ACIMA_MAXIMO'
+          ELSE 'NORMAL'
+        END AS CRITICIDADE
+      FROM TGFPRO P WITH (NOLOCK)
+      LEFT JOIN TGFGRU G WITH (NOLOCK) ON P.CODGRUPOPROD = G.CODGRUPOPROD
+      LEFT JOIN (
+        SELECT CODPROD, SUM(ESTOQUE) AS ESTOQUE, SUM(ESTMIN) AS ESTMIN, SUM(ESTMAX) AS ESTMAX
+        FROM TGFEST WITH (NOLOCK)
+        WHERE ATIVO = 'S'
+        GROUP BY CODPROD
+      ) E ON P.CODPROD = E.CODPROD
+      ${whereClause}
+      ORDER BY P.DESCRPROD
+    `
+
+    const countQuery = `
+      SELECT COUNT(*) AS TOTAL
+      FROM TGFPRO P WITH (NOLOCK)
+      LEFT JOIN (
+        SELECT CODPROD, SUM(ESTOQUE) AS ESTOQUE, SUM(ESTMIN) AS ESTMIN, SUM(ESTMAX) AS ESTMAX
+        FROM TGFEST WITH (NOLOCK)
+        WHERE ATIVO = 'S'
+        GROUP BY CODPROD
+      ) E ON P.CODPROD = E.CODPROD
+      ${whereClause}
+    `
+
+    try {
+      const results = await this.sankhyaApiService.executeQuery(query, [])
+      const data = results.slice(offset).map((item: any) => ({
+        codprod: Number(item.CODPROD),
+        descrprod: item.DESCRPROD,
+        referencia: item.REFERENCIA,
+        marca: item.MARCA,
+        ativo: item.ATIVO,
+        descrgrupoprod: item.DESCRGRUPOPROD,
+        estoque: Number(item.ESTOQUE),
+        estmin: Number(item.ESTMIN),
+        estmax: Number(item.ESTMAX),
+        criticidade: item.CRITICIDADE,
+        percentualEstoque:
+          item.ESTMIN > 0 ? (Number(item.ESTOQUE) / item.ESTMIN) * 100 : 0,
+      }))
+
+      const [countResult] = await this.sankhyaApiService.executeQuery(
+        countQuery,
+        [],
+      )
+      const total = Number(countResult.TOTAL)
+
+      return buildPaginatedResult({ data, total, page, perPage })
+    } catch (error) {
+      this.logger.error(
+        'Erro em getProdutosCriticos:',
+        (error as any)?.message || error,
+      )
+      throw new InternalServerErrorException(
+        'Erro ao buscar produtos críticos',
+      )
+    }
+  }
+
+  async getAnaliseABC(
+    classe: string,
+    page: number,
+    perPage: number,
+  ): Promise<PaginatedResult<any>> {
+    const offset = (page - 1) * perPage
+
+    const query = `
+      WITH ProdutosValor AS (
+        SELECT
+          P.CODPROD,
+          P.DESCRPROD,
+          P.REFERENCIA,
+          P.MARCA,
+          G.DESCRGRUPOPROD,
+          ISNULL(E.ESTOQUE, 0) AS ESTOQUE,
+          ISNULL(P.VLRVENDA, 0) AS VLRVENDA,
+          ISNULL(E.ESTOQUE, 0) * ISNULL(P.VLRVENDA, 0) AS VALOR_ESTOQUE
+        FROM TGFPRO P WITH (NOLOCK)
+        LEFT JOIN TGFGRU G WITH (NOLOCK) ON P.CODGRUPOPROD = G.CODGRUPOPROD
+        LEFT JOIN (
+          SELECT CODPROD, SUM(ESTOQUE) AS ESTOQUE
+          FROM TGFEST WITH (NOLOCK)
+          WHERE ATIVO = 'S'
+          GROUP BY CODPROD
+        ) E ON P.CODPROD = E.CODPROD
+        WHERE P.ATIVO = 'S'
+      ),
+      ProdutosComPercentual AS (
+        SELECT *,
+          SUM(VALOR_ESTOQUE) OVER() AS TOTAL_VALOR,
+          (VALOR_ESTOQUE / NULLIF(SUM(VALOR_ESTOQUE) OVER(), 0)) * 100 AS PERCENTUAL,
+          ROW_NUMBER() OVER(ORDER BY VALOR_ESTOQUE DESC) AS RN
+        FROM ProdutosValor
+      ),
+      ClasseABC AS (
+        SELECT *,
+          SUM(PERCENTUAL) OVER(ORDER BY RN) AS PERCENTUAL_ACUMULADO,
+          CASE
+            WHEN SUM(PERCENTUAL) OVER(ORDER BY RN) <= 80 THEN 'A'
+            WHEN SUM(PERCENTUAL) OVER(ORDER BY RN) <= 95 THEN 'B'
+            ELSE 'C'
+          END AS CLASSE_ABC
+        FROM ProdutosComPercentual
+      )
+      SELECT TOP ${perPage + offset} *
+      FROM ClasseABC
+      ${classe !== 'todos' ? `WHERE CLASSE_ABC = '${classe}'` : ''}
+      ORDER BY VALOR_ESTOQUE DESC
+    `
+
+    try {
+      const results = await this.sankhyaApiService.executeQuery(query, [])
+      const data = results.slice(offset).map((item: any) => ({
+        codprod: Number(item.CODPROD),
+        descrprod: item.DESCRPROD,
+        referencia: item.REFERENCIA,
+        marca: item.MARCA,
+        descrgrupoprod: item.DESCRGRUPOPROD,
+        estoque: Number(item.ESTOQUE),
+        vlrvenda: Number(item.VLRVENDA),
+        valorEstoque: Number(item.VALOR_ESTOQUE),
+        percentual: Number(item.PERCENTUAL).toFixed(2),
+        percentualAcumulado: Number(item.PERCENTUAL_ACUMULADO).toFixed(2),
+        classeABC: item.CLASSE_ABC,
+      }))
+
+      return buildPaginatedResult({
+        data,
+        total: results.length,
+        page,
+        perPage,
+      })
+    } catch (error) {
+      this.logger.error(
+        'Erro em getAnaliseABC:',
+        (error as any)?.message || error,
+      )
+      throw new InternalServerErrorException('Erro ao buscar análise ABC')
+    }
+  }
+
+  async getEstatisticasPorGrupo(): Promise<any> {
+    const query = `
+      SELECT
+        G.CODGRUPOPROD,
+        G.DESCRGRUPOPROD,
+        COUNT(DISTINCT P.CODPROD) AS QTD_PRODUTOS,
+        SUM(CASE WHEN P.ATIVO = 'S' THEN 1 ELSE 0 END) AS QTD_ATIVOS,
+        ISNULL(SUM(E.ESTOQUE), 0) AS ESTOQUE_TOTAL,
+        ISNULL(SUM(E.ESTOQUE * P.VLRVENDA), 0) AS VALOR_TOTAL,
+        COUNT(DISTINCT CASE WHEN E.ESTOQUE IS NULL OR E.ESTOQUE = 0 THEN P.CODPROD END) AS SEM_ESTOQUE,
+        COUNT(DISTINCT CASE WHEN E.ESTOQUE > 0 AND E.ESTOQUE < E.ESTMIN AND E.ESTMIN > 0 THEN P.CODPROD END) AS CRITICOS
+      FROM TGFGRU G WITH (NOLOCK)
+      LEFT JOIN TGFPRO P WITH (NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
+      LEFT JOIN (
+        SELECT CODPROD, SUM(ESTOQUE) AS ESTOQUE, SUM(ESTMIN) AS ESTMIN
+        FROM TGFEST WITH (NOLOCK)
+        WHERE ATIVO = 'S'
+        GROUP BY CODPROD
+      ) E ON P.CODPROD = E.CODPROD
+      GROUP BY G.CODGRUPOPROD, G.DESCRGRUPOPROD
+      HAVING COUNT(DISTINCT P.CODPROD) > 0
+      ORDER BY ESTOQUE_TOTAL DESC
+    `
+
+    try {
+      const results = await this.sankhyaApiService.executeQuery(query, [])
+      return results.map((item: any) => ({
+        codgrupoprod: Number(item.CODGRUPOPROD),
+        descrgrupoprod: item.DESCRGRUPOPROD,
+        qtdProdutos: Number(item.QTD_PRODUTOS),
+        qtdAtivos: Number(item.QTD_ATIVOS),
+        estoqueTotal: Number(item.ESTOQUE_TOTAL),
+        valorTotal: Number(item.VALOR_TOTAL),
+        semEstoque: Number(item.SEM_ESTOQUE),
+        criticos: Number(item.CRITICOS),
+        taxaDisponibilidade: (
+          ((Number(item.QTD_PRODUTOS) - Number(item.SEM_ESTOQUE)) /
+            Number(item.QTD_PRODUTOS)) *
+          100
+        ).toFixed(2),
+      }))
+    } catch (error) {
+      this.logger.error(
+        'Erro em getEstatisticasPorGrupo:',
+        (error as any)?.message || error,
+      )
+      throw new InternalServerErrorException(
+        'Erro ao buscar estatísticas por grupo',
+      )
+    }
+  }
 }

@@ -108,4 +108,35 @@ export class EstoqueController {
   ) {
     return this.estoqueService.getConferencias(status, limite)
   }
+
+  @Get('metrics-comprehensive')
+  @ApiOperation({ summary: 'Métricas comprehensivas do estoque' })
+  @ApiResponse({ status: 200, description: 'Métricas de estoque' })
+  async getMetricsComprehensive(
+    @Query('search') search?: string,
+    @Query('status') status?: string,
+    @Query('marca') marca?: string,
+    @Query('comControle') comControle?: boolean,
+    @Query('semControle') semControle?: boolean,
+    @Query('comMovimento') comMovimento?: boolean,
+    @Query('semMovimento') semMovimento?: boolean,
+  ) {
+    return this.estoqueService.getMetricsComprehensive({
+      search,
+      status,
+      marca,
+      comControle,
+      semControle,
+      comMovimento,
+      semMovimento,
+    })
+  }
+
+  @Get('produtos/:codprod/locais')
+  @ApiOperation({ summary: 'Buscar estoque de um produto em todos os locais' })
+  @ApiResponse({ status: 200, description: 'Estoque do produto por local' })
+  @ApiParam({ name: 'codprod', type: Number, description: 'Código do produto' })
+  async getProdutoLocais(@Param('codprod') codprod: number) {
+    return this.estoqueService.getProdutoLocais(codprod)
+  }
 }

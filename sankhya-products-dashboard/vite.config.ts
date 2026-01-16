@@ -21,8 +21,9 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       port: 5173,
+      strictPort: true, // Não tenta outras portas se 5173 estiver ocupada
       host: true,
-      open: true,
+      open: false,
       fs: {
         strict: false,
       },
@@ -54,7 +55,6 @@ export default defineConfig(({ mode }) => {
       },
       hmr: {
         overlay: true,
-        port: 5173,
       },
       watch: {
         usePolling: false,

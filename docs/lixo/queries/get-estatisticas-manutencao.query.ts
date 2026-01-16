@@ -1,0 +1,17 @@
+export const getEstatisticasManutencaoQuery = `
+SELECT
+    -- Total de OS ativas
+    (SELECT COUNT(*) FROM SANKHYA.TCFOSCAB WHERE STATUS IN ('A', 'E') AND DATAFIN IS NULL) AS TotalAtivas,
+    -- OS por tipo de manutenção
+    (SELECT COUNT(*) FROM SANKHYA.TCFOSCAB WHERE STATUS IN ('A', 'E') AND DATAFIN IS NULL AND MANUTENCAO = 'C') AS Corretivas,
+    (SELECT COUNT(*) FROM SANKHYA.TCFOSCAB WHERE STATUS IN ('A', 'E') AND DATAFIN IS NULL AND MANUTENCAO = 'P') AS Preventivas,
+    -- Atrasadas
+    (SELECT COUNT(*) FROM SANKHYA.TCFOSCAB WHERE STATUS IN ('A', 'E') AND DATAFIN IS NULL AND PREVISAO < GETDATE()) AS Atrasadas,
+    -- Serviços em execução
+    (SELECT COUNT(*) FROM SANKHYA.TCFSERVOS s
+     INNER JOIN SANKHYA.TCFOSCAB c ON c.NUOS = s.NUOS
+     WHERE c.STATUS IN ('A', 'E') AND c.DATAFIN IS NULL AND s.STATUS = 'E') AS ServicosEmExecucao,
+    -- Média de dias em manutenção
+    (SELECT AVG(CAST(DATEDIFF(DAY, DATAINI, GETDATE()) AS FLOAT))
+     FROM SANKHYA.TCFOSCAB WHERE STATUS IN ('A', 'E') AND DATAFIN IS NULL) AS MediaDiasManutencao
+`;

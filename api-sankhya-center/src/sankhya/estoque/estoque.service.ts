@@ -242,4 +242,113 @@ export class EstoqueService extends SankhyaBaseService<any> {
     `
     return this.sankhyaApiService.executeQuery(query, [])
   }
+
+  async getMetricsComprehensive(filters: {
+    search?: string
+    status?: string
+    marca?: string
+    comControle?: boolean
+    semControle?: boolean
+    comMovimento?: boolean
+    semMovimento?: boolean
+  }) {
+    // Query para métricas gerais de estoque
+    const query = `
+      SELECT
+        COUNT(DISTINCT E.CODPROD) AS total,
+        SUM(CASE WHEN E.ESTOQUE < 0 THEN 1 ELSE 0 END) AS negativos,
+        SUM(CASE WHEN E.ESTOQUE < E.ESTMIN AND E.ESTMIN > 0 THEN 1 ELSE 0 END) AS abaixoMinimo,
+        SUM(CASE WHEN E.ESTOQUE > E.ESTMAX AND E.ESTMAX > 0 THEN 1 ELSE 0 END) AS acimaMaximo,
+        SUM(CASE WHEN E.ESTOQUE >= E.ESTMIN AND E.ESTOQUE <= E.ESTMAX THEN 1 ELSE 0 END) AS normais,
+        SUM(E.ESTOQUE * ISNULL(P.VLRUNIT, 0)) AS valorTotalEstoque,
+        0 AS semMovimento
+      FROM TGFEST E WITH(NOLOCK)
+      LEFT JOIN TGFPRO P WITH(NOLOCK) ON P.CODPROD = E.CODPROD
+      WHERE E.ATIVO = 'S'
+        ${filters.status === 'active' ? "AND P.ATIVO = 'S'" : ''}
+        ${filters.marca ? `AND P.MARCA LIKE '%${filters.marca}%'` : ''}
+        ${filters.search ? `AND (P.DESCRPROD LIKE '%${filters.search}%' OR CAST(P.CODPROD AS VARCHAR) LIKE '%${filters.search}%')` : ''}
+    `
+
+    const [result] = await this.sankhyaApiService.executeQuery(query, [])
+
+    return {
+      negativos: result?.negativos || 0,
+      abaixoMinimo: result?.abaixoMinimo || 0,
+      acimaMaximo: result?.acimaMaximo || 0,
+      semMovimento: result?.semMovimento || 0,
+      normais: result?.normais || 0,
+      total: result?.total || 0,
+      valorTotalEstoque: result?.valorTotalEstoque || 0,
+      trendNegativos: 0,
+      trendAbaixoMinimo: 0,
+      trendAcimaMaximo: 0,
+      trendSemMovimento: 0,
+      trendNormais: 0,
+    }
+  }
+
+  async getProdutoLocais(codprod: number) {
+    // Buscar informações do produto
+    const produtoQuery = `
+      SELECT CODPROD, DESCRPROD
+      FROM TGFPRO WITH(NOLOCK)
+      WHERE CODPROD = ${codprod}
+    `
+    const [produto] = await this.sankhyaApiService.executeQuery(produtoQuery, [])
+
+    if (!produto) {
+      return null
+    }
+
+    // Buscar estoque por local
+    const locaisQuery = `
+      SELECT
+        E.CODLOCAL,
+        L.DESCRLOCAL,
+        E.ESTOQUE,
+        E.RESERVADO,
+        (E.ESTOQUE - ISNULL(E.RESERVADO, 0)) as disponivel,
+        E.ESTMIN,
+        E.ESTMAX,
+        CASE
+          WHEN E.ESTOQUE < 0 THEN 'negativo'
+          WHEN E.ESTMIN > 0 AND E.ESTOQUE < E.ESTMIN THEN 'abaixo_minimo'
+          WHEN E.ESTMAX > 0 AND E.ESTOQUE > E.ESTMAX THEN 'acima_maximo'
+          ELSE 'normal'
+        END as situacao
+      FROM TGFEST E WITH(NOLOCK)
+      LEFT JOIN TGFLOC L WITH(NOLOCK) ON L.CODLOCAL = E.CODLOCAL
+      WHERE E.CODPROD = ${codprod} AND E.ATIVO = 'S'
+      ORDER BY E.CODLOCAL
+    `
+    const locais = await this.sankhyaApiService.executeQuery(locaisQuery, [])
+
+    // Calcular totais
+    const totais = locais.reduce(
+      (acc, local) => ({
+        estoque: acc.estoque + (local.ESTOQUE || 0),
+        reservado: acc.reservado + (local.RESERVADO || 0),
+        disponivel: acc.disponivel + (local.disponivel || 0),
+        qtdLocais: acc.qtdLocais + 1,
+      }),
+      { estoque: 0, reservado: 0, disponivel: 0, qtdLocais: 0 },
+    )
+
+    return {
+      codprod: produto.CODPROD,
+      descrprod: produto.DESCRPROD,
+      locais: locais.map((local) => ({
+        codlocal: local.CODLOCAL,
+        descrlocal: local.DESCRLOCAL || `Local ${local.CODLOCAL}`,
+        estoque: local.ESTOQUE || 0,
+        reservado: local.RESERVADO || 0,
+        disponivel: local.disponivel || 0,
+        estmin: local.ESTMIN,
+        estmax: local.ESTMAX,
+        situacao: local.situacao,
+      })),
+      totais,
+    }
+  }
 }

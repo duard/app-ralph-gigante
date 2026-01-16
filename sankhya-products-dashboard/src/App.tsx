@@ -5,6 +5,7 @@ import { QueryProvider } from '@/lib/react-query';
 import { initGTM } from '@/utils/analytics';
 import { useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { CommandMenuProvider, CommandMenu } from '@/components/command-menu';
 
 // Get basename from environment (for deployment) or use empty string for development
 const basename = import.meta.env.VITE_BASENAME || '';
@@ -36,7 +37,10 @@ function App() {
       >
         <AppLayout>
           <Router basename={basename}>
-            <AppRouter />
+            <CommandMenuProvider>
+              <AppRouter />
+              <CommandMenu />
+            </CommandMenuProvider>
           </Router>
         </AppLayout>
 
