@@ -135,51 +135,51 @@ export function CommandSearch({ open, onOpenChange }: CommandSearchProps) {
     // Módulo Produtos
     {
       title: 'Listagem de Produtos',
-      url: '/produtos',
+      url: '/produtos-v2',
       group: 'Produtos',
       icon: Package,
       subtitle: 'Visualizar todos os produtos cadastrados'
     },
     {
-      title: 'Produtos Detalhados',
-      url: '/produtos/detalhados',
+      title: 'Dashboard Produtos',
+      url: '/produtos-v2/dashboard',
       group: 'Produtos',
-      icon: PackageSearch,
-      subtitle: 'Produtos com análise de preços e estoque'
-    },
-    {
-      title: 'Análise de Consumo',
-      url: '/produtos/analise-consumo',
-      group: 'Produtos',
-      icon: TrendingUp,
-      subtitle: 'Análise temporal de consumo de produtos'
+      icon: LayoutDashboard,
+      subtitle: 'Dashboard com métricas de produtos'
     },
 
     // Módulo Qualidade
     {
       title: 'Produtos sem NCM',
-      url: '/qualidade/produtos-sem-ncm',
+      url: '/produtos-v2/qualidade/sem-ncm',
       group: 'Qualidade',
       icon: AlertTriangle,
       subtitle: 'Produtos sem NCM cadastrado'
     },
 
+    // Módulo Consumo
+    {
+      title: 'Análise de Consumo',
+      url: '/produtos-v2/consumo',
+      group: 'Consumo',
+      icon: TrendingUp,
+      subtitle: 'Análise temporal de consumo de produtos'
+    },
+    {
+      title: 'Consulta Produto',
+      url: '/produtos-v2/consumo/consulta-produto',
+      group: 'Consumo',
+      icon: PackageSearch,
+      subtitle: 'Consultar consumo de um produto específico'
+    },
+
     // Módulo Análise
     {
       title: 'Análise de Preços',
-      url: '/analise/precos',
+      url: '/produtos-v2/analise',
       group: 'Análise',
       icon: BarChart3,
       subtitle: 'Variação de preços ao longo do tempo'
-    },
-
-    // Módulo Segurança
-    {
-      title: 'Permissões',
-      url: '/seguranca/permissoes',
-      group: 'Segurança',
-      icon: ShieldCheck,
-      subtitle: 'Gerenciar permissões de usuários'
     },
   ];
 

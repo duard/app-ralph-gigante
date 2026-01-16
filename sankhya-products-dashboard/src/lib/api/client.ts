@@ -38,12 +38,9 @@ export const backendClient: AxiosInstance = axios.create({
 // Request interceptor for Sankhya client - adds Sankhya JWT token
 sankhyaClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    console.log('[Sankhya API Request]', config.method?.toUpperCase(), config.url, {
-      baseURL: config.baseURL,
-      headers: config.headers,
-      data: config.data,
-      params: config.params,
-    });
+    if (import.meta.env.DEV) {
+      console.log('[Sankhya API Request]', config.method?.toUpperCase(), config.url);
+    }
 
     // Get Sankhya token from Zustand auth store (stored in localStorage as 'auth-storage')
     let token: string | null = null;
@@ -54,7 +51,9 @@ sankhyaClient.interceptors.request.use(
         token = authData.state?.token || null;
       }
     } catch (error) {
-      console.error('[Sankhya API Request] Error reading auth token from storage:', error);
+      if (import.meta.env.DEV) {
+        console.error('[Sankhya API Request] Error reading auth token from storage:', error);
+      }
     }
 
     // Fallback to old method if Zustand token not found
@@ -65,18 +64,14 @@ sankhyaClient.interceptors.request.use(
 
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log(
-        '[Sankhya API Request] Sankhya token added to headers:',
-        token.substring(0, 50) + '...'
-      );
-    } else {
-      console.log('[Sankhya API Request] No Sankhya token available - user may need to login');
     }
 
     return config;
   },
   (error: AxiosError) => {
-    console.error('[Sankhya API Request Error]', error);
+    if (import.meta.env.DEV) {
+      console.error('[Sankhya API Request Error]', error);
+    }
     return Promise.reject(error);
   }
 );
@@ -84,30 +79,26 @@ sankhyaClient.interceptors.request.use(
 // Response interceptor for Sankhya client
 sankhyaClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log(
-      '[Sankhya API Response]',
-      response.status,
-      response.config.method?.toUpperCase(),
-      response.config.url,
-      {
-        data: response.data,
-        headers: response.headers,
-      }
-    );
+    if (import.meta.env.DEV) {
+      console.log(
+        '[Sankhya API Response]',
+        response.status,
+        response.config.method?.toUpperCase(),
+        response.config.url
+      );
+    }
     return response;
   },
   (error: AxiosError) => {
-    console.error(
-      '[Sankhya API Response Error]',
-      error.response?.status,
-      error.config?.method?.toUpperCase(),
-      error.config?.url,
-      {
-        message: error.message,
-        response: error.response?.data,
-        headers: error.response?.headers,
-      }
-    );
+    if (import.meta.env.DEV) {
+      console.error(
+        '[Sankhya API Response Error]',
+        error.response?.status,
+        error.config?.method?.toUpperCase(),
+        error.config?.url,
+        error.message
+      );
+    }
 
     // Handle Sankhya API errors
     if (error.response) {
@@ -146,27 +137,23 @@ export { backendClient as apiClient };
 // Request interceptor - adds authorization token if available
 backendClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    console.log('[API Request]', config.method?.toUpperCase(), config.url, {
-      baseURL: config.baseURL,
-      headers: config.headers,
-      data: config.data,
-      params: config.params,
-    });
+    if (import.meta.env.DEV) {
+      console.log('[API Request]', config.method?.toUpperCase(), config.url);
+    }
 
     // Get token from stored tokens
     const { token } = authService.getStoredTokens();
 
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('[API Request] Token added to headers:', token.substring(0, 50) + '...');
-    } else {
-      console.log('[API Request] No token available');
     }
 
     return config;
   },
   (error: AxiosError) => {
-    console.error('[API Request Error]', error);
+    if (import.meta.env.DEV) {
+      console.error('[API Request Error]', error);
+    }
     return Promise.reject(error);
   }
 );
@@ -174,16 +161,14 @@ backendClient.interceptors.request.use(
 // Response interceptor - handles errors globally
 backendClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log(
-      '[API Response]',
-      response.status,
-      response.config.method?.toUpperCase(),
-      response.config.url,
-      {
-        data: response.data,
-        headers: response.headers,
-      }
-    );
+    if (import.meta.env.DEV) {
+      console.log(
+        '[API Response]',
+        response.status,
+        response.config.method?.toUpperCase(),
+        response.config.url
+      );
+    }
     return response;
   },
   async (error: AxiosError) => {
@@ -264,17 +249,15 @@ backendClient.interceptors.response.use(
       toast.error(`Erro: ${error.message}`);
     }
 
-    console.error(
-      '[API Response Error]',
-      error.response?.status,
-      error.config?.method?.toUpperCase(),
-      error.config?.url,
-      {
-        message: error.message,
-        response: error.response?.data,
-        headers: error.response?.headers,
-      }
-    );
+    if (import.meta.env.DEV) {
+      console.error(
+        '[API Response Error]',
+        error.response?.status,
+        error.config?.method?.toUpperCase(),
+        error.config?.url,
+        error.message
+      );
+    }
     return Promise.reject(error);
   }
 );

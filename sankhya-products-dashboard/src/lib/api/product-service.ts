@@ -84,7 +84,6 @@ export const productService = {
 
     const queryString = queryParams.toString();
     const url = `/tgfpro${queryString ? `?${queryString}` : ''}`;
-    console.log('[productService] Fetching products with URL:', url, 'params:', params);
 
     return sankhyaClient.get<PaginatedResponse<Product>>(url).then((response) => response.data);
   },
@@ -139,7 +138,13 @@ export const productService = {
    */
   async searchProducts(query: string): Promise<PaginatedResponse<Product>> {
     return sankhyaClient
-      .get<PaginatedResponse<Product>>(`/tgfpro/search?q=${encodeURIComponent(query)}`)
+      .get<PaginatedResponse<Product>>(`/tgfpro2/produtos`, {
+        params: {
+          search: query,
+          page: 1,
+          pageSize: 20,
+        },
+      })
       .then((response) => response.data);
   },
 
