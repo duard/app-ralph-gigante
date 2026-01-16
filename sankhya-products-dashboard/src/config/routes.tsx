@@ -60,6 +60,11 @@ const ProdutosV2QualidadeSemNCM = lazy(
   () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v2/qualidade/sem-ncm/page')
 );
 
+// Produtos V6 - Pesquisa Avançada
+const ProdutosV6 = lazy(
+  () => import(/* webpackChunkName: "produtos" */ '@/app/produtos-v6/page')
+);
+
 // Segurança pages
 const SegurancaPermissoes = lazy(
   () => import(/* webpackChunkName: "seguranca" */ '@/app/seguranca/permissoes/page')
@@ -342,6 +347,16 @@ export const routes: RouteConfig[] = [
     element: (
       <ProtectedRoute>
         <ProdutosV2QualidadeSemNCM />
+      </ProtectedRoute>
+    ),
+  },
+
+  // Produtos V6 - Pesquisa Avançada
+  {
+    path: '/produtos-v6',
+    element: (
+      <ProtectedRoute>
+        <ProdutosV6 />
       </ProtectedRoute>
     ),
   },

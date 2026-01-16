@@ -141,6 +141,13 @@ export function CommandSearch({ open, onOpenChange }: CommandSearchProps) {
       subtitle: 'Visualizar todos os produtos cadastrados'
     },
     {
+      title: 'Pesquisa Avançada',
+      url: '/produtos-v6',
+      group: 'Produtos',
+      icon: PackageSearch,
+      subtitle: 'Tabela rica com análise detalhada de produtos'
+    },
+    {
       title: 'Dashboard Produtos',
       url: '/produtos-v2/dashboard',
       group: 'Produtos',
