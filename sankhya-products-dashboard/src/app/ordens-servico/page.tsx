@@ -25,17 +25,14 @@ export default function OrdensServicoPage() {
   }
 
   return (
-    <BaseLayout
-      title="Ordens de Serviço - Manutenção"
-      description="Gerenciamento completo de ordens de serviço e manutenção"
-    >
+    <BaseLayout>
       <div className="@container/main px-3 sm:px-4 lg:px-6 space-y-4 sm:space-y-6">
         {/* Header com ações */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">Dashboard de Manutenção</h2>
-            <p className="text-muted-foreground">
-              Acompanhe as ordens de serviço e produtividade da equipe
+            <h1 className="text-2xl font-bold tracking-tight">Dashboard de Manutenção</h1>
+            <p className="text-sm text-muted-foreground">
+              Acompanhe as ordens de serviço e produtividade
             </p>
           </div>
           <div className="flex gap-2">

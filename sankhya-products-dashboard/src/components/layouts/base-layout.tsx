@@ -18,7 +18,7 @@ export function BaseLayout({ children, title, description }: BaseLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main className="flex flex-1 flex-col">
+      <main className="flex flex-1 flex-col pt-16">
         <div className="px-4 lg:px-6 py-4">
           <BreadcrumbNav />
         </div>

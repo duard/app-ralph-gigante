@@ -1,12 +1,15 @@
 /**
  * Queries SQL para Ordens de Serviço de Manutenção (TCFOSCAB)
- * Otimizadas e organizadas por funcionalidade
+ *
+ * IMPORTANTE: A API Sankhya NÃO suporta parâmetros nomeados (@param).
+ * Use as funções build*Query() para interpolar valores diretamente nas queries.
  */
 
 // ========================================
 // LISTAGEM E BUSCA
 // ========================================
 
+// Query principal SEM subqueries (API Sankhya não suporta bem subqueries no SELECT)
 export const FIND_ALL_OS_QUERY = `
   SELECT
     cab.NUOS,
@@ -33,25 +36,7 @@ export const FIND_ALL_OS_QUERY = `
     p.RAZAOSOCIAL AS PARCEIRO_NOME,
     uInc.NOMEUSU AS USUARIO_INCLUSAO,
     uResp.NOMEUSU AS USUARIO_RESPONSAVEL,
-    uFin.NOMEUSU AS USUARIO_FINALIZACAO,
-
-    -- Contadores
-    (SELECT COUNT(*) FROM TCFSERVOS s WHERE s.NUOS = cab.NUOS) AS QTD_SERVICOS,
-    (SELECT COUNT(*) FROM TCFSERVOS s WHERE s.NUOS = cab.NUOS AND s.STATUS = 'F') AS QTD_SERVICOS_FINALIZADOS,
-    (SELECT COUNT(*) FROM TCFSERVOSATO a WHERE a.NUOS = cab.NUOS) AS QTD_APONTAMENTOS,
-    (SELECT COUNT(*) FROM TCFPRODOS pr WHERE pr.NUOS = cab.NUOS) AS QTD_PRODUTOS,
-
-    -- Tempo em manutenção
-    DATEDIFF(DAY, cab.DATAINI, ISNULL(cab.DATAFIN, GETDATE())) AS DIAS_MANUTENCAO,
-
-    -- Status da OS
-    CASE
-      WHEN cab.DATAFIN < cab.PREVISAO THEN 'CONCLUIDA_NO_PRAZO'
-      WHEN cab.DATAFIN > cab.PREVISAO THEN 'CONCLUIDA_ATRASADA'
-      WHEN cab.STATUS IN ('A','E') AND cab.PREVISAO < GETDATE() THEN 'ATRASADA'
-      WHEN cab.STATUS IN ('A','E') AND cab.PREVISAO >= GETDATE() THEN 'NO_PRAZO'
-      ELSE 'INDEFINIDO'
-    END AS SITUACAO_PRAZO
+    uFin.NOMEUSU AS USUARIO_FINALIZACAO
 
   FROM TCFOSCAB cab WITH(NOLOCK)
   LEFT JOIN TGFVEI v WITH(NOLOCK) ON v.CODVEICULO = cab.CODVEICULO
@@ -61,7 +46,24 @@ export const FIND_ALL_OS_QUERY = `
   LEFT JOIN TSIUSU uFin WITH(NOLOCK) ON uFin.CODUSU = cab.CODUSUFINALIZA
 `;
 
-export const FIND_OS_BY_ID_QUERY = `
+// Query para buscar contadores de serviços para UMA OS
+export function buildServicosCountQuerySingle(nuos: number): string {
+  return `
+    SELECT
+      COUNT(*) AS TOTAL,
+      SUM(CASE WHEN s.STATUS = 'F' THEN 1 ELSE 0 END) AS FINALIZADOS
+    FROM TCFSERVOS s WITH(NOLOCK)
+    WHERE s.NUOS = ${nuos}
+  `
+}
+
+
+// ========================================
+// BUSCAR OS POR ID
+// ========================================
+
+export function buildFindByIdQuery(nuos: number): string {
+  return `
   SELECT
     cab.NUOS,
     cab.DTABERTURA,
@@ -76,38 +78,17 @@ export const FIND_OS_BY_ID_QUERY = `
     cab.CODUSUINC,
     cab.CODUSU,
     cab.CODUSUFINALIZA,
-    cab.CODUSUREABRE,
     cab.KM,
     cab.HORIMETRO,
     cab.CODCENCUS,
-    cab.CODEMPNEGOC,
-    cab.CODMOTORISTA,
-    cab.NUNOTA,
-    cab.CODNAT,
-    cab.CODPROJ,
-    cab.CODPROD,
-    cab.CODBEM,
-    cab.OSMANUAL,
-    cab.NUPLANO,
-    cab.AUTOMATICO,
-    cab.DHALTER,
-    cab.AD_DATAFINAL,
-    cab.AD_NUNOTASOLCOMPRA,
-    cab.AD_STATUSGIG,
 
     -- Veículo
     v.PLACA,
     v.MARCAMODELO AS VEICULO_NOME,
-    v.AD_TIPOEQPTO AS VEICULO_TIPO,
-    v.CHASSIS,
-    v.RENAVAM,
-    v.KMACUM AS VEICULO_KM_TOTAL,
 
     -- Parceiro
-    p.CODPARC,
+    p.CODPARC AS PARCEIRO_COD,
     p.RAZAOSOCIAL AS PARCEIRO_NOME,
-    p.TELEFONE AS PARCEIRO_TELEFONE,
-    p.EMAIL AS PARCEIRO_EMAIL,
 
     -- Usuários
     uInc.CODUSU AS COD_USUARIO_INC,
@@ -115,9 +96,7 @@ export const FIND_OS_BY_ID_QUERY = `
     uResp.CODUSU AS COD_USUARIO_RESP,
     uResp.NOMEUSU AS USUARIO_RESPONSAVEL,
     uFin.CODUSU AS COD_USUARIO_FIN,
-    uFin.NOMEUSU AS USUARIO_FINALIZACAO,
-    uReabre.CODUSU AS COD_USUARIO_REABRE,
-    uReabre.NOMEUSU AS USUARIO_REABERTURA
+    uFin.NOMEUSU AS USUARIO_FINALIZACAO
 
   FROM TCFOSCAB cab WITH(NOLOCK)
   LEFT JOIN TGFVEI v WITH(NOLOCK) ON v.CODVEICULO = cab.CODVEICULO
@@ -125,15 +104,15 @@ export const FIND_OS_BY_ID_QUERY = `
   LEFT JOIN TSIUSU uInc WITH(NOLOCK) ON uInc.CODUSU = cab.CODUSUINC
   LEFT JOIN TSIUSU uResp WITH(NOLOCK) ON uResp.CODUSU = cab.CODUSU
   LEFT JOIN TSIUSU uFin WITH(NOLOCK) ON uFin.CODUSU = cab.CODUSUFINALIZA
-  LEFT JOIN TSIUSU uReabre WITH(NOLOCK) ON uReabre.CODUSU = cab.CODUSUREABRE
-  WHERE cab.NUOS = @nuos
-`;
+  WHERE cab.NUOS = ${nuos}`;
+}
 
 // ========================================
 // SERVIÇOS DA OS
 // ========================================
 
-export const FIND_SERVICOS_BY_OS_QUERY = `
+export function buildFindServicosQuery(nuos: number): string {
+  return `
   SELECT
     s.NUOS,
     s.SEQUENCIA,
@@ -146,9 +125,6 @@ export const FIND_SERVICOS_BY_OS_QUERY = `
     s.TEMPO,
     s.STATUS,
     s.OBSERVACAO,
-    s.NUNOTA,
-    s.CODPARC,
-    s.CONTROLE,
 
     -- Produto
     p.DESCRPROD,
@@ -167,15 +143,16 @@ export const FIND_SERVICOS_BY_OS_QUERY = `
 
   FROM TCFSERVOS s WITH(NOLOCK)
   LEFT JOIN TGFPRO p WITH(NOLOCK) ON p.CODPROD = s.CODPROD
-  WHERE s.NUOS = @nuos
-  ORDER BY s.SEQUENCIA
-`;
+  WHERE s.NUOS = ${nuos}
+  ORDER BY s.SEQUENCIA`;
+}
 
 // ========================================
 // APONTAMENTOS DE TEMPO
 // ========================================
 
-export const FIND_APONTAMENTOS_BY_OS_QUERY = `
+export function buildFindApontamentosQuery(nuos: number): string {
+  return `
   SELECT
     a.NUOS,
     a.ID,
@@ -186,16 +163,14 @@ export const FIND_APONTAMENTOS_BY_OS_QUERY = `
     a.INTERVALO,
     a.STATUS,
     a.DHAPONT,
-    a.AD_DESCR,
 
     -- Executor
     u.NOMEUSU AS EXECUTOR_NOME,
-    f.NOMEFUNC AS EXECUTOR_FUNC_NOME,
 
     -- Cálculos de tempo
     DATEDIFF(MINUTE, a.DHINI, a.DHFIN) AS MINUTOS_TRABALHADOS,
 
-    -- Intervalo em minutos (lógica do SQL original)
+    -- Intervalo em minutos
     CAST(
       CASE
         WHEN a.INTERVALO IS NULL THEN 0
@@ -221,20 +196,20 @@ export const FIND_APONTAMENTOS_BY_OS_QUERY = `
 
   FROM TCFSERVOSATO a WITH(NOLOCK)
   LEFT JOIN TSIUSU u WITH(NOLOCK) ON u.CODUSU = a.CODEXEC
-  LEFT JOIN TFPFUN f WITH(NOLOCK) ON f.CODFUNC = u.CODFUNC
   LEFT JOIN TCFSERVOS s WITH(NOLOCK) ON s.NUOS = a.NUOS AND s.SEQUENCIA = a.SEQUENCIA
   LEFT JOIN TGFPRO p WITH(NOLOCK) ON p.CODPROD = s.CODPROD
-  WHERE a.NUOS = @nuos
+  WHERE a.NUOS = ${nuos}
     AND a.DHINI IS NOT NULL
     AND a.DHFIN IS NOT NULL
-  ORDER BY a.SEQUENCIA, a.DHINI
-`;
+  ORDER BY a.SEQUENCIA, a.DHINI`;
+}
 
 // ========================================
 // PRODUTOS/PEÇAS UTILIZADOS
 // ========================================
 
-export const FIND_PRODUTOS_BY_OS_QUERY = `
+export function buildFindProdutosQuery(nuos: number): string {
+  return `
   SELECT
     pr.NUOS,
     pr.SEQUENCIA,
@@ -246,8 +221,6 @@ export const FIND_PRODUTOS_BY_OS_QUERY = `
     pr.VLRUNIT,
     pr.VLRTOT,
     pr.OBSERVACAO,
-    pr.NUNOTA,
-    pr.CODPARC,
 
     -- Produto
     p.DESCRPROD,
@@ -257,31 +230,22 @@ export const FIND_PRODUTOS_BY_OS_QUERY = `
     g.DESCRGRUPOPROD,
 
     -- Local de estoque
-    l.DESCRLOCAL,
-
-    -- Campos customizados
-    pr.AD_CODGRUPOPROD,
-    pr.AD_NUNOTASOL,
-    pr.AD_NUNOTAREQ,
-    pr.AD_CODUSU,
-    pr.AD_DTENVIO,
-    pr.AD_DTINICIOGARANT,
-    pr.AD_DTIFIMGARANT,
-    pr.AD_DTRETORNO
+    l.DESCRLOCAL
 
   FROM TCFPRODOS pr WITH(NOLOCK)
   LEFT JOIN TGFPRO p WITH(NOLOCK) ON p.CODPROD = pr.CODPROD
   LEFT JOIN TGFGRU g WITH(NOLOCK) ON g.CODGRUPOPROD = p.CODGRUPOPROD
   LEFT JOIN TGFLOC l WITH(NOLOCK) ON l.CODLOCAL = pr.CODLOCAL
-  WHERE pr.NUOS = @nuos
-  ORDER BY pr.SEQUENCIA
-`;
+  WHERE pr.NUOS = ${nuos}
+  ORDER BY pr.SEQUENCIA`;
+}
 
 // ========================================
 // ESTATÍSTICAS E DASHBOARDS
 // ========================================
 
-export const GET_ESTATISTICAS_GERAL_QUERY = `
+export function buildEstatisticasGeralQuery(dataInicio: string, dataFim: string): string {
+  return `
   SELECT
     COUNT(*) AS TOTAL_OS,
     SUM(CASE WHEN STATUS = 'F' THEN 1 ELSE 0 END) AS FINALIZADAS,
@@ -294,7 +258,7 @@ export const GET_ESTATISTICAS_GERAL_QUERY = `
     SUM(CASE WHEN MANUTENCAO = 'C' THEN 1 ELSE 0 END) AS CORRETIVAS,
     SUM(CASE WHEN MANUTENCAO = 'O' THEN 1 ELSE 0 END) AS OUTRAS,
 
-    -- Atrasadas (ativas com previsão vencida)
+    -- Atrasadas
     SUM(CASE
       WHEN STATUS IN ('A','E') AND DATAFIN IS NULL AND PREVISAO < GETDATE()
       THEN 1 ELSE 0
@@ -312,9 +276,9 @@ export const GET_ESTATISTICAS_GERAL_QUERY = `
     COUNT(DISTINCT CODUSU) AS TOTAL_RESPONSAVEIS
 
   FROM TCFOSCAB WITH(NOLOCK)
-  WHERE DTABERTURA >= @dataInicio
-    AND DTABERTURA <= @dataFim
-`;
+  WHERE DTABERTURA >= '${dataInicio}'
+    AND DTABERTURA <= '${dataFim}'`;
+}
 
 export const GET_OS_ATIVAS_RESUMO_QUERY = `
   SELECT
@@ -360,7 +324,8 @@ export const GET_OS_ATIVAS_RESUMO_QUERY = `
     cab.PREVISAO
 `;
 
-export const GET_PRODUTIVIDADE_EXECUTORES_QUERY = `
+export function buildProdutividadeExecutoresQuery(dataInicio: string, dataFim: string): string {
+  return `
   SELECT
     a.CODEXEC,
     u.NOMEUSU AS EXECUTOR_NOME,
@@ -372,7 +337,7 @@ export const GET_PRODUTIVIDADE_EXECUTORES_QUERY = `
     SUM(DATEDIFF(MINUTE, a.DHINI, a.DHFIN)) AS TOTAL_MINUTOS_BRUTOS,
     SUM(DATEDIFF(MINUTE, a.DHINI, a.DHFIN)) / 60.0 AS TOTAL_HORAS_BRUTAS,
 
-    -- Tempo líquido (descontando intervalos)
+    -- Tempo líquido
     SUM(
       DATEDIFF(MINUTE, a.DHINI, a.DHFIN) -
       CAST(
@@ -401,16 +366,17 @@ export const GET_PRODUTIVIDADE_EXECUTORES_QUERY = `
   FROM TCFSERVOSATO a WITH(NOLOCK)
   LEFT JOIN TSIUSU u WITH(NOLOCK) ON u.CODUSU = a.CODEXEC
   INNER JOIN TCFOSCAB cab WITH(NOLOCK) ON cab.NUOS = a.NUOS
-  WHERE a.DHINI >= @dataInicio
-    AND a.DHINI <= @dataFim
+  WHERE a.DHINI >= '${dataInicio}'
+    AND a.DHINI <= '${dataFim}'
     AND a.DHINI IS NOT NULL
     AND a.DHFIN IS NOT NULL
     AND cab.STATUS = 'F'
   GROUP BY a.CODEXEC, u.NOMEUSU
-  ORDER BY TOTAL_HORAS_LIQUIDAS DESC
-`;
+  ORDER BY TOTAL_HORAS_LIQUIDAS DESC`;
+}
 
-export const GET_PRODUTOS_MAIS_UTILIZADOS_QUERY = `
+export function buildProdutosMaisUtilizadosQuery(dataInicio: string, dataFim: string): string {
+  return `
   SELECT TOP 20
     pr.CODPROD,
     p.DESCRPROD,
@@ -427,8 +393,8 @@ export const GET_PRODUTOS_MAIS_UTILIZADOS_QUERY = `
   LEFT JOIN TGFPRO p WITH(NOLOCK) ON p.CODPROD = pr.CODPROD
   LEFT JOIN TGFGRU g WITH(NOLOCK) ON g.CODGRUPOPROD = p.CODGRUPOPROD
   INNER JOIN TCFOSCAB cab WITH(NOLOCK) ON cab.NUOS = pr.NUOS
-  WHERE cab.DTABERTURA >= @dataInicio
-    AND cab.DTABERTURA <= @dataFim
+  WHERE cab.DTABERTURA >= '${dataInicio}'
+    AND cab.DTABERTURA <= '${dataFim}'
   GROUP BY pr.CODPROD, p.DESCRPROD, p.REFERENCIA, p.MARCA, g.DESCRGRUPOPROD
-  ORDER BY QTD_OS DESC, VALOR_TOTAL DESC
-`;
+  ORDER BY QTD_OS DESC, VALOR_TOTAL DESC`;
+}

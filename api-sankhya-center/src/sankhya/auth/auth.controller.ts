@@ -64,7 +64,7 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
   async login(@Body() body: { username: string; password: string }) {
     try {
-      return this.authService.authenticateWithSankhya(
+      return await this.authService.authenticateWithSankhya(
         body.username,
         body.password,
       )

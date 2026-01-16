@@ -64,11 +64,13 @@ export default function OrdensServicoListagemPage() {
   const getSituacaoBadge = (situacao?: string) => {
     switch (situacao) {
       case 'NO_PRAZO':
-        return <Badge variant="outline" className="bg-green-50 text-green-700">No Prazo</Badge>
-      case 'ATRASADO':
-        return <Badge variant="outline" className="bg-orange-50 text-orange-700">Atrasado</Badge>
-      case 'CRITICO':
-        return <Badge variant="outline" className="bg-red-50 text-red-700">Crítico</Badge>
+        return <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-400">No Prazo</Badge>
+      case 'CONCLUIDA_NO_PRAZO':
+        return <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-400">Concluída</Badge>
+      case 'ATRASADA':
+        return <Badge variant="outline" className="bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-400">Atrasada</Badge>
+      case 'CONCLUIDA_ATRASADA':
+        return <Badge variant="outline" className="bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-400">Conc. Atrasada</Badge>
       default:
         return null
     }
@@ -103,14 +105,14 @@ export default function OrdensServicoListagemPage() {
 
               {/* Status */}
               <Select
-                value={filters.status || ''}
-                onValueChange={(value) => handleFilterChange('status', value || undefined)}
+                value={filters.status || 'all'}
+                onValueChange={(value) => handleFilterChange('status', value === 'all' ? undefined : value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos</SelectItem>
+                  <SelectItem value="all">Todos</SelectItem>
                   <SelectItem value="F">Finalizada</SelectItem>
                   <SelectItem value="E">Em Execução</SelectItem>
                   <SelectItem value="A">Aberta</SelectItem>
@@ -120,14 +122,14 @@ export default function OrdensServicoListagemPage() {
 
               {/* Manutenção */}
               <Select
-                value={filters.manutencao || ''}
-                onValueChange={(value) => handleFilterChange('manutencao', value || undefined)}
+                value={filters.manutencao || 'all'}
+                onValueChange={(value) => handleFilterChange('manutencao', value === 'all' ? undefined : value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Tipo de Manutenção" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos</SelectItem>
+                  <SelectItem value="all">Todos</SelectItem>
                   <SelectItem value="C">Corretiva</SelectItem>
                   <SelectItem value="P">Preventiva</SelectItem>
                   <SelectItem value="O">Outros</SelectItem>
@@ -136,14 +138,14 @@ export default function OrdensServicoListagemPage() {
 
               {/* Tipo */}
               <Select
-                value={filters.tipo || ''}
-                onValueChange={(value) => handleFilterChange('tipo', value || undefined)}
+                value={filters.tipo || 'all'}
+                onValueChange={(value) => handleFilterChange('tipo', value === 'all' ? undefined : value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos</SelectItem>
+                  <SelectItem value="all">Todos</SelectItem>
                   <SelectItem value="I">Interna</SelectItem>
                   <SelectItem value="E">Externa</SelectItem>
                 </SelectContent>

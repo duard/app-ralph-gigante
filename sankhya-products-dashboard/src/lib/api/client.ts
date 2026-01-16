@@ -139,8 +139,25 @@ backendClient.interceptors.request.use(
       console.log('[API Request]', config.method?.toUpperCase(), config.url);
     }
 
-    // Get token from stored tokens
-    const { token } = authService.getStoredTokens();
+    // Get token from Zustand auth store first (stored in localStorage as 'auth-storage')
+    let token: string | null = null;
+    try {
+      const authStorage = localStorage.getItem('auth-storage');
+      if (authStorage) {
+        const authData = JSON.parse(authStorage);
+        token = authData.state?.token || null;
+      }
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.error('[API Request] Error reading auth token from Zustand storage:', error);
+      }
+    }
+
+    // Fallback to old method if Zustand token not found
+    if (!token) {
+      const { token: fallbackToken } = authService.getStoredTokens();
+      token = fallbackToken;
+    }
 
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
