@@ -260,7 +260,7 @@ export class EstoqueService extends SankhyaBaseService<any> {
         SUM(CASE WHEN E.ESTOQUE < E.ESTMIN AND E.ESTMIN > 0 THEN 1 ELSE 0 END) AS abaixoMinimo,
         SUM(CASE WHEN E.ESTOQUE > E.ESTMAX AND E.ESTMAX > 0 THEN 1 ELSE 0 END) AS acimaMaximo,
         SUM(CASE WHEN E.ESTOQUE >= E.ESTMIN AND E.ESTOQUE <= E.ESTMAX THEN 1 ELSE 0 END) AS normais,
-        SUM(E.ESTOQUE * ISNULL(P.VLRUNIT, 0)) AS valorTotalEstoque,
+        SUM(E.ESTOQUE * ISNULL(P.PRECOBASE, 0)) AS valorTotalEstoque,
         0 AS semMovimento
       FROM TGFEST E WITH(NOLOCK)
       LEFT JOIN TGFPRO P WITH(NOLOCK) ON P.CODPROD = E.CODPROD

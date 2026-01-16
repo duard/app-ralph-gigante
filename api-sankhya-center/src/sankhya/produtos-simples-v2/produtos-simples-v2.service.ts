@@ -25,7 +25,7 @@ export class ProdutosSimplesV2Service {
     }
 
     // Get total count
-    const countSql = `SELECT COUNT(*) as total FROM (${sql})`
+    const countSql = `SELECT COUNT(*) as total FROM (${sql}) AS t`
     const countResult = await this.sankhyaApiService.executeQuery(
       countSql,
       params,
