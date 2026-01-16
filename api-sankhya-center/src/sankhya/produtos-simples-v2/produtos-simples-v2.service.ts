@@ -12,34 +12,31 @@ export class ProdutosSimplesV2Service {
   ): Promise<{ data: ProdutoSimplesV2[]; total: number; lastPage: number }> {
     const { search, page = 1, perPage = 20, sort = 'codprod asc' } = query
 
-    let sql = `
-      SELECT CODPROD, DESCRPROD, ATIVO
-      FROM TGFPRO
-    `
+    // Escape search para evitar SQL injection
+    const searchEscaped = search ? search.replace(/'/g, "''") : ''
 
-    const params: any[] = []
-
-    if (search) {
-      sql += ` WHERE UPPER(DESCRPROD) LIKE UPPER(?)`
-      params.push(`%${search}%`)
+    let whereSql = ''
+    if (searchEscaped) {
+      whereSql = ` WHERE UPPER(DESCRPROD) LIKE '%${searchEscaped.toUpperCase()}%'`
     }
 
     // Get total count
-    const countSql = `SELECT COUNT(*) as total FROM (${sql}) AS t`
-    const countResult = await this.sankhyaApiService.executeQuery(
-      countSql,
-      params,
-    )
-    const total = countResult[0]?.TOTAL || 0
+    const countSql = `SELECT COUNT(*) AS total FROM TGFPRO WITH (NOLOCK)${whereSql}`
+    const countResult = await this.sankhyaApiService.executeQuery(countSql, [])
+    const total = countResult[0]?.total || 0
     const lastPage = Math.ceil(total / perPage)
 
-    sql += ` ORDER BY ${sort}`
-
-    // Pagination
+    // Pagination com OFFSET/FETCH (SQL Server 2012+)
     const offset = (page - 1) * perPage
-    sql += ` OFFSET ${offset} ROWS FETCH NEXT ${perPage} ROWS ONLY`
+    const dataSql = `
+      SELECT CODPROD, DESCRPROD, ATIVO
+      FROM TGFPRO WITH (NOLOCK)
+      ${whereSql}
+      ORDER BY ${sort}
+      OFFSET ${offset} ROWS FETCH NEXT ${perPage} ROWS ONLY
+    `
 
-    const produtos = await this.sankhyaApiService.executeQuery(sql, params)
+    const produtos = await this.sankhyaApiService.executeQuery(dataSql, [])
 
     const result: ProdutoSimplesV2[] = []
 
@@ -64,36 +61,34 @@ export class ProdutosSimplesV2Service {
 
   private async getLocalizacao(codprod: number): Promise<string> {
     const sql = `
-      SELECT NVL(LOC.CODLOCAL || ' - ' || LOC.DESCRLOCAL, 'N/A') AS LOCALIZACAO
-      FROM TGFPRO PRO
-      LEFT JOIN TGFLOC LOC ON PRO.CODLOCAL = LOC.CODLOCAL
-      WHERE PRO.CODPROD = ?
+      SELECT ISNULL(LOCALIZACAO, 'N/A') AS LOCALIZACAO
+      FROM TGFPRO WITH (NOLOCK)
+      WHERE CODPROD = ${codprod}
     `
-    const result = await this.sankhyaApiService.executeQuery(sql, [codprod])
+    const result = await this.sankhyaApiService.executeQuery(sql, [])
     return result[0]?.LOCALIZACAO || 'N/A'
   }
 
   private async getValorMedio(codprod: number): Promise<number> {
     const sql = `
       SELECT AVG(ITE.VLRUNIT) AS VALOR_MEDIO
-      FROM TGFCAB CAB
-      JOIN TGFITE ITE ON CAB.NUNOTA = ITE.NUNOTA
-      WHERE ITE.CODPROD = ? AND CAB.TIPMOV = 'C'
+      FROM TGFCAB CAB WITH (NOLOCK)
+      JOIN TGFITE ITE WITH (NOLOCK) ON CAB.NUNOTA = ITE.NUNOTA
+      WHERE ITE.CODPROD = ${codprod} AND CAB.TIPMOV = 'C'
     `
-    const result = await this.sankhyaApiService.executeQuery(sql, [codprod])
+    const result = await this.sankhyaApiService.executeQuery(sql, [])
     return result[0]?.VALOR_MEDIO || 0
   }
 
   private async getValorUltimaCompra(codprod: number): Promise<number> {
     const sql = `
-      SELECT ITE.VLRUNIT AS VALOR_ULTIMA
-      FROM TGFCAB CAB
-      JOIN TGFITE ITE ON CAB.NUNOTA = ITE.NUNOTA
-      WHERE ITE.CODPROD = ? AND CAB.TIPMOV = 'C'
+      SELECT TOP 1 ITE.VLRUNIT AS VALOR_ULTIMA
+      FROM TGFCAB CAB WITH (NOLOCK)
+      JOIN TGFITE ITE WITH (NOLOCK) ON CAB.NUNOTA = ITE.NUNOTA
+      WHERE ITE.CODPROD = ${codprod} AND CAB.TIPMOV = 'C'
       ORDER BY CAB.DTNEG DESC
-      FETCH FIRST 1 ROW ONLY
     `
-    const result = await this.sankhyaApiService.executeQuery(sql, [codprod])
+    const result = await this.sankhyaApiService.executeQuery(sql, [])
     return result[0]?.VALOR_ULTIMA || 0
   }
 }
