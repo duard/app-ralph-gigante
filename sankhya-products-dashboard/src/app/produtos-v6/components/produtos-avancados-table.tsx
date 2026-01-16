@@ -117,11 +117,13 @@ export function ProdutosAvancadosTable() {
       setProdutos(response.data.data);
       setMeta(response.data.meta);
       setStats(response.data.stats);
-    } catch (error) {
+    } catch (error: any) {
       if (import.meta.env.DEV) {
         console.error('Error fetching produtos detalhados:', error);
+        console.error('Response data:', error?.response?.data);
+        console.error('Status:', error?.response?.status);
       }
-      toast.error('Erro ao carregar produtos');
+      toast.error(error?.response?.data?.error || 'Erro ao carregar produtos');
     } finally {
       setLoading(false);
     }
