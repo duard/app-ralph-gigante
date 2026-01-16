@@ -2035,48 +2035,71 @@ export class Tgfpro2Service {
     if (codgrupoprod) whereConditions.push(`P.CODGRUPOPROD = ${codgrupoprod}`)
     if (search) {
       whereConditions.push(
-        `(P.DESCRPROD LIKE '%${search}%' OR P.MARCA LIKE '%${search}%')`,
+        `(P.DESCRPROD LIKE '%${search}%' OR CAST(P.CODPROD AS VARCHAR) LIKE '%${search}%')`,
       )
     }
 
+    // Map sortBy frontend field to database column
+    const sortByMap: Record<string, string> = {
+      descrprod: 'P.DESCRPROD',
+      codprod: 'P.CODPROD',
+      estoqueTotal: 'ESTOQUE_TOTAL',
+      precoMedioPonderado: 'PRECO_MEDIO',
+      qtdComprasUltimos6Meses: 'QTD_COMPRAS',
+    }
+    const orderByColumn = sortByMap[sortBy] || 'P.DESCRPROD'
+    const orderByDirection = sortOrder?.toUpperCase() || 'ASC'
+
     const whereClause = whereConditions.join(' AND ')
 
-    // Simplified query - basic product info only (for MVP)
-    // TODO: Add price analysis and stock aggregation later
+    // Main query with CTE for estoque
     const query = `
-      SELECT TOP ${pageSize}
-        P.CODPROD,
-        P.DESCRPROD,
-        P.MARCA,
-        P.CODGRUPOPROD,
-        G.DESCRGRUPOPROD,
-        P.ATIVO,
-        P.TIPCONTEST,
-        P.LISCONTEST,
-        CASE WHEN P.TIPCONTEST <> 'N' THEN 1 ELSE 0 END AS HAS_CONTROLE,
-        0 AS CONTROLE_COUNT,
-        0 AS ESTOQUE_TOTAL,
-        0 AS TEM_ESTOQUE,
-        NULL AS PRECO_MEDIO_PONDERADO,
-        NULL AS PRECO_ULTIMA_COMPRA,
-        NULL AS PRECO_MINIMO,
-        NULL AS PRECO_MAXIMO,
-        NULL AS VARIACAO_PRECO_PERCENTUAL,
-        NULL AS TENDENCIA_PRECO,
-        0 AS QTD_COMPRAS_6M,
-        0 AS TOTAL_GASTO_6M,
-        P.DTALTER,
-        NULL AS NOMEUSU_ALT
-      FROM TGFPRO P WITH(NOLOCK)
-      LEFT JOIN TGFGRU G WITH(NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
-      WHERE ${whereClause}
-      ORDER BY P.DESCRPROD ASC
+      WITH ProdutosComEstoque AS (
+        SELECT
+          P.CODPROD,
+          P.DESCRPROD,
+          P.MARCA,
+          P.CODGRUPOPROD,
+          G.DESCRGRUPOPROD,
+          P.ATIVO,
+          P.TIPCONTEST,
+          P.LISCONTEST,
+          CASE WHEN P.TIPCONTEST <> 'N' THEN 1 ELSE 0 END AS HAS_CONTROLE,
+          0 AS CONTROLE_COUNT,
+          ISNULL(E.ESTOQUE_TOTAL, 0) AS ESTOQUE_TOTAL,
+          CASE WHEN ISNULL(E.ESTOQUE_TOTAL, 0) > 0 THEN 1 ELSE 0 END AS TEM_ESTOQUE,
+          NULL AS PRECO_MEDIO,
+          NULL AS PRECO_ULTIMA,
+          NULL AS PRECO_MIN,
+          NULL AS PRECO_MAX,
+          NULL AS VAR_PRECO_PCT,
+          NULL AS TENDENCIA,
+          0 AS QTD_COMPRAS,
+          0 AS TOTAL_GASTO,
+          P.DTALTER,
+          NULL AS NOMEUSU_ALT,
+          ROW_NUMBER() OVER (ORDER BY ${orderByColumn} ${orderByDirection}) AS RowNum
+        FROM TGFPRO P WITH(NOLOCK)
+        LEFT JOIN TGFGRU G WITH(NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
+        LEFT JOIN (
+          SELECT CODPROD, SUM(ESTOQUE) AS ESTOQUE_TOTAL
+          FROM TGFEST WITH(NOLOCK)
+          WHERE ATIVO = 'S'
+          GROUP BY CODPROD
+        ) E ON E.CODPROD = P.CODPROD
+        WHERE ${whereClause}
+          ${temEstoque !== undefined ? (temEstoque ? 'AND ISNULL(E.ESTOQUE_TOTAL, 0) > 0' : 'AND ISNULL(E.ESTOQUE_TOTAL, 0) = 0') : ''}
+      )
+      SELECT *
+      FROM ProdutosComEstoque
+      WHERE RowNum > ${offset} AND RowNum <= ${offset + pageSize}
+      ORDER BY RowNum
     `
 
     // Execute main query
     const result = await this.sankhyaApiService.executeQuery(query, [])
 
-    // Count total for pagination (using same filters)
+    // Count total for pagination
     const countQuery = `
       SELECT COUNT(*) AS TOTAL
       FROM TGFPRO P WITH(NOLOCK)
@@ -2087,31 +2110,38 @@ export class Tgfpro2Service {
         GROUP BY CODPROD
       ) E ON E.CODPROD = P.CODPROD
       WHERE ${whereClause}
-        ${temEstoque !== undefined ? `AND ${temEstoque ? 'ISNULL(E.ESTOQUE_TOTAL, 0) > 0' : 'ISNULL(E.ESTOQUE_TOTAL, 0) = 0'}` : ''}
+        ${temEstoque !== undefined ? (temEstoque ? 'AND ISNULL(E.ESTOQUE_TOTAL, 0) > 0' : 'AND ISNULL(E.ESTOQUE_TOTAL, 0) = 0') : ''}
     `
 
     const countResult = await this.sankhyaApiService.executeQuery(
       countQuery,
       [],
     )
-    const total = Number(countResult[0]?.TOTAL || 0)
-    const totalPages = Math.ceil(total / pageSize)
+    const totalItems = Number(countResult[0]?.TOTAL || 0)
+    const totalPages = Math.ceil(totalItems / pageSize)
 
-    // Calculate stats (applies same filters)
+    // Calculate stats (applies same filters except temEstoque)
     const statsQuery = `
       SELECT
         COUNT(*) AS TOTAL_PRODUTOS,
-        SUM(CASE WHEN ESTOQUE > 0 THEN 1 ELSE 0 END) AS COM_ESTOQUE,
-        SUM(CASE WHEN ESTOQUE = 0 OR ESTOQUE IS NULL THEN 1 ELSE 0 END) AS SEM_ESTOQUE,
-        SUM(CASE WHEN TIPCONTEST <> 'N' THEN 1 ELSE 0 END) AS COM_CONTROLE,
-        SUM(CASE WHEN ATIVO = 'S' THEN 1 ELSE 0 END) AS ATIVOS,
-        SUM(CASE WHEN ATIVO = 'N' THEN 1 ELSE 0 END) AS INATIVOS
+        SUM(CASE WHEN ATIVO = 'S' THEN 1 ELSE 0 END) AS PRODUTOS_ATIVOS,
+        SUM(CASE WHEN ATIVO = 'N' THEN 1 ELSE 0 END) AS PRODUTOS_INATIVOS,
+        SUM(CASE WHEN ISNULL(ESTOQUE_TOTAL, 0) > 0 THEN 1 ELSE 0 END) AS PRODUTOS_COM_ESTOQUE,
+        SUM(CASE WHEN ISNULL(ESTOQUE_TOTAL, 0) = 0 THEN 1 ELSE 0 END) AS PRODUTOS_SEM_ESTOQUE,
+        SUM(CASE WHEN TIPCONTEST <> 'N' THEN 1 ELSE 0 END) AS PRODUTOS_COM_CONTROLE,
+        SUM(CASE WHEN TIPCONTEST = 'N' THEN 1 ELSE 0 END) AS PRODUTOS_SEM_CONTROLE
       FROM (
         SELECT
           P.ATIVO,
           P.TIPCONTEST,
-          ISNULL((SELECT SUM(E.ESTOQUE) FROM TGFEST E WITH(NOLOCK) WHERE E.CODPROD = P.CODPROD AND E.ATIVO = 'S'), 0) AS ESTOQUE
+          E.ESTOQUE_TOTAL
         FROM TGFPRO P WITH(NOLOCK)
+        LEFT JOIN (
+          SELECT CODPROD, SUM(ESTOQUE) AS ESTOQUE_TOTAL
+          FROM TGFEST WITH(NOLOCK)
+          WHERE ATIVO = 'S'
+          GROUP BY CODPROD
+        ) E ON E.CODPROD = P.CODPROD
         WHERE ${whereClause}
       ) AS Stats
     `
@@ -2139,25 +2169,25 @@ export class Tgfpro2Service {
       estoqueTotal: Number(item.ESTOQUE_TOTAL || 0),
       temEstoque: Boolean(item.TEM_ESTOQUE),
 
-      precoMedioPonderado: item.PRECO_MEDIO_PONDERADO
-        ? Number(item.PRECO_MEDIO_PONDERADO)
+      precoMedioPonderado: item.PRECO_MEDIO
+        ? Number(item.PRECO_MEDIO)
         : null,
-      precoUltimaCompra: item.PRECO_ULTIMA_COMPRA
-        ? Number(item.PRECO_ULTIMA_COMPRA)
+      precoUltimaCompra: item.PRECO_ULTIMA
+        ? Number(item.PRECO_ULTIMA)
         : null,
-      precoMinimo: item.PRECO_MINIMO ? Number(item.PRECO_MINIMO) : null,
-      precoMaximo: item.PRECO_MAXIMO ? Number(item.PRECO_MAXIMO) : null,
-      variacaoPrecoPercentual: item.VARIACAO_PRECO_PERCENTUAL
-        ? Number(item.VARIACAO_PRECO_PERCENTUAL)
+      precoMinimo: item.PRECO_MIN ? Number(item.PRECO_MIN) : null,
+      precoMaximo: item.PRECO_MAX ? Number(item.PRECO_MAX) : null,
+      variacaoPrecoPercentual: item.VAR_PRECO_PCT
+        ? Number(item.VAR_PRECO_PCT)
         : null,
-      tendenciaPreco: (item.TENDENCIA_PRECO as
+      tendenciaPreco: (item.TENDENCIA as
         | 'AUMENTO'
         | 'QUEDA'
         | 'ESTAVEL'
         | null) || null,
 
-      qtdComprasUltimos6Meses: Number(item.QTD_COMPRAS_6M || 0),
-      totalGastoUltimos6Meses: Number(item.TOTAL_GASTO_6M || 0),
+      qtdComprasUltimos6Meses: Number(item.QTD_COMPRAS || 0),
+      totalGastoUltimos6Meses: Number(item.TOTAL_GASTO || 0),
 
       dtalter: item.DTALTER || null,
       nomeusualt: item.NOMEUSU_ALT || null,
@@ -2166,18 +2196,20 @@ export class Tgfpro2Service {
     return {
       data,
       meta: {
-        total,
         page,
         pageSize,
+        totalItems: totalItems,
+        total: totalItems,
         totalPages,
       },
       stats: {
         totalProdutos: Number(stats.TOTAL_PRODUTOS || 0),
-        comEstoque: Number(stats.COM_ESTOQUE || 0),
-        semEstoque: Number(stats.SEM_ESTOQUE || 0),
-        comControle: Number(stats.COM_CONTROLE || 0),
-        ativos: Number(stats.ATIVOS || 0),
-        inativos: Number(stats.INATIVOS || 0),
+        ativos: Number(stats.PRODUTOS_ATIVOS || 0),
+        inativos: Number(stats.PRODUTOS_INATIVOS || 0),
+        comEstoque: Number(stats.PRODUTOS_COM_ESTOQUE || 0),
+        semEstoque: Number(stats.PRODUTOS_SEM_ESTOQUE || 0),
+        comControle: Number(stats.PRODUTOS_COM_CONTROLE || 0),
+        semControle: Number(stats.PRODUTOS_SEM_CONTROLE || 0),
       },
     }
   }
