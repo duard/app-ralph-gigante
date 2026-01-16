@@ -6,15 +6,13 @@ import { Command as CommandPrimitive } from 'cmdk';
 import { useDebounce } from '@/lib/utils/debounce';
 import {
   Search,
-  LayoutPanelLeft,
   LayoutDashboard,
   Package,
   BarChart3,
-  Filter,
-  FileSpreadsheet,
-  Download,
-  Settings,
-  HelpCircle,
+  AlertTriangle,
+  ShieldCheck,
+  PackageSearch,
+  TrendingUp,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -131,25 +129,58 @@ export function CommandSearch({ open, onOpenChange }: CommandSearchProps) {
   const { searchProducts } = useProducts();
 
   const staticItems: SearchItem[] = [
-    // Dashboards
-    { title: 'Dashboard', url: '/dashboard', group: 'Navegação', icon: LayoutDashboard },
-    { title: 'Bem-Vindo', url: '/bem-vindo', group: 'Navegação', icon: LayoutPanelLeft },
+    // Dashboard Principal
+    { title: 'Dashboard Principal', url: '/dashboard', group: 'Dashboard', icon: LayoutDashboard },
 
-    // Products
-    { title: 'Lista de Produtos', url: '/produtos', group: 'Navegação', icon: Package },
-    { title: 'Análise de Produtos', url: '/produtos/analise', group: 'Navegação', icon: BarChart3 },
-    { title: 'Filtros Avançados', url: '/produtos/filtros', group: 'Navegação', icon: Filter },
+    // Módulo Produtos
     {
-      title: 'Exportação de Dados',
-      url: '/produtos/exportar',
-      group: 'Navegação',
-      icon: FileSpreadsheet,
+      title: 'Listagem de Produtos',
+      url: '/produtos',
+      group: 'Produtos',
+      icon: Package,
+      subtitle: 'Visualizar todos os produtos cadastrados'
+    },
+    {
+      title: 'Produtos Detalhados',
+      url: '/produtos/detalhados',
+      group: 'Produtos',
+      icon: PackageSearch,
+      subtitle: 'Produtos com análise de preços e estoque'
+    },
+    {
+      title: 'Análise de Consumo',
+      url: '/produtos/analise-consumo',
+      group: 'Produtos',
+      icon: TrendingUp,
+      subtitle: 'Análise temporal de consumo de produtos'
     },
 
-    // Other
-    { title: 'Relatórios', url: '/relatorios', group: 'Navegação', icon: Download },
-    { title: 'Configurações', url: '/configuracoes', group: 'Navegação', icon: Settings },
-    { title: 'Ajuda', url: '/ajuda', group: 'Navegação', icon: HelpCircle },
+    // Módulo Qualidade
+    {
+      title: 'Produtos sem NCM',
+      url: '/qualidade/produtos-sem-ncm',
+      group: 'Qualidade',
+      icon: AlertTriangle,
+      subtitle: 'Produtos sem NCM cadastrado'
+    },
+
+    // Módulo Análise
+    {
+      title: 'Análise de Preços',
+      url: '/analise/precos',
+      group: 'Análise',
+      icon: BarChart3,
+      subtitle: 'Variação de preços ao longo do tempo'
+    },
+
+    // Módulo Segurança
+    {
+      title: 'Permissões',
+      url: '/seguranca/permissoes',
+      group: 'Segurança',
+      icon: ShieldCheck,
+      subtitle: 'Gerenciar permissões de usuários'
+    },
   ];
 
   const [productResults, setProductResults] = React.useState<SearchItem[]>([]);
