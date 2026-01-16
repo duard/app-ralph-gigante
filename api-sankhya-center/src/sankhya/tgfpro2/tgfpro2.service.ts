@@ -2052,48 +2052,44 @@ export class Tgfpro2Service {
 
     const whereClause = whereConditions.join(' AND ')
 
-    // Main query with CTE for estoque
+    // Simplified query without CTE - direct TOP with OFFSET
     const query = `
-      WITH ProdutosComEstoque AS (
-        SELECT
-          P.CODPROD,
-          P.DESCRPROD,
-          P.MARCA,
-          P.CODGRUPOPROD,
-          G.DESCRGRUPOPROD,
-          P.ATIVO,
-          P.TIPCONTEST,
-          P.LISCONTEST,
-          CASE WHEN P.TIPCONTEST <> 'N' THEN 1 ELSE 0 END AS HAS_CONTROLE,
-          0 AS CONTROLE_COUNT,
-          ISNULL(E.ESTOQUE_TOTAL, 0) AS ESTOQUE_TOTAL,
-          CASE WHEN ISNULL(E.ESTOQUE_TOTAL, 0) > 0 THEN 1 ELSE 0 END AS TEM_ESTOQUE,
-          NULL AS PRECO_MEDIO,
-          NULL AS PRECO_ULTIMA,
-          NULL AS PRECO_MIN,
-          NULL AS PRECO_MAX,
-          NULL AS VAR_PRECO_PCT,
-          NULL AS TENDENCIA,
-          0 AS QTD_COMPRAS,
-          0 AS TOTAL_GASTO,
-          P.DTALTER,
-          NULL AS NOMEUSU_ALT,
-          ROW_NUMBER() OVER (ORDER BY ${orderByColumn} ${orderByDirection}) AS RowNum
-        FROM TGFPRO P WITH(NOLOCK)
-        LEFT JOIN TGFGRU G WITH(NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
-        LEFT JOIN (
-          SELECT CODPROD, SUM(ESTOQUE) AS ESTOQUE_TOTAL
-          FROM TGFEST WITH(NOLOCK)
-          WHERE ATIVO = 'S'
-          GROUP BY CODPROD
-        ) E ON E.CODPROD = P.CODPROD
-        WHERE ${whereClause}
-          ${temEstoque !== undefined ? (temEstoque ? 'AND ISNULL(E.ESTOQUE_TOTAL, 0) > 0' : 'AND ISNULL(E.ESTOQUE_TOTAL, 0) = 0') : ''}
-      )
-      SELECT CODPROD, DESCRPROD, MARCA, CODGRUPOPROD, DESCRGRUPOPROD, ATIVO, TIPCONTEST, LISCONTEST, HAS_CONTROLE, CONTROLE_COUNT, ESTOQUE_TOTAL, TEM_ESTOQUE, PRECO_MEDIO, PRECO_ULTIMA, PRECO_MIN, PRECO_MAX, VAR_PRECO_PCT, TENDENCIA, QTD_COMPRAS, TOTAL_GASTO, DTALTER, NOMEUSU_ALT, RowNum
-      FROM ProdutosComEstoque
-      WHERE RowNum > ${offset} AND RowNum <= ${offset + pageSize}
-      ORDER BY RowNum
+      SELECT TOP ${pageSize}
+        P.CODPROD,
+        P.DESCRPROD,
+        P.MARCA,
+        P.CODGRUPOPROD,
+        G.DESCRGRUPOPROD,
+        P.ATIVO,
+        P.TIPCONTEST,
+        P.LISCONTEST,
+        CASE WHEN P.TIPCONTEST <> 'N' THEN 1 ELSE 0 END AS HAS_CONTROLE,
+        0 AS CONTROLE_COUNT,
+        ISNULL(E.ESTOQUE_TOTAL, 0) AS ESTOQUE_TOTAL,
+        CASE WHEN ISNULL(E.ESTOQUE_TOTAL, 0) > 0 THEN 1 ELSE 0 END AS TEM_ESTOQUE,
+        NULL AS PRECO_MEDIO,
+        NULL AS PRECO_ULTIMA,
+        NULL AS PRECO_MIN,
+        NULL AS PRECO_MAX,
+        NULL AS VAR_PRECO_PCT,
+        NULL AS TENDENCIA,
+        0 AS QTD_COMPRAS,
+        0 AS TOTAL_GASTO,
+        P.DTALTER,
+        NULL AS NOMEUSU_ALT
+      FROM TGFPRO P WITH(NOLOCK)
+      LEFT JOIN TGFGRU G WITH(NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
+      LEFT JOIN (
+        SELECT CODPROD, SUM(ESTOQUE) AS ESTOQUE_TOTAL
+        FROM TGFEST WITH(NOLOCK)
+        WHERE ATIVO = 'S'
+        GROUP BY CODPROD
+      ) E ON E.CODPROD = P.CODPROD
+      WHERE ${whereClause}
+        ${temEstoque !== undefined ? (temEstoque ? 'AND ISNULL(E.ESTOQUE_TOTAL, 0) > 0' : 'AND ISNULL(E.ESTOQUE_TOTAL, 0) = 0') : ''}
+      ORDER BY ${orderByColumn} ${orderByDirection}
+      OFFSET ${offset} ROWS
+      FETCH NEXT ${pageSize} ROWS ONLY
     `
 
     // Execute main query
