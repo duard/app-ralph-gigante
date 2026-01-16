@@ -2090,7 +2090,7 @@ export class Tgfpro2Service {
         WHERE ${whereClause}
           ${temEstoque !== undefined ? (temEstoque ? 'AND ISNULL(E.ESTOQUE_TOTAL, 0) > 0' : 'AND ISNULL(E.ESTOQUE_TOTAL, 0) = 0') : ''}
       )
-      SELECT *
+      SELECT CODPROD, DESCRPROD, MARCA, CODGRUPOPROD, DESCRGRUPOPROD, ATIVO, TIPCONTEST, LISCONTEST, HAS_CONTROLE, CONTROLE_COUNT, ESTOQUE_TOTAL, TEM_ESTOQUE, PRECO_MEDIO, PRECO_ULTIMA, PRECO_MIN, PRECO_MAX, VAR_PRECO_PCT, TENDENCIA, QTD_COMPRAS, TOTAL_GASTO, DTALTER, NOMEUSU_ALT, RowNum
       FROM ProdutosComEstoque
       WHERE RowNum > ${offset} AND RowNum <= ${offset + pageSize}
       ORDER BY RowNum
