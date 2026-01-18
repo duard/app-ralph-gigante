@@ -300,9 +300,15 @@ export class SankhyaApiService {
       try {
         // Para renovação, precisamos das credenciais. Por enquanto, usamos credenciais padrão
         // Em produção, isso deveria ser configurável ou usar refresh tokens
+        const serviceUser =
+          this.configService.get<string>('SANKHYA_SERVICE_USER') || 'CONVIDADO'
+        const servicePassword =
+          this.configService.get<string>('SANKHYA_SERVICE_PASSWORD') ||
+          'guest123'
+
         const newToken = await this.authService.refreshToken(
-          'CONVIDADO',
-          'guest123',
+          serviceUser,
+          servicePassword,
         )
 
         // Atualizar token em memória e cache

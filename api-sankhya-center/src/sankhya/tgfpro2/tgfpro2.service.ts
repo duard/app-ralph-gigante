@@ -28,6 +28,7 @@ import {
   ConsumoProduto,
   ConsumoAnalise,
 } from './interfaces'
+import { Tgfpro2Repository } from './repository/tgfpro2.repository'
 
 /**
  * Traduz código TIPMOV para descrição em português
@@ -95,7 +96,10 @@ function determinarTipoMovimento(
 export class Tgfpro2Service {
   private readonly logger = new Logger(Tgfpro2Service.name)
 
-  constructor(private readonly sankhyaApiService: SankhyaApiService) {}
+  constructor(
+    private readonly sankhyaApiService: SankhyaApiService,
+    private readonly tgfpro2Repository: Tgfpro2Repository,
+  ) {}
 
   /**
    * Lista produtos com opção de incluir estoque agregado
@@ -105,69 +109,13 @@ export class Tgfpro2Service {
 
     const page = dto.page || 1
     const perPage = dto.perPage || 10
-
-    // Construir WHERE clause
-    const { whereClause } = this.buildWhereClause(dto)
-
-    // 1. Contar total de registros (sem paginação)
-    const countQuery = `
-      SELECT COUNT(*) AS total
-      FROM TGFPRO P WITH (NOLOCK)
-      WHERE 1=1 ${whereClause}
-    `
-
-    const countResult = await this.sankhyaApiService.executeQuery(
-      countQuery,
-      [],
-    )
-    const total = Number(countResult[0]?.total || 0)
-
-    // 2. Buscar apenas a página solicitada
-    const sortOrder = dto.sort || 'CODPROD DESC'
     const offset = (page - 1) * perPage
 
-    const query = `
-      SELECT
-        P.CODPROD,
-        P.DESCRPROD,
-        P.COMPLDESC,
-        P.CARACTERISTICAS,
-        P.REFERENCIA,
-        P.REFFORN,
-        P.MARCA,
-        P.CODGRUPOPROD,
-        P.CODVOL,
-        P.CODVOLCOMPRA,
-        P.NCM,
-        P.ATIVO,
-        P.PESOBRUTO,
-        P.PESOLIQ,
-        P.LOCALIZACAO,
-        P.CODLOCALPADRAO,
-        P.USALOCAL,
-        P.CODCENCUS,
-        P.TIPCONTEST,
-        P.LISCONTEST,
-        P.ESTMIN,
-        P.ESTMAX,
-        P.ALERTAESTMIN,
-        P.PRAZOVAL,
-        P.USANROFOGO,
-        P.USOPROD,
-        P.ORIGPROD,
-        G.DESCRGRUPOPROD,
-        V.DESCRVOL
-      FROM TGFPRO P WITH (NOLOCK)
-      LEFT JOIN TGFGRU G WITH (NOLOCK) ON G.CODGRUPOPROD = P.CODGRUPOPROD
-      LEFT JOIN TGFVOL V WITH (NOLOCK) ON V.CODVOL = P.CODVOL
-      WHERE 1=1 ${whereClause}
-      ORDER BY ${sortOrder}
-      OFFSET ${offset} ROWS
-      FETCH NEXT ${perPage} ROWS ONLY
-    `
+    // 1. Contar total de registros (usando o repositório)
+    const total = await this.tgfpro2Repository.countAll(dto)
 
-    // Executar query paginada
-    const result = await this.sankhyaApiService.executeQuery(query, [])
+    // 2. Buscar apenas a página solicitada (usando o repositório)
+    const result = await this.tgfpro2Repository.findAll(dto, offset)
 
     // Mapear resultados (apenas a página atual)
     const produtos = result.map((item) => this.mapToProduto2(item))
@@ -185,62 +133,6 @@ export class Tgfpro2Service {
       page,
       perPage,
     })
-  }
-
-  /**
-   * Constrói a cláusula WHERE baseada nos filtros
-   * Usa concatenação de strings com escape de aspas para segurança
-   */
-  private buildWhereClause(dto: ProdutoFindAllDto): {
-    whereClause: string
-    params: any[]
-  } {
-    let whereClause = ''
-
-    if (dto.search) {
-      const searchEscaped = dto.search.trim().replace(/'/g, "''")
-      whereClause += ` AND (P.DESCRPROD LIKE '%${searchEscaped}%' OR P.REFERENCIA LIKE '%${searchEscaped}%' OR P.MARCA LIKE '%${searchEscaped}%')`
-    }
-
-    if (dto.descrprod) {
-      const descrprodEscaped = dto.descrprod.trim().replace(/'/g, "''")
-      whereClause += ` AND P.DESCRPROD LIKE '%${descrprodEscaped}%'`
-    }
-
-    if (dto.referencia) {
-      const referenciaEscaped = dto.referencia.trim().replace(/'/g, "''")
-      whereClause += ` AND P.REFERENCIA LIKE '%${referenciaEscaped}%'`
-    }
-
-    if (dto.marca) {
-      const marcaEscaped = dto.marca.trim().replace(/'/g, "''")
-      whereClause += ` AND P.MARCA LIKE '%${marcaEscaped}%'`
-    }
-
-    if (dto.codgrupoprod) {
-      whereClause += ` AND P.CODGRUPOPROD = ${dto.codgrupoprod}`
-    }
-
-    if (dto.ativo) {
-      whereClause += ` AND P.ATIVO = '${dto.ativo}'`
-    }
-
-    if (dto.localizacao) {
-      const localizacaoEscaped = dto.localizacao.trim().replace(/'/g, "''")
-      whereClause += ` AND P.LOCALIZACAO LIKE '%${localizacaoEscaped}%'`
-    }
-
-    if (dto.tipcontest) {
-      const tipcontestEscaped = dto.tipcontest.trim().replace(/'/g, "''")
-      whereClause += ` AND P.TIPCONTEST LIKE '%${tipcontestEscaped}%'`
-    }
-
-    if (dto.ncm) {
-      const ncmEscaped = dto.ncm.trim().replace(/'/g, "''")
-      whereClause += ` AND P.NCM LIKE '%${ncmEscaped}%'`
-    }
-
-    return { whereClause, params: [] }
   }
 
   /**

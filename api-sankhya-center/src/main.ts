@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter'
+import * as os from 'os' // Importar o módulo 'os'
 
 // Define timezone para America/Sao_Paulo
 process.env.TZ = 'America/Sao_Paulo'
@@ -54,6 +55,30 @@ async function bootstrap() {
     },
   })
 
-  await app.listen(process.env.PORT ? parseInt(process.env.PORT) : 3000)
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 3000
+  await app.listen(port)
+
+  // Logar IPs disponíveis e porta
+  const interfaces = os.networkInterfaces()
+  const addresses: string[] = []
+  for (const name in interfaces) {
+    for (const iface of interfaces[name]!) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        addresses.push(iface.address)
+      }
+    }
+  }
+  const localAddress = `http://localhost:${port}`
+  const networkAddresses = addresses
+    .map((addr) => `http://${addr}:${port}`)
+    .join(', ')
+
+  console.log(`\nAPI Sankhya Center running on:`)
+  console.log(`- Local:   ${localAddress}`)
+  if (networkAddresses) {
+    console.log(`- Network: ${networkAddresses}`)
+  }
+  console.log(`Swagger UI: ${localAddress}/api`)
+  console.log(`Port: ${port}\n`)
 }
 bootstrap()
