@@ -197,7 +197,7 @@ export function ProdutosSimplesContainer() {
               </TableCell>
             </TableRow>
           ) : (
-            data?.map((product, idx) => (
+            data?.data?.map((product, idx) => (
               <TableRow
                 key={`${product.codprod}-${idx}`}
                 className={cn(product.ativo !== 'S' && 'text-muted-foreground')}

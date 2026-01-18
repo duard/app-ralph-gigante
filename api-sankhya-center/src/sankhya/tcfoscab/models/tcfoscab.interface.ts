@@ -59,6 +59,14 @@ export interface OrdemServico {
     codusu: number
     nomeusu: string
   }
+
+  // Campos calculados para listagem
+  qtdServicos?: number
+  qtdServicosFinalizados?: number
+  qtdApontamentos?: number
+  qtdProdutos?: number
+  diasManutencao?: number
+  situacaoPrazo?: string
 }
 
 // Tabela Real: TCFSERVOS (Serviços da OS)
@@ -97,6 +105,7 @@ export interface ApontamentoOS {
   dhini?: Date // Data/Hora Início
   dhfin?: Date // Data/Hora Fim
   intervalo?: number // Minutos ou HHMM
+  intervaloMinutos?: number // Intervalo convertido para minutos
   status?: string
   dhapont?: Date
   ad_descr?: string // Descrição customizada
@@ -112,6 +121,7 @@ export interface ApontamentoOS {
     codusu: number
     nomeusu: string
   }
+  servicoDescricao?: string
 }
 
 // Tabela Real: TCFPRODOS (Produtos/Peças da OS)

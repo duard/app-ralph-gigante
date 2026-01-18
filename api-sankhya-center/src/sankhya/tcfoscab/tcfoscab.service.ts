@@ -67,10 +67,57 @@ export class TcfoscabService {
     const query = OSQueries.FIND_ALL_OS_QUERY + ` ${where} ORDER BY ${sort}`
 
     try {
+      // 1. Buscar dados principais
       const allResults = await this.sankhyaApiService.executeQuery(query, [])
-      const data = allResults
-        .slice(offset, offset + perPage)
-        .map((item: any) => this.mapOrdemServico(item))
+
+      // 2. Paginar resultados
+      const paginatedItems = allResults.slice(offset, offset + perPage)
+
+      // 3. Buscar contadores de serviços para os itens da página atual
+      this.logger.log(`[findAll] Buscando contadores para ${paginatedItems.length} itens`)
+
+      if (paginatedItems.length > 0) {
+        // Buscar contadores de serviços para cada OS individualmente (em paralelo)
+        await Promise.all(
+          paginatedItems.map(async (item: any) => {
+            try {
+              const nuos = Number(item.NUOS)
+              const countQuery = OSQueries.buildServicosCountQuerySingle(nuos)
+              this.logger.debug(`[findAll] Query para OS ${nuos}: ${countQuery.replace(/\s+/g, ' ').trim()}`)
+
+              const results = await this.sankhyaApiService.executeQuery(countQuery, [])
+              this.logger.debug(`[findAll] OS ${nuos} - Resultado bruto: ${JSON.stringify(results)}`)
+
+              if (results && results.length > 0) {
+                const row = results[0]
+                this.logger.debug(`[findAll] OS ${nuos} - Row keys: ${Object.keys(row).join(', ')}`)
+
+                // Tentar diferentes nomes de coluna
+                const total = Number(row.TOTAL || row.total || row['TOTAL'] || 0)
+                const finalizados = Number(row.FINALIZADOS || row.finalizados || row['FINALIZADOS'] || 0)
+
+                item.QTD_SERVICOS = total
+                item.QTD_SERVICOS_FINALIZADOS = finalizados
+
+                this.logger.log(`[findAll] OS ${nuos}: Serviços ${finalizados}/${total}`)
+              } else {
+                this.logger.warn(`[findAll] OS ${nuos}: Nenhum resultado da query de contagem`)
+              }
+            } catch (err) {
+              this.logger.error(`[findAll] Erro ao buscar contadores para OS ${item.NUOS}: ${(err as any)?.message}`)
+            }
+          }),
+        )
+      }
+
+      // Log dos itens com contadores antes do mapeamento
+      this.logger.debug(`[findAll] Itens com contadores: ${JSON.stringify(paginatedItems.slice(0, 2).map((i: any) => ({ nuos: i.NUOS, QTD_SERVICOS: i.QTD_SERVICOS, QTD_SERVICOS_FINALIZADOS: i.QTD_SERVICOS_FINALIZADOS })))}`)
+
+      // 4. Mapear para o formato de resposta
+      const data = paginatedItems.map((item: any) => this.mapOrdemServico(item))
+
+      // Log dados após mapeamento
+      this.logger.log(`[findAll] Dados mapeados (primeiros 2): ${JSON.stringify(data.slice(0, 2).map(d => ({ nuos: d.nuos, qtdServicos: d.qtdServicos, qtdServicosFinalizados: d.qtdServicosFinalizados })))}`)
 
       return buildPaginatedResult({
         data,
@@ -90,26 +137,98 @@ export class TcfoscabService {
    * Busca OS por ID com todos os detalhes
    */
   async findById(nuos: number): Promise<OrdemServicoDetalhada> {
+    const startTime = Date.now()
+    this.logger.log(`[findById] Iniciando busca da OS ${nuos}`)
+
     try {
-      const [cabResult] = await this.sankhyaApiService.executeQuery(
-        OSQueries.FIND_OS_BY_ID_QUERY,
-        [{ name: 'nuos', value: nuos }],
-      )
+      // Step 1: Buscar cabeçalho da OS
+      this.logger.debug(`[findById:${nuos}] Step 1: Executando query FIND_OS_BY_ID_QUERY`)
+      const cabStartTime = Date.now()
+
+      let cabResults: any[]
+      try {
+        // Usa interpolação direta do nuos pois a API não suporta parâmetros nomeados
+        const query = OSQueries.buildFindByIdQuery(nuos)
+        cabResults = await this.sankhyaApiService.executeQuery(query, [])
+        this.logger.debug(
+          `[findById:${nuos}] Step 1 OK: Query executada em ${Date.now() - cabStartTime}ms, ${cabResults?.length || 0} resultados`,
+        )
+      } catch (queryError) {
+        this.logger.error(
+          `[findById:${nuos}] Step 1 FALHOU: Erro na query FIND_OS_BY_ID_QUERY`,
+          {
+            error: (queryError as any)?.message,
+            stack: (queryError as any)?.stack,
+            query: 'buildFindByIdQuery',
+            nuos,
+          },
+        )
+        throw new InternalServerErrorException({
+          message: 'Erro ao executar query de busca da OS',
+          details: {
+            step: 'FIND_OS_BY_ID_QUERY',
+            nuos,
+            error: (queryError as any)?.message,
+            stack: (queryError as any)?.stack?.split('\n').slice(0, 5),
+          },
+        })
+      }
+
+      const [cabResult] = cabResults
 
       if (!cabResult) {
+        this.logger.warn(`[findById:${nuos}] OS não encontrada`)
         throw new NotFoundException(`Ordem de serviço ${nuos} não encontrada`)
       }
 
-      const os = this.mapOrdemServicoDetalhada(cabResult)
+      // Step 2: Mapear resultado
+      this.logger.debug(`[findById:${nuos}] Step 2: Mapeando resultado do cabeçalho`)
+      let os: OrdemServico
+      try {
+        os = this.mapOrdemServicoDetalhada(cabResult)
+        this.logger.debug(`[findById:${nuos}] Step 2 OK: Mapeamento concluído`)
+      } catch (mapError) {
+        this.logger.error(`[findById:${nuos}] Step 2 FALHOU: Erro no mapeamento`, {
+          error: (mapError as any)?.message,
+          cabResult: JSON.stringify(cabResult).slice(0, 500),
+        })
+        throw new InternalServerErrorException({
+          message: 'Erro ao mapear dados da OS',
+          details: {
+            step: 'mapOrdemServicoDetalhada',
+            nuos,
+            error: (mapError as any)?.message,
+            rawData: JSON.stringify(cabResult).slice(0, 200),
+          },
+        })
+      }
 
-      // Buscar serviços
+      // Step 3: Buscar serviços
+      this.logger.debug(`[findById:${nuos}] Step 3: Buscando serviços`)
+      const servicosStartTime = Date.now()
       const servicos = await this.findServicos(nuos)
-      // Buscar apontamentos
-      const apontamentos = await this.findApontamentos(nuos)
-      // Buscar produtos
-      const produtos = await this.findProdutos(nuos)
+      this.logger.debug(
+        `[findById:${nuos}] Step 3 OK: ${servicos.length} serviços em ${Date.now() - servicosStartTime}ms`,
+      )
 
-      // Calcular totais
+      // Step 4: Buscar apontamentos
+      this.logger.debug(`[findById:${nuos}] Step 4: Buscando apontamentos`)
+      const apontStartTime = Date.now()
+      const apontamentos = await this.findApontamentos(nuos)
+      this.logger.debug(
+        `[findById:${nuos}] Step 4 OK: ${apontamentos.length} apontamentos em ${Date.now() - apontStartTime}ms`,
+      )
+
+      // Step 5: Buscar produtos
+      this.logger.debug(`[findById:${nuos}] Step 5: Buscando produtos`)
+      const prodStartTime = Date.now()
+      const produtos = await this.findProdutos(nuos)
+      this.logger.debug(
+        `[findById:${nuos}] Step 5 OK: ${produtos.length} produtos em ${Date.now() - prodStartTime}ms`,
+      )
+
+      // Step 6: Calcular totais
+      this.logger.debug(`[findById:${nuos}] Step 6: Calculando totais`)
       const totalHorasHomem = apontamentos.reduce(
         (sum, a) => sum + (a.minutosTrabalhados || 0),
         0,
@@ -120,7 +239,7 @@ export class TcfoscabService {
       )
       const totalCusto = produtos.reduce((sum, p) => sum + (p.vlrtot || 0), 0)
 
-      return {
+      const result = {
         ...os,
         servicos,
         apontamentos,
@@ -132,12 +251,34 @@ export class TcfoscabService {
         totalCusto,
         qtdExecutores: new Set(apontamentos.map((a) => a.codexec)).size,
       }
+
+      this.logger.log(
+        `[findById:${nuos}] Concluído em ${Date.now() - startTime}ms - ${servicos.length} serviços, ${apontamentos.length} apontamentos, ${produtos.length} produtos`,
+      )
+
+      return result
     } catch (error) {
       if (error instanceof NotFoundException) throw error
-      this.logger.error('Erro em findById:', (error as any)?.message || error)
-      throw new InternalServerErrorException(
-        'Erro ao buscar ordem de serviço',
-      )
+      if (error instanceof InternalServerErrorException) throw error
+
+      // Erro não tratado
+      this.logger.error(`[findById:${nuos}] Erro não tratado:`, {
+        message: (error as any)?.message,
+        name: (error as any)?.name,
+        stack: (error as any)?.stack,
+        error: JSON.stringify(error, Object.getOwnPropertyNames(error as any)),
+      })
+
+      throw new InternalServerErrorException({
+        message: 'Erro interno ao buscar ordem de serviço',
+        details: {
+          nuos,
+          errorType: (error as any)?.name || 'Unknown',
+          errorMessage: (error as any)?.message || String(error),
+          stack: (error as any)?.stack?.split('\n').slice(0, 10),
+          timestamp: new Date().toISOString(),
+        },
+      })
     }
   }
 
@@ -146,10 +287,8 @@ export class TcfoscabService {
    */
   async findServicos(nuos: number): Promise<ServicoOS[]> {
     try {
-      const results = await this.sankhyaApiService.executeQuery(
-        OSQueries.FIND_SERVICOS_BY_OS_QUERY,
-        [{ name: 'nuos', value: nuos }],
-      )
+      const query = OSQueries.buildFindServicosQuery(nuos)
+      const results = await this.sankhyaApiService.executeQuery(query, [])
 
       return results.map((item: any) => this.mapServico(item))
     } catch (error) {
@@ -163,10 +302,8 @@ export class TcfoscabService {
    */
   async findApontamentos(nuos: number): Promise<ApontamentoOS[]> {
     try {
-      const results = await this.sankhyaApiService.executeQuery(
-        OSQueries.FIND_APONTAMENTOS_BY_OS_QUERY,
-        [{ name: 'nuos', value: nuos }],
-      )
+      const query = OSQueries.buildFindApontamentosQuery(nuos)
+      const results = await this.sankhyaApiService.executeQuery(query, [])
 
       return results.map((item: any) => this.mapApontamento(item))
     } catch (error) {
@@ -180,10 +317,8 @@ export class TcfoscabService {
    */
   async findProdutos(nuos: number): Promise<ProdutoOS[]> {
     try {
-      const results = await this.sankhyaApiService.executeQuery(
-        OSQueries.FIND_PRODUTOS_BY_OS_QUERY,
-        [{ name: 'nuos', value: nuos }],
-      )
+      const query = OSQueries.buildFindProdutosQuery(nuos)
+      const results = await this.sankhyaApiService.executeQuery(query, [])
 
       return results.map((item: any) => this.mapProduto(item))
     } catch (error) {
@@ -200,13 +335,8 @@ export class TcfoscabService {
     dataFim: string,
   ): Promise<EstatisticasOS> {
     try {
-      const [result] = await this.sankhyaApiService.executeQuery(
-        OSQueries.GET_ESTATISTICAS_GERAL_QUERY,
-        [
-          { name: 'dataInicio', value: dataInicio },
-          { name: 'dataFim', value: dataFim },
-        ],
-      )
+      const query = OSQueries.buildEstatisticasGeralQuery(dataInicio, dataFim)
+      const [result] = await this.sankhyaApiService.executeQuery(query, [])
 
       return {
         totalOS: Number(result.TOTAL_OS),
@@ -269,11 +399,7 @@ export class TcfoscabService {
   ): Promise<ProdutividadeExecutor[]> {
     try {
       const results = await this.sankhyaApiService.executeQuery(
-        OSQueries.GET_PRODUTIVIDADE_EXECUTORES_QUERY,
-        [
-          { name: 'dataInicio', value: dataInicio },
-          { name: 'dataFim', value: dataFim },
-        ],
+        OSQueries.buildProdutividadeExecutoresQuery(dataInicio, dataFim),
       )
 
       return results.map((item: any) => ({
@@ -300,11 +426,7 @@ export class TcfoscabService {
   ): Promise<any[]> {
     try {
       const results = await this.sankhyaApiService.executeQuery(
-        OSQueries.GET_PRODUTOS_MAIS_UTILIZADOS_QUERY,
-        [
-          { name: 'dataInicio', value: dataInicio },
-          { name: 'dataFim', value: dataFim },
-        ],
+        OSQueries.buildProdutosMaisUtilizadosQuery(dataInicio, dataFim),
       )
 
       return results.map((item: any) => ({
@@ -368,6 +490,14 @@ export class TcfoscabService {
             nomeusu: item.USUARIO_INCLUSAO,
           }
         : undefined,
+      // Contadores (vindos da query FIND_ALL_OS_QUERY)
+      // Nota: tentamos ambos os cases pois a API pode retornar em case diferente
+      qtdServicos: this.getNumber(item, 'QTD_SERVICOS', 0),
+      qtdServicosFinalizados: this.getNumber(item, 'QTD_SERVICOS_FINALIZADOS', 0),
+      qtdApontamentos: this.getNumber(item, 'QTD_APONTAMENTOS', 0),
+      qtdProdutos: this.getNumber(item, 'QTD_PRODUTOS', 0),
+      diasManutencao: this.getNumber(item, 'DIAS_MANUTENCAO', undefined),
+      situacaoPrazo: this.getString(item, 'SITUACAO_PRAZO'),
     }
   }
 
@@ -407,6 +537,9 @@ export class TcfoscabService {
       dhini: item.DHINI ? new Date(item.DHINI) : undefined,
       dhfin: item.DHFIN ? new Date(item.DHFIN) : undefined,
       intervalo: item.INTERVALO ? Number(item.INTERVALO) : undefined,
+      intervaloMinutos: item.INTERVALO_MINUTOS
+        ? Number(item.INTERVALO_MINUTOS)
+        : undefined,
       status: item.STATUS,
       dhapont: item.DHAPONT ? new Date(item.DHAPONT) : undefined,
       ad_descr: item.AD_DESCR,
@@ -422,6 +555,7 @@ export class TcfoscabService {
             nomeusu: item.EXECUTOR_NOME,
           }
         : undefined,
+      servicoDescricao: item.SERVICO_DESCRICAO,
     }
   }
 
@@ -446,5 +580,23 @@ export class TcfoscabService {
           }
         : undefined,
     }
+  }
+
+  /**
+   * Helper para obter valor numérico de um campo (case-insensitive)
+   */
+  private getNumber(item: any, fieldName: string, defaultValue: number | undefined): number | undefined {
+    // Tenta uppercase, lowercase e original
+    const value = item[fieldName] ?? item[fieldName.toLowerCase()] ?? item[fieldName.toUpperCase()]
+    if (value === null || value === undefined) return defaultValue
+    const num = Number(value)
+    return isNaN(num) ? defaultValue : num
+  }
+
+  /**
+   * Helper para obter valor string de um campo (case-insensitive)
+   */
+  private getString(item: any, fieldName: string): string | undefined {
+    return item[fieldName] ?? item[fieldName.toLowerCase()] ?? item[fieldName.toUpperCase()]
   }
 }

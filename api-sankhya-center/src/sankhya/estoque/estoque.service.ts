@@ -252,7 +252,16 @@ export class EstoqueService extends SankhyaBaseService<any> {
     comMovimento?: boolean
     semMovimento?: boolean
   }) {
+    // Escape filters para evitar SQL injection
+    const searchEscaped = filters.search
+      ? filters.search.replace(/'/g, "''")
+      : ''
+    const marcaEscaped = filters.marca
+      ? filters.marca.replace(/'/g, "''")
+      : ''
+
     // Query para métricas gerais de estoque
+    // Nota: valorTotalEstoque precisa de cálculo separado via TGFITE (preço última compra)
     const query = `
       SELECT
         COUNT(DISTINCT E.CODPROD) AS total,
@@ -260,14 +269,13 @@ export class EstoqueService extends SankhyaBaseService<any> {
         SUM(CASE WHEN E.ESTOQUE < E.ESTMIN AND E.ESTMIN > 0 THEN 1 ELSE 0 END) AS abaixoMinimo,
         SUM(CASE WHEN E.ESTOQUE > E.ESTMAX AND E.ESTMAX > 0 THEN 1 ELSE 0 END) AS acimaMaximo,
         SUM(CASE WHEN E.ESTOQUE >= E.ESTMIN AND E.ESTOQUE <= E.ESTMAX THEN 1 ELSE 0 END) AS normais,
-        SUM(E.ESTOQUE * ISNULL(P.VLRUNIT, 0)) AS valorTotalEstoque,
         0 AS semMovimento
       FROM TGFEST E WITH(NOLOCK)
       LEFT JOIN TGFPRO P WITH(NOLOCK) ON P.CODPROD = E.CODPROD
       WHERE E.ATIVO = 'S'
         ${filters.status === 'active' ? "AND P.ATIVO = 'S'" : ''}
-        ${filters.marca ? `AND P.MARCA LIKE '%${filters.marca}%'` : ''}
-        ${filters.search ? `AND (P.DESCRPROD LIKE '%${filters.search}%' OR CAST(P.CODPROD AS VARCHAR) LIKE '%${filters.search}%')` : ''}
+        ${marcaEscaped ? `AND P.MARCA LIKE '%${marcaEscaped}%'` : ''}
+        ${searchEscaped ? `AND (P.DESCRPROD LIKE '%${searchEscaped}%' OR CAST(P.CODPROD AS VARCHAR) LIKE '%${searchEscaped}%')` : ''}
     `
 
     const [result] = await this.sankhyaApiService.executeQuery(query, [])
@@ -279,7 +287,7 @@ export class EstoqueService extends SankhyaBaseService<any> {
       semMovimento: result?.semMovimento || 0,
       normais: result?.normais || 0,
       total: result?.total || 0,
-      valorTotalEstoque: result?.valorTotalEstoque || 0,
+      valorTotalEstoque: 0, // TODO: Calcular via TGFITE (preço última compra * estoque)
       trendNegativos: 0,
       trendAbaixoMinimo: 0,
       trendAcimaMaximo: 0,

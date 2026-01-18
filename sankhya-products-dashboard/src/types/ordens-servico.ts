@@ -39,11 +39,13 @@ export interface OrdemServico {
     nomeusu: string
   }
 
-  // Campos calculados
+  // Campos calculados (vindos da query de listagem)
   qtdServicos?: number
   qtdServicosFinalizados?: number
+  qtdApontamentos?: number
+  qtdProdutos?: number
   diasManutencao?: number
-  situacaoPrazo?: 'NO_PRAZO' | 'ATRASADO' | 'CRITICO'
+  situacaoPrazo?: 'NO_PRAZO' | 'ATRASADA' | 'CONCLUIDA_NO_PRAZO' | 'CONCLUIDA_ATRASADA' | 'INDEFINIDO'
 }
 
 export interface ServicoOS {

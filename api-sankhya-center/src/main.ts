@@ -3,6 +3,7 @@ import { ValidationPipe } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter'
 
 // Define timezone para America/Sao_Paulo
 process.env.TZ = 'America/Sao_Paulo'
@@ -14,6 +15,9 @@ async function bootstrap() {
 
   // Enable global validation
   app.useGlobalPipes(new ValidationPipe())
+
+  // Enable global exception filter for detailed error logging
+  app.useGlobalFilters(new AllExceptionsFilter())
 
   // Enable global logging interceptor for development
   app.useGlobalInterceptors(new LoggingInterceptor())
